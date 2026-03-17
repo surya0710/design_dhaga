@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\Registered;
+
+
+class UserController extends Controller
+{
+    public function login()
+    {
+        return view('user.index');
+    }
+
+    public function loginPost(Request $request){
+        $credentials = array_merge($request->only('email', 'password'), ['utype' => 'USR']);
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('home')->with('success', 'Login successful!');
+        } else {
+            return redirect()->back()->with('error', 'Invalid credentials');
+        }
+    }
+
+    public function register()
+    {
+        return view('user.register');
+    }
+
+    public function registerPost(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'phone' => 'nullable|numeric|digits:10|unique:users,mobile',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.unique' => 'This email belongs to a different account.',
+            'phone.unique' => 'This mobile belongs to a different account.',
+        ]);
+
+        $user = User::create([
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email,
+            'mobile' => $request->phone,
+            'role' => 'USR',
+            'password' => $request->password, // auto hashed
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('verification.notice');
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('user.forgot-password');
+        }
+
+        $request->validate([
+            'email' => ['required', 'email']
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('success', __($status))
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('user.reset-password', [
+                'email' => $request->query('email'),
+                'token' => $request->route('token')
+            ]);
+        }
+
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('success', __($status))
+            : back()->withErrors(['email' => __($status)]);
+    }
+}

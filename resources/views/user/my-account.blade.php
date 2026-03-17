@@ -1,0 +1,802 @@
+@extends('frontend.layouts.app')
+@section('title', 'My Account - Design Dhaga')
+
+@section('meta_description', 'Create your Design Dhaga account to access exclusive handcrafted collections and manage
+your orders.')
+@section('meta_keywords', 'register, sign up, design dhaga, fashion brand, handmade clothing, made in india')
+@section('og_title', 'Register - Design Dhaga')
+@section('og_description', 'Create your Design Dhaga account to access exclusive handcrafted collections.')
+@section('og_image', asset('frontend_assets/images/og-register.jpg'))
+
+@section('content')
+<style>
+    :root {
+        --primary-color: #212529;
+        /* Dark/Black */
+        --accent-color: #4f46e5;
+        /* Modern Indigo for highlights */
+        --bg-color: #f8f9fa;
+        --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-color);
+        color: #4a5568;
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    /* Sidebar Navigation */
+    .nav-pills .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        padding: 12px 20px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        margin-bottom: 8px;
+    }
+
+    .nav-pills .nav-link:hover {
+        background-color: #e9ecef;
+        color: var(--primary-color);
+        transform: translateX(5px);
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(33, 37, 41, 0.3);
+    }
+
+    .nav-pills .nav-link i {
+        font-size: 1.1rem;
+    }
+
+    /* Mobile 2x2 grid navigation */
+    @media (max-width: 575.98px) {
+        .nav-pills {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .nav-pills .nav-link {
+            margin-bottom: 0;
+            text-align: center;
+            justify-content: center;
+        }
+    }
+
+    /* Buttons */
+    .btn-dark {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-dark:hover {
+        background-color: #000;
+        transform: scale(1.02);
+    }
+
+    /* Form Controls */
+    .form-control,
+    .form-select {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.1);
+        border-color: var(--primary-color);
+    }
+
+    .form-control-plaintext {
+        font-weight: 500;
+        color: #2d3748;
+    }
+
+    /* Stat Cards */
+    .stat-card-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f5f9;
+        border-radius: 50%;
+        margin: 0 auto 10px;
+        color: var(--primary-color);
+        transition: 0.3s;
+    }
+
+    .card:hover .stat-card-icon {
+        background: var(--primary-color);
+        color: #fff;
+    }
+</style>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="card text-center p-4 mb-4">
+                <div class="position-relative mx-auto mb-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80"
+                        class="rounded-circle border border-3 border-white shadow-sm" />
+                    <span
+                        class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-2"></span>
+                </div>
+                <h5 class="fw-bold mb-1">{{ Auth::user()->name }}</h5>
+                <small class="text-muted">{{ Auth::user()->email }}</small>
+            </div>
+
+            <div class="card p-3">
+                <div class="nav flex-column nav-pills" role="tablist">
+                    <button class="nav-link active d-flex justify-content-between align-items-center"
+                        data-bs-toggle="pill" data-bs-target="#dashboard">
+                        <span><i class="bi bi-grid-fill me-2"></i> Dashboard</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </button>
+
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
+                        data-bs-target="#profile">
+                        <span><i class="bi bi-person-fill me-2"></i> My Profile</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </button>
+
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
+                        data-bs-target="#addresses">
+                        <span><i class="bi bi-geo-alt-fill me-2"></i> Addresses</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </button>
+
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
+                        data-bs-target="#orders">
+                        <span><i class="bi bi-bag-fill me-2"></i> My Orders</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </button>
+
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
+                        data-bs-target="#wishlist">
+                        <span><i class="bi bi-heart-fill me-2"></i> Wishlist</span>
+                        <i class="bi bi-chevron-right small"></i>
+                    </button>
+
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#logout">
+                        <span><i class="bi bi-box-arrow-right me-2"></i> Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="dashboard">
+                    <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+                        <div class="col">
+                            <div class="card text-center p-3 h-100">
+                                <div class="stat-card-icon">
+                                    <i class="bi bi-box-seam fs-4"></i>
+                                </div>
+                                <h6 class="text-muted small text-uppercase fw-bold">
+                                    Orders
+                                </h6>
+                                <h3 class="fw-bold mb-0">12</h3>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card text-center p-3 h-100">
+                                <div class="stat-card-icon">
+                                    <i class="bi bi-wallet2 fs-4"></i>
+                                </div>
+                                <h6 class="text-muted small text-uppercase fw-bold">
+                                    Spend
+                                </h6>
+                                <h3 class="fw-bold mb-0">₹ 4.5k</h3>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card text-center p-3 h-100">
+                                <div class="stat-card-icon">
+                                    <i class="bi bi-credit-card fs-4"></i>
+                                </div>
+                                <h6 class="text-muted small text-uppercase fw-bold">
+                                    Balance
+                                </h6>
+                                <h3 class="fw-bold mb-0">₹ 151</h3>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card text-center p-3 h-100">
+                                <div class="stat-card-icon">
+                                    <i class="bi bi-geo-alt fs-4"></i>
+                                </div>
+                                <h6 class="text-muted small text-uppercase fw-bold">
+                                    Locales
+                                </h6>
+                                <h3 class="fw-bold mb-0">2</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-7">
+                            <div class="card p-4 h-100 d-flex flex-column justify-content-center align-items-start">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-dark text-white rounded p-2 me-3">
+                                        <i class="bi bi-receipt fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Recent Orders</h5>
+                                        <small class="text-muted">Track, return or exchange items</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark w-100 mt-2">
+                                    View Order History
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <div class="card p-4 h-100">
+                                <h5 class="fw-bold mb-1">Shipping</h5>
+                                <p class="text-muted small mb-3">
+                                    Manage your delivery locations
+                                </p>
+                                <button class="btn btn-dark w-100 mt-auto" onclick="document.querySelector('[data-bs-target=\'#addresses\']').click()">
+                                    Manage Addresses
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="profile">
+                    <div class="card p-4 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                            <h4 class="fw-bold mb-0">Personal Information</h4>
+                            <button class="btn btn-sm btn-dark text-white fw-bold" onclick="enableEdit()" id="editBtn">
+                                Edit Details <i class="bi bi-pencil-square me-1"></i>
+                            </button>
+                        </div>
+
+                        <form id="profileForm">
+                            <div class="row g-4">
+                                @php $name = explode(' ', Auth::user()->name); @endphp
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">First Name</label>
+                                    <input type="text" class="form-control-plaintext" value="{{ $name[0] }}" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Last Name</label>
+                                    <input type="text" class="form-control-plaintext" value="{{ $name[1] }}" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Email Address</label>
+                                    <input type="email" class="form-control-plaintext" value="{{ Auth::user()->email }}" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Mobile</label>
+                                    <input type="text" class="form-control-plaintext" value="{{ isset(Auth::user()->mobile) ? Auth::user()->mobile : '' }}" readonly />
+                                </div>
+                                <!-- <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Birth Date</label>
+                                    <input type="date" class="form-control-plaintext" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Gender</label>
+                                    <select class="form-control-plaintext" disabled>
+                                        <option>Select Gender</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div> -->
+                            </div>
+                            <div class="d-flex justify-content-end gap-2 mt-4 d-none" id="actionButtons">
+                                <button type="button" class="btn btn-light" onclick="cancelEdit()">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-dark">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="addresses">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Saved Addresses</h4>
+                        <button class="btn btn-dark btn-sm" onclick="showForm()">
+                            <i class="bi bi-plus-lg"></i> Add New
+                        </button>
+                    </div>
+
+                    <div id="addressList">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card p-4 h-100">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="badge bg-dark">Default</span>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-bold">{{ Auth::user()->name }}</h5>
+                                    <!-- <p class="text-muted small mb-0">
+                                        PK House, Kannur<br />
+                                        670523, India<br />
+                                        +91 9876543210
+                                    </p> -->
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-6">
+                                <div class="card p-4 h-100">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="badge bg-light text-dark border">Work</span>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <h6 class="fw-bold">Office Address</h6>
+                                    <p class="text-muted small mb-0">
+                                        MG Road, Kochi<br />
+                                        682001, India<br />
+                                        +91 9876543211
+                                    </p>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div id="addressForm" class="d-none">
+                        <div class="card p-4">
+                            <h5 class="fw-bold mb-4">Add New Destination</h5>
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">First Name</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Last Name</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Address 1</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Address 2
+                                            <span class="text-muted">(Optional)</span></label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Phone</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Company
+                                            <span class="text-muted">(Optional)</span></label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Country</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">State</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">City</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small text-muted">Zip Code</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-12 d-flex mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="defaultAddressCheck" />
+                                            <label class="form-check-label" for="defaultAddressCheck">
+                                                Make as Default Address
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-4 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-dark">
+                                            Save Address
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary ms-2"
+                                            onclick="hideForm()">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="orders">
+                    <h4 class="fw-bold mb-4">Your Orders</h4>
+                    <div id="ordersEmpty" class="card p-5 text-center d-none">
+                        <div class="mb-3 text-muted">
+                            <i class="bi bi-bag-x fs-1"></i>
+                        </div>
+                        <h4>No Orders Yet</h4>
+                        <p class="text-muted">
+                            Start shopping to see your orders here.
+                        </p>
+                        <button class="btn btn-dark mt-2">Start Shopping</button>
+                    </div>
+                    <div id="ordersList">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="card p-4 border-1">
+                                    <div class="row g-4 align-items-start">
+                                        <div class="col-md-2">
+                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                                class="img-fluid rounded" alt="Product">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6 class="fw-bold mb-2">Premium Wireless Headphones</h6>
+                                            <small class="text-muted d-block mb-2">Order ID: #1234567890</small>
+                                            <small class="text-muted d-block mb-3">Ordered on: Jan 15, 2025</small>
+                                            <div class="d-flex gap-2">
+                                                <span class="badge bg-success">Delivered</span>
+                                                <small class="text-muted">Delivered on Jan 20, 2025</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h6 class="fw-bold">₹ 2,499</h6>
+                                            <small class="text-muted">Qty: 1</small>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
+                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="card p-4 border-1">
+                                    <div class="row g-4 align-items-start">
+                                        <div class="col-md-2">
+                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                                class="img-fluid rounded" alt="Product">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6 class="fw-bold mb-2">Premium Watch</h6>
+                                            <small class="text-muted d-block mb-2">Order ID: #1234567891</small>
+                                            <small class="text-muted d-block mb-3">Ordered on: Jan 10, 2025</small>
+                                            <div class="d-flex gap-2">
+                                                <span class="badge bg-success">Delivered</span>
+                                                <small class="text-muted">Delivered on Jan 15, 2025</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h6 class="fw-bold">₹ 4,999</h6>
+                                            <small class="text-muted">Qty: 1</small>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
+                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="card p-4 border-1">
+                                    <div class="row g-4 align-items-start">
+                                        <div class="col-md-2">
+                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                                class="img-fluid rounded" alt="Product">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6 class="fw-bold mb-2">Portable Phone Charger</h6>
+                                            <small class="text-muted d-block mb-2">Order ID: #1234567892</small>
+                                            <small class="text-muted d-block mb-3">Ordered on: Dec 28, 2024</small>
+                                            <div class="d-flex gap-2">
+                                                <span class="badge bg-warning text-dark">In Transit</span>
+                                                <small class="text-muted">Expected on Feb 18, 2025</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h6 class="fw-bold">₹ 1,299</h6>
+                                            <small class="text-muted">Qty: 2</small>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
+                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="wishlist">
+                    <h4 class="fw-bold mb-4">My Wishlist</h4>
+                    <div id="wishlistEmpty" class="card p-5 text-center d-none">
+                        <div class="mb-3 text-muted">
+                            <i class="bi bi-heart fs-1"></i>
+                        </div>
+                        <h4>Your Wishlist is Empty</h4>
+                        <p class="text-muted">
+                            Start adding items to your wishlist
+                        </p>
+                        <button class="btn btn-dark mt-2">Continue Shopping</button>
+                    </div>
+                    <div id="wishlistItems">
+                        <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">Premium Wireless Headphones</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(256)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 2,499</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">Smart Watch Pro</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-half text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(128)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 4,999</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">Portable Phone Charger</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(512)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 1,299</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">Bluetooth Speaker</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(342)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 3,499</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">USB-C Cable (3m)</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-half text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(89)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 399</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
+                                        style="z-index: 10;">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
+                                        class="card-img-top" alt="Product">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title fw-bold small mb-2">Screen Protector (12 pieces)</h6>
+                                        <div class="d-flex align-items-center gap-1 mb-2">
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
+                                            <i class="bi bi-star text-warning" style="font-size: 0.75rem;"></i>
+                                            <small class="text-muted">(234)</small>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-3">₹ 599</h5>
+                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="logout">
+                    <div class="card p-5 text-center border-danger border-opacity-25">
+                        <i class="bi bi-exclamation-circle text-danger fs-1 mb-3"></i>
+                        <h4>Are you sure?</h4>
+                        <p class="text-muted">
+                            You will need to login again to access your account.
+                        </p>
+                        <div class="mt-3 d-flex justify-content-center">
+                            <form method="post" action="{{ route('account.logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-danger px-4">Yes, Logout</button>
+                            </form>
+                            <button class="btn btn-light px-4" onclick="document.querySelector('[data-bs-target=\'#dashboard\']').click()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+    // Persist Navigation State
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restore active tab from localStorage
+        const lastTab = localStorage.getItem('dashboard-active-tab');
+        if (lastTab) {
+            const trigger = document.querySelector(`[data-bs-target='${lastTab}']`);
+            if (trigger) trigger.click();
+        }
+
+        // Save tab on click
+        document.querySelectorAll('.nav-pills .nav-link').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const target = btn.getAttribute('data-bs-target');
+                if (target) localStorage.setItem('dashboard-active-tab', target);
+            });
+        });
+    });
+
+    // Profile Edit Logic
+    function enableEdit() {
+        document
+            .querySelectorAll("#profileForm input, #profileForm select")
+            .forEach((el) => {
+                el.removeAttribute("readonly");
+                el.removeAttribute("disabled");
+                el.classList.remove("form-control-plaintext");
+                el.classList.add("form-control");
+            });
+        document.getElementById("actionButtons").classList.remove("d-none");
+        document.getElementById("editBtn").classList.add("d-none");
+    }
+
+    function cancelEdit() {
+        document.querySelectorAll("#profileForm input").forEach((el) => {
+            el.setAttribute("readonly", true);
+            el.classList.remove("form-control");
+            el.classList.add("form-control-plaintext");
+        });
+        const sel = document.querySelector("#profileForm select");
+        sel.setAttribute("disabled", true);
+        sel.classList.remove("form-control");
+        sel.classList.add("form-control-plaintext");
+
+        document.getElementById("actionButtons").classList.add("d-none");
+        document.getElementById("editBtn").classList.remove("d-none");
+    }
+
+    // Address Form Logic
+    function showForm() {
+        document.getElementById("addressList").classList.add("d-none");
+        document.getElementById("addressForm").classList.remove("d-none");
+        document.getElementById("addressForm").classList.add("fade-in");
+    }
+
+    function hideForm() {
+        document.getElementById("addressForm").classList.add("d-none");
+        document.getElementById("addressList").classList.remove("d-none");
+    }
+</script>
+@endpush

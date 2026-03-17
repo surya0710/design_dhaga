@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Http\Request;
+
+class ShopController extends Controller
+{
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->categories = Category::where('status', 1)
+            ->whereNull('parent_id')
+            ->with('children')
+            ->get();
+    }
+    public function category_products(Request $request, $slug = null)
+    {
+        $category = Category::where('slug', $slug)
+            ->with('children')
+            ->firstOrFail();
+
+        $subcategoryIds = $category->children->pluck('id')->toArray();
+
+        $products = Product::where('status', 1)
+            ->where(function ($q) use ($category, $subcategoryIds) {
+                $q->where('category_id', $category->id)
+                  ->orWhereIn('category_id', $subcategoryIds);
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $categories = $this->categories;
+
+        return view('frontend.shop', compact('products', 'category', 'categories'));
+    }
+
+    public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
+    {
+        $categories = $this->categories;
+        
+        $product = Product::where('slug', $slug)
+            ->with([
+                'galleryImages',
+                'artisanImages',
+                'productAttributes',
+                'category'
+            ])
+            ->firstOrFail();
+
+        // Build unified image array: main + gallery
+        $galleryPaths = $product->galleryImages->pluck('image')->toArray();
+
+        return view('frontend.product', compact('product', 'categories', 'galleryPaths'));
+    }
+}
