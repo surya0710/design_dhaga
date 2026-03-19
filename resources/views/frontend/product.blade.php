@@ -212,7 +212,7 @@
                         Add To Cart | ₹ <span id="total">{{ $product->sale_price ?? $product->regular_price }}</span>
                     </button>
                     @else
-                    <a class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2" href="https://api.whatsapp.com/send/?phone=919671941303&text=Hi+%21&type=phone_number&app_absent=0">
+                    <a class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2" href="https://api.whatsapp.com/send/?phone=919671941303&text=Hi%2C+I+am+interested+in+{{ $product->name }}%2C+with+price+₹+{{ $product->sale_price ?? $product->regular_price }}.+Please+share+more+details+about+this+product." target="_blank" rel="noopener noreferrer">
                         Request To Purchase
                     </a>
                     @endif
@@ -487,7 +487,7 @@
         <div class="container-fluid px-0 overflow-hidden">
             <div class="row position-relative px-3 m-0 align-items-center justify-content-center text-center">
                 <div class="col-12 col-md-8 position-relative" style="z-index: 2">
-                    <h2 class="px-md-5 mt-0">When we say our artisans go an extra mile, we mean it.</h2>
+                    <h2 class="px-md-5 mt-0">{{  $product->artisan_heading ?? 'When we say our artisans go an extra mile, we mean it.' }}</h2>
                 </div>
             </div>
         </div>

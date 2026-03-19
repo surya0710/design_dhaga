@@ -165,6 +165,13 @@
         <div class="card">
             <div class="card-title">Artisan Gallery</div>
 
+            <div class="field">
+                <label>Artisan Heading</label>
+                <input type="text" name="artisan_heading" class="ht-sm" placeholder="Section Heading" value="{{ old('artisan_heading') }}">
+            </div>
+
+            <div class="divider"></div>
+
             <div class="artisan-grid">
                 @for($i = 1; $i <= 3; $i++)
                 <div class="artisan-slot">

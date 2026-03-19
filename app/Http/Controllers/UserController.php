@@ -13,13 +13,26 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\Registered;
+use App\Models\Category;
 
 
 class UserController extends Controller
 {
+
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->categories = Category::where('status', 1)
+            ->whereNull('parent_id')
+            ->with('children')
+            ->get();
+    }
+
     public function login()
     {
-        return view('user.index');
+        $categories = $this->categories;
+        return view('user.index', compact('categories'));
     }
 
     public function loginPost(Request $request){
@@ -33,7 +46,8 @@ class UserController extends Controller
 
     public function register()
     {
-        return view('user.register');
+        $categories = $this->categories;
+        return view('user.register', compact('categories'));
     }
 
     public function registerPost(Request $request)

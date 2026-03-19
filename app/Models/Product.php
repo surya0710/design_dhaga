@@ -30,6 +30,7 @@ class Product extends Model
         'square_banner',
         'square_banner_title',
         'square_banner_description',
+        'artisan_heading'
     ];
 
     /*

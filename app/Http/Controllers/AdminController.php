@@ -30,37 +30,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
-    // =========================================================================
-    // NATIVE GD IMAGE HELPER  (used for ALL product images)
-    //
-    // Why GD instead of Intervention for products:
-    //   • Intervention v3 decodes the full bitmap into a GdImage object AND keeps
-    //     a PHP wrapper object alive until GC runs — with multiple gallery files
-    //     this easily blows past 512 M even after unset().
-    //   • Native GD gives us direct control: create resource → resize → save →
-    //     imagedestroy() immediately frees the C-level bitmap. Zero leakage.
-    // =========================================================================
-
-    /**
-     * Memory-safe image resize using native GD.
-     *
-     * PROBLEM WITH NAIVE GD:
-     *   imagecreatefromjpeg() decodes the FULL bitmap into RAM regardless of
-     *   your target size. A 6000×4000 DSLR photo = 6000×4000×4 bytes = ~91MB
-     *   just for $src, plus another chunk for $dst — with several images this
-     *   blows past 1GB easily.
-     *
-     * HOW THIS FIXES IT — two-pass approach for large images:
-     *   1. Read image dimensions WITHOUT loading pixels (getimagesize).
-     *   2. If the image is larger than 2× the target, use imagecreatefromjpeg
-     *      with a reduced sampling hint (for JPEG: use jpeg2wbmp sampling scale)
-     *      OR load at full size but immediately scale down via imagescale() to
-     *      an intermediate ~2× target size, destroy the original, then do the
-     *      final resize from the much-smaller intermediate. This cuts peak RAM
-     *      by up to 90% for large source images.
-     *   3. imagedestroy() is called on every resource the moment it's no longer
-     *      needed — never leaving two full bitmaps alive simultaneously.
-     */
+    
     private function resizeAndSaveImage($sourcePath, $destinationPath, $maxWidth, $maxHeight)
     {
         list($width, $height, $type) = getimagesize($sourcePath);
@@ -436,6 +406,7 @@ class AdminController extends Controller
             'hand_painted_details'          => 'nullable|string',
             'care_instructions'             => 'nullable|string',
             'manufacturing_details'         => 'nullable|string',
+            'artisan_heading'               => 'nullable|string|max:255',
         ]);
 
         if ($validate->fails()) {
@@ -474,6 +445,7 @@ class AdminController extends Controller
                 'square_banner'             => $request->square_banner,
                 'square_banner_title'       => $request->square_banner_title,
                 'square_banner_description' => $request->square_banner_description,
+                'artisan_heading'           => $request->artisan_heading,
             ];
 
             $product = Product::create($data);
@@ -603,6 +575,7 @@ class AdminController extends Controller
             'square_banner'                 => 'nullable|string',
             'square_banner_title'           => 'nullable|string|max:255',
             'square_banner_description'     => 'nullable|string',
+            'artisan_heading'               => 'nullable|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -633,6 +606,7 @@ class AdminController extends Controller
                 'square_banner'             => $request->square_banner ?: null,
                 'square_banner_title'       => $request->square_banner_title ?: null,
                 'square_banner_description' => $request->square_banner_description ?: null,
+                'artisan_heading'           => $request->artisan_heading ?: null,
             ]);
 
             // ── 2. Main image (media library path) ────────────────────────────
