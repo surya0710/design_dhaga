@@ -1,17 +1,83 @@
 @extends('layouts.admin')
+
 @push('styles')
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+
+<style>
+    #editor-toolbar {
+        border: 1px solid #e5e7eb;
+        border-bottom: 0;
+        border-radius: 8px 8px 0 0;
+        background: #fff;
+    }
+
+    #editor-container {
+        min-height: 400px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0 0 8px 8px;
+    }
+
+    #editor-container .ql-editor {
+        min-height: 400px;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    #html-editor {
+        display: none;
+        width: 100%;
+        min-height: 400px;
+        border: 1px solid #e5e7eb;
+        border-radius: 0 0 8px 8px;
+        background: #fff;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 14px;
+        resize: vertical;
+    }
+
+    .editor-top-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .bootstrap-tagsinput {
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .bootstrap-tagsinput .tag {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 3px 8px;
+        background: #2275fc;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    #imgpreview img {
+        max-width: 100%;
+        display: block;
+    }
+</style>
 @endpush
+
 @section('content')
 <div class="main-content-inner">
-    <!-- main-content-wrap -->
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-            <h3>Add Product</h3>
+            <h3>Edit Blog</h3>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li>
-                    <a href="{{route('admin.index')}}">
+                    <a href="{{ route('admin.index') }}">
                         <div class="text-tiny">Dashboard</div>
                     </a>
                 </li>
@@ -19,7 +85,7 @@
                     <i class="icon-chevron-right"></i>
                 </li>
                 <li>
-                    <a href="{{route('admin.blogs')}}">
+                    <a href="{{ route('admin.blogs') }}">
                         <div class="text-tiny">Blogs</div>
                     </a>
                 </li>
@@ -31,175 +97,312 @@
                 </li>
             </ul>
         </div>
-        <!-- form-add-product -->
-        <form class=" form-add-product" method="POST" enctype="multipart/form-data"
-            action="{{route('admin.blog.update', $blog->id)}}">
+
+        <form class="form-add-product" method="POST" enctype="multipart/form-data" action="{{ route('admin.blog.update', $blog->id) }}">
             @csrf
             @method('PUT')
+
             @if(Session::has('status'))
-            <p class="alert alert-success"> {{Session::get('status')}}</p>
+                <p class="alert alert-success">{{ Session::get('status') }}</p>
             @endif
+
             @if(Session::has('error'))
-            <p class="alert alert-danger"> {{Session::get('error')}}</p>
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
             @endif
-            <!-- @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif -->
 
             <div class="wg-box">
                 <fieldset class="name">
-                    <div class="body-title mb-10">Blog title <span class="tf-color-1">*</span>
-                    </div>
-                    <input class="mb-10" type="text" placeholder="Enter blog title" name="title" tabindex="0"
-                        value="{{$blog->title}}" aria-required="true" required="">
-                    <div class="text-tiny">Do not exceed 100 characters when entering the
-                        blog title.</div>
-                    <!-- print error message -->
-                    <div class="text-danger">
-                        {{ $errors->first('title') }}
-                    </div>
+                    <div class="body-title mb-10">Blog title <span class="tf-color-1">*</span></div>
+                    <input
+                        class="mb-10"
+                        type="text"
+                        placeholder="Enter blog title"
+                        name="title"
+                        tabindex="0"
+                        value="{{ old('title', $blog->title) }}"
+                        aria-required="true"
+                        required
+                    >
+                    <div class="text-tiny">Do not exceed 100 characters when entering the blog title.</div>
+                    <div class="text-danger">{{ $errors->first('title') }}</div>
                 </fieldset>
 
                 <fieldset class="name">
                     <div class="body-title mb-10">Slug <span class="tf-color-1">*</span></div>
-                    <input class="mb-10" type="text" placeholder="Enter product slug" name="slug" tabindex="0"
-                        value="{{$blog->slug}}" aria-required="true" required="">
-                    <div class="text-danger">
-                        {{ $errors->first('slug') }}
-                    </div>
+                    <input
+                        class="mb-10"
+                        type="text"
+                        placeholder="Enter blog slug"
+                        name="slug"
+                        tabindex="0"
+                        value="{{ old('slug', $blog->slug) }}"
+                        aria-required="true"
+                        required
+                    >
+                    <div class="text-danger">{{ $errors->first('slug') }}</div>
                 </fieldset>
+
                 <fieldset class="name">
                     <div class="body-title mb-10">Tags <span class="tf-color-1">*</span></div>
-                    <input type="text" name="tags" class="form-control w-100" data-role="tagsinput"
-                        value="{{ isset($blog) ? $blog->tags->pluck('name')->implode(',') : '' }}">
-                    <div class="text-danger">
-                        {{ $errors->first('tags') }}
-                    </div>
+                    <input
+                        type="text"
+                        name="tags"
+                        class="form-control w-100"
+                        data-role="tagsinput"
+                        value="{{ old('tags', isset($blog) ? $blog->tags->pluck('name')->implode(',') : '') }}"
+                    >
+                    <div class="text-danger">{{ $errors->first('tags') }}</div>
                 </fieldset>
 
                 <fieldset class="description">
-                    <div class="body-title mb-10">Content <span class="tf-color-1">*</span>
+                    <div class="body-title mb-10">Content <span class="tf-color-1">*</span></div>
+
+                    <div class="editor-top-actions">
+                        <button type="button" class="tf-button style-1" id="toggleHtmlBtn">Edit HTML</button>
                     </div>
-                    <textarea class="mb-10" name="content" placeholder="Content" id="editor1" tabindex="0"
-                        aria-required="true" required="">{{ old('content', $blog->content ?? '') }}</textarea>
-                    <div class="text-danger">
-                        {{ $errors->first('content') }}
+
+                    <div id="editor-toolbar">
+                        <span class="ql-formats">
+                            <select class="ql-header">
+                                <option value="" selected>Normal</option>
+                                <option value="1">H1</option>
+                                <option value="2">H2</option>
+                                <option value="3">H3</option>
+                                <option value="4">H4</option>
+                                <option value="5">H5</option>
+                                <option value="6">H6</option>
+                            </select>
+                            <select class="ql-size">
+                                <option value="small"></option>
+                                <option selected></option>
+                                <option value="large"></option>
+                                <option value="huge"></option>
+                            </select>
+                        </span>
+
+                        <span class="ql-formats">
+                            <button type="button" class="ql-bold"></button>
+                            <button type="button" class="ql-italic"></button>
+                            <button type="button" class="ql-underline"></button>
+                            <button type="button" class="ql-strike"></button>
+                        </span>
+
+                        <span class="ql-formats">
+                            <button type="button" class="ql-script" value="sub"></button>
+                            <button type="button" class="ql-script" value="super"></button>
+                            <button type="button" class="ql-blockquote"></button>
+                            <button type="button" class="ql-code-block"></button>
+                        </span>
+
+                        <span class="ql-formats">
+                            <button type="button" class="ql-list" value="ordered"></button>
+                            <button type="button" class="ql-list" value="bullet"></button>
+                            <button type="button" class="ql-indent" value="-1"></button>
+                            <button type="button" class="ql-indent" value="+1"></button>
+                        </span>
+
+                        <span class="ql-formats">
+                            <select class="ql-align"></select>
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+
+                        <span class="ql-formats">
+                            <button type="button" class="ql-link"></button>
+                            <button type="button" class="ql-image"></button>
+                        </span>
+
+                        <span class="ql-formats">
+                            <button type="button" class="ql-clean"></button>
+                        </span>
                     </div>
+
+                    <div id="editor-container"></div>
+                    <textarea id="html-editor"></textarea>
+                    <input
+                        type="hidden"
+                        name="content"
+                        id="content"
+                        value="{{ old('content', $blog->content ?? '') }}"
+                    >
+
+                    <div class="text-danger">{{ $errors->first('content') }}</div>
                 </fieldset>
+
                 <fieldset class="name">
                     <div class="body-title mb-10">Meta title <span class="tf-color-1">*</span></div>
-                    <input class="mb-10" type="text" placeholder="Enter product Meta title" name="meta_title"
-                        tabindex="0" value="{{$blog->meta_title}}" aria-required="true">
-                    <div class="text-danger">
-                        {{ $errors->first('meta_title') }}
-                    </div>
+                    <input
+                        class="mb-10"
+                        type="text"
+                        placeholder="Enter product Meta title"
+                        name="meta_title"
+                        tabindex="0"
+                        value="{{ old('meta_title', $blog->meta_title) }}"
+                        aria-required="true"
+                    >
+                    <div class="text-danger">{{ $errors->first('meta_title') }}</div>
                 </fieldset>
+
                 <fieldset class="name">
                     <div class="body-title mb-10">Meta keywords <span class="tf-color-1">*</span></div>
-                    <input class="mb-10" type="text" placeholder="Enter product Meta keywords" name="meta_keywords"
-                        tabindex="0" value="{{$blog->meta_keywords}}" aria-required="true">
-                    <div class="text-danger">
-                        {{ $errors->first('meta_keywords') }}
-                    </div>
+                    <input
+                        class="mb-10"
+                        type="text"
+                        placeholder="Enter product Meta keywords"
+                        name="meta_keywords"
+                        tabindex="0"
+                        value="{{ old('meta_keywords', $blog->meta_keywords) }}"
+                        aria-required="true"
+                    >
+                    <div class="text-danger">{{ $errors->first('meta_keywords') }}</div>
                 </fieldset>
+
                 <fieldset class="name">
                     <div class="body-title mb-10">Meta description <span class="tf-color-1">*</span></div>
-                    <textarea class="mb-10" placeholder="Enter product Meta description" name="meta_description"
-                        tabindex="0" aria-required="true">{{$blog->meta_description}}</textarea>
-                    <div class="text-danger">
-                        {{ $errors->first('meta_description') }}
-                    </div>
+                    <textarea
+                        class="mb-10"
+                        placeholder="Enter product Meta description"
+                        name="meta_description"
+                        tabindex="0"
+                        aria-required="true"
+                    >{{ old('meta_description', $blog->meta_description) }}</textarea>
+                    <div class="text-danger">{{ $errors->first('meta_description') }}</div>
                 </fieldset>
+
                 <fieldset>
-                    <div class="body-title mb-10">Upload image <span class="tf-color-1">*</span>
-                    </div>
+                    <div class="body-title mb-10">Upload image <span class="tf-color-1">*</span></div>
                     <div class="upload-image flex-grow">
                         <div class="item" id="imgpreview">
                             @if($blog->image)
-                            @php
-                            $images = explode(',', $blog->image);
-                            $firstimg = $images[0];
-                            @endphp
-                            <img src="{{ asset('uploads/blogs/'.$firstimg) }}" class="effect8" alt="">
+                                @php
+                                    $images = explode(',', $blog->image);
+                                    $firstimg = $images[0];
+                                @endphp
+                                <img src="{{ asset('uploads/blogs/' . $firstimg) }}" class="effect8" alt="">
+                            @else
+                                <img src="" class="effect8" alt="" style="display:none;">
                             @endif
                         </div>
+
                         <div id="upload-file" class="item up-load">
                             <label class="uploadfile" for="myFile">
                                 <span class="icon">
                                     <i class="icon-upload-cloud"></i>
                                 </span>
-                                <span class="body-text">Drop your images here or select <span class="tf-color">click to
-                                        browse</span></span>
+                                <span class="body-text">
+                                    Drop your images here or select
+                                    <span class="tf-color">click to browse</span>
+                                </span>
                                 <input type="file" id="myFile" name="image" accept="image/*">
                             </label>
                         </div>
-
                     </div>
-                    <div class="text-danger">
-                        {{ $errors->first('image') }}
-                    </div>
-
+                    <div class="text-danger">{{ $errors->first('image') }}</div>
                 </fieldset>
+
                 <div class="cols gap10">
                     <button class="tf-button w-full" type="submit">Update Blog</button>
                 </div>
             </div>
         </form>
-        <!-- /form-add-product -->
     </div>
-    <!-- /main-content-wrap -->
 </div>
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
 <script>
-    $(function() {
-        $("#myFile").on('change', function(e) {
-            const photoinp = $("#myFile");
-            const [file] = this.files;
-            if (file) {
-                $("#imgpreview img").attr('src', URL.createObjectURL(file));
-                $("#imgpreview").show();
-            }
-        });
-        $("#gFile").on('change', function(e) {
-            const photoinp = $("#gFile");
-            const $gphotos = this.files;
-            $.each($gphotos, function(index, file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    $("#galUpload").append('<div class="item"><img src="' + e.target.result +
-                        '" alt=""></div>');
+    const quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: {
+                container: '#editor-toolbar',
+                handlers: {
+                    image: imageHandler
                 }
-                reader.readAsDataURL(file);
-            });
-        });
-
-        $("input[name='title']").on("change", function() {
-            $("input[name='slug']").val(StringToSlug($(this).val()));
-
-        })
+            }
+        }
     });
 
-    function StringToSlug(Text) {
-        return Text.toLowerCase()
-            .replace(/[^\w ]+/g, "")
-            .replace(/ +/g, "-");
+    const oldContent = document.getElementById('content').value;
+    if (oldContent) {
+        quill.root.innerHTML = oldContent;
+    }
+
+    function imageHandler() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = function () {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const range = quill.getSelection(true) || {
+                    index: quill.getLength(),
+                    length: 0
+                };
+
+                quill.insertEmbed(range.index, 'image', e.target.result);
+                quill.setSelection(range.index + 1);
+            };
+
+            reader.readAsDataURL(file);
+        };
+    }
+
+    const toggleHtmlBtn = document.getElementById('toggleHtmlBtn');
+    const htmlEditor = document.getElementById('html-editor');
+    const editorContainer = document.getElementById('editor-container');
+    const editorToolbar = document.getElementById('editor-toolbar');
+    let htmlMode = false;
+
+    toggleHtmlBtn.addEventListener('click', function () {
+        if (!htmlMode) {
+            htmlEditor.value = quill.root.innerHTML;
+            htmlEditor.style.display = 'block';
+            editorContainer.style.display = 'none';
+            editorToolbar.style.display = 'none';
+            toggleHtmlBtn.textContent = 'Back to Editor';
+            htmlMode = true;
+        } else {
+            quill.root.innerHTML = htmlEditor.value;
+            htmlEditor.style.display = 'none';
+            editorContainer.style.display = 'block';
+            editorToolbar.style.display = 'block';
+            toggleHtmlBtn.textContent = 'Edit HTML';
+            htmlMode = false;
+        }
+    });
+
+    document.querySelector('.form-add-product').addEventListener('submit', function () {
+        document.querySelector('#content').value = htmlMode ? htmlEditor.value : quill.root.innerHTML;
+    });
+
+    $(function () {
+        $('#myFile').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const $img = $('#imgpreview img');
+                $img.attr('src', URL.createObjectURL(file)).show();
+            }
+        });
+
+        $("input[name='title']").on('change keyup', function () {
+            $("input[name='slug']").val(StringToSlug($(this).val()));
+        });
+    });
+
+    function StringToSlug(text) {
+        return text.toLowerCase()
+            .replace(/[^\w ]+/g, '')
+            .replace(/ +/g, '-');
     }
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
-<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
-
-
-<script>
-    CKEDITOR.replace('editor1');
-</script>
-
 @endpush

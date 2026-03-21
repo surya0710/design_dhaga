@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use App\Http\Controllers\CkeditorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -163,6 +164,7 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::delete('admin/blogs/{id}/delete', [AdminController::class, 'BlogDelete'])->name('admin.blog.delete');
     Route::get('admin/blogs/import-blogs', [AdminController::class, 'importblogscsv'])->name('import.blogs');
     Route::post('admin/blogs/import-blogs/add', [AdminController::class, 'importBlogs'])->name('import.blogs.add');
+    Route::post('/ckeditor/upload', [CkeditorController::class, 'upload'])->name('ckeditor.upload');
 
     Route::get('/admin/testimonials', [AdminController::class, 'testimonials'])->name('admin.testimonials');
     Route::get('/admin/testimonials/add', [AdminController::class, 'testimonial_add'])->name('admin.testimonial.add');
