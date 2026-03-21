@@ -138,9 +138,29 @@
 @push('scripts')
 <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
 
-
 <script>
-    CKEDITOR.replace('editor1');
+    CKEDITOR.replace('editor1', {
+        height: 500,
+
+        extraPlugins: 'uploadimage',
+        removePlugins: 'easyimage,cloudservices,exportpdf',
+
+        filebrowserUploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+        filebrowserUploadMethod: 'form',
+
+        toolbar: [
+            { name: 'clipboard', items: ['Undo', 'Redo'] },
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+            { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+            { name: 'styles', items: ['Format', 'FontSize'] },
+            { name: 'colors', items: ['TextColor', 'BGColor'] },
+            { name: 'tools', items: ['Maximize'] }
+        ],
+
+        removeButtons: 'Save,NewPage,Print,Preview,Find,Replace,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Flash,Smiley,PageBreak,Iframe,ShowBlocks,About'
+    });
 </script>
 <script>
     $(function() {
