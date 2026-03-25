@@ -1,0 +1,60 @@
+# Laravel specific
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Environment files
+.env
+.env.backup
+.env.*.local
+
+# Composer
+composer.lock
+
+# NPM
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# PHPUnit
+.phpunit.result.cache
+
+# IDEs & Editors
+/.idea
+/.vscode
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug / Logs
+npm-debug.log
+yarn-error.log
+
+# Laravel Mix / Vite
+/public/hot
+/public/build
+
+# Cache & compiled files
+/bootstrap/cache/*.php
+
+# Optional: ignore generated images/uploads
+/public/uploads
+/public/images/uploads
+
+# Optional: ignore backup files
+*.zip
+*.tar
+*.gz
+
+# Optional: ignore temp files
+*.log
+*.tmp

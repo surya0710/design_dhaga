@@ -104,7 +104,6 @@
 
     <div class="menu-section p-3">
         @foreach($categories as $category)
-            @if($category->parent_id == null)
             <div class="menu-title" data-toggle="{{ $category->slug }}">
                 {{ $category->name }}
                 <span class="toggle-icon">{{ $loop->index == 0 ? '-' : '+' }}</span>
@@ -118,7 +117,6 @@
                     </a>
                 @endforeach
             </div>
-            @endif
         @endforeach
         
         <div class="menu-title">

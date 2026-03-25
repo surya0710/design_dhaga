@@ -16,7 +16,10 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->categories = Category::where('status', 1)
-            ->whereNull('parent_id')
+            ->where(function ($query) {
+                $query->whereNull('parent_id')
+                      ->orWhere('parent_id', 0);
+            })
             ->with('children')
             ->get();
     }

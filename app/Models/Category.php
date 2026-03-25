@@ -18,7 +18,12 @@ class Category extends Model
         'meta_keywords',
         'meta_description'
     ];
-
+    
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+    
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');

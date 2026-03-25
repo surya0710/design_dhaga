@@ -266,9 +266,9 @@ fw-bold mb-2">
 $product->sale_price ?? $product->regular_price }}</span>
                     </button>
                     @else
-                    <a class="btn bg-maroon text-white w-100 py-3
-fw-bold mb-2" href="https://api.whatsapp.com/send/?phone=919671941303&text=Hi+%21&type=phone_number&app_absent=0">
-                        Request To Purchase
+                    <a class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2"
+                       href="https://api.whatsapp.com/send/?phone=919671941303&text={{ urlencode('Hi! I am interested in this product: ' . url()->current()) }}">
+                       Request To Purchase
                     </a>
                     @endif
 

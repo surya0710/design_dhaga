@@ -327,32 +327,43 @@ class AdminController extends Controller
     {
         $request->validate([
             'name'             => 'required|min:3',
-            'slug'             => 'required|string|max:255|unique:categories,slug,' . $request->id . ',id',
+            'slug'             => 'required|string|max:255|unique:categories,slug,' . $request->id,
             'image'            => 'nullable|mimes:png,jpg,jpeg|max:2048',
-            'meta_title'       => 'nullable|unique:categories,meta_title,' . $request->id . ',id',
+            'meta_title'       => 'nullable|unique:categories,meta_title,' . $request->id,
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
         ]);
-
-        $category                    = Category::findOrFail($request->id);
-        $category->name              = $request->name;
-        $category->slug              = Str::slug($request->slug);
-        $category->meta_title        = $request->meta_title;
-        $category->meta_keywords     = $request->meta_keywords;
-        $category->meta_description  = $request->meta_description;
-
+    
+        $category = Category::findOrFail($request->id);
+    
+        $category->name = $request->name;
+        $category->slug = Str::slug($request->slug ?? $request->name);
+        $category->meta_title = $request->meta_title;
+        $category->meta_keywords = $request->meta_keywords;
+        $category->meta_description = $request->meta_description;
+    
         if ($request->hasFile('image')) {
-            $oldPath = public_path('uploads/categories/' . $category->image);
-            if ($category->image && File::exists($oldPath)) File::delete($oldPath);
 
-            $image      = $request->file('image');
-            $image_name = Carbon::now()->timestamp . '.' . $image->getClientOriginalExtension();
-            $this->GenerateCategoryThumbnailsImage($image, $image_name);
+            // Delete old image
+            if ($category->image) {
+                $oldPath = public_path('uploads/categories/' . $category->image);
+                if (File::exists($oldPath)) {
+                    File::delete($oldPath);
+                }
+            }
+        
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+        
+            // SAVE DIRECTLY (bypass function for testing)
+            $image->move(public_path('uploads/categories'), $image_name);
+        
             $category->image = $image_name;
         }
-
+    
         $category->save();
-        return redirect()->route('admin.categories')->with('status', 'Category updated successfully');
+    
+        return redirect()->route('admin.categories')->with('status', 'Category updated successfully' . $category->image);
     }
 
     public function category_delete($id)

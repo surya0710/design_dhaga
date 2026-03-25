@@ -45,14 +45,14 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Slug</th>
-                            <th>Products</th>
+                            <th>Parent Category</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($categories as $category)
                         <tr>
-                            <td>{{$category->id}}</td>
+                            <td>{{$loop->index + 1}}</td>
                             <td class="pname">
                                 <div class="image">
                                     <img src="{{asset('uploads/categories'.'/'.$category->image)}}" alt="" class="image">
@@ -62,7 +62,7 @@
                                 </div>
                             </td>
                             <td>{{$category->slug}}</td>
-                            <td><a href="javascript:void(0);" target="_blank">{{$category->products_count}}</a></td>
+                            <td>{{ $category->parent->name ?? '' }}</td>
                             <td>
                                 <div class="list-icon-function">
                                     <a href="{{route('admin.category.edit',['id'=>$category->id])}}">
