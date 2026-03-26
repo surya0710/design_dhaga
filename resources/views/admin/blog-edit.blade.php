@@ -374,8 +374,8 @@ function buildColHtml(type) {
     const textSlot = `<p>Type your text here...</p>`;
 
     const layouts = {
-        'img-left'  : `<div class="row g-3 align-items-center my-2"><div class="col-md-6">${imgSlot}</div><div class="col-md-7">${textSlot}</div></div>`,
-        'img-right' : `<div class="row g-3 align-items-center my-2"><div class="col-md-6">${textSlot}</div><div class="col-md-5">${imgSlot}</div></div>`,
+        'img-left'  : `<div class="row g-3 align-items-center my-2"><div class="col-md-6">${imgSlot}</div><div class="col-md-6">${textSlot}</div></div>`,
+        'img-right' : `<div class="row g-3 align-items-center my-2"><div class="col-md-6">${textSlot}</div><div class="col-md-6">${imgSlot}</div></div>`,
         'two-text'  : `<div class="row g-3 align-items-center my-2"><div class="col-md-6">${textSlot}</div><div class="col-md-6">${textSlot}</div></div>`,
         'three-col' : `<div class="row g-3 align-items-center my-2"><div class="col-md-4">${textSlot}</div><div class="col-md-4">${textSlot}</div><div class="col-md-4">${textSlot}</div></div>`,
     };
