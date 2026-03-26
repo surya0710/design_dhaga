@@ -17,6 +17,7 @@ use App\Models\Subscribe;
 use App\Models\Tag;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Models\Sliders;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -1034,6 +1035,11 @@ class AdminController extends Controller
     {
         $subscribers = Subscribe::with('user')->orderBy('id', 'desc')->paginate(10);
         return view('admin.subscribers', compact('subscribers'));
+    }
+
+    public function sliders(){
+        $sliders = Sliders::orderBy('id', 'desc')->paginate(10);
+        return view('admin.sliders', compact('sliders'));
     }
 
     public function logout()

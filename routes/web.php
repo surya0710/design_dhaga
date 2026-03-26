@@ -173,6 +173,9 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::put('/admin/testimonials/update', [AdminController::class, 'testimonial_update'])->name('admin.testimonial.update');
     Route::delete('/admin/testimonials/delete/{id}', [AdminController::class, 'testimonial_delete'])->name('admin.testimonial.delete');
 
+    Route::get('/admin/sliders/list', [AdminController::class, 'sliders'])->name('admin.sliders');
+    Route::get('/admin/sliders/create', [AdminController::class, 'sliders_add'])->name('admin.sliders.create');
+
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 
     Route::get('/admin/contactquery', [AdminController::class, 'contactquery'])->name('admin.contact.view');
