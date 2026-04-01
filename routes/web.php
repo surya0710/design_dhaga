@@ -2,18 +2,15 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CompareController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -28,9 +25,7 @@ use App\Http\Controllers\CkeditorController;
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/email/verify', function () {
-        return view('auth.verify');
-    })->name('verification.notice');
+    Route::get('/email/verify', [UserController::class, 'verificationNotice'])->name('verification.notice');
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
@@ -94,6 +89,14 @@ Route::get('/blogs/{slug}', [BlogController::class, 'blogdetail'])->name('blog.s
 Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::get('/account', [AccountController::class,'index'])->name('account.index');
+    
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add',    [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');

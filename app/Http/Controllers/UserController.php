@@ -4,17 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\Registered;
 use App\Models\Category;
-
 
 class UserController extends Controller
 {
@@ -35,10 +30,16 @@ class UserController extends Controller
         return view('user.index', compact('categories'));
     }
 
-    public function loginPost(Request $request){
-        $credentials = array_merge($request->only('email', 'password'), ['utype' => 'USR']);
+    public function loginPost(Request $request)
+    {
+        $credentials = array_merge(
+            $request->only('email', 'password'),
+            ['utype' => 'USR']
+        );
+
         if (Auth::attempt($credentials)) {
-            return redirect()->route('home')->with('success', 'Login successful!');
+            return redirect($request->redirect_to ?? route('home'))
+                ->with('success', 'Login successful!');
         } else {
             return redirect()->back()->with('error', 'Invalid credentials');
         }
@@ -84,9 +85,7 @@ class UserController extends Controller
             return view('user.forgot-password');
         }
 
-        $request->validate([
-            'email' => ['required', 'email']
-        ]);
+        $request->validate([ 'email' => ['required', 'email']]);
 
         $status = Password::sendResetLink(
             $request->only('email')
@@ -126,4 +125,11 @@ class UserController extends Controller
             ? redirect()->route('login')->with('success', __($status))
             : back()->withErrors(['email' => __($status)]);
     }
+
+    function verificationNotice()
+    {
+        $categories = $this->categories;
+        return view('auth.verify', compact('categories'));
+    }
+
 }

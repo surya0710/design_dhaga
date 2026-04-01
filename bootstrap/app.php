@@ -15,7 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'utype' => Utype::class,
             'auth.admin' => \App\Http\Middleware\AuthAdmin::class,
+            'track.user' => \App\Http\Middleware\TrackUser::class,
         ]);
+
+        // ✅ ADD THIS LINE
+        $middleware->append(\App\Http\Middleware\TrackUser::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

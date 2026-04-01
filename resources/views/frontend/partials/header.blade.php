@@ -41,7 +41,7 @@
 
             <!-- RIGHT: CART WITH BADGE -->
             <div class="position-relative">
-                <button class="btn p-0 bg-transparent border-0">
+                <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '{{ route('cart.index') }}'">
                     <svg width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <circle cx="10" cy="20" r="1.5"></circle>
@@ -51,9 +51,8 @@
                 </button>
 
                 <!-- Badge -->
-                <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 end-0"
-                    style="font-size: 12px; transform: translate(40%, -40%);">
-                    0
+                <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 end-0" style="font-size: 12px; transform: translate(40%, -40%);">
+                    {{ getCartItemsCount() }}
                 </span>
             </div>
 

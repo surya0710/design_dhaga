@@ -54,6 +54,7 @@
                         @if(session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
                         @endif
+                        <input type="hidden" name="redirect_to" value="{{ url()->previous() }}">
 
                         <div class="form-group">
                             <label class="form-label" for="email">Email</label>

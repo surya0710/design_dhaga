@@ -8,11 +8,23 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Category;
 
 class AccountController extends Controller
 {
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->categories = Category::where('status', 1)
+            ->whereNull('parent_id')
+            ->with('children')
+            ->get();
+    }
+
     public function index() {
-        return view('user.my-account');
+        $categories = $this->categories;
+        return view('user.my-account', compact('categories'));
     }
 
     public function logout(){
