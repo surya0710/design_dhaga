@@ -225,7 +225,7 @@
                         @for($i = 1; $i < 7; $i++)
                         <div class="col-4">
                             <svg width="30" height="30">
-                                <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.$product->category->name.'/'. $i.'.svg') }}"></use>
+                                <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.strtolower($product->category->name).'/'.$i.'.svg') }}"></use>
                             </svg>
                             <p>{{ $iconsText[$i] }}</p>
                         </div>
