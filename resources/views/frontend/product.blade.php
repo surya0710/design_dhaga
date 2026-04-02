@@ -567,7 +567,7 @@
     {{-- SECTION 3: Square Banner                                     --}}
     {{-- ============================================================ --}}
     @if ($product->square_banner)
-        <section class="py-md-2 bg-white pb-3">
+        <section class="pt-2 bg-white pb-4">
             <div class="container-fluid px-2 px-md-5">
                 <div class="row align-items-center g-4 g-lg-5">
 
