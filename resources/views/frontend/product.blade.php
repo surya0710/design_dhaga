@@ -567,7 +567,7 @@
     {{-- SECTION 3: Square Banner                                     --}}
     {{-- ============================================================ --}}
     @if ($product->square_banner)
-        <section class="py-md-2 bg-white">
+        <section class="py-md-2 bg-white pb-3">
             <div class="container-fluid px-2 px-md-5">
                 <div class="row align-items-center g-4 g-lg-5">
 
@@ -614,7 +614,7 @@
     {{-- SECTION 4: Reviews (Auth Only)                               --}}
     {{-- ============================================================ --}}
     @if (Auth::check())
-        <section class="py-5">
+        <section class="py-5 pt-0">
             <div class="container">
 
                 <div id="reviewSummary" class="shadow p-4 p-md-5 rounded-1 d-flex flex-column align-items-center">
@@ -703,10 +703,7 @@
                             <a href="#" class="text-decoration-underline text-muted">content</a> policies.
                         </p>
                         <div class="d-flex justify-content-center gap-3">
-                            <button type="button"
-                                    onclick="toggleReviewForm()"
-                                    class="btn px-4 py-2"
-                                    style="border: 1px solid #8b1e2d; color: #8b1e2d;">
+                            <button type="button" onclick="toggleReviewForm()" class="btn px-4 py-2" style="border: 1px solid #8b1e2d; color: #8b1e2d;">
                                 Cancel review
                             </button>
                             <button type="button" class="btn btn-brand-custom px-4 py-2">Submit Review</button>
