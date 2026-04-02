@@ -220,14 +220,14 @@
                     @endif
 
                     {{-- Feature Icons Grid --}}
-                    <div class="row g-2 mt-2 mb-2 p-3 rounded bg-light-pink text-center">
+                    <div class="row g-2 mt-2 mb-2 p-3 rounded bg-body-secondary text-center">
                         @php $iconsText = getIconsByCategory($product->category->name); @endphp
                         @for($i = 1; $i < 7; $i++)
                         <div class="col-4">
-                            <svg width="30" height="30">
+                            <svg width="40" height="40">
                                 <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.strtolower($product->category->name).'/'.$i.'.svg') }}"></use>
                             </svg>
-                            <p>{{ $iconsText[$i] }}</p>
+                            <p class="text-black">{{ $iconsText[$i] }}</p>
                         </div>
                         @endfor
                     </div>
@@ -316,12 +316,7 @@
 
                         @if ($product->hand_painted_details)
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-dark py-4 fs-5"
-                                        id="handPainted-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#handPaintedTab"
-                                        type="button"
-                                        role="tab">
+                                <button class="nav-link fw-bold text-dark py-4 fs-5" id="handPainted-tab" data-bs-toggle="tab" data-bs-target="#handPaintedTab" type="button" role="tab">
                                     <i class="fa-solid fa-palette me-2 text-maroon"></i>Hand Painted Details
                                 </button>
                             </li>
@@ -545,21 +540,18 @@
                         <div class="col-lg-4 col-md-6">
                             @if ($artisan->image)
                                 <div class="mb-4">
-                                    <img src="{{ asset('storage/' . $artisan->image) }}"
-                                         class="w-100"
-                                         alt="{{ $artisan->title ?? 'Artisan' }}" />
+                                    <img src="{{ asset('storage/' . $artisan->image) }}" class="w-100" alt="{{ $artisan->title ?? 'Artisan' }}" />
                                 </div>
                             @endif
 
                             @if ($artisan->title)
-                                <h3 class="h5 fw-bold border-bottom border-2 border-dark pb-2 mb-3 text-uppercase"
-                                    style="letter-spacing: 1px;">
+                                <h3 class="h5 fw-bold border-bottom border-2 border-dark pb-2 mb-3 text-uppercase" style="letter-spacing: 1px;">
                                     {{ $artisan->title }}
                                 </h3>
                             @endif
 
                             @if ($artisan->description)
-                                <p class="text-secondary small lh-lg">
+                                <p class="text-secondary lh-lg">
                                     {!! nl2br(e($artisan->description)) !!}
                                 </p>
                             @endif
@@ -589,9 +581,7 @@
                     {{-- Left Image --}}
                     <div class="col-lg-5">
                         <div class="style-comfort-img rounded-3 overflow-hidden">
-                            <img src="{{ asset('storage/' . $product->square_banner) }}"
-                                 class="img-fluid w-100"
-                                 alt="{{ $product->square_banner_title ?? $product->name }}"
+                            <img src="{{ asset('storage/' . $product->square_banner) }}" class="img-fluid w-100" alt="{{ $product->square_banner_title ?? $product->name }}"
                                  style="object-fit: cover;" />
                         </div>
                     </div>

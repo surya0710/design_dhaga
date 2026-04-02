@@ -113,7 +113,7 @@
 
             <div class="field">
                 <label>Description <span class="req">*</span></label>
-                <textarea name="description" placeholder="Describe the product…">{{ old('description', $product->description) }}</textarea>
+                <textarea name="description" class="ht-sm editor" placeholder="Describe the product…">{{ old('description', $product->description) }}</textarea>
                 @error('description')<div class="field-error">{{ $message }}</div>@enderror
             </div>
         </div>
@@ -125,24 +125,21 @@
 
             <div class="field">
                 <label>Hand Painted Details</label>
-                <textarea name="hand_painted_details" class="ht-sm"
-                          placeholder="Describe the hand-painted elements…">{{ old('hand_painted_details', $product->hand_painted_details) }}</textarea>
+                <textarea name="hand_painted_details" class="ht-sm editor" placeholder="Describe the hand-painted elements…">{{ old('hand_painted_details', $product->hand_painted_details) }}</textarea>
             </div>
 
             <div class="divider"></div>
 
             <div class="field">
                 <label>Care Instructions</label>
-                <textarea name="care_instructions" class="ht-sm"
-                          placeholder="How to care for this product…">{{ old('care_instructions', $product->care_instructions) }}</textarea>
+                <textarea name="care_instructions" class="ht-sm editor" placeholder="How to care for this product…">{{ old('care_instructions', $product->care_instructions) }}</textarea>
             </div>
 
             <div class="divider"></div>
 
             <div class="field">
                 <label>Manufacturing Details</label>
-                <textarea name="manufacturing_details" class="ht-sm"
-                          placeholder="Where and how it's made…">{{ old('manufacturing_details', $product->manufacturing_details) }}</textarea>
+                <textarea name="manufacturing_details" class="ht-sm editor" placeholder="Where and how it's made…">{{ old('manufacturing_details', $product->manufacturing_details) }}</textarea>
             </div>
         </div>
 
@@ -536,6 +533,18 @@
 
 
 @push('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+<script>
+tinymce.init({
+    selector: '.editor',
+    height: 250,
+    menubar: false,
+    plugins: 'lists link image code',
+    toolbar: 'undo redo | bold italic underline | bullist numlist | link | code',
+});
+</script>
+
 <script>
 /* ─────────────────────────────────────────────────────────────
    STATE

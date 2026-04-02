@@ -35,16 +35,14 @@
                 <input type="hidden" name="id" value="{{$brand->id}}">
                 <fieldset class="name">
                     <div class="body-title">Brand Name <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" value="{{$brand->name}}" placeholder="Brand name" name="name"
-                        tabindex="0" value="" aria-required="true" required="">
+                    <input class="flex-grow" type="text" value="{{$brand->name}}" placeholder="Brand name" name="name" tabindex="0" value="" aria-required="true" required="">
                 </fieldset>
                 @error('name')
                 <span class="invalid-feedback">{{$message}}</span>
                 @enderror
                 <fieldset class="name">
                     <div class="body-title">Brand Slug <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" value="{{$brand->slug}}" type="text" placeholder="Brand Slug" name="slug"
-                        tabindex="0" value="" aria-required="true" required="">
+                    <input class="flex-grow" value="{{$brand->slug}}" type="text" placeholder="Brand Slug" name="slug" tabindex="0" value="" aria-required="true" required="">
                 </fieldset>
                 @error('slug')
                 <span class="invalid-feedback">{{$message}}</span>
