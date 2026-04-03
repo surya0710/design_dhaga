@@ -368,7 +368,7 @@
                                 <div class="row g-4 align-items-stretch">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
-                                            {!! nl2br(e($product->hand_painted_details)) !!}
+                                            {!! $product->hand_painted_details !!}
                                         </p>
                                     </div>
                                 </div>
@@ -381,7 +381,7 @@
                                 <div class="row g-4 align-items-stretch">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
-                                            {!! nl2br(e($product->care_instructions)) !!}
+                                            {!! $product->care_instructions !!}
                                         </p>
                                     </div>
                                 </div>
@@ -394,7 +394,7 @@
                                 <div class="row g-4 align-items-stretch">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
-                                            {!! nl2br(e($product->manufacturing_details)) !!}
+                                            {!! $product->manufacturing_details !!}
                                         </p>
                                     </div>
                                 </div>
