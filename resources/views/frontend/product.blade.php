@@ -241,11 +241,11 @@
                                     <h4>Easy Delivery</h4>
                                 </div>
                                 <div class="feature-item col">
-                                    <img src="{{ asset('frontend_assets/images/easy-delivery-process.svg') }}" class="mobile-icons">
+                                    <img src="{{ asset('frontend_assets/images/exquisite-product.svg') }}" class="mobile-icons">
                                     <h4>Exquisite Product</h4>
                                 </div>
                                 <div class="feature-item col">
-                                    <img src="{{ asset('frontend_assets/images/easy-delivery-process.svg') }}" class="mobile-icons">
+                                    <img src="{{ asset('frontend_assets/images/intricate-design.svg') }}" class="mobile-icons">
                                     <h4>Intricate Design</h4>
                                 </div>
                             </div>
