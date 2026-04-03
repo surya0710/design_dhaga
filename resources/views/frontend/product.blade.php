@@ -591,7 +591,7 @@
 
                         {{-- Desktop Heading --}}
                         @if ($product->square_banner_title)
-                            <h2 class="fw-bold d-none d-lg-block mb-4 text-black" style="font-size: 2.6rem;">
+                            <h2 class="h3 fw-bold mb-1 mt-0">
                                 {{ $product->square_banner_title }}
                             </h2>
                         @endif
