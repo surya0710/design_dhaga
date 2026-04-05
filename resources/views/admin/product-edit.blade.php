@@ -151,8 +151,7 @@
             {{-- MAIN IMAGE --}}
             <div class="field">
                 <label>Main Image</label>
-                <input type="hidden" name="image" id="product_image"
-                       value="{{ old('image', $product->image) }}">
+                <input type="hidden" name="image" id="product_image" value="{{ old('image', $product->image) }}">
 
                 @php
                     $hasMain = !empty($product->image);
@@ -165,9 +164,7 @@
                     <div class="pick-icon" {{ $hasMain ? 'style=display:none' : '' }}>🖼</div>
                     <div class="pick-label" {{ $hasMain ? 'style=display:none' : '' }}>Click to choose main product image</div>
                     <span class="pick-btn" {{ $hasMain ? 'style=display:none' : '' }}>Browse Media</span>
-                    <img id="preview_product_image"
-                         src="{{ $mainSrc }}"
-                         style="{{ $hasMain ? '' : 'display:none' }}">
+                    <img id="preview_product_image" src="{{ $mainSrc }}" style="{{ $hasMain ? '' : 'display:none' }}"> 
                     <div class="overlay">
                         <button type="button" onclick="event.stopPropagation(); openMediaUploader('product_image','preview_product_image','picker_product_image')">Change</button>
                         <button type="button" class="del-btn" onclick="event.stopPropagation(); clearImage('product_image','preview_product_image','picker_product_image')">Remove</button>
@@ -315,6 +312,25 @@
             </button>
         </div>
 
+        {{--  Meta Details --}}
+        <div class="card">
+            <div class="card-title">Meta Details</div>
+
+            <div class="field">
+                <label for="meta_title">Meta Title</label>
+                <input type="text" name="meta_title" placeholder="Meta Title" value="{{ old('meta_title', $product->meta_title) }}">
+            </div>
+
+            <div class="field">
+                <label for="meta_description">Meta Description</label>
+                <textarea name="meta_description" placeholder="Meta Description">{{ old('meta_description', $product->meta_description) }}</textarea>
+            </div>
+            
+            <div class="field">
+                <label for="meta_keywords">Meta Keywords</label>
+                <input type="text" name="meta_keywords" placeholder="Meta Keywords" value="{{ old('meta_keywords', $product->meta_keywords) }}">
+            </div>
+        </div>
 
     </div>
     {{-- END LEFT --}}

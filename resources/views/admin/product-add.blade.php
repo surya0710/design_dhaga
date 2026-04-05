@@ -244,6 +244,25 @@
             </button>
         </div>
 
+        {{--  Meta Details --}}
+        <div class="card">
+            <div class="card-title">Meta Details</div>
+
+            <div class="field">
+                <label for="meta_title">Meta Title</label>
+                <input type="text" name="meta_title" placeholder="Meta Title" value="{{ old('meta_title') }}">
+            </div>
+
+            <div class="field">
+                <label for="meta_description">Meta Description</label>
+                <textarea name="meta_description" placeholder="Meta Description">{{ old('meta_description') }}</textarea>
+            </div>
+            
+            <div class="field">
+                <label for="meta_keywords">Meta Keywords</label>
+                <input type="text" name="meta_keywords" placeholder="Meta Keywords" value="{{ old('meta_keywords') }}">
+            </div>
+        </div>
     </div>
     {{-- END LEFT --}}
 

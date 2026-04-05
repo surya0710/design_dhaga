@@ -9,7 +9,7 @@ function getIconsByCategory($category){
             "3" => "Made in India",
             "4" => "Limited Edition",
             "5" => "Timeless Appeal",
-            "6" => "Dupatta(Pack of 1)"
+            "6" => "Pack of 1"
         ]
     ];
     return $categoryIcons[$category];

@@ -419,6 +419,9 @@ class AdminController extends Controller
             'care_instructions'             => 'nullable|string',
             'manufacturing_details'         => 'nullable|string',
             'artisan_heading'               => 'nullable|string|max:255',
+            'meta_title'                    => 'nullable|string|max:255',
+            'meta_keywords'                 => 'nullable|string|max:255',
+            'meta_description'              => 'nullable|string',
         ]);
 
         if ($validate->fails()) {
@@ -430,34 +433,33 @@ class AdminController extends Controller
         try {
 
             $data = [
-                'name'         => $request->name,
-                'slug'         => Str::slug($request->slug),
-                // Stored raw — line breaks preserved exactly as the user typed
-                'short_description' => $request->short_description,
-                'description'  => $request->description,
-                'regular_price'=> $request->regular_price,
-                'sale_price'   => $request->sale_price ?: null,
-                'sku'          => $request->sku,
-                'quantity'     => $request->quantity ?? 0,
-                'stock_status' => $request->stock_status ?? 1,
-                'featured'     => $request->featured ?? 0,
-                // ?: null ensures empty string "" is never stored as 0
-                'category_id'  => $request->input('category_id') ?: null,
-                'type'         => $request->purchase_type,
-                'image'        => $request->image ?: null,
-                // Shipping / meta fields added in the new add page
-                'weight'       => $request->weight,
-                'dimension'    => $request->dimension,
-                'color'        => $request->color,
-                'tags'         => $request->tags,
-                // Long textarea fields — stored raw, all line breaks intact
-                'hand_painted_details'  => $request->hand_painted_details,
-                'care_instructions'     => $request->care_instructions,
-                'manufacturing_details' => $request->manufacturing_details,
+                'name'                      => $request->name,
+                'slug'                      => Str::slug($request->slug),
+                'short_description'         => $request->short_description,
+                'description'               => $request->description,
+                'regular_price'             => $request->regular_price,
+                'sale_price'                => $request->sale_price ?: null,
+                'sku'                       => $request->sku,
+                'quantity'                  => $request->quantity ?? 0,
+                'stock_status'              => $request->stock_status ?? 1,
+                'featured'                  => $request->featured ?? 0,
+                'category_id'               => $request->input('category_id') ?: null,
+                'type'                      => $request->purchase_type,
+                'image'                     => $request->image ?: null,
+                'weight'                    => $request->weight,
+                'dimension'                 => $request->dimension,
+                'color'                     => $request->color,
+                'tags'                      => $request->tags,
+                'hand_painted_details'      => $request->hand_painted_details,
+                'care_instructions'         => $request->care_instructions,
+                'manufacturing_details'     => $request->manufacturing_details,
                 'square_banner'             => $request->square_banner,
                 'square_banner_title'       => $request->square_banner_title,
                 'square_banner_description' => $request->square_banner_description,
                 'artisan_heading'           => $request->artisan_heading,
+                'meta_title'                => $request->meta_title,
+                'meta_keywords'             => $request->meta_keywords,
+                'meta_description'          => $request->meta_description,
             ];
 
             $product = Product::create($data);
@@ -588,6 +590,9 @@ class AdminController extends Controller
             'square_banner_title'           => 'nullable|string|max:255',
             'square_banner_description'     => 'nullable|string',
             'artisan_heading'               => 'nullable|string|max:255',
+            'meta_title'                    => 'nullable|string|max:255',
+            'meta_keywords'                 => 'nullable|string|max:255',
+            'meta_description'              => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -619,6 +624,9 @@ class AdminController extends Controller
                 'square_banner_title'       => $request->square_banner_title ?: null,
                 'square_banner_description' => $request->square_banner_description ?: null,
                 'artisan_heading'           => $request->artisan_heading ?: null,
+                'meta_title'                => $request->meta_title ?: null,
+                'meta_keywords'             => $request->meta_keywords ?: null,
+                'meta_description'          => $request->meta_description ?: null,
             ]);
 
             // ── 2. Main image (media library path) ────────────────────────────
