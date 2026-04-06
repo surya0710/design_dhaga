@@ -138,8 +138,8 @@ class CheckoutController extends Controller
             }
 
             $api = new Api(
-                env('RAZORPAY_KEY'),
-                env('RAZORPAY_SECRET')
+                config('services.razorpay.key'),
+                config('services.razorpay.secret')
             );
 
             $razorpayOrder = $api->order->create([
@@ -186,8 +186,8 @@ class CheckoutController extends Controller
 
         try {
             $api = new Api(
-                env('RAZORPAY_KEY'),
-                env('RAZORPAY_SECRET')
+                config('services.razorpay.key'),
+                config('services.razorpay.secret')
             );
 
             $api->utility->verifyPaymentSignature([
