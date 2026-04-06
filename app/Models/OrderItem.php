@@ -9,25 +9,20 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
-        'quantity',
+        'product_name',
+        'product_image',
         'price',
+        'quantity',
         'total',
-        'status',
-        'product_sku',
-        'product_category',
-        'certificate_name',
-        'certificate_price',
     ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'total' => 'decimal:2',
+    ];
+
     public function order()
     {
         return $this->belongsTo(Order::class);
-    }
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-    public function returnRequest()
-    {
-        return $this->hasOne(OrderItemReturn::class);
     }
 }

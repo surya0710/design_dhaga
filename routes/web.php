@@ -95,8 +95,17 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('place.order');
+
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+
+    Route::post('/razorpay/order', [CheckoutController::class, 'createRazorpayOrder'])->name('razorpay.order');
+
+    Route::post('/razorpay/verify', [CheckoutController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
 
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');

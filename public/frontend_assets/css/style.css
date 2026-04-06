@@ -3312,3 +3312,152 @@ ol.breadcrumb li {
     font-size: 1.4rem !important;
   }
 }
+
+.cart-page {
+  min-height: 75vh;
+  padding: 40px 0 60px;
+}
+
+.cart-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.cart-box,
+.summary-box,
+.empty-cart-box {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eee;
+}
+
+.cart-item {
+  padding: 22px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.product-image {
+  width: 95px;
+  height: 95px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.product-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.price-text,
+.total-text {
+  font-weight: 600;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: 0.9rem;
+}
+
+.remove-btn:hover {
+  text-decoration: underline;
+}
+
+/* Quantity Buttons */
+.qty-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.qty-btn {
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: #f8f8f8;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.qty-btn:hover {
+  background: #eaeaea;
+}
+
+.qty-input {
+  width: 50px;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.summary-box {
+  padding: 28px;
+  position: sticky;
+  top: 30px;
+}
+
+.summary-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  margin-bottom: 12px;
+}
+
+.summary-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.checkout-btn {
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.empty-cart-box {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty-cart-title {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.empty-cart-text {
+  color: #777;
+  margin: 10px 0 20px;
+}
+
+@media (max-width: 991px) {
+  .summary-box {
+    position: static;
+    margin-top: 25px;
+  }
+
+  .cart-item {
+    display: block !important;
+  }
+
+  .cart-item>div {
+    margin-bottom: 15px;
+  }
+}

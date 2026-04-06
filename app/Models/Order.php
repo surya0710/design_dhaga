@@ -8,41 +8,93 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
+        'address_id',
+
         'name',
         'email',
-        'mobile',
+        'phone',
+
         'country',
         'state',
         'city',
-        'street',
         'pincode',
+        'address_line_1',
+        'address_line_2',
         'landmark',
         'address_type',
+
         'notes',
+
+        'subtotal',
+        'shipping',
+        'coupon_discount',
+        'total',
+
         'coupon_code',
         'coupon_id',
-        'payment_id',
-        'delivery_charge',
-        'delivered_at',
-        'coupon_discount',
+
         'payment_method',
-        'total',
-        'status'
+        'payment_status',
+        'razorpay_order_id',
+        'razorpay_payment_id',
+        'razorpay_signature',
+
+        'order_status',
+        'paid_at',
+        'delivered_at',
+        'cancelled_at',
     ];
+
+    protected $casts = [
+        'subtotal' => 'decimal:2',
+        'shipping' => 'decimal:2',
+        'coupon_discount' => 'decimal:2',
+        'total' => 'decimal:2',
+        'paid_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
+
     public function getFullAddressAttribute()
     {
-        return "{$this->street}, {$this->city}, {$this->state}, {$this->country} - {$this->pincode}";
+        return collect([
+            $this->address_line_1,
+            $this->address_line_2,
+            $this->landmark,
+            $this->city,
+            $this->state,
+            $this->country,
+            $this->pincode,
+        ])->filter()->implode(', ');
     }
-    public function getAddressTypeAttribute($value)
+
+    public function isPaid()
     {
-        return ucfirst($value);
+        return $this->payment_status === 'paid';
+    }
+
+    public function isPending()
+    {
+        return $this->order_status === 'pending';
+    }
+
+    public function isDelivered()
+    {
+        return $this->order_status === 'delivered';
     }
 }

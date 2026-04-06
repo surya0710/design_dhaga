@@ -7,9 +7,19 @@
 @section('og_description', $product->meta_description ?? '')
 @section('og_image', asset('storage/' . $product->image))
 
+@php
+    $isInWishlist = auth()->check()
+        ? \App\Models\Wishlist::where('user_id', auth()->id())->where('product_id', $product->id)->exists()
+        : false;
+@endphp
+
 @push('styles')
-{{-- SweetAlert2 CSS --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<style>
+    .wishlist-btn.active i {
+        font-weight: 900;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -17,16 +27,9 @@
     <div class="px-2 px-md-5 mt-3">
         <div class="row g-4 align-items-stretch">
 
-            {{-- ============================================================ --}}
-            {{-- IMAGE COLUMN                                                  --}}
-            {{-- ============================================================ --}}
             <div class="col-md-6">
-
-                {{-- DESKTOP: Thumbnails left + Main image right --}}
                 <div class="d-none d-md-block position-relative">
                     <div class="d-flex gap-3">
-
-                        {{-- Desktop Thumbnails (left side) --}}
                         <div class="d-flex flex-column gap-2 overflow-hidden"
                              style="max-height: 700px; scrollbar-width: thin;">
 
@@ -43,7 +46,6 @@
                             @endforeach
                         </div>
 
-                        {{-- Main Image (right side) --}}
                         <div class="carousel-container position-relative overflow-hidden flex-grow-1">
                             <img id="desktopMainImage"
                                  src="{{ asset('storage/' . $product->image) }}"
@@ -64,14 +66,10 @@
                                 <i class="fa-solid fa-chevron-right"></i>
                             </button>
                         </div>
-
                     </div>
                 </div>
 
-                {{-- MOBILE: Title + Price + Main image + Bottom thumbnails --}}
                 <div class="d-md-none">
-
-                    {{-- Mobile: Title, Rating, Price --}}
                     <div class="mb-3">
                         <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
 
@@ -104,8 +102,6 @@
                     </div>
 
                     <div class="d-flex flex-column gap-2">
-
-                        {{-- Mobile Main Image --}}
                         <div class="position-relative" style="overflow: hidden;">
                             <img id="mobileMainImage"
                                  src="{{ asset('storage/' . $product->image) }}"
@@ -126,7 +122,6 @@
                             </button>
                         </div>
 
-                        {{-- Mobile Thumbnails --}}
                         <div class="d-flex gap-2 overflow-auto pb-1" style="scrollbar-width: thin;">
                             <img src="{{ asset('storage/' . $product->image) }}"
                                  class="border border-2 border-danger mobile-thumb"
@@ -142,21 +137,12 @@
                                      ondblclick="openImageModal(this.src)" />
                             @endforeach
                         </div>
-
                     </div>
                 </div>
-
             </div>
-            {{-- END IMAGE COLUMN --}}
 
-
-            {{-- ============================================================ --}}
-            {{-- DETAILS COLUMN                                                --}}
-            {{-- ============================================================ --}}
             <div class="col-md-6">
                 <div class="sticky-md-top h-100">
-
-                    {{-- Desktop: Title + Wishlist + Stars --}}
                     <div class="d-flex justify-content-between align-items-start d-none d-md-flex">
                         <div>
                             <h1 class="h3 fw-bold mb-1 mt-0" style="font-size: 25px;">
@@ -175,8 +161,14 @@
                             </div>
                         </div>
 
-                        <button class="btn bg-maroon rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn">
-                            <i class="fa-regular fa-heart fa-lg"></i>
+                        <button
+                            type="button"
+                            class="btn bg-maroon rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
+                            data-product-id="{{ $product->id }}"
+                            data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
+                            aria-label="Toggle wishlist"
+                        >
+                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
                         </button>
                     </div>
 
@@ -184,7 +176,6 @@
                         {{ $product->short_description }}
                     </p>
 
-                    {{-- Desktop Price --}}
                     <div class="h4 mb-2 d-none d-md-block price">
                         @if ($product->sale_price)
                             <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
@@ -199,11 +190,8 @@
                         @endif
                     </div>
 
-                    {{-- Add to Cart / Request to Purchase --}}
                     @if ($product->type == 1)
-                        <button id="addToCartBtn"
-                                class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2 btn-add-to-cart"
-                                onclick="handleAddToCart({{ $product->id }})">
+                        <button id="addToCartBtn" class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2 btn-add-to-cart" onclick="handleAddToCart({{ $product->id }})">
                             <span class="btn-text">
                                 Add To Cart &nbsp;|&nbsp; ₹ <span id="total">{{ $product->sale_price ?? $product->regular_price }}</span>
                             </span>
@@ -219,7 +207,6 @@
                         </a>
                     @endif
 
-                    {{-- Feature Icons Grid --}}
                     <div class="row g-2 mt-2 mb-2 p-3 rounded bg-body-secondary text-center">
                         @php $iconsText = getIconsByCategory($product->category->name); @endphp
                         @for($i = 1; $i < 7; $i++)
@@ -232,7 +219,6 @@
                         @endfor
                     </div>
 
-                    {{-- Mobile Feature Strip --}}
                     <section class="features-box d-sm-block d-md-none" style="padding: 15px 0 !important;">
                         <div class="container">
                             <div class="row feature-items">
@@ -252,7 +238,6 @@
                         </div>
                     </section>
 
-                    {{-- Pincode Check --}}
                     <div class="mb-2 mt-1 fw-bold heading-size">
                         <i class="fa-solid fa-truck me-2"></i>Check Delivery Time
                     </div>
@@ -260,17 +245,11 @@
                         <input type="text" class="form-control bg-light-pink p-3 border-0" placeholder="Enter pincode" />
                         <button class="btn btn-white border fw-bold">Check</button>
                     </div>
-
                 </div>
             </div>
-            {{-- END DETAILS COLUMN --}}
 
         </div>
 
-
-        {{-- ============================================================ --}}
-        {{-- PRODUCT DETAILS BOX                                          --}}
-        {{-- ============================================================ --}}
         @if ($product->productAttributes->count())
             <section style="background-color: #fbe8e9;">
                 <div class="py-3 px-3 px-md-4 rounded my-3">
@@ -290,16 +269,10 @@
 
     </div>
 
-
-    {{-- ============================================================ --}}
-    {{-- FULL-WIDTH TABS                                               --}}
-    {{-- ============================================================ --}}
     <div class="w-100 bg-white pt-0">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 px-2 px-md-5">
-
-                    {{-- Tab Navigation (Desktop Only) --}}
                     <ul class="nav nav-underline border-bottom border-2 mb-0 gap-4 d-none d-md-flex justify-content-between"
                         role="tablist">
 
@@ -347,13 +320,9 @@
                                 </button>
                             </li>
                         @endif
-
                     </ul>
 
-                    {{-- Tab Content (Desktop Only) --}}
                     <div class="tab-content pt-2 pb-2 d-none d-md-block">
-
-                        {{-- Product Description --}}
                         <div class="tab-pane fade show active" id="descTab" role="tabpanel">
                             <div class="row g-4 align-items-stretch">
                                 <div class="col-lg-12">
@@ -362,7 +331,6 @@
                             </div>
                         </div>
 
-                        {{-- Hand Painted Details --}}
                         @if ($product->hand_painted_details)
                             <div class="tab-pane fade" id="handPaintedTab" role="tabpanel">
                                 <div class="row g-4 align-items-stretch">
@@ -375,7 +343,6 @@
                             </div>
                         @endif
 
-                        {{-- Care Instructions --}}
                         @if ($product->care_instructions)
                             <div class="tab-pane fade" id="careTab" role="tabpanel">
                                 <div class="row g-4 align-items-stretch">
@@ -388,7 +355,6 @@
                             </div>
                         @endif
 
-                        {{-- Manufacturing Details --}}
                         @if ($product->manufacturing_details)
                             <div class="tab-pane fade" id="manufacturingTab" role="tabpanel">
                                 <div class="row g-4 align-items-stretch">
@@ -400,16 +366,10 @@
                                 </div>
                             </div>
                         @endif
-
                     </div>
 
-                    {{-- ============================================================ --}}
-                    {{-- MOBILE ACCORDION                                             --}}
-                    {{-- ============================================================ --}}
                     <div class="d-block d-md-none py-2">
                         <div class="accordion accordion-flush" id="productAccordion">
-
-                            {{-- Product Description --}}
                             <div class="accordion-item border-bottom">
                                 <h2 class="accordion-header" id="headingDesc">
                                     <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3"
@@ -431,7 +391,6 @@
                                 </div>
                             </div>
 
-                            {{-- Hand Painted Details --}}
                             @if ($product->hand_painted_details)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingHandPainted">
@@ -457,7 +416,6 @@
                                 </div>
                             @endif
 
-                            {{-- Care Instructions --}}
                             @if ($product->care_instructions)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingCare">
@@ -483,7 +441,6 @@
                                 </div>
                             @endif
 
-                            {{-- Manufacturing Details --}}
                             @if ($product->manufacturing_details)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingManufacturing">
@@ -508,20 +465,14 @@
                                     </div>
                                 </div>
                             @endif
-
                         </div>
                     </div>
-                    {{-- END MOBILE ACCORDION --}}
 
                 </div>
             </div>
         </div>
     </div>
 
-
-    {{-- ============================================================ --}}
-    {{-- SECTION 2: Artisan Gallery                                   --}}
-    {{-- ============================================================ --}}
     @if ($product->artisanImages->count())
         <section class="bg-white py-0">
             <div class="container-fluid px-0 overflow-hidden">
@@ -562,23 +513,16 @@
         </section>
     @endif
 
-
-    {{-- ============================================================ --}}
-    {{-- SECTION 3: Square Banner                                     --}}
-    {{-- ============================================================ --}}
     @if ($product->square_banner)
         <section class="pt-2 bg-white pb-4">
             <div class="container-fluid px-2 px-md-5">
                 <div class="row align-items-center g-4 g-lg-5">
-
-                    {{-- Mobile Heading --}}
                     <div class="col-12 d-lg-none mb-2">
                         <h2 class="fw-bold text-black my-0" style="line-height: 1.3;">
                             {{ $product->square_banner_title ?? '' }}
                         </h2>
                     </div>
 
-                    {{-- Left Image --}}
                     <div class="col-lg-5">
                         <div class="style-comfort-img rounded-3 overflow-hidden">
                             <img src="{{ asset('storage/' . $product->square_banner) }}" class="img-fluid w-100" alt="{{ $product->square_banner_title ?? $product->name }}"
@@ -586,10 +530,7 @@
                         </div>
                     </div>
 
-                    {{-- Right Content --}}
                     <div class="col-lg-7 ps-lg-5">
-
-                        {{-- Desktop Heading --}}
                         @if ($product->square_banner_title)
                             <h2 class="h3 fw-bold mb-1 mt-0">
                                 {{ $product->square_banner_title }}
@@ -601,22 +542,15 @@
                                 {!! nl2br(e($product->square_banner_description)) !!}
                             </p>
                         @endif
-
                     </div>
-
                 </div>
             </div>
         </section>
     @endif
 
-
-    {{-- ============================================================ --}}
-    {{-- SECTION 4: Reviews (Auth Only)                               --}}
-    {{-- ============================================================ --}}
     @if (Auth::check())
         <section class="py-5 pt-0">
             <div class="container">
-
                 <div id="reviewSummary" class="shadow p-4 p-md-5 rounded-1 d-flex flex-column align-items-center">
                     <h2 class="text-center fw-bold fs-1 mb-5">Customer Reviews</h2>
                     <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 gap-md-5 text-center">
@@ -710,17 +644,12 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </section>
     @endif
 
 </div>
 
-
-{{-- ============================================================ --}}
-{{-- IMAGE MODAL                                                   --}}
-{{-- ============================================================ --}}
 <div id="imageModal"
      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 9999; align-items: center;
@@ -740,17 +669,15 @@
              style="width: 100%; height: 100%; object-fit: contain;
                     cursor: grab; transition: transform 0.2s ease;" />
 
-        {{-- Zoom Controls --}}
         <div style="position: absolute; bottom: 15px; right: 0; z-index: 10000; display: flex; gap: 6px;">
-            <button onclick="zoomIn()"    class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">+</button>
-            <button onclick="zoomOut()"   class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">−</button>
+            <button onclick="zoomIn()" class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">+</button>
+            <button onclick="zoomOut()" class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">−</button>
             <button onclick="resetZoom()" class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">
                 <i class="fa fa-sync"></i>
             </button>
         </div>
     </div>
 
-    {{-- Modal Thumbnails --}}
     <div style="width: 100%; max-width: 600px; display: flex; gap: 8px; margin-top: 20px;
                 overflow-x: auto; padding-bottom: 8px; justify-content: center; z-index: 9999;">
 
@@ -769,18 +696,13 @@
         @endforeach
     </div>
 </div>
-
 @endsection
 
-
 @push('scripts')
-{{-- jQuery --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-{{-- SweetAlert2 JS --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // ── Image URLs Array ────────────────────────────────────────────────────────
     const imageUrls = [
         "{{ asset('storage/' . $product->image) }}",
         @foreach ($product->galleryImages as $img)
@@ -788,256 +710,52 @@
         @endforeach
     ];
 
-    let desktopImageIndex = 0;
-    let modalImageIndex   = 0;
-    let mobileIndex       = 0;
+    const wishlistConfig = {
+        addUrl: "{{ route('wishlist.add') }}",
+        removeUrl: "{{ route('wishlist.remove') }}",
+        loginUrl: "{{ route('login') }}",
+        csrfToken: "{{ csrf_token() }}"
+    };
 
-
-    // ── Desktop Image Slider ────────────────────────────────────────────────────
-    function setDesktopImage(element) {
-        const index = Array.from(document.querySelectorAll('.desktop-thumb')).indexOf(element);
-        if (index >= 0) {
-            desktopImageIndex = index;
-            updateDesktopImage();
-        }
-    }
-
-    function nextDesktopImage() {
-        desktopImageIndex = (desktopImageIndex + 1) % imageUrls.length;
-        updateDesktopImage();
-    }
-
-    function prevDesktopImage() {
-        desktopImageIndex = (desktopImageIndex - 1 + imageUrls.length) % imageUrls.length;
-        updateDesktopImage();
-    }
-
-    function updateDesktopImage() {
-        document.getElementById('desktopMainImage').src = imageUrls[desktopImageIndex];
-        document.querySelectorAll('.desktop-thumb').forEach((thumb, index) => {
-            thumb.style.opacity = index === desktopImageIndex ? '1' : '0.6';
-            thumb.classList.toggle('border-2',    index === desktopImageIndex);
-            thumb.classList.toggle('border-danger', index === desktopImageIndex);
-        });
-    }
-
-
-    // ── Mobile Image Navigation ─────────────────────────────────────────────────
-    function nextMobileImage() {
-        mobileIndex = (mobileIndex + 1) % imageUrls.length;
-        setMobileImageByIndex(mobileIndex);
-    }
-
-    function prevMobileImage() {
-        mobileIndex = (mobileIndex - 1 + imageUrls.length) % imageUrls.length;
-        setMobileImageByIndex(mobileIndex);
-    }
-
-
-    // ── Image Modal ─────────────────────────────────────────────────────────────
-    function openImageModal() {
-        const modal = document.getElementById('imageModal');
-        modal.style.display        = 'flex';
-        modal.style.flexDirection  = 'column';
-        modal.style.alignItems     = 'center';
-        modal.style.justifyContent = 'center';
-        document.body.style.overflow = 'hidden';
-        modalImageIndex = window.innerWidth >= 768 ? desktopImageIndex : mobileIndex;
-        updateModalImage();
-    }
-
-    function closeImageModal() {
-        document.getElementById('imageModal').style.display = 'none';
-        document.body.style.overflow = '';
-    }
-
-    function setModalImage(element) {
-        const index = Array.from(document.querySelectorAll('.modal-thumb')).indexOf(element);
-        if (index >= 0) {
-            modalImageIndex = index;
-            updateModalImage();
-        }
-    }
-
-    function nextModalImage() {
-        modalImageIndex = (modalImageIndex + 1) % imageUrls.length;
-        updateModalImage();
-    }
-
-    function prevModalImage() {
-        modalImageIndex = (modalImageIndex - 1 + imageUrls.length) % imageUrls.length;
-        updateModalImage();
-    }
-
-    function updateModalImage() {
-        document.getElementById('modalMainImage').src = imageUrls[modalImageIndex];
-
-        scale      = 1;
-        translateX = 0;
-        translateY = 0;
-
-        if (modalImg) {
-            modalImg.style.transform = 'translate(0px, 0px) scale(1)';
-            modalImg.style.cursor    = 'default';
-        }
-
-        document.querySelectorAll('.modal-thumb').forEach((thumb, index) => {
-            thumb.style.opacity     = index === modalImageIndex ? '1' : '0.5';
-            thumb.style.borderColor = index === modalImageIndex ? 'white' : 'transparent';
-        });
-    }
-
-
-    // ── Mobile Swipe Slider ─────────────────────────────────────────────────────
-    let mobileThumbs = [];
-
-    function setMobileImageByIndex(nextIndex) {
-        if (!mobileThumbs.length) return;
-
-        const total     = mobileThumbs.length;
-        const safeIndex = ((nextIndex % total) + total) % total;
-        const nextThumb = mobileThumbs[safeIndex];
-        const mainImage = document.getElementById('mobileMainImage');
-
-        if (mainImage) {
-            mainImage.classList.remove('mobile-slide-anim');
-            mainImage.offsetWidth; // force reflow
-            mainImage.src = nextThumb.src;
-            mainImage.classList.add('mobile-slide-anim');
-        }
-
-        mobileThumbs.forEach(img => {
-            img.classList.add('opacity-75');
-            img.classList.remove('border', 'border-2', 'border-danger');
-        });
-        nextThumb.classList.remove('opacity-75');
-        nextThumb.classList.add('border', 'border-2', 'border-danger');
-        mobileIndex = safeIndex;
-    }
-
-    function changeImage(element) {
-        if (element && element.classList.contains('mobile-thumb')) {
-            const index = mobileThumbs.indexOf(element);
-            setMobileImageByIndex(index >= 0 ? index : 0);
-            return;
-        }
-        document.getElementById('mobileMainImage').src = element.src;
-        element.parentElement.querySelectorAll('img').forEach(img => {
-            img.classList.add('opacity-75');
-            img.classList.remove('border', 'border-2', 'border-danger');
-        });
-        element.classList.remove('opacity-75');
-        element.classList.add('border', 'border-2', 'border-danger');
-    }
-
-    function setupMobileSwipeSlider() {
-        mobileThumbs = Array.from(document.querySelectorAll('.mobile-thumb'));
-        if (!mobileThumbs.length) return;
-
-        const mainImage = document.getElementById('mobileMainImage');
-        if (!mainImage) return;
-
-        const initialIndex = mobileThumbs.findIndex(img => img.src === mainImage.src);
-        setMobileImageByIndex(initialIndex >= 0 ? initialIndex : 0);
-
-        let startX = 0, startY = 0, tracking = false;
-
-        mainImage.addEventListener('touchstart', e => {
-            if (e.touches.length !== 1) return;
-            startX   = e.touches[0].clientX;
-            startY   = e.touches[0].clientY;
-            tracking = true;
-        }, { passive: true });
-
-        mainImage.addEventListener('touchend', e => {
-            if (!tracking) return;
-            tracking = false;
-            const deltaX = e.changedTouches[0].clientX - startX;
-            const deltaY = e.changedTouches[0].clientY - startY;
-            if (Math.abs(deltaX) < 35 || Math.abs(deltaX) < Math.abs(deltaY)) return;
-            deltaX < 0
-                ? setMobileImageByIndex(mobileIndex + 1)
-                : setMobileImageByIndex(mobileIndex - 1);
-        }, { passive: true });
-    }
-
-    document.addEventListener('DOMContentLoaded', setupMobileSwipeSlider);
-
-
-    // ── Keyboard Navigation ─────────────────────────────────────────────────────
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeImageModal();
-        if (document.getElementById('imageModal').style.display === 'flex') {
-            if (e.key === 'ArrowLeft')  prevModalImage();
-            if (e.key === 'ArrowRight') nextModalImage();
-        }
-    });
-
-
-    // ── Review Form Toggle ──────────────────────────────────────────────────────
-    function toggleReviewForm() {
-        const summary = document.getElementById('reviewSummary');
-        const form    = document.getElementById('reviewForm');
-        if (form.classList.contains('d-none')) {
-            summary.classList.add('d-none');
-            form.classList.remove('d-none');
-        } else {
-            form.classList.add('d-none');
-            summary.classList.remove('d-none');
-        }
-    }
-
-
-    // ── Star Rating ─────────────────────────────────────────────────────────────
-    function setRating(val) {
-        document.querySelectorAll('.star-rating i').forEach((star, index) => {
-            star.classList.toggle('fa-solid',  index < val);
-            star.classList.toggle('fa-regular', index >= val);
-        });
-    }
-
-
-    // ── Add to Cart ─────────────────────────────────────────────────────────────
     function handleAddToCart(productId) {
         const btn = document.getElementById('addToCartBtn');
         btn.classList.add('loading');
 
         $.ajax({
-            url: "{{ route('cart.add') }}",
+            url: @json(route('cart.add')),
             method: 'POST',
             data: {
-                _token: "{{ csrf_token() }}",
+                _token: @json(csrf_token()),
                 product_id: productId,
                 quantity: 1,
             },
-            success: function (response) {
+            success: function () {
                 btn.classList.remove('loading');
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Added to Cart!',
-                    html: `<p class="mb-0"><strong>{{ $product->name }}</strong> has been added to your cart.</p>`,
+                    html: `<p class="mb-0"><strong>@json($product->name)</strong> has been added to your cart.</p>`,
                     confirmButtonText: 'View Cart',
                     showCancelButton: true,
                     cancelButtonText: 'Continue Shopping',
                     confirmButtonColor: '#8b1e2d',
                     cancelButtonColor: '#6c757d',
                     customClass: {
-                        popup:   'rounded-3 shadow',
-                        title:   'fs-5 fw-bold',
+                        popup: 'rounded-3 shadow',
+                        title: 'fs-5 fw-bold',
                     },
                     timer: 5000,
                     timerProgressBar: true,
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "{{ route('cart.index') }}";
+                        window.location.href = @json(route('cart.index'));
                     }
                 });
             },
             error: function (xhr) {
                 btn.classList.remove('loading');
 
-                // If unauthenticated, redirect to login
                 if (xhr.status === 401) {
                     Swal.fire({
                         icon: 'warning',
@@ -1049,7 +767,7 @@
                         cancelButtonText: 'Cancel',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "{{ route('login') }}";
+                            window.location.href = @json(route('login'));
                         }
                     });
                     return;
@@ -1064,76 +782,6 @@
             },
         });
     }
-
-
-    // ── Image Zoom & Pan ────────────────────────────────────────────────────────
-    let scale      = 1;
-    let translateX = 0;
-    let translateY = 0;
-    let isDragging = false;
-    let startX     = 0;
-    let startY     = 0;
-    let modalImg   = null;
-
-    document.addEventListener('DOMContentLoaded', function () {
-        modalImg = document.getElementById('modalMainImage');
-
-        function applyTransform() {
-            if (!modalImg) return;
-            modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-            modalImg.style.cursor    = scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default';
-        }
-
-        window.zoomIn = function () {
-            if (!modalImg) return;
-            scale = Math.min(scale + 0.25, 4);
-            applyTransform();
-        };
-
-        window.zoomOut = function () {
-            if (!modalImg) return;
-            scale = Math.max(scale - 0.25, 1);
-            if (scale === 1) { translateX = 0; translateY = 0; }
-            applyTransform();
-        };
-
-        window.resetZoom = function () {
-            if (!modalImg) return;
-            scale      = 1;
-            translateX = 0;
-            translateY = 0;
-            applyTransform();
-        };
-
-        modalImg.addEventListener('mousedown', function (e) {
-            if (scale <= 1) return;
-            isDragging = true;
-            startX     = e.clientX;
-            startY     = e.clientY;
-            e.preventDefault();
-            applyTransform();
-        });
-
-        document.addEventListener('mousemove', function (e) {
-            if (!isDragging || scale <= 1) return;
-            translateX += e.clientX - startX;
-            translateY += e.clientY - startY;
-            startX      = e.clientX;
-            startY      = e.clientY;
-            applyTransform();
-        });
-
-        document.addEventListener('mouseup', function () {
-            if (!modalImg) return;
-            isDragging = false;
-            applyTransform();
-        });
-
-        modalImg.addEventListener('dragstart', function (e) {
-            e.preventDefault();
-        });
-
-        applyTransform();
-    });
 </script>
+<script src="{{ asset('frontend_assets/js/product.js') }}"></script>
 @endpush
