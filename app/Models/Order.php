@@ -97,4 +97,9 @@ class Order extends Model
     {
         return $this->order_status === 'delivered';
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

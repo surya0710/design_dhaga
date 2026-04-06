@@ -125,13 +125,13 @@ class AdminController extends Controller
     {
         $totalOrders     = Order::count();
         $recentOrders    = Order::with('items')->orderBy('created_at', 'desc')->take(5)->get();
-        $deliveredOrders = Order::where('status', 'delivered')->count();
-        $pendingOrders   = Order::where('status', 'pending')->count();
-        $cancelledOrders = Order::where('status', 'cancelled')->count();
+        $deliveredOrders = Order::where('order_status', 'delivered')->count();
+        $pendingOrders   = Order::where('order_status', 'pending')->count();
+        $cancelledOrders = Order::where('order_status', 'cancelled')->count();
         $totalAmount     = Order::sum('total');
-        $deliveredAmount = Order::where('status', 'delivered')->sum('total');
-        $pendingAmount   = Order::where('status', 'pending')->sum('total');
-        $cancelledAmount = Order::where('status', 'cancelled')->sum('total');
+        $deliveredAmount = Order::where('order_status', 'delivered')->sum('total');
+        $pendingAmount   = Order::where('order_status', 'pending')->sum('total');
+        $cancelledAmount = Order::where('order_status', 'cancelled')->sum('total');
 
         $startOfWeek   = Carbon::now()->startOfWeek();
         $endOfWeek     = Carbon::now()->endOfWeek();
@@ -153,10 +153,7 @@ class AdminController extends Controller
         $months    = collect(range(1, 12))->map(fn($m) => Carbon::create()->month($m)->format('M'));
         $totalData = $pendingData = $deliveredData = $canceledData = array_fill(0, 12, 0);
 
-        $orders = Order::selectRaw('MONTH(created_at) as month, status, SUM(total) as total')
-            ->whereYear('created_at', now()->year)
-            ->groupBy('month', 'status')
-            ->get();
+        $orders = Order::selectRaw('MONTH(created_at) as month, order_status, SUM(total) as total')->whereYear('created_at', now()->year)->groupBy('month', 'order_status')->get();
 
         foreach ($orders as $order) {
             $index = $order->month - 1;
@@ -779,7 +776,7 @@ class AdminController extends Controller
 
     public function orders_detail($id)
     {
-        $orders = Order::with('items.product')->findOrFail($id);
+        $orders = Order::with('items')->findOrFail($id);
         return view('admin.order-detail', compact('orders'));
     }
 

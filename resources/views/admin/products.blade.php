@@ -34,8 +34,7 @@
                 </div>
                 <a class="tf-button style-1 w208" href="{{route('import.products')}}"><i
                         class="icon-plus"></i>Import Products</a>
-                <a class="tf-button style-1 w208" href="{{route('admin.products.add')}}"><i
-                        class="icon-plus"></i>Add new</a>
+                <a class="tf-button style-1 w208" href="{{route('admin.products.add')}}"><i class="icon-plus"></i>Add new</a>
             </div>
             @if(Session::has('status'))
                 <p class="alert alert-success"> {{Session::get('status')}}</p>

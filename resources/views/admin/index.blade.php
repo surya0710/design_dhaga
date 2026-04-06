@@ -209,7 +209,6 @@
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Phone</th>
                                         <th class="text-center">Subtotal</th>
-                                        <th class="text-center">Tax</th>
                                         <th class="text-center">Total</th>
 
                                         <th class="text-center">Status</th>
@@ -224,12 +223,11 @@
                                         <tr>
                                             <td class="text-center">{{ $recentOrder->id }}</td>
                                             <td class="text-center">{{ $recentOrder->name }}</td>
-                                            <td class="text-center">{{ $recentOrder->mobile }}</td>
+                                            <td class="text-center">{{ $recentOrder->phone }}</td>
                                             <td class="text-center">{{ $recentOrder->total }}</td>
-                                            <td class="text-center">{{ $recentOrder->tax }}</td>
                                             <td class="text-center">{{ $recentOrder->total }}</td>
 
-                                            <td class="text-center">{{ $recentOrder->status }}</td>
+                                            <td class="text-center">{{ $recentOrder->order_status }}</td>
                                             <td class="text-center">{{ $recentOrder->created_at }}</td>
                                             <td class="text-center">{{ $recentOrder->items()->count() }}</td>
                                             <td class="text-center">
