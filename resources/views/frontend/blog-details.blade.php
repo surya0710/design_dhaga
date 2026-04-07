@@ -13,7 +13,7 @@
 
 <div class="container">
     <div class="row gx-lg-5 px-xs-2">
-        <div class="col-lg-8 mt-lg-3">
+        <div class="col-lg-9 mt-lg-3">
             <div class="mb-4">
                 <h1 class="fw-bold">{{ $blog->title }}</h1>
             </div>
@@ -27,29 +27,26 @@
             </div>
         </div>
 
-        <div class="col-lg-4 mt-lg-3">
+        <div class="col-lg-3 mt-lg-3">
             <div class="d-flex align-items-center justify-content-between mb-4">
-                <h2 class="h4 fw-bold mb-0">Recent Blogs</h2>
-                <a href="{{ route('blogs') }}" class="small text-decoration-none text-black d-flex align-items-center">
-                    View all <i class="fa-solid fa-arrow-right-long ms-2"></i>
-                </a>
+                <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
             <div id="recentBlogsCarousel" class="carousel slide d-md-none" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    @foreach($blogs as $blog)
+                    @foreach($featuredProducts as $product)
+                    @php $productUrl = getProductUrl($product); @endphp
                     <div class="carousel-item active">
-                        <a href="{{ route('blog.show', $blog->slug) }}"
+                        <a href="{{ $productUrl }}"
                             class="text-decoration-none text-dark">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="ratio ratio-4x3">
-                                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}"
-                                        class="card-img-top object-fit-cover" alt="{{ $blog->title }}" />
+                                    <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                                 </div>
                                 <div class="card-body">
-                                    <h3 class="h6 fw-bold mb-2">{{ $blog->title }}</h3>
+                                    <h3 class="h6 fw-bold mb-2">{{ $product->name }}</h3>
                                     <p class="small text-muted mb-0">
-                                        {{ Str::limit(strip_tags($blog->content), 100) }}
+                                        {{ $product->sale_price }}
                                     </p>
                                 </div>
                             </div>
@@ -72,16 +69,17 @@
             </div>
 
             <div class="d-none d-md-flex flex-column gap-4">
-                @foreach($blogs as $blog)
-                <a href="{{ route('blog.show', $blog->slug) }}" class="text-decoration-none text-dark">
+                @foreach($featuredProducts as $product)
+                @php $productUrl = getProductUrl($product); @endphp
+                <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
                     <div class="card border-0 shadow-sm">
                         <div class="ratio ratio-4x3">
-                            <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover" alt="{{ $blog->title }}" />
+                            <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                         </div>
                         <div class="card-body p-2">
-                            <h3 class="h6 fw-bold mb-2">{{ $blog->title }}</h3>
+                            <h3 class="h6 fw-bold mb-2">{{ $product->name }}</h3>
                             <p class="small text-muted mb-0">
-                                {{ Str::limit(strip_tags($blog->content), 100) }}
+                                ₹ {{ $product->sale_price }}
                             </p>
                         </div>
                     </div>

@@ -329,6 +329,11 @@
                             </div>
 
                             <div class="summary-row">
+                                <span>GST</span>
+                                <span>₹{{ number_format($gstData['gst_amount'], 2) }}</span>
+                            </div>
+
+                            <div class="summary-row">
                                 <span>Shipping</span>
                                 <span>{{ $shipping == 0 ? 'Free' : '₹'.number_format($shipping, 2) }}</span>
                             </div>

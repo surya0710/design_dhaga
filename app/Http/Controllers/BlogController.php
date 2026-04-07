@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Product;
 
 class BlogController extends Controller
 {
@@ -23,19 +24,15 @@ class BlogController extends Controller
     }
     
     public function index() {
-        $categories = $this->categories;
-        $blogs = Blog::orderBy('id','desc')->paginate(15);
+        $categories         = $this->categories;
+        $blogs              = Blog::orderBy('id','desc')->paginate(15);
         return view('frontend.blogs',compact('blogs', 'categories'));
     }
-    public function tagIndex($slug){
-        $tag = Tag::where('slug', $slug)->firstOrFail();
-        $blogs = $tag->blogs()->with('tags')->where('status', 1)->latest()->paginate(15);
-        return view('blogs', compact('blogs', 'tag'));
-    }  
+
     public function blogdetail($slug) {
         $categories = $this->categories;
-        $blogs = Blog::orderBy('id','desc')->paginate(3);
-        $blog = Blog::where('slug', $slug)->firstOrFail();
-        return view('frontend.blog-details',compact('blog', 'blogs', 'categories'));
+        $blog               = Blog::where('slug', $slug)->firstOrFail();
+        $featuredProducts   = Product::where('status', 1)->where('featured', 1)->with(['category.parent'])->inRandomOrder()->limit(8)->get();
+        return view('frontend.blog-details',compact('blog', 'categories', 'featuredProducts'));
     }
 }

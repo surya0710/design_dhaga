@@ -50,14 +50,10 @@ class CheckoutController extends Controller
         $defaultAddress = null;
 
         if (auth()->check()) {
-            $defaultAddress = Address::where('user_id', auth()->id())
-                ->where('is_default', true)
-                ->first();
+            $defaultAddress = Address::where('user_id', auth()->id())->where('is_default', true)->first();
 
             if (!$defaultAddress) {
-                $defaultAddress = Address::where('user_id', auth()->id())
-                    ->latest()
-                    ->first();
+                $defaultAddress = Address::where('user_id', auth()->id())->latest()->first();
             }
         }
 

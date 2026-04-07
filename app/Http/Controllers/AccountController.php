@@ -27,7 +27,7 @@ class AccountController extends Controller
     public function index() {
         $categories = $this->categories;
         $addresses  = Address::where('user_id', auth()->id())->get();
-        $wishlists = Wishlist::where('user_id', auth()->id())->whereHas('product')->with(['product.category.parent'])->latest()->take(10)->get();
+        $wishlists  = Wishlist::where('user_id', auth()->id())->whereHas('product')->with(['product.category.parent'])->latest()->take(10)->get();
         return view('user.my-account', compact('categories', 'addresses', 'wishlists'));
     }
 

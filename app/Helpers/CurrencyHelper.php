@@ -22,3 +22,25 @@ function getCartItemsCount(){
     }
     return $cartItemsCount;
 }
+
+if (!function_exists('getProductUrl')) {
+    function getProductUrl($product)
+    {
+        if (!$product || !$product->category) {
+            return '#';
+        }
+
+        $category = $product->category;
+        $parent   = $category->parent; // key change
+
+        $parentSlug = $parent ? $parent->slug : $category->slug;
+
+        $subcategorySlug = $parent ? $category->slug : null;
+
+        return route('shop.product', [
+            'category' => $parentSlug,
+            'subcategory' => $subcategorySlug,
+            'product' => $product->slug
+        ]);
+    }
+}

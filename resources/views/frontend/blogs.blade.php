@@ -23,8 +23,8 @@
     </div>
 
     <!-- Blog Cards -->
-     @foreach($blogs as $blog)
     <div class="row g-4">
+        @foreach($blogs as $blog)
         <!-- Card 1 -->
         <div class="col-md-4 d-flex">
             <div class="card rounded-4 border-1 card-hover">
@@ -41,8 +41,8 @@
                 </div>
             </div>
         </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
 
 @endsection
