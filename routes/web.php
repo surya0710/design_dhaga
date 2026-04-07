@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CkeditorController;
+use App\Http\Controllers\ShiprocketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +86,7 @@ Route::get('/blogs/{slug}', [BlogController::class, 'blogdetail'])->name('blog.s
 | User Routes
 |--------------------------------------------------------------------------
 */
-
+Route::post('/shiprocket/check-serviceability', [ShiprocketController::class, 'check'])->name('shiprocket.check.serviceability');
 Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::get('/account', [AccountController::class,'index'])->name('account.index');

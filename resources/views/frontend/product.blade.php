@@ -19,6 +19,39 @@
     .wishlist-btn.active i {
         font-weight: 900;
     }
+
+    .delivery-result-box {
+        border: 1px solid #ead5d8;
+        background: #fff8f8;
+        border-radius: 8px;
+    }
+
+    .delivery-result-box .label {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 2px;
+    }
+
+    .delivery-result-box .value {
+        font-size: 14px;
+        color: #212529;
+        font-weight: 600;
+    }
+
+    .delivery-result-box .status-success {
+        color: #198754;
+        font-weight: 700;
+    }
+
+    .delivery-result-box .status-fail {
+        color: #dc3545;
+        font-weight: 700;
+    }
+
+    .delivery-loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
 </style>
 @endpush
 
@@ -241,9 +274,83 @@
                     <div class="mb-2 mt-1 fw-bold heading-size">
                         <i class="fa-solid fa-truck me-2"></i>Check Delivery Time
                     </div>
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light-pink p-3 border-0" placeholder="Enter pincode" />
-                        <button class="btn btn-white border fw-bold">Check</button>
+
+                    <div id="deliveryCheckWrapper"
+                         data-product-id="{{ $product->id }}"
+                         data-product-weight="{{ $product->weight ?? 0.5 }}"
+                         data-pickup-postcode="{{ config('services.shiprocket.pickup_postcode', '110001') }}">
+
+                        <div id="deliveryInputSection">
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    id="deliveryPincode"
+                                    class="form-control bg-light-pink p-3 border-0"
+                                    placeholder="Enter pincode"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                />
+                                <button
+                                    class="btn btn-white border fw-bold"
+                                    type="button"
+                                    id="checkDeliveryBtn">
+                                    Check
+                                </button>
+                            </div>
+                            <small id="deliveryError" class="text-danger d-none mt-2"></small>
+                        </div>
+
+                        <div id="deliverySuccessSection" class="d-none mt-2">
+                            <div class="delivery-result-box p-3">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <div class="status-success mb-2">
+                                            <i class="fa-solid fa-circle-check me-1"></i>
+                                            Delivery available
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <div class="label">Pincode</div>
+                                            <div class="value" id="deliveryPincodeValue"></div>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <div class="label">Estimated delivery by</div>
+                                            <div class="value" id="deliveryDateValue"></div>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <div class="label">Estimated delivery time</div>
+                                            <div class="value" id="deliveryDaysValue"></div>
+                                        </div>
+
+                                        <div class="mb-0" id="deliveryCourierRow">
+                                            <div class="label">Courier partner</div>
+                                            <div class="value" id="deliveryCourierValue"></div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="changeDeliveryPincodeBtn">
+                                        Change
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="deliveryUnavailableSection" class="d-none mt-2">
+                            <div class="delivery-result-box p-3">
+                                <div class="status-fail mb-2">
+                                    <i class="fa-solid fa-circle-xmark me-1"></i>
+                                    Delivery not available
+                                </div>
+                                <div class="small text-muted mb-3">
+                                    Sorry, this pincode is not serviceable right now.
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="retryDeliveryBtn">
+                                    Try another pincode
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -782,6 +889,241 @@
             },
         });
     }
+
+    const deliveryConfig = {
+        endpoint: @json(route('shiprocket.check.serviceability')),
+        csrfToken: @json(csrf_token()),
+        storageKey: 'delivery_check_product_{{ $product->id }}'
+    };
+
+    function getDeliveryElements() {
+        return {
+            wrapper: document.getElementById('deliveryCheckWrapper'),
+            inputSection: document.getElementById('deliveryInputSection'),
+            successSection: document.getElementById('deliverySuccessSection'),
+            unavailableSection: document.getElementById('deliveryUnavailableSection'),
+            pincodeInput: document.getElementById('deliveryPincode'),
+            checkBtn: document.getElementById('checkDeliveryBtn'),
+            errorBox: document.getElementById('deliveryError'),
+            pincodeValue: document.getElementById('deliveryPincodeValue'),
+            dateValue: document.getElementById('deliveryDateValue'),
+            daysValue: document.getElementById('deliveryDaysValue'),
+            courierValue: document.getElementById('deliveryCourierValue'),
+            courierRow: document.getElementById('deliveryCourierRow'),
+            changeBtn: document.getElementById('changeDeliveryPincodeBtn'),
+            retryBtn: document.getElementById('retryDeliveryBtn')
+        };
+    }
+
+    function showDeliveryError(message) {
+        const els = getDeliveryElements();
+        els.errorBox.textContent = message;
+        els.errorBox.classList.remove('d-none');
+    }
+
+    function hideDeliveryError() {
+        const els = getDeliveryElements();
+        els.errorBox.textContent = '';
+        els.errorBox.classList.add('d-none');
+    }
+
+    function resetDeliverySections() {
+        const els = getDeliveryElements();
+        els.inputSection.classList.remove('d-none');
+        els.successSection.classList.add('d-none');
+        els.unavailableSection.classList.add('d-none');
+        hideDeliveryError();
+    }
+
+    function getNumericDeliveryDays(value) {
+        if (value === null || value === undefined || value === '') {
+            return null;
+        }
+
+        if (!isNaN(value)) {
+            return parseInt(value, 10);
+        }
+
+        const match = String(value).match(/\d+/);
+        return match ? parseInt(match[0], 10) : null;
+    }
+
+    function formatEstimatedDate(days) {
+        if (days === null || isNaN(days)) {
+            return 'To be confirmed';
+        }
+
+        const date = new Date();
+        date.setDate(date.getDate() + Number(days));
+
+        return new Intl.DateTimeFormat('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    function renderDeliverySuccess(data) {
+        const els = getDeliveryElements();
+        const bestOption = data?.best_option || null;
+        const pincode = data?.delivery_postcode || els.pincodeInput.value || '';
+        const rawDays = bestOption?.estimated_delivery_days ?? null;
+        const numericDays = getNumericDeliveryDays(rawDays);
+        const formattedDate = formatEstimatedDate(numericDays);
+        const courierName = bestOption?.courier_name || '';
+
+        els.pincodeValue.textContent = pincode;
+        els.dateValue.textContent = formattedDate;
+        els.daysValue.textContent = numericDays !== null ? `${numericDays} day${numericDays > 1 ? 's' : ''}` : (rawDays || 'To be confirmed');
+
+        if (courierName) {
+            els.courierValue.textContent = courierName;
+            els.courierRow.classList.remove('d-none');
+        } else {
+            els.courierValue.textContent = '';
+            els.courierRow.classList.add('d-none');
+        }
+
+        els.inputSection.classList.add('d-none');
+        els.unavailableSection.classList.add('d-none');
+        els.successSection.classList.remove('d-none');
+
+        localStorage.setItem(deliveryConfig.storageKey, JSON.stringify({
+            status: 'success',
+            response: data,
+            pincode: pincode
+        }));
+    }
+
+    function renderDeliveryUnavailable(pincode) {
+        const els = getDeliveryElements();
+
+        els.inputSection.classList.add('d-none');
+        els.successSection.classList.add('d-none');
+        els.unavailableSection.classList.remove('d-none');
+
+        localStorage.setItem(deliveryConfig.storageKey, JSON.stringify({
+            status: 'unavailable',
+            pincode: pincode
+        }));
+    }
+
+    function restoreSavedDeliveryState() {
+        const els = getDeliveryElements();
+        const saved = localStorage.getItem(deliveryConfig.storageKey);
+
+        if (!saved) {
+            return;
+        }
+
+        try {
+            const parsed = JSON.parse(saved);
+
+            if (parsed?.pincode) {
+                els.pincodeInput.value = parsed.pincode;
+            }
+
+            if (parsed?.status === 'success' && parsed?.response) {
+                renderDeliverySuccess(parsed.response);
+            } else if (parsed?.status === 'unavailable') {
+                renderDeliveryUnavailable(parsed.pincode || '');
+            }
+        } catch (e) {
+            localStorage.removeItem(deliveryConfig.storageKey);
+        }
+    }
+
+    function setDeliveryLoading(isLoading) {
+        const els = getDeliveryElements();
+
+        if (isLoading) {
+            els.checkBtn.dataset.originalText = els.checkBtn.innerHTML;
+            els.checkBtn.innerHTML = 'Checking...';
+            els.checkBtn.disabled = true;
+            els.checkBtn.classList.add('delivery-loading');
+            els.pincodeInput.disabled = true;
+        } else {
+            els.checkBtn.innerHTML = els.checkBtn.dataset.originalText || 'Check';
+            els.checkBtn.disabled = false;
+            els.checkBtn.classList.remove('delivery-loading');
+            els.pincodeInput.disabled = false;
+        }
+    }
+
+    function checkDeliveryAvailability() {
+        const els = getDeliveryElements();
+        const wrapper = els.wrapper;
+        const deliveryPincode = (els.pincodeInput.value || '').trim();
+        const pickupPostcode = wrapper.dataset.pickupPostcode;
+        const productWeight = wrapper.dataset.productWeight || '0.5';
+
+        hideDeliveryError();
+
+        if (!/^\d{6}$/.test(deliveryPincode)) {
+            showDeliveryError('Please enter a valid 6-digit pincode.');
+            return;
+        }
+
+        setDeliveryLoading(true);
+
+        $.ajax({
+            url: deliveryConfig.endpoint,
+            method: 'POST',
+            data: {
+                _token: deliveryConfig.csrfToken,
+                pickup_postcode: pickupPostcode,
+                delivery_postcode: deliveryPincode,
+                weight: productWeight,
+                cod: 0
+            },
+            success: function (response) {
+                setDeliveryLoading(false);
+
+                const result = response?.data || {};
+                const serviceable = !!result.serviceable;
+
+                if (serviceable) {
+                    renderDeliverySuccess(result);
+                } else {
+                    renderDeliveryUnavailable(deliveryPincode);
+                }
+            },
+            error: function (xhr) {
+                setDeliveryLoading(false);
+
+                const message = xhr.responseJSON?.message || xhr.responseJSON?.error || 'Unable to check delivery for this pincode right now.';
+                showDeliveryError(message);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        const els = getDeliveryElements();
+
+        restoreSavedDeliveryState();
+
+        $('#checkDeliveryBtn').on('click', function () {
+            checkDeliveryAvailability();
+        });
+
+        $('#deliveryPincode').on('input', function () {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
+            hideDeliveryError();
+        });
+
+        $('#deliveryPincode').on('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkDeliveryAvailability();
+            }
+        });
+
+        $('#changeDeliveryPincodeBtn, #retryDeliveryBtn').on('click', function () {
+            localStorage.removeItem(deliveryConfig.storageKey);
+            resetDeliverySections();
+            els.pincodeInput.focus();
+        });
+    });
 </script>
 <script src="{{ asset('frontend_assets/js/product.js') }}"></script>
 @endpush
