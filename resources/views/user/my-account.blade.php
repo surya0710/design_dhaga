@@ -208,30 +208,6 @@ your orders.')
                                 <h3 class="fw-bold mb-0">₹ 4.5k</h3>
                             </div>
                         </div>
-
-                        <div class="col">
-                            <div class="card text-center p-3 h-100">
-                                <div class="stat-card-icon">
-                                    <i class="bi bi-credit-card fs-4"></i>
-                                </div>
-                                <h6 class="text-muted small text-uppercase fw-bold">
-                                    Balance
-                                </h6>
-                                <h3 class="fw-bold mb-0">₹ 151</h3>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card text-center p-3 h-100">
-                                <div class="stat-card-icon">
-                                    <i class="bi bi-geo-alt fs-4"></i>
-                                </div>
-                                <h6 class="text-muted small text-uppercase fw-bold">
-                                    Locales
-                                </h6>
-                                <h3 class="fw-bold mb-0">2</h3>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row g-4">
@@ -320,19 +296,22 @@ your orders.')
                 </div>
 
                 <div class="tab-pane fade" id="addresses">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    <!-- <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="fw-bold mb-0">Saved Addresses</h4>
                         <button class="btn btn-dark btn-sm" onclick="showForm()">
                             <i class="bi bi-plus-lg"></i> Add New
                         </button>
-                    </div>
+                    </div> -->
 
                     <div id="addressList">
                         <div class="row g-4">
+                            @foreach($addresses as $address)
                             <div class="col-md-6">
                                 <div class="card p-4 h-100">
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        @if($address->is_default == 1)
                                         <span class="badge bg-dark">Default</span>
+                                        @endif
                                         <div class="dropdown">
                                             <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots-vertical"></i>
@@ -345,39 +324,16 @@ your orders.')
                                             </ul>
                                         </div>
                                     </div>
-                                    <h5 class="fw-bold">{{ Auth::user()->name }}</h5>
-                                    <!-- <p class="text-muted small mb-0">
-                                        PK House, Kannur<br />
-                                        670523, India<br />
-                                        +91 9876543210
-                                    </p> -->
-                                </div>
-                            </div>
-
-                            <!-- <div class="col-md-6">
-                                <div class="card p-4 h-100">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="badge bg-light text-dark border">Work</span>
-                                        <div class="dropdown">
-                                            <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots-vertical"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="fw-bold">{{ $address->full_name }}</h5>
+                                        <span>{{ ucwords(str_replace('_', ' ', $address->address_type)) }}</span>
                                     </div>
-                                    <h6 class="fw-bold">Office Address</h6>
                                     <p class="text-muted small mb-0">
-                                        MG Road, Kochi<br />
-                                        682001, India<br />
-                                        +91 9876543211
+                                        {{ $address->address_line_1 }}, {{ $address->address_line_2 }}, {{ $address->landmark }}, {{ $address->city }}, {{ $address->state }}, {{ $address->country }}, {{ $address->pincode }}
                                     </p>
                                 </div>
-                            </div> -->
+                            </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -566,151 +522,38 @@ your orders.')
                         <button class="btn btn-dark mt-2">Continue Shopping</button>
                     </div>
                     <div id="wishlistItems">
-                        <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">Premium Wireless Headphones</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(256)</small>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 2,499</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 text-center">
+                            @foreach($wishlists as $wishlist)
+                                @php
+                                    $product = $wishlist->product;
+                                    $category = $product?->category;
+                                @endphp
 
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">Smart Watch Pro</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-half text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(128)</small>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 4,999</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                                @if($product && $category)
+                                    <div class="col">
+                                        <div class="card h-100 position-relative">
+                                            <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger" style="z-index: 10;">
+                                                <i class="bi bi-heart-fill"></i>
+                                            </button>
 
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">Portable Phone Charger</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(512)</small>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 1,299</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
 
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">Bluetooth Speaker</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(342)</small>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 3,499</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                                            <a class="card-body d-flex flex-column text-decoration-none" href="{{ route('shop.product', [ 
+                                            $category->parent_id  ? $category->parent->slug : $category->slug, $category->slug, $product->slug ]) }}">
+                                                
+                                                <h6 class="card-title fw-bold small">
+                                                    {{ $product->name }}
+                                                </h6>
 
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">USB-C Cable (3m)</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-half text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(89)</small>
+                                                <h5 class="fw-bold text-dark">
+                                                    ₹ {{ $product->sale_price }}
+                                                </h5>
+                                            </a>
                                         </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 399</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="card h-100 position-relative">
-                                    <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger"
-                                        style="z-index: 10;">
-                                        <i class="bi bi-heart-fill"></i>
-                                    </button>
-                                    <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                        class="card-img-top" alt="Product">
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title fw-bold small mb-2">Screen Protector (12 pieces)</h6>
-                                        <div class="d-flex align-items-center gap-1 mb-2">
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.75rem;"></i>
-                                            <i class="bi bi-star text-warning" style="font-size: 0.75rem;"></i>
-                                            <small class="text-muted">(234)</small>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-3">₹ 599</h5>
-                                        <button class="btn btn-dark btn-sm w-100 mt-auto">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 

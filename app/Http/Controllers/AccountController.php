@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
+use App\Models\Address;
+use App\Models\Wishlist;
 
 class AccountController extends Controller
 {
@@ -24,7 +26,9 @@ class AccountController extends Controller
 
     public function index() {
         $categories = $this->categories;
-        return view('user.my-account', compact('categories'));
+        $addresses  = Address::where('user_id', auth()->id())->get();
+        $wishlists = Wishlist::where('user_id', auth()->id())->whereHas('product')->with(['product.category.parent'])->latest()->take(10)->get();
+        return view('user.my-account', compact('categories', 'addresses', 'wishlists'));
     }
 
     public function logout(){
