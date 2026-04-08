@@ -16,6 +16,9 @@
               <li class="mb-2">
                 <a href="{{ route('terms-and-condition') }}" class="text-decoration-none text-secondary link-dark">Terms & Condition</a>
               </li>
+              <li class="mb-2">
+                <a href="{{ route('blogs') }}" class="text-decoration-none text-secondary link-dark">Blogs</a>
+              </li>
             </ul>
           </div>
 

@@ -356,7 +356,8 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeImageModal();
 
-    if (document.getElementById('imageModal').style.display === 'flex') {
+    const imageModal = document.getElementById('imageModal');
+    if (imageModal && imageModal.style.display === 'flex') {
         if (e.key === 'ArrowLeft') prevModalImage();
         if (e.key === 'ArrowRight') nextModalImage();
     }

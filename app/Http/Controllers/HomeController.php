@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\ContactMail;
 use App\Models\Category;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -25,8 +25,9 @@ class HomeController extends Controller
     }
 
     public function index(){
-        $categories = $this->categories;
-        return view('frontend.home', compact('categories'));
+        $categories         = $this->categories;
+        $newArrivals        = Product::where('status', 1)->with(['category.parent'])->latest()->limit(9)->get();
+        return view('frontend.home', compact('categories', 'newArrivals'));
     }
 
     public function about(){

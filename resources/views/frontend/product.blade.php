@@ -245,7 +245,7 @@
                         @for($i = 1; $i < 7; $i++)
                         <div class="col-4">
                             <svg width="40" height="40">
-                                <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.strtolower($product->category->name).'/'.$i.'.svg') }}"></use>
+                                <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.$i.'.svg') }}"></use>
                             </svg>
                             <p class="text-black">{{ $iconsText[$i] }}</p>
                         </div>
@@ -275,10 +275,7 @@
                         <i class="fa-solid fa-truck me-2"></i>Check Delivery Time
                     </div>
 
-                    <div id="deliveryCheckWrapper"
-                         data-product-id="{{ $product->id }}"
-                         data-product-weight="{{ $product->weight ?? 0.5 }}"
-                         data-pickup-postcode="{{ config('services.shiprocket.pickup_postcode', '110001') }}">
+                    <div id="deliveryCheckWrapper" data-product-id="{{ $product->id }}" data-product-weight="{{ $product->weight ?? 0.5 }}">
 
                         <div id="deliveryInputSection">
                             <div class="input-group">
@@ -1054,7 +1051,6 @@
         const els = getDeliveryElements();
         const wrapper = els.wrapper;
         const deliveryPincode = (els.pincodeInput.value || '').trim();
-        const pickupPostcode = wrapper.dataset.pickupPostcode;
         const productWeight = wrapper.dataset.productWeight || '0.5';
 
         hideDeliveryError();
@@ -1071,7 +1067,6 @@
             method: 'POST',
             data: {
                 _token: deliveryConfig.csrfToken,
-                pickup_postcode: pickupPostcode,
                 delivery_postcode: deliveryPincode,
                 weight: productWeight,
                 cod: 0

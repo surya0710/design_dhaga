@@ -10,7 +10,7 @@
     </div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-white border-bottom p-0">
-        <div class="container-fluid d-flex justify-content-between align-items-center px-md-5">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-3 px-md-5">
 
             <!-- LEFT: MENU + SEARCH -->
             <div class="d-flex align-items-center gap-3">
@@ -39,23 +39,34 @@
                 </a>
             </div>
 
-            <!-- RIGHT: CART WITH BADGE -->
-            <div class="position-relative">
-                <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '{{ route('cart.index') }}'">
-                    <svg width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="10" cy="20" r="1.5"></circle>
-                        <circle cx="18" cy="20" r="1.5"></circle>
-                        <path d="M3 3h3l2.5 12h11.5l2-8H8"></path>
-                    </svg>
-                </button>
+            <!-- RIGHT: WISHLIST + CART -->
+            <div class="d-flex align-items-center gap-3">
 
-                <!-- Badge -->
-                <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 end-0" style="font-size: 12px; transform: translate(40%, -40%);">
-                    {{ getCartItemsCount() }}
-                </span>
+                <!-- Wishlist -->
+                <div>
+                    <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '#'">
+                        <i class="fa-2x fa-regular fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Cart -->
+                <div class="position-relative">
+                    <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '{{ route('cart.index') }}'">
+                        <svg width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="10" cy="20" r="1.5"></circle>
+                            <circle cx="18" cy="20" r="1.5"></circle>
+                            <path d="M3 3h3l2.5 12h11.5l2-8H8"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Badge -->
+                    <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle"
+                        style="font-size: 12px;">
+                        {{ getCartItemsCount() }}
+                    </span>
+                </div>
+
             </div>
-
         </div>
     </nav>
 </div>
@@ -126,6 +137,9 @@
         </div>
         <div class="menu-title">
             <a href="{{ route('portfolio') }}" class="submenu-item">PORTFOLIO</a>
+        </div>
+        <div class="menu-title">
+            <a href="{{ route('blogs') }}" class="submenu-item">BLOGS</a>
         </div>
         <div class="menu-title">
             <a href="{{ route('contact-us') }}" class="submenu-item">CONTACT US</a>

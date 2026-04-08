@@ -3,16 +3,14 @@
 
 function getIconsByCategory($category){
     $categoryIcons = [
-        "Dupatta" => [
-            "1" => "Natural Fibre",
-            "2" => "Hand Painted",
-            "3" => "Made in India",
-            "4" => "Limited Edition",
-            "5" => "Timeless Appeal",
-            "6" => "Pack of 1"
-        ]
+        "1" => "Natural Fibre",
+        "2" => "Hand Painted",
+        "3" => "Made in India",
+        "4" => "Limited Edition",
+        "5" => "Timeless Appeal",
+        "6" => "Pack of 1"
     ];
-    return $categoryIcons[$category];
+    return $categoryIcons;
 }
 
 function getCartItemsCount(){

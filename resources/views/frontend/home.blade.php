@@ -30,7 +30,7 @@
             <div class="carousel-caption caption-left text-white">
                 <h2>Hand-Painted Elegance <br>for the <strong>Modern Man</strong></h2>
                 <p>Inspired by <i>culture</i>, and designed to stand apart</p>
-                <a href="{{ route('store') }}" class="btn btn-outline-primary">Shop Now</a>
+                <a href="{{ route('shop.index', ['men']) }}" class="btn btn-outline-primary">Shop Now</a>
             </div>
         </div>
         <div class="carousel-item">
@@ -38,7 +38,7 @@
             <div class="carousel-caption caption-right text-dark">
                 <h2>Hand-Painted Stories, <br><strong>for Womens</strong></h2>
                 <p>Every outfit is a canvas crafted by <br>skilled artists, who love timeless elegance.</p>
-                <a href="{{ route('store') }}" class="btn btn-outline-primary">Shop Now</a>
+                <a href="{{ route('shop.index', ['women']) }}" class="btn btn-outline-primary">Shop Now</a>
             </div>
         </div>
         <div class="carousel-item">
@@ -54,7 +54,7 @@
             <div class="carousel-caption caption-right text-dark">
                 <h2><strong>Little Outfits</strong>. Big Smiles</h2>
                 <p>Hand-painted kidswear made with <br><strong><i>love, colors, and comfort</i></strong>.</p>
-                <a href="{{ route('store') }}" class="btn btn-outline-primary">Shop Now</a>
+                <a href="{{ route('shop.index', ['kids']) }}" class="btn btn-outline-primary">Shop Now</a>
             </div>
         </div>
         <div class="carousel-item">
@@ -124,14 +124,12 @@
         <div class="d-flex justify-content-center mb-3">
             <ul class="nav nav-tabs custom-tabs border-0 gap-2" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="new-arrival-tab" data-bs-toggle="tab"
-                        data-bs-target="#new-arrival-tab-pane" type="button" role="tab"
-                        aria-controls="new-arrival-tab-pane" aria-selected="true">New Arrival</button>
+                    <button class="nav-link active" id="new-arrival-tab" data-bs-toggle="tab" data-bs-target="#new-arrival-tab-pane" type="button" role="tab"
+                    aria-controls="new-arrival-tab-pane" aria-selected="true">New Arrival</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="best-seller-tab" data-bs-toggle="tab"
-                        data-bs-target="#best-seller-tab-pane" type="button" role="tab"
-                        aria-controls="best-seller-tab-pane" aria-selected="false">Best Seller</button>
+                    <button class="nav-link" id="best-seller-tab" data-bs-toggle="tab" data-bs-target="#best-seller-tab-pane" type="button" role="tab"
+                    aria-controls="best-seller-tab-pane" aria-selected="false">Best Seller</button>
                 </li>
             </ul>
         </div>
@@ -142,44 +140,14 @@
             <!-- New Arrival -->
             <div class="tab-pane fade show active" id="new-arrival-tab-pane" role="tabpanel">
                 <div class="products-conatiner">
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Boys-HandCrafted-Dress.jpg" class="loaded"
-                            alt="">
-                        <p>Boys HandCrafted Dress</p>
+                    @foreach ($newArrivals as $product)
+                    @php $url = getProductUrl($product); @endphp
+                    <a class="product-item" href="{{ $url }}">
+                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}">
+                        <p>{{ $product->name }}</p>
                     </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Custom-Name-Saree.jpg" class="loaded"
-                            alt="">
-                        <p>Custom Name Saree</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Girls-Handcrafted-Dress.jpg" class="loaded"
-                            alt="">
-                        <p>Girls HandCrafted Dress</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Hand-Painted-Blouse.jpg" class="loaded"
-                            alt="">
-                        <p>Hand Painted Blouse</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Hand-Painted-T-Shirt.jpg" class="loaded"
-                            alt="">
-                        <p>Hand Painted T-Shirt</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/Men's-Hand-painted-Shirt.jpg"
-                            class="loaded" alt="">
-                        <p>Men's Hand Painted Shirt</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/new-arrival/wedding-Lehenga.jpg" class="loaded" alt="">
-                        <p>Wedding Lehenga</p>
-                    </a>
+                    @endforeach
                 </div>
-                <!-- <div class="d-flex justify-content-center py-3">
-                                <a class="btn btn-outline-secondary view-all-btn">VIEW ALL ➝</a>
-                            </div> -->
             </div>
 
             <!-- Best Seller -->
@@ -205,9 +173,6 @@
                         <p>Modren Art Design Saree</p>
                     </a>
                 </div>
-                <!-- <div class="d-flex justify-content-center py-3">
-                                <a class="btn btn-outline-secondary view-all-btn">VIEW ALL ➝</a>
-                            </div> -->
             </div>
         </div>
     </div>

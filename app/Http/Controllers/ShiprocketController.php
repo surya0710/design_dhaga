@@ -11,7 +11,6 @@ class ShiprocketController extends Controller
     public function check(Request $request, ShiprocketService $shiprocket): JsonResponse
     {
         $validated = $request->validate([
-            'pickup_postcode' => ['required', 'digits:6'],
             'delivery_postcode' => ['required', 'digits:6'],
             'weight' => ['required', 'numeric', 'min:0.1'],
             'cod' => ['nullable', 'boolean'],
@@ -23,7 +22,7 @@ class ShiprocketController extends Controller
 
         try {
             $result = $shiprocket->checkServiceability(
-                pickupPincode: $validated['pickup_postcode'],
+                pickupPincode: '125001',
                 deliveryPincode: $validated['delivery_postcode'],
                 weight: (float) $validated['weight'],
                 cod: (int) ($validated['cod'] ?? 0),
