@@ -21,23 +21,27 @@ class ShopController extends Controller
             ->get();
     }
     
-    public function category_products(Request $request, $slug = null)
+    public function category_products(Request $request, $categorySlug = null, $subcategorySlug = null)
     {
-        $category = Category::where('slug', $slug)
-            ->with('children')
-            ->firstOrFail();
-
-        $subcategoryIds = $category->children->pluck('id')->toArray();
-
-        $products = Product::where('status', 1)
-            ->where(function ($q) use ($category, $subcategoryIds) {
-                $q->where('category_id', $category->id)
-                  ->orWhereIn('category_id', $subcategoryIds);
-            })
-            ->orderBy('id', 'desc')
-            ->get();
-
         $categories = $this->categories;
+
+        if ($subcategorySlug) {
+            $category = Category::where('slug', $subcategorySlug)->firstOrFail();
+
+            $products = Product::where('status', 1)->where('category_id', $category->id)->orderBy('id', 'desc')->get();
+        } else {
+            $category = Category::where('slug', $categorySlug)->with('children')->firstOrFail();
+
+            $subcategoryIds = $category->children->pluck('id')->toArray();
+
+            $products = Product::where('status', 1)
+                ->where(function ($q) use ($category, $subcategoryIds) {
+                    $q->where('category_id', $category->id)
+                    ->orWhereIn('category_id', $subcategoryIds);
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+        }
 
         return view('frontend.shop', compact('products', 'category', 'categories'));
     }

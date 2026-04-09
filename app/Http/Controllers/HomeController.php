@@ -70,6 +70,11 @@ class HomeController extends Controller
         return view('frontend.store', compact('categories'));
     }
 
+    public function collaborations(){
+        $categories = $this->categories;
+        return view('frontend.collaborations', compact('categories'));
+    }
+
     public function sendmail(Request $request)
     {
         // ✅ Validation

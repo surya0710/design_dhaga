@@ -80,6 +80,8 @@ Route::get('/store', [HomeController::class, 'store'])->name('store');
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
 Route::get('/blogs/{slug}', [BlogController::class, 'blogdetail'])->name('blog.show');
 
+Route::get('/collaborations', [HomeController::class, 'collaborations'])->name('collaborations');
+
 
 /*
 |--------------------------------------------------------------------------
