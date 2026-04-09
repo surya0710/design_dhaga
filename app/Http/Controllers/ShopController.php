@@ -59,9 +59,11 @@ class ShopController extends Controller
             ])
             ->firstOrFail();
 
+        $reviews = $product->reviews()->where('approved', 1)->get();
+
         // Build unified image array: main + gallery
         $galleryPaths = $product->galleryImages->pluck('image')->toArray();
 
-        return view('frontend.product', compact('product', 'categories', 'galleryPaths'));
+        return view('frontend.product', compact('product', 'categories', 'galleryPaths', 'reviews'));
     }
 }

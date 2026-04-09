@@ -112,4 +112,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class, 'product_id')->where('type', 'gallery')->orderBy('id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id');
+    }
 }

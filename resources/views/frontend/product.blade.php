@@ -107,16 +107,22 @@
                         <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
 
                         <div class="d-flex align-items-center gap-2 mb-1">
+                            @php
+                                $totalReviews = $product->reviews->count();
+                                $totalRatings = $product->reviews->sum('rating');
+                                $averageRating = $totalReviews ? number_format($totalRatings / $totalReviews, 1) : 0;
+                            @endphp
                             <div class="text-warning">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($averageRating >= $i)
+                                        <i class="fa-solid fa-star"></i>
+                                    @else
+                                        <i class="fa-regular fa-star"></i>
+                                    @endif
+                                @endfor
                             </div>
-                            <span class="small text-muted">4.0 (128 reviews)</span>
+                            <span class="small text-muted">{{ $averageRating ?? 0 }} ({{ $totalReviews }} reviews)</span>
                         </div>
-
                         <p class="text-black mb-0 small">{{ $product->short_description }}</p>
 
                         <div class="h6 mb-0 price">
@@ -184,13 +190,15 @@
 
                             <div class="d-flex align-items-center gap-2 mb-1">
                                 <div class="text-warning">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($averageRating >= $i)
+                                            <i class="fa-solid fa-star"></i>
+                                        @else
+                                            <i class="fa-regular fa-star"></i>
+                                        @endif
+                                    @endfor
                                 </div>
-                                <span class="small text-muted">4.0 (128 reviews)</span>
+                                <span class="small text-muted">{{ $averageRating ?? 0 }} ({{ $totalReviews }} reviews)</span>
                             </div>
                         </div>
 
