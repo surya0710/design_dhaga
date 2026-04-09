@@ -34,6 +34,9 @@
               <li class="mb-2">
                 <a href="{{ route('contact-us') }}" class="text-decoration-none text-secondary link-dark">Contact Us</a>
               </li>
+              <li class="mb-2">
+                <a href="{{ route('collaborations') }}" class="text-decoration-none text-secondary link-dark">Collaboration</a>
+              </li>
             </ul>
           </div>
 

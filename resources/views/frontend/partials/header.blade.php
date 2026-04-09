@@ -142,6 +142,9 @@
             <a href="{{ route('blogs') }}" class="submenu-item">BLOGS</a>
         </div>
         <div class="menu-title">
+            <a href="{{ route('collaborations') }}" class="submenu-item">COLLABORATIONS</a>
+        </div>
+        <div class="menu-title">
             <a href="{{ route('contact-us') }}" class="submenu-item">CONTACT US</a>
         </div>
     </div>
