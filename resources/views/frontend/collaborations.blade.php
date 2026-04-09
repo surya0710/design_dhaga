@@ -11,7 +11,7 @@
 
     @section('content')
         <section class="bg-body-secondary">
-            <div class="container py-5">
+            <div class="container py-5 pt-3">
                 <h3>Introduction</h3>
                 <p>At Design Dhaga, we believe great things happen when creative people come together. Whether you are a content creator, a wedding planner, a boutique owner, or someone who simply loves handcrafted art - we would love to work with you.</p>
                 <p>Every piece we make is hand-painted, original, and one of a kind. And we are looking for people who value that same authenticity in their work.</p>
