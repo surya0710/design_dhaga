@@ -379,7 +379,7 @@
 
                             <div class="summary-row">
                                 <span>Shipping</span>
-                                <span id="summary-shipping">{{ ($shipping ?? 0) == 0 ? 'Free' : '₹'.number_format($shipping, 2) }}</span>
+                                <span id="summary-shipping">{{ ($shipping ?? 0) == 0 ? '0' : '₹'.number_format($shipping, 2) }}</span>
                             </div>
 
                             <hr>

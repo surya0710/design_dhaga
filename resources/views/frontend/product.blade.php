@@ -294,17 +294,16 @@
                         <div id="deliverySuccessSection" class="d-none mt-2">
                             <div class="delivery-result-box p-3">
                                 <div class="d-flex justify-content-between align-items-start gap-3">
-                                    <div class="d-flex justify-content-between flex-row gap-2">
-
-                                        <div class="mb-2 d-flex">
+                                    <div class="d-flex justify-content-between flex-column gap-2">
+                                        <div class="d-flex">
                                             <div class="label">
                                                 <i class="fa-solid fa-location-dot me-1"></i>
                                             </div>
                                             <div class="value" id="deliveryPincodeValue"></div>
                                         </div>
 
-                                        <div class="mb-2 d-flex">
-                                            <div class="label">Delivery by</div>
+                                        <div class="d-flex">
+                                            <div class="label">Delivery by </div>
                                             <div class="value" id="deliveryDateValue"></div>
                                         </div>
                                     </div>
