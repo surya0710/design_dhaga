@@ -294,7 +294,7 @@
                         <div id="deliverySuccessSection" class="d-none mt-2">
                             <div class="delivery-result-box p-3">
                                 <div class="d-flex justify-content-between align-items-start gap-3">
-                                    <div class="d-flex justify-content-between flex-column">
+                                    <div class="d-flex justify-content-between flex-row gap-2">
 
                                         <div class="mb-2 d-flex">
                                             <div class="label">
