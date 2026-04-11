@@ -47,7 +47,7 @@
                                 
                                 <div class="position-relative d-inline-block w-100">
 
-                                    <img src="https://www.designdhaga.com/storage/uploads/media/1775635761_image%2001.jpg" alt="{{ $product->name }}" class="w-100 rounded">
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 rounded">
 
                                     <button type="button" class="btn p-0 bg-white border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                                         style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
