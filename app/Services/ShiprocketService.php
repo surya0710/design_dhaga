@@ -41,7 +41,7 @@ class ShiprocketService
     }
 
     public function checkServiceability(
-        string $pickupPincode,
+        string $pickupPincode = '400013',
         string $deliveryPincode,
         float $weight,
         int $cod = 0,
