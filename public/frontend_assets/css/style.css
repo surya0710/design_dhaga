@@ -444,7 +444,7 @@ h5 {
 .products-conatiner {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
 }
 
@@ -453,14 +453,14 @@ h5 {
   color: #000;
   display: block;
   flex: 0 0 calc(20% - 20px);
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   background: transparent;
 }
 
 .product-item img {
   width: 100%;
-  max-width: 220px;
+  max-width: 100%;
   display: block;
   margin: 0 auto 10px;
   border-radius: 7px;
@@ -655,6 +655,18 @@ h5 {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+}
+
+div:where(.swal2-icon){
+  width: 4em!important;
+  height: 4em!important;
+}
+div:where(.swal2-icon) .swal2-icon-content{
+  font-size: 3em!important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title){
+  padding: 0!important;
 }
 
 @keyframes scroll-left {

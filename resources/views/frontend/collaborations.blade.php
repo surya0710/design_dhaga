@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-@section('title', 'Contact Us')
+@section('title', 'Collaborate With Ss')
 
 @section('meta_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 
@@ -63,6 +63,7 @@
                             @endif
                             <form class="form-group" action="{{ route('sendmail') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <input type="hidden" name="terms" value="1" />
                                 <div class="row">
                                     <div class="col-md-6">
                                         @if ($errors->has('name'))
@@ -93,10 +94,11 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    @if ($errors->has('design'))
-                                        <span class="text-danger">{{ $errors->first('design') }}</span>
-                                    @endif
-                                    <input type="file" class="form-control" name="design" placeholder="Upload Your Design Ideas">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="instagram" id="instagram" placeholder="Enter Instagram Link" value="{{ old('instagram') }}" required>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                     @if ($errors->has('message'))

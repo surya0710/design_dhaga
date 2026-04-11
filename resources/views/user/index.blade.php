@@ -9,7 +9,7 @@
 
 @section('content')
 
-<div class="login-page">
+<div class="bg-black">
     <div class="bg-decoration"></div>
     <div class="bg-decoration"></div>
     <div class="bg-decoration"></div>
@@ -18,11 +18,11 @@
         <div class="row align-items-center login-logo-section">
             
             <!-- Brand Section -->
-            <div class="col-lg-6 brand-section">
+            <div class="col-lg-6 brand-section text-center">
                 <img style="max-width: 35%" class="mb-2" src="{{ asset('frontend_assets/images/logo/square-logo.png') }}" alt="Design Dhaga Logo">
-                <p class="brand-tagline d-none d-md-block">Explore limited edition handcrafted pieces you won’t find anywhere else.</p>
+                <!-- <p class="brand-tagline d-none d-md-block">Explore limited edition handcrafted pieces you won’t find anywhere else.</p> -->
 
-                <ul class="feature-list d-none d-lg-block">
+                <!-- <ul class="feature-list d-none d-lg-block">
                     <li class="feature-item">
                         <div class="feature-icon">✦</div>
                         <span class="feature-text">Access exclusive handmade collections</span>
@@ -35,7 +35,7 @@
                         <div class="feature-icon">⚡</div>
                         <span class="feature-text">Track orders and manage your account</span>
                     </li>
-                </ul>
+                </ul> -->
             </div>
 
             <!-- Login Card -->

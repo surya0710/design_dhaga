@@ -33,7 +33,7 @@
                 <div class="cart-box p-4">
 
                     @foreach($cartItems as $item)
-                    <div class="cart-item d-lg-flex justify-content-between align-items-center">
+                    <div class="cart-item d-lg-flex justify-content-between align-items-center gap-2">
 
                         {{-- PRODUCT --}}
                         <div class="d-flex gap-3 align-items-center">
@@ -90,11 +90,6 @@
                     <div class="d-flex justify-content-between summary-row">
                         <span>Subtotal</span>
                         <span>₹{{ number_format($subtotal, 2) }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between summary-row">
-                        <span>Shipping</span>
-                        <span>Free</span>
                     </div>
 
                     <hr>

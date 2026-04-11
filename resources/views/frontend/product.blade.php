@@ -202,13 +202,9 @@
                             </div>
                         </div>
 
-                        <button
-                            type="button"
+                        <button type="button"
                             class="btn bg-maroon rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
-                            data-product-id="{{ $product->id }}"
-                            data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
-                            aria-label="Toggle wishlist"
-                        >
+                            data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
                             <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
                         </button>
                     </div>
@@ -896,7 +892,7 @@
     }
 
     const deliveryConfig = {
-        endpoint: @json(route('shiprocket.check.serviceability')),
+        endpoint: @json(route('checkout.delivery.options')),
         csrfToken: @json(csrf_token()),
         storageKey: 'delivery_check_product_{{ $product->id }}'
     };

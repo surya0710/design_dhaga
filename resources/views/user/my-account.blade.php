@@ -174,8 +174,13 @@ your orders.')
                         <i class="bi bi-chevron-right small"></i>
                     </button>
 
-                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#logout">
-                        <span><i class="bi bi-box-arrow-right me-2"></i> Logout</span>
+                    <button class="nav-link d-flex justify-content-between align-items-center">
+                        <form method="post" action="{{ route('account.logout') }}" id="logoutForm">
+                            @csrf
+                            <span onclick="document.getElementById('logoutForm').submit()">
+                                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                            </span>
+                        </form>
                     </button>
                 </div>
             </div>
@@ -553,25 +558,6 @@ your orders.')
                                     </div>
                                 @endif
                             @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="logout">
-                    <div class="card p-5 text-center border-danger border-opacity-25">
-                        <i class="bi bi-exclamation-circle text-danger fs-1 mb-3"></i>
-                        <h4>Are you sure?</h4>
-                        <p class="text-muted">
-                            You will need to login again to access your account.
-                        </p>
-                        <div class="mt-3 d-flex justify-content-center">
-                            <form method="post" action="{{ route('account.logout') }}">
-                                @csrf
-                                <button type="submit" class="btn btn-danger px-4">Yes, Logout</button>
-                            </form>
-                            <button class="btn btn-light px-4" onclick="document.querySelector('[data-bs-target=\'#dashboard\']').click()">
-                                Cancel
-                            </button>
                         </div>
                     </div>
                 </div>

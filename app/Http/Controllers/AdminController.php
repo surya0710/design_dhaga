@@ -194,7 +194,7 @@ class AdminController extends Controller
         $request->validate([
             'name'  => 'required',
             'slug'  => 'required|unique:brands,slug',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
         ]);
 
         $brand       = new Brand();
@@ -230,7 +230,7 @@ class AdminController extends Controller
         $request->validate([
             'name'  => 'required',
             'slug'  => 'required|unique:brands,slug,' . $request->id,
-            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
         ]);
 
         $brand       = Brand::findOrFail($request->id);
@@ -280,7 +280,7 @@ class AdminController extends Controller
         $request->validate([
             'name'             => 'required|min:3',
             'slug'             => 'required|unique:categories,slug',
-            'image'            => 'nullable|mimes:png,jpg,jpeg|max:2048',
+            'image'            => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
             'meta_title'       => 'nullable|max:255|unique:categories,meta_title',
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
@@ -311,7 +311,7 @@ class AdminController extends Controller
         $destinationPath = public_path('uploads/categories');
         if (!File::exists($destinationPath)) File::makeDirectory($destinationPath, 0755, true);
         $img = Image::read($image->path());
-        $img->cover(250, 250, 'top')->save($destinationPath . '/' . $imageName);
+        $img->save($destinationPath . '/' . $imageName);
         unset($img);
     }
 
@@ -326,7 +326,7 @@ class AdminController extends Controller
         $request->validate([
             'name'             => 'required|min:3',
             'slug'             => 'required|string|max:255|unique:categories,slug,' . $request->id,
-            'image'            => 'nullable|mimes:png,jpg,jpeg|max:2048',
+            'image'            => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
             'meta_title'       => 'nullable|unique:categories,meta_title,' . $request->id,
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',

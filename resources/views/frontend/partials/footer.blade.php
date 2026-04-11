@@ -34,44 +34,34 @@
               <li class="mb-2">
                 <a href="{{ route('contact-us') }}" class="text-decoration-none text-secondary link-dark">Contact Us</a>
               </li>
-              <li class="mb-2">
-                <a href="{{ route('collaborations') }}" class="text-decoration-none text-secondary link-dark">Collaboration</a>
-              </li>
             </ul>
           </div>
 
           <div class="col-lg-4 col-md-12 col-sm-12">
             <h5 class="fw-bold text-uppercase mt-1 mb-1">Connect With Us</h5>
-            <p class="text-muted small">Follow us for daily inspiration:</p>
-            <div class="d-flex gap-2 mt-3 social-media-icons">
-              <a
-                href="https://www.facebook.com/share/1A9mCmVNy2/"
-                target="_blank"
-                class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none"
-                ><i class="fa-brands fa-facebook" style="font-size:20px"></i
-              ></a>
-              <a
-                href="https://www.instagram.com/design.dhaga?igsh=MW5maXJraTgzbnYzOA=="
-                target="_blank"
-                class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none"
-                ><i class="fa-brands fa-instagram" style="font-size:20px"></i
-              ></a>
-              <a
-                href="https://youtube.com/@designdhaga?si=A5rYdj_bpGZB_D1b"
-                target="_blank"
-                class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none"
-                ><i class="fa-brands fa-youtube" style="font-size:20px"></i
-              ></a>
-              <a
-                href="https://pin.it/Y79Q6uD62"
-                target="_blank"
-                class="p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none"
-                ><i class="fa-brands fa-pinterest" style="font-size:20px"></i
-              ></a>
+            <p class="text-muted small mb-1">Follow us for daily inspiration:</p>
+            <ul class="list-unstyled mb-1">
+              <li>
+                <a href="{{ route('collaborations') }}" class="text-decoration-none text-secondary link-dark">Collaboration</a>
+              </li>
+            </ul>
+            <div class="d-flex mt-2 social-media-icons">
+              <a href="https://www.facebook.com/share/1A9mCmVNy2/" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none" >
+                <i class="fa-brands fa-facebook" style="font-size:20px"></i>
+              </a>
+              <a href="https://www.instagram.com/design.dhaga?igsh=MW5maXJraTgzbnYzOA==" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none" >
+                <i class="fa-brands fa-instagram" style="font-size:20px"></i>
+              </a>
+              <a href="https://youtube.com/@designdhaga?si=A5rYdj_bpGZB_D1b" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+                <i class="fa-brands fa-youtube" style="font-size:20px"></i>
+              </a>
+              <a href="https://pin.it/Y79Q6uD62" target="_blank" class="p-2 d-flex align-items-center justify-content-center"
+                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+                <i class="fa-brands fa-pinterest" style="font-size:20px"></i>
+              </a>
             </div>
           </div>
         </div>

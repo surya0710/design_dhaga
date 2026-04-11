@@ -44,9 +44,12 @@
 
                 <!-- Wishlist -->
                 <div>
-                    <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '#'">
+                    @php 
+                        $url = (Auth::check() && Auth::user()->utype === 'USR') ? route('wishlist.index') : route('login');
+                    @endphp
+                    <a class="btn p-0 bg-transparent border-0" href="{{ $url }}">
                         <i class="fa-2x fa-regular fa-heart"></i>
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Cart -->
@@ -149,7 +152,7 @@
         </div>
     </div>
     
-    <div class="fixed-bottom">
+    <div class="position-absolute bottom-0 w-100 align-items-center">
         <div class="d-flex gap-3 justify-content-center social-media-icons mb-2">
             <a href="https://www.facebook.com/share/1A9mCmVNy2/" target="_blank">
                 <i class="fa-brands fa-facebook"></i>

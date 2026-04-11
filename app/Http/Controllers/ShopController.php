@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -46,6 +47,20 @@ class ShopController extends Controller
         return view('frontend.shop', compact('products', 'category', 'categories'));
     }
 
+
+    public function wishlist()
+    {
+        $category = (object) [
+            'meta_title' => 'Your Wishlist',
+            'name' => 'Wishlist',
+            'slug' => 'wishlist',
+        ];
+        $categories = $this->categories;
+        $wishlistProductIds = Wishlist::where('user_id', auth()->user()->id)->pluck('product_id')->toArray();
+        $products = Product::whereIn('id', $wishlistProductIds)->get();
+        return view('frontend.shop', compact('products', 'categories', 'category'));
+    }
+
     public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
     {
         $categories = $this->categories;
@@ -66,4 +81,5 @@ class ShopController extends Controller
 
         return view('frontend.product', compact('product', 'categories', 'galleryPaths', 'reviews'));
     }
+
 }

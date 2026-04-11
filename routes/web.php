@@ -88,7 +88,7 @@ Route::get('/collaborations', [HomeController::class, 'collaborations'])->name('
 | User Routes
 |--------------------------------------------------------------------------
 */
-Route::post('/shiprocket/check-serviceability', [ShiprocketController::class, 'check'])->name('shiprocket.check.serviceability');
+
 Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::get('/account', [AccountController::class,'index'])->name('account.index');
@@ -98,10 +98,14 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
+    Route::get('/wishlist', [ShopController::class, 'wishlist'])->name('wishlist.index');
+
     Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
     Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/delivery-options', [CheckoutController::class, 'getDeliveryOptions'])->name('checkout.delivery.options');
+
     Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('place.order');
 
     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
