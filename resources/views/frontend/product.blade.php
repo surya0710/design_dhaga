@@ -385,12 +385,7 @@
                         role="tablist">
 
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active fw-bold text-dark py-4 fs-5"
-                                    id="desc-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#descTab"
-                                    type="button"
-                                    role="tab">
+                            <button class="nav-link active fw-bold text-dark py-4 fs-5" id="desc-tab" data-bs-toggle="tab" data-bs-target="#descTab" type="button" role="tab">
                                 <i class="fa-solid fa-book me-2 text-maroon"></i>Product Description
                             </button>
                         </li>
@@ -480,19 +475,12 @@
                         <div class="accordion accordion-flush" id="productAccordion">
                             <div class="accordion-item border-bottom">
                                 <h2 class="accordion-header" id="headingDesc">
-                                    <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#collapseDesc"
-                                            aria-expanded="false"
-                                            aria-controls="collapseDesc">
+                                    <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc"
+                                    aria-expanded="false" aria-controls="collapseDesc">
                                         <i class="fa-solid fa-book me-2 text-maroon"></i>Product Description
                                     </button>
                                 </h2>
-                                <div id="collapseDesc"
-                                     class="accordion-collapse collapse"
-                                     aria-labelledby="headingDesc"
-                                     data-bs-parent="#productAccordion">
+                                <div id="collapseDesc" class="accordion-collapse collapse" aria-labelledby="headingDesc" data-bs-parent="#productAccordion">
                                     <div class="accordion-body px-0 pb-4">
                                         <p class="text-dark lh-lg mb-0 fs-6">{!! $product->description !!}</p>
                                     </div>
@@ -502,22 +490,15 @@
                             @if ($product->hand_painted_details)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingHandPainted">
-                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseHandPainted"
-                                                aria-expanded="false"
-                                                aria-controls="collapseHandPainted">
+                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3" type="button" data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseHandPainted" aria-expanded="false" aria-controls="collapseHandPainted">
                                             <i class="fa-solid fa-palette me-2 text-maroon"></i>Hand Painted Details
                                         </button>
                                     </h2>
-                                    <div id="collapseHandPainted"
-                                         class="accordion-collapse collapse"
-                                         aria-labelledby="headingHandPainted"
-                                         data-bs-parent="#productAccordion">
+                                    <div id="collapseHandPainted" class="accordion-collapse collapse" aria-labelledby="headingHandPainted" data-bs-parent="#productAccordion">
                                         <div class="accordion-body px-0 pb-4">
                                             <p class="text-dark lh-lg mb-0 fs-6">
-                                                {!! nl2br(e($product->hand_painted_details)) !!}
+                                                {!! $product->hand_painted_details !!}
                                             </p>
                                         </div>
                                     </div>
@@ -527,22 +508,15 @@
                             @if ($product->care_instructions)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingCare">
-                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseCare"
-                                                aria-expanded="false"
-                                                aria-controls="collapseCare">
+                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCare"
+                                        aria-expanded="false" aria-controls="collapseCare">
                                             <i class="fa-solid fa-heart-pulse me-2 text-maroon"></i>Care Instructions
                                         </button>
                                     </h2>
-                                    <div id="collapseCare"
-                                         class="accordion-collapse collapse"
-                                         aria-labelledby="headingCare"
-                                         data-bs-parent="#productAccordion">
+                                    <div id="collapseCare" class="accordion-collapse collapse" aria-labelledby="headingCare" data-bs-parent="#productAccordion">
                                         <div class="accordion-body px-0 pb-4">
                                             <p class="text-dark lh-lg mb-0 fs-6">
-                                                {!! nl2br(e($product->care_instructions)) !!}
+                                                {!! $product->care_instructions !!}
                                             </p>
                                         </div>
                                     </div>
@@ -552,12 +526,8 @@
                             @if ($product->manufacturing_details)
                                 <div class="accordion-item border-bottom">
                                     <h2 class="accordion-header" id="headingManufacturing">
-                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseManufacturing"
-                                                aria-expanded="false"
-                                                aria-controls="collapseManufacturing">
+                                        <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseManufacturing"
+                                        aria-expanded="false" aria-controls="collapseManufacturing">
                                             <i class="fa-solid fa-tools me-2 text-maroon"></i>Manufacturing Details
                                         </button>
                                     </h2>
@@ -567,7 +537,7 @@
                                          data-bs-parent="#productAccordion">
                                         <div class="accordion-body px-0 pb-4">
                                             <p class="text-dark lh-lg mb-0 fs-6">
-                                                {!! nl2br(e($product->manufacturing_details)) !!}
+                                                {!! $product->manufacturing_details !!}
                                             </p>
                                         </div>
                                     </div>
