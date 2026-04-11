@@ -103,8 +103,6 @@ class CheckoutController extends Controller
         }
 
         $pickupPincode = config('services.shiprocket.pickup_pincode');
-        echo $pickupPincode;
-        die;
 
         if (empty($pickupPincode)) {
             return response()->json([
