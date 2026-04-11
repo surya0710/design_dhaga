@@ -283,18 +283,8 @@
 
                         <div id="deliveryInputSection">
                             <div class="input-group">
-                                <input
-                                    type="text"
-                                    id="deliveryPincode"
-                                    class="form-control bg-light-pink p-3 border-0"
-                                    placeholder="Enter pincode"
-                                    maxlength="6"
-                                    inputmode="numeric"
-                                />
-                                <button
-                                    class="btn btn-white border fw-bold"
-                                    type="button"
-                                    id="checkDeliveryBtn">
+                                <input type="text" id="deliveryPincode" class="form-control bg-light-pink p-3 border-0" placeholder="Enter pincode" maxlength="6" inputmode="numeric" />
+                                <button class="btn btn-white border fw-bold" type="button" id="checkDeliveryBtn"> 
                                     Check
                                 </button>
                             </div>
@@ -304,30 +294,18 @@
                         <div id="deliverySuccessSection" class="d-none mt-2">
                             <div class="delivery-result-box p-3">
                                 <div class="d-flex justify-content-between align-items-start gap-3">
-                                    <div>
-                                        <div class="status-success mb-2">
-                                            <i class="fa-solid fa-circle-check me-1"></i>
-                                            Delivery available
-                                        </div>
+                                    <div class="d-flex justify-content-between flex-column">
 
-                                        <div class="mb-2">
-                                            <div class="label">Pincode</div>
+                                        <div class="mb-2 d-flex">
+                                            <div class="label">
+                                                <i class="fa-solid fa-location-dot me-1"></i>
+                                            </div>
                                             <div class="value" id="deliveryPincodeValue"></div>
                                         </div>
 
-                                        <div class="mb-2">
-                                            <div class="label">Estimated delivery by</div>
+                                        <div class="mb-2 d-flex">
+                                            <div class="label">Delivery by</div>
                                             <div class="value" id="deliveryDateValue"></div>
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <div class="label">Estimated delivery time</div>
-                                            <div class="value" id="deliveryDaysValue"></div>
-                                        </div>
-
-                                        <div class="mb-0" id="deliveryCourierRow">
-                                            <div class="label">Courier partner</div>
-                                            <div class="value" id="deliveryCourierValue"></div>
                                         </div>
                                     </div>
 
@@ -862,7 +840,7 @@
     }
 
     const deliveryConfig = {
-        endpoint: @json(route('checkout.delivery.options')),
+        endpoint: @json(route('pincode.serviceable')),
         csrfToken: @json(csrf_token()),
         storageKey: 'delivery_check_product_{{ $product->id }}'
     };
@@ -945,15 +923,6 @@
 
         els.pincodeValue.textContent = pincode;
         els.dateValue.textContent = formattedDate;
-        els.daysValue.textContent = numericDays !== null ? `${numericDays} day${numericDays > 1 ? 's' : ''}` : (rawDays || 'To be confirmed');
-
-        if (courierName) {
-            els.courierValue.textContent = courierName;
-            els.courierRow.classList.remove('d-none');
-        } else {
-            els.courierValue.textContent = '';
-            els.courierRow.classList.add('d-none');
-        }
 
         els.inputSection.classList.add('d-none');
         els.unavailableSection.classList.add('d-none');

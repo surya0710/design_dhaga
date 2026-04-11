@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 
 class ShiprocketController extends Controller
 {
-    public function check(Request $request, ShiprocketService $shiprocket): JsonResponse
+    public function checkPincode(Request $request, ShiprocketService $shiprocket): JsonResponse
     {
         $validated = $request->validate([
             'delivery_postcode' => ['required', 'digits:6'],
             'weight' => ['required', 'numeric', 'min:0.1'],
-            'cod' => ['nullable', 'boolean'],
+            'cod' => ['nullable', false],
             'length' => ['nullable', 'numeric', 'min:0'],
             'breadth' => ['nullable', 'numeric', 'min:0'],
             'height' => ['nullable', 'numeric', 'min:0'],
@@ -22,7 +22,7 @@ class ShiprocketController extends Controller
 
         try {
             $result = $shiprocket->checkServiceability(
-                pickupPincode: '125001',
+                pickupPincode: config('services.shiprocket.pickup_pincode'),
                 deliveryPincode: $validated['delivery_postcode'],
                 weight: (float) $validated['weight'],
                 cod: (int) ($validated['cod'] ?? 0),
@@ -34,9 +34,7 @@ class ShiprocketController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => $result['serviceable']
-                    ? 'Pincode is serviceable.'
-                    : 'Pincode is not serviceable.',
+                'message' => $result['serviceable'] ? 'Pincode is serviceable.' : 'Pincode is not serviceable.',
                 'data' => $result,
             ]);
         } catch (\Throwable $e) {

@@ -82,6 +82,7 @@ Route::get('/blogs/{slug}', [BlogController::class, 'blogdetail'])->name('blog.s
 
 Route::get('/collaborations', [HomeController::class, 'collaborations'])->name('collaborations');
 
+Route::post('/pincode/serviceable', [ShiprocketController::class, 'checkPincode'])->name('pincode.serviceable');
 
 /*
 |--------------------------------------------------------------------------
