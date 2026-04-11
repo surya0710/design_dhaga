@@ -287,7 +287,7 @@ function toggleWishlist($button) {
             setWishlistButtonState($button, response.in_wishlist);
 
             Swal.fire({
-                icon: 'success',
+                iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
                 title: response.in_wishlist ? 'Added to Wishlist' : 'Removed from Wishlist',
                 text: response.message,
                 confirmButtonColor: '#8b1e2d',
