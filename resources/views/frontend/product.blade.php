@@ -811,7 +811,7 @@
                 btn.classList.remove('loading');
 
                 Swal.fire({
-                    icon: '<i class="fa-regular fa-circle-check fa-2x"></i>',
+                    iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
                     title: 'Added to Cart!',
                     html: `<p class="mb-0"><strong>@json($product->name)</strong> has been added to your cart.</p>`,
                     confirmButtonText: 'View Cart',
