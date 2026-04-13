@@ -560,7 +560,6 @@ class AdminController extends Controller
                     'product_id' => $product->id,
                     'image'      => $icon['image'],
                     'text'       => $icon['text'],
-                    'position'   => $position,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -754,7 +753,6 @@ class AdminController extends Controller
                     'product_id' => $product->id,
                     'image'      => $icon['image'],
                     'text'       => $icon['text'],
-                    'position'   => $position,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
