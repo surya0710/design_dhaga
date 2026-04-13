@@ -431,7 +431,7 @@ your orders.')
 
                                             <!-- Product Info -->
                                             <div class="col-md-5">
-                                                <h4 class="fw-bold mb-2">{{ $item->product_name }}</h4>
+                                                <h4 class="fw-bold mb-2 mt-0">{{ $item->product_name }}</h4>
 
                                                 <p class="text-muted d-block mb-2">Order ID: #{{ $order->id }}</p>
 
