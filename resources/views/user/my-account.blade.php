@@ -462,12 +462,8 @@ your orders.')
 
                                             <!-- Price -->
                                             <div class="col-md-2">
-                                                <h6 class="fw-bold">
-                                                    ₹ {{ number_format($item->total, 2) }}
-                                                </h6>
-                                                <small class="text-muted">
-                                                    Qty: {{ $item->quantity }}
-                                                </small>
+                                                <p class="fw-bold">₹ {{ number_format($item->total, 2) }}</p>
+                                                <p class="text-muted">Qty: {{ $item->quantity }}</p>
                                             </div>
 
                                             <!-- Actions -->
