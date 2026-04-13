@@ -426,8 +426,7 @@ your orders.')
 
                                             <!-- Product Image -->
                                             <div class="col-md-2">
-                                                <img src="{{ asset($item->product_image) }}"
-                                                    class="img-fluid rounded" alt="Product">
+                                                <img src="{{ asset('storage/' . $item->product_image) }}" class="img-fluid rounded" alt="Product">
                                             </div>
 
                                             <!-- Product Info -->
