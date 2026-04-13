@@ -65,14 +65,7 @@ class ShopController extends Controller
     {
         $categories = $this->categories;
         
-        $product = Product::where('slug', $slug)
-            ->with([
-                'galleryImages',
-                'artisanImages',
-                'productAttributes',
-                'category'
-            ])
-            ->firstOrFail();
+        $product = Product::where('slug', $slug)->with(['galleryImages','artisanImages','productAttributes','category','icons'])->firstOrFail();
 
         $reviews = $product->reviews()->where('approved', 1)->get();
 

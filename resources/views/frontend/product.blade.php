@@ -245,15 +245,14 @@
                     @endif
 
                     <div class="row g-2 mt-2 mb-2 p-3 rounded bg-body-secondary text-center">
-                        @php $iconsText = getIconsByCategory($product->category->name); @endphp
-                        @for($i = 1; $i < 7; $i++)
+                        @foreach($product->icons as $icon)
                         <div class="col-4">
                             <svg width="40" height="40">
-                                <use xlink:href="{{ asset('frontend_assets/images/product-icons/'.$i.'.svg') }}"></use>
+                                <use xlink:href="{{ asset('storage/' . $icon->image) }}"></use>
                             </svg>
-                            <p class="text-black">{{ $iconsText[$i] }}</p>
+                            <p class="text-black">{{ $icon->text }}</p>
                         </div>
-                        @endfor
+                        @endforeach
                     </div>
 
                     <section class="features-box d-sm-block d-md-none" style="padding: 15px 0 !important;">
