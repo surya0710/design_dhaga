@@ -856,6 +856,8 @@ body {
 }
 
 .mm-item {
+    width: 100px;
+    height: 100px;
     position: relative;
     aspect-ratio: 1;
     border-radius: 10px;
