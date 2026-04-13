@@ -485,11 +485,6 @@ your orders.')
                                                     View Bill
                                                 </a>
 
-                                                <!-- Buy Again -->
-                                                <a href="{{ route('shop.product', $item->product_id) }}" class="btn btn-sm btn-dark w-100">
-                                                    Buy Again
-                                                </a>
-
                                             </div>
 
                                         </div>
