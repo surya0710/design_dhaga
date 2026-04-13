@@ -115,6 +115,10 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::post('/razorpay/verify', [CheckoutController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
 
+    Route::get('/order/{id}/invoice', [CheckoutController::class, 'invoice'])->name('order.invoice');
+
+    Route::get('/order/{id}/invoice/download', function ($id) { return app(\App\Http\Controllers\CheckoutController::class)->invoice($id, 'download');})->name('order.invoice.download');
+
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
 });

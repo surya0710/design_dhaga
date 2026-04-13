@@ -78,9 +78,7 @@ class Product extends Model
 
     public function getProductAttributeValue($key)
     {
-        return $this->productAttributes()
-            ->where('key', $key)
-            ->value('value');
+        return $this->productAttributes()->where('key', $key)->value('value');
     }
 
     /*
@@ -91,9 +89,7 @@ class Product extends Model
 
     public static function getSingleSlug($slug)
     {
-        return self::where('slug', $slug)
-            ->where('status', 1)
-            ->with([
+        return self::where('slug', $slug)->where('status', 1)->with([
                 'category:id,name,slug',
                 'images:id,product_id,image',
                 'productAttributes:id,product_id,key,value'
@@ -103,9 +99,7 @@ class Product extends Model
 
     public function artisanImages()
     {
-        return $this->hasMany(ProductImage::class, 'product_id')
-                    ->where('type', 'artisan')
-                    ->orderBy('id');
+        return $this->hasMany(ProductImage::class, 'product_id')->where('type', 'artisan')->orderBy('id');
     }
 
     public function galleryImages()
@@ -116,5 +110,10 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class, 'product_id');
+    }
+
+    public function icons()
+    {
+        return $this->hasMany(ProductIcon::class);
     }
 }

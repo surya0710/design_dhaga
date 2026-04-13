@@ -263,6 +263,43 @@
                 <input type="text" name="meta_keywords" placeholder="Meta Keywords" value="{{ old('meta_keywords') }}">
             </div>
         </div>
+
+        {{-- Upload Icons --}}
+        <div class="card">
+            <div class="card-title">Upload Product Icons</div>
+
+            <div class="artisan-grid">
+                @for($i = 1; $i <= 6; $i++)
+                <div class="image-picker"
+                    id="picker_productIcons_{{ $i }}"
+                    onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+
+                    {{-- Hidden image --}}
+                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}">
+
+                    <div class="pick-icon">🖼</div>
+                    <span class="pick-btn">Select</span>
+
+                    <img id="preview_productIcons_{{ $i }}" style="display:none">
+
+                    <div class="overlay">
+                        <button type="button"
+                            onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                            Change
+                        </button>
+
+                        <button type="button" class="del-btn"
+                            onclick="event.stopPropagation(); clearImage('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Text --}}
+                <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text') }}">
+                @endfor
+            </div>
+        </div>
     </div>
     {{-- END LEFT --}}
 

@@ -19,7 +19,7 @@
             
             <!-- Brand Section -->
             <div class="col-lg-6 brand-section text-center">
-                <img style="max-width: 35%" class="mb-2" src="{{ asset('frontend_assets/images/logo/square-logo.png') }}" alt="Design Dhaga Logo">
+                <img style="max-width: 35%" class="mb-2" src="{{ asset('frontend_assets/images/logo/white-logo.svg') }}" alt="Design Dhaga Logo">
                 <!-- <p class="brand-tagline d-none d-md-block">Explore limited edition handcrafted pieces you won’t find anywhere else.</p> -->
 
                 <!-- <ul class="feature-list d-none d-lg-block">

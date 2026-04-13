@@ -303,7 +303,7 @@
                                         </div>
 
                                         <div class="d-flex">
-                                            <div class="label">Delivery by </div>
+                                            <div class="label">Delivery by:</div> &nbsp;
                                             <div class="value" id="deliveryDateValue"></div>
                                         </div>
                                     </div>

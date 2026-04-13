@@ -255,17 +255,13 @@
                     $bannerSrc = $hasBanner ? asset('storage/' . $product->square_banner) : '';
                 @endphp
 
-                <input type="hidden" name="square_banner" id="square_banner"
-                    value="{{ old('square_banner', $product->square_banner) }}">
+                <input type="hidden" name="square_banner" id="square_banner" value="{{ old('square_banner', $product->square_banner) }}">
 
-                <div class="media-picker {{ $hasBanner ? 'has-image' : '' }}"
-                    id="picker_square_banner" style="min-height:100px"
+                <div class="media-picker {{ $hasBanner ? 'has-image' : '' }}" id="picker_square_banner" style="min-height:100px"
                     onclick="openMediaUploader('square_banner','preview_square_banner','picker_square_banner')">
                     <div class="pick-icon" style="font-size:20px;{{ $hasBanner ? 'display:none' : '' }}">🖼</div>
                     <span class="pick-btn" style="font-size:11px;padding:5px 10px;{{ $hasBanner ? 'display:none' : '' }}">Select</span>
-                    <img id="preview_square_banner"
-                        src="{{ $bannerSrc }}"
-                        style="{{ $hasBanner ? '' : 'display:none' }}">
+                    <img id="preview_square_banner" src="{{ $bannerSrc }}" style="{{ $hasBanner ? '' : 'display:none' }}">
                     <div class="overlay">
                         <button type="button" onclick="event.stopPropagation(); openMediaUploader('square_banner','preview_square_banner','picker_square_banner')">Change</button>
                         <button type="button" class="del-btn" onclick="event.stopPropagation(); clearImage('square_banner','preview_square_banner','picker_square_banner')">✕</button>
@@ -332,6 +328,46 @@
             </div>
         </div>
 
+        {{-- Upload Icons --}}
+        <div class="card">
+            <div class="card-title">Upload Product Icons</div>
+
+            <div class="artisan-grid">
+                @for($i = 1; $i <= 6; $i++)
+                @php
+                    $icon = $product->icons->firstWhere('position', $i);
+                    $hasImg = $icon && $icon->image;
+                    $src = $hasImg ? asset('storage/'.$icon->image) : '';
+                @endphp
+                <div class="row">
+                    <div class="image-picker {{ $hasImg ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
+                        onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+
+                        {{-- Hidden image --}}
+                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $icon->image ?? '' }}">
+
+                        <div class="pick-icon" style="{{ $hasImg ? 'display:none' : '' }}">🖼</div>
+                        <span class="pick-btn" style="{{ $hasImg ? 'display:none' : '' }}">Select</span>
+
+                        <img id="preview_productIcons_{{ $i }}" src="{{ $src }}" style="{{ $hasImg ? '' : 'display:none' }}">
+
+                        <div class="overlay">
+                            <button type="button" onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                                Change
+                            </button>
+
+                            <button type="button" class="del-btn" onclick="event.stopPropagation(); clearImage('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Text --}}
+                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ $icon->text ?? '' }}">
+                </div>
+                @endfor
+            </div>
+        </div>
     </div>
     {{-- END LEFT --}}
 

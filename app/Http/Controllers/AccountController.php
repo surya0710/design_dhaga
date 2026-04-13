@@ -24,11 +24,26 @@ class AccountController extends Controller
             ->get();
     }
 
-    public function index() {
+    public function index()
+    {
         $categories = $this->categories;
-        $addresses  = Address::where('user_id', auth()->id())->get();
-        $wishlists  = Wishlist::where('user_id', auth()->id())->whereHas('product')->with(['product.category.parent'])->latest()->take(10)->get();
-        return view('user.my-account', compact('categories', 'addresses', 'wishlists'));
+
+        $addresses = Address::where('user_id', auth()->id())->get();
+
+        // Fetch only paid orders with items
+        $orders = auth()->user()->orders()->with(['items' => function ($q) {   // ✅ $q (NOT q)
+            $q->select('id','order_id','product_name','product_image','price','quantity','total');}])
+        ->where('payment_status', 'paid')->latest()->get();
+
+        // Total Spend Calculation
+        $totalSpend = $orders->sum('total');
+
+        return view('user.my-account', compact(
+            'categories',
+            'addresses',
+            'orders',
+            'totalSpend'
+        ));
     }
 
     public function logout(){

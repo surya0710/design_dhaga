@@ -559,4 +559,20 @@ class CheckoutController extends Controller
             'etd' => $courier['estimated_delivery_days'] ?? null,
         ];
     }
+
+    public function invoice($id, $type = 'view')
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        $pdf = Pdf::loadView('user.invoice', compact('order'))
+            ->setPaper('A4', 'portrait');
+
+        // OPEN IN BROWSER (like Myntra)
+        if ($type === 'view') {
+            return $pdf->stream('invoice-'.$order->id.'.pdf');
+        }
+
+        // DOWNLOAD PDF
+        return $pdf->download('invoice-'.$order->id.'.pdf');
+    }
 }

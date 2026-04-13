@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Imports\BlogImport;
-use App\Imports\ProductImport;
 use App\Models\AskQuestion;
 use App\Models\Blog;
 use App\Models\Brand;
@@ -18,6 +17,7 @@ use App\Models\Tag;
 use App\Models\Testimonial;
 use App\Models\User;
 use App\Models\Sliders;
+use App\Models\ProductIcon;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
-    
+
     private function resizeAndSaveImage($sourcePath, $destinationPath, $maxWidth, $maxHeight)
     {
         list($width, $height, $type) = getimagesize($sourcePath);
@@ -66,7 +66,10 @@ class AdminController extends Controller
         imagecopyresampled(
             $newImage,
             $sourceImage,
-            0, 0, 0, 0,
+            0,
+            0,
+            0,
+            0,
             $newWidth,
             $newHeight,
             $width,
@@ -158,19 +161,40 @@ class AdminController extends Controller
         foreach ($orders as $order) {
             $index = $order->month - 1;
             switch ($order->status) {
-                case 'pending':   $pendingData[$index]   = (float) $order->total; break;
-                case 'delivered': $deliveredData[$index] = (float) $order->total; break;
-                case 'canceled':  $canceledData[$index]  = (float) $order->total; break;
+                case 'pending':
+                    $pendingData[$index]   = (float) $order->total;
+                    break;
+                case 'delivered':
+                    $deliveredData[$index] = (float) $order->total;
+                    break;
+                case 'canceled':
+                    $canceledData[$index]  = (float) $order->total;
+                    break;
             }
             $totalData[$index] += (float) $order->total;
         }
 
         return view('admin.index', compact(
-            'totalOrders', 'deliveredOrders', 'pendingOrders', 'cancelledOrders',
-            'totalAmount', 'deliveredAmount', 'pendingAmount', 'cancelledAmount',
-            'recentOrders', 'thisWeekRevenue', 'lastWeekRevenue',
-            'thisWeekOrders', 'lastWeekOrders', 'revenueChange', 'orderChange',
-            'months', 'totalData', 'pendingData', 'deliveredData', 'canceledData'
+            'totalOrders',
+            'deliveredOrders',
+            'pendingOrders',
+            'cancelledOrders',
+            'totalAmount',
+            'deliveredAmount',
+            'pendingAmount',
+            'cancelledAmount',
+            'recentOrders',
+            'thisWeekRevenue',
+            'lastWeekRevenue',
+            'thisWeekOrders',
+            'lastWeekOrders',
+            'revenueChange',
+            'orderChange',
+            'months',
+            'totalData',
+            'pendingData',
+            'deliveredData',
+            'canceledData'
         ));
     }
 
@@ -331,15 +355,15 @@ class AdminController extends Controller
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
         ]);
-    
+
         $category = Category::findOrFail($request->id);
-    
+
         $category->name = $request->name;
         $category->slug = Str::slug($request->slug ?? $request->name);
         $category->meta_title = $request->meta_title;
         $category->meta_keywords = $request->meta_keywords;
         $category->meta_description = $request->meta_description;
-    
+
         if ($request->hasFile('image')) {
 
             // Delete old image
@@ -349,18 +373,18 @@ class AdminController extends Controller
                     File::delete($oldPath);
                 }
             }
-        
+
             $image = $request->file('image');
             $image_name = time() . '.' . $image->getClientOriginalExtension();
-        
+
             // SAVE DIRECTLY (bypass function for testing)
             $image->move(public_path('uploads/categories'), $image_name);
-        
+
             $category->image = $image_name;
         }
-    
+
         $category->save();
-    
+
         return redirect()->route('admin.categories')->with('status', 'Category updated successfully' . $category->image);
     }
 
@@ -419,6 +443,9 @@ class AdminController extends Controller
             'meta_title'                    => 'nullable|string|max:255',
             'meta_keywords'                 => 'nullable|string|max:255',
             'meta_description'              => 'nullable|string',
+            'product_icons'                 => 'required|array|size:6',
+            'product_icons.*.image'         => 'required|string',
+            'product_icons.*.text'          => 'required|string|max:255',
         ]);
 
         if ($validate->fails()) {
@@ -525,11 +552,26 @@ class AdminController extends Controller
                 }
             }
 
+            // ── Product Icons ─────────────────────────────
+            $iconsData = [];
+
+            foreach ($request->product_icons as $position => $icon) {
+                $iconsData[] = [
+                    'product_id' => $product->id,
+                    'image'      => $icon['image'],
+                    'text'       => $icon['text'],
+                    'position'   => $position,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            ProductIcon::insert($iconsData);
+
             DB::commit();
 
             return redirect()->route('admin.products')
                 ->with('success', 'Product added successfully.');
-
         } catch (\Throwable $e) {
 
             DB::rollBack();
@@ -551,7 +593,7 @@ class AdminController extends Controller
     // -------------------------------------------------------------------------
     public function product_edit($id)
     {
-        $product = Product::with(['galleryImages', 'artisanImages', 'productAttributes', ])->findOrFail($id);
+        $product = Product::with(['galleryImages', 'artisanImages', 'productAttributes','icons'])->findOrFail($id);
 
         $categories = Category::where('status', 1)->select('id', 'name')->orderBy('name')->limit(20)->get();
 
@@ -590,6 +632,9 @@ class AdminController extends Controller
             'meta_title'                    => 'nullable|string|max:255',
             'meta_keywords'                 => 'nullable|string|max:255',
             'meta_description'              => 'nullable|string',
+            'product_icons'                 => 'required|array|size:6',
+            'product_icons.*.image'         => 'required|string',
+            'product_icons.*.text'          => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -659,8 +704,8 @@ class AdminController extends Controller
                 if (!$hasImage && !$hasText) {
                     if ($slotId) {
                         ProductImage::where('id', $slotId)
-                                    ->where('product_id', $product->id)
-                                    ->delete();
+                            ->where('product_id', $product->id)
+                            ->delete();
                     }
                     continue;
                 }
@@ -674,8 +719,8 @@ class AdminController extends Controller
 
                 if ($slotId) {
                     ProductImage::where('id', $slotId)
-                                ->where('product_id', $product->id)
-                                ->update($data);
+                        ->where('product_id', $product->id)
+                        ->update($data);
                 } else {
                     ProductImage::create(array_merge($data, ['product_id' => $product->id]));
                 }
@@ -699,11 +744,27 @@ class AdminController extends Controller
                 }
             }
 
+            // ── 6. Product Icons ───────────────────────────
+            $product->icons()->delete();
+
+            $iconsData = [];
+
+            foreach ($request->product_icons as $position => $icon) {
+                $iconsData[] = [
+                    'product_id' => $product->id,
+                    'image'      => $icon['image'],
+                    'text'       => $icon['text'],
+                    'position'   => $position,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            ProductIcon::insert($iconsData);
+
             DB::commit();
 
-            return redirect()->route('admin.products')
-                ->with('status', 'Product updated successfully.');
-
+            return redirect()->route('admin.products')->with('status', 'Product updated successfully.');
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -719,18 +780,18 @@ class AdminController extends Controller
         }
     }
 
-        // -------------------------------------------------------------------------
-        // PRODUCT DELETE
-        // -------------------------------------------------------------------------
-        public function product_delete($id)
-        {
-            $product = Product::with('images')->findOrFail($id);
+    // -------------------------------------------------------------------------
+    // PRODUCT DELETE
+    // -------------------------------------------------------------------------
+    public function product_delete($id)
+    {
+        $product = Product::with('images')->findOrFail($id);
 
-            // Main image
-            if ($product->image) {
-                $path = public_path('uploads/products/' . $product->image);
-                if (File::exists($path)) File::delete($path);
-            }
+        // Main image
+        if ($product->image) {
+            $path = public_path('uploads/products/' . $product->image);
+            if (File::exists($path)) File::delete($path);
+        }
 
         // Gallery + artisan images
         foreach ($product->images as $img) {
@@ -770,7 +831,7 @@ class AdminController extends Controller
 
     public function orders()
     {
-        $orders = Order::orderBy('id','desc')->paginate(20);
+        $orders = Order::orderBy('id', 'desc')->paginate(20);
         return view('admin.orders', compact('orders'));
     }
 
@@ -1042,7 +1103,8 @@ class AdminController extends Controller
         return view('admin.subscribers', compact('subscribers'));
     }
 
-    public function sliders(){
+    public function sliders()
+    {
         $sliders = Sliders::orderBy('id', 'desc')->paginate(10);
         return view('admin.sliders', compact('sliders'));
     }

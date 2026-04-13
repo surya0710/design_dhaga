@@ -372,12 +372,7 @@
                                 </div>
                             @endif
 
-                            <div class="summary-row">
-                                <span>Total GST</span>
-                                <span>₹<span id="summary-gst">{{ number_format($gstData['gst_amount'], 2) }}</span></span>
-                            </div>
-
-                            <div class="summary-row">
+                            <div class="summary-row d-none" id="shipping-row">
                                 <span>Shipping</span>
                                 <span id="summary-shipping">{{ ($shipping ?? 0) == 0 ? '0' : '₹'.number_format($shipping, 2) }}</span>
                             </div>
@@ -484,6 +479,8 @@
                 return;
             }
 
+            document.getElementById("shipping-row").classList.remove('d-none');
+
             const wrap = document.getElementById('delivery-options-wrap');
             wrap.style.display = 'block';
 
@@ -520,6 +517,19 @@
             }
 
             wrap.innerHTML = html || '<p class="mb-0 text-muted">No delivery options available.</p>';
+
+            // ✅ AUTO SELECT REGULAR (NEW FIX)
+            if (data.regular) {
+                const firstOption = wrap.querySelector('.delivery-option');
+                if (firstOption) {
+                    selectDeliveryOption(
+                        firstOption,
+                        'regular',
+                        data.regular.charge,
+                        data.regular.courier_id ?? ''
+                    );
+                }
+            }
 
             button.disabled = false;
             button.innerText = 'Check Delivery Options';

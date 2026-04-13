@@ -144,33 +144,23 @@ your orders.')
 
             <div class="card p-3">
                 <div class="nav flex-column nav-pills" role="tablist">
-                    <button class="nav-link active d-flex justify-content-between align-items-center"
-                        data-bs-toggle="pill" data-bs-target="#dashboard">
+                    <button class="nav-link active d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#dashboard">
                         <span><i class="bi bi-grid-fill me-2"></i> Dashboard</span>
                         <i class="bi bi-chevron-right small"></i>
                     </button>
 
-                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
-                        data-bs-target="#profile">
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#profile">
                         <span><i class="bi bi-person-fill me-2"></i> My Profile</span>
                         <i class="bi bi-chevron-right small"></i>
                     </button>
 
-                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
-                        data-bs-target="#addresses">
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#addresses">
                         <span><i class="bi bi-geo-alt-fill me-2"></i> Addresses</span>
                         <i class="bi bi-chevron-right small"></i>
                     </button>
 
-                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
-                        data-bs-target="#orders">
+                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill" data-bs-target="#orders">
                         <span><i class="bi bi-bag-fill me-2"></i> My Orders</span>
-                        <i class="bi bi-chevron-right small"></i>
-                    </button>
-
-                    <button class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="pill"
-                        data-bs-target="#wishlist">
-                        <span><i class="bi bi-heart-fill me-2"></i> Wishlist</span>
                         <i class="bi bi-chevron-right small"></i>
                     </button>
 
@@ -195,10 +185,8 @@ your orders.')
                                 <div class="stat-card-icon">
                                     <i class="bi bi-box-seam fs-4"></i>
                                 </div>
-                                <h6 class="text-muted small text-uppercase fw-bold">
-                                    Orders
-                                </h6>
-                                <h3 class="fw-bold mb-0">12</h3>
+                                <h6 class="text-muted small text-uppercase fw-bold">Orders</h6>
+                                <h3 class="fw-bold mb-0">{{ count($orders) }}</h3>
                             </div>
                         </div>
 
@@ -210,7 +198,7 @@ your orders.')
                                 <h6 class="text-muted small text-uppercase fw-bold">
                                     Spend
                                 </h6>
-                                <h3 class="fw-bold mb-0">₹ 4.5k</h3>
+                                <h3 class="fw-bold mb-0">₹ {{ $totalSpend }}</h3>
                             </div>
                         </div>
                     </div>
@@ -427,137 +415,109 @@ your orders.')
                     </div>
                     <div id="ordersList">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <div class="card p-4 border-1">
-                                    <div class="row g-4 align-items-start">
-                                        <div class="col-md-2">
-                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                                class="img-fluid rounded" alt="Product">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <h6 class="fw-bold mb-2">Premium Wireless Headphones</h6>
-                                            <small class="text-muted d-block mb-2">Order ID: #1234567890</small>
-                                            <small class="text-muted d-block mb-3">Ordered on: Jan 15, 2025</small>
-                                            <div class="d-flex gap-2">
-                                                <span class="badge bg-success">Delivered</span>
-                                                <small class="text-muted">Delivered on Jan 20, 2025</small>
+
+                            @forelse($orders as $order)
+
+                                @foreach($order->items as $item)
+
+                                <div class="col-12">
+                                    <div class="card p-4 border-1">
+                                        <div class="row g-4 align-items-start">
+
+                                            <!-- Product Image -->
+                                            <div class="col-md-2">
+                                                <img src="{{ asset($item->product_image) }}"
+                                                    class="img-fluid rounded" alt="Product">
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <h6 class="fw-bold">₹ 2,499</h6>
-                                            <small class="text-muted">Qty: 1</small>
-                                        </div>
-                                        <div class="col-md-3 text-end">
-                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
-                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <div class="card p-4 border-1">
-                                    <div class="row g-4 align-items-start">
-                                        <div class="col-md-2">
-                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                                class="img-fluid rounded" alt="Product">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <h6 class="fw-bold mb-2">Premium Watch</h6>
-                                            <small class="text-muted d-block mb-2">Order ID: #1234567891</small>
-                                            <small class="text-muted d-block mb-3">Ordered on: Jan 10, 2025</small>
-                                            <div class="d-flex gap-2">
-                                                <span class="badge bg-success">Delivered</span>
-                                                <small class="text-muted">Delivered on Jan 15, 2025</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <h6 class="fw-bold">₹ 4,999</h6>
-                                            <small class="text-muted">Qty: 1</small>
-                                        </div>
-                                        <div class="col-md-3 text-end">
-                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
-                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="card p-4 border-1">
-                                    <div class="row g-4 align-items-start">
-                                        <div class="col-md-2">
-                                            <img src="https://silkland.in/cdn/shop/files/SZ-DGRUPA-OFW-2371_1_d73bcc5e-6ed1-4d10-b5cf-d46c6794003e.jpg?v=1748936263&width=1200"
-                                                class="img-fluid rounded" alt="Product">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <h6 class="fw-bold mb-2">Portable Phone Charger</h6>
-                                            <small class="text-muted d-block mb-2">Order ID: #1234567892</small>
-                                            <small class="text-muted d-block mb-3">Ordered on: Dec 28, 2024</small>
-                                            <div class="d-flex gap-2">
-                                                <span class="badge bg-warning text-dark">In Transit</span>
-                                                <small class="text-muted">Expected on Feb 18, 2025</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <h6 class="fw-bold">₹ 1,299</h6>
-                                            <small class="text-muted">Qty: 2</small>
-                                        </div>
-                                        <div class="col-md-3 text-end">
-                                            <button class="btn btn-sm btn-outline-dark w-100 mb-2">View Details</button>
-                                            <button class="btn btn-sm btn-outline-dark w-100">Buy Again</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="wishlist">
-                    <h4 class="fw-bold mb-4">My Wishlist</h4>
-                    <div id="wishlistEmpty" class="card p-5 text-center d-none">
-                        <div class="mb-3 text-muted">
-                            <i class="bi bi-heart fs-1"></i>
-                        </div>
-                        <h4>Your Wishlist is Empty</h4>
-                        <p class="text-muted">
-                            Start adding items to your wishlist
-                        </p>
-                        <button class="btn btn-dark mt-2">Continue Shopping</button>
-                    </div>
-                    <div id="wishlistItems">
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 text-center">
-                            @foreach($wishlists as $wishlist)
-                                @php
-                                    $product = $wishlist->product;
-                                    $category = $product?->category;
-                                @endphp
-
-                                @if($product && $category)
-                                    <div class="col">
-                                        <div class="card h-100 position-relative">
-                                            <button class="btn btn-link position-absolute top-0 end-0 p-2 text-danger" style="z-index: 10;">
-                                                <i class="bi bi-heart-fill"></i>
-                                            </button>
-
-                                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
-
-                                            <a class="card-body d-flex flex-column text-decoration-none" href="{{ route('shop.product', [ 
-                                            $category->parent_id  ? $category->parent->slug : $category->slug, $category->slug, $product->slug ]) }}">
-                                                
-                                                <h6 class="card-title fw-bold small">
-                                                    {{ $product->name }}
+                                            <!-- Product Info -->
+                                            <div class="col-md-5">
+                                                <h6 class="fw-bold mb-2">
+                                                    {{ $item->product_name }}
                                                 </h6>
 
-                                                <h5 class="fw-bold text-dark">
-                                                    ₹ {{ $product->sale_price }}
-                                                </h5>
-                                            </a>
+                                                <small class="text-muted d-block mb-2">
+                                                    Order ID: #{{ $order->id }}
+                                                </small>
+
+                                                <small class="text-muted d-block mb-2">
+                                                    Ordered on: {{ $order->created_at->format('M d, Y') }}
+                                                </small>
+
+                                                <!-- Status Badge -->
+                                                @php
+                                                    $statusColors = [
+                                                        'pending' => 'secondary',
+                                                        'confirmed' => 'info',
+                                                        'shipped' => 'primary',
+                                                        'delivered' => 'success',
+                                                        'cancelled' => 'danger',
+                                                    ];
+                                                @endphp
+
+                                                <span class="badge bg-{{ $statusColors[$order->order_status] ?? 'secondary' }}">
+                                                    {{ ucfirst($order->order_status) }}
+                                                </span>
+
+                                                <!-- Delivery Date -->
+                                                @if($order->delivered_at)
+                                                    <small class="text-muted d-block mt-1">
+                                                        Delivered on {{ $order->delivered_at->format('M d, Y') }}
+                                                    </small>
+                                                @endif
+                                            </div>
+
+                                            <!-- Price -->
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">
+                                                    ₹ {{ number_format($item->total, 2) }}
+                                                </h6>
+                                                <small class="text-muted">
+                                                    Qty: {{ $item->quantity }}
+                                                </small>
+                                            </div>
+
+                                            <!-- Actions -->
+                                            <div class="col-md-3 text-end">
+
+                                                <!-- View Bill -->
+                                                <a href="{{ route('order.invoice', $order->id) }}" class="btn btn-sm btn-outline-dark w-100 mb-2">
+                                                    View Bill
+                                                </a>
+
+                                                <!-- Buy Again -->
+                                                <a href="{{ route('shop.product', $item->product_id) }}" class="btn btn-sm btn-dark w-100">
+                                                    Buy Again
+                                                </a>
+
+                                            </div>
+
                                         </div>
                                     </div>
-                                @endif
-                            @endforeach
+                                </div>
+
+                                @endforeach
+
+                            @empty
+
+                                <!-- Empty State -->
+                                <div class="col-12">
+                                    <div class="card p-5 text-center">
+                                        <div class="mb-3 text-muted">
+                                            <i class="bi bi-bag-x fs-1"></i>
+                                        </div>
+                                        <h4>No Orders Yet</h4>
+                                        <p class="text-muted">
+                                            Start shopping to see your orders here.
+                                        </p>
+                                        <a href="{{ route('shop') }}" class="btn btn-dark mt-2">
+                                            Start Shopping
+                                        </a>
+                                    </div>
+                                </div>
+
+                            @endforelse
+
                         </div>
                     </div>
                 </div>
