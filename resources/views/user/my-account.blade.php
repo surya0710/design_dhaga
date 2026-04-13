@@ -432,17 +432,11 @@ your orders.')
 
                                             <!-- Product Info -->
                                             <div class="col-md-5">
-                                                <h6 class="fw-bold mb-2">
-                                                    {{ $item->product_name }}
-                                                </h6>
+                                                <h4 class="fw-bold mb-2">{{ $item->product_name }}</h4>
 
-                                                <small class="text-muted d-block mb-2">
-                                                    Order ID: #{{ $order->id }}
-                                                </small>
+                                                <p class="text-muted d-block mb-2">Order ID: #{{ $order->id }}</p>
 
-                                                <small class="text-muted d-block mb-2">
-                                                    Ordered on: {{ $order->created_at->format('M d, Y') }}
-                                                </small>
+                                                <p class="text-muted d-block mb-2">Ordered on: {{ $order->created_at->format('M d, Y') }}</p>
 
                                                 <!-- Status Badge -->
                                                 @php
