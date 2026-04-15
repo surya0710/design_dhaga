@@ -51,11 +51,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Auth::routes(['login' => false, 'reset' => false]);
 
-Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
-
-Route::get('/register', [UserController::class, 'register'])->name('register');
-Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
 
 Route::match(['GET', 'POST'], '/forgot-password', [UserController::class, 'forgotPassword'])->name('password.forgot');
 Route::match(['GET', 'POST'], '/reset-password/{token}', [UserController::class, 'resetPassword'])->name('password.reset');

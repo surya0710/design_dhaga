@@ -112,7 +112,7 @@
 
                           <!-- STEP 1 -->
                           <div id="step1">
-
+                              <input type="hidden" name="redirect_to" value="{{ request()->url() }}">
                               <label class="form-label text-uppercase small text-muted fw-semibold">
                                   Email
                               </label>

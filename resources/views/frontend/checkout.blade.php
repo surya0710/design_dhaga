@@ -229,9 +229,6 @@
 
 <main class="checkout-page">
     <div class="container">
-        <div class="text-center">
-            <h1 class="checkout-title">Checkout</h1>
-        </div>
 
         <form id="checkout-form">
             @csrf

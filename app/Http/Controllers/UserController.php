@@ -24,12 +24,6 @@ class UserController extends Controller
             ->get();
     }
 
-    public function login()
-    {
-        $categories = $this->categories;
-        return view('user.index', compact('categories'));
-    }
-
     public function loginPost(Request $request)
     {
         $credentials = array_merge(

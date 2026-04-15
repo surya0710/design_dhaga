@@ -74,7 +74,7 @@
         const wishlistConfig = {
             addUrl: "{{ route('wishlist.add') }}",
             removeUrl: "{{ route('wishlist.remove') }}",
-            loginUrl: "{{ route('login') }}",
+            loginUrl: "",
             csrfToken: "{{ csrf_token() }}"
         };
         function showWishlistAuthPopup() {
@@ -88,7 +88,7 @@
                 cancelButtonText: 'Cancel',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = wishlistConfig.loginUrl;
+                    $("#loginModal").modal('toggle');
                 }
             });
         }
