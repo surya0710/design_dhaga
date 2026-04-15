@@ -143,7 +143,7 @@
                             <div class="col-12 text-center">
                                 <p class="mb-0">
                                     Already have an account?
-                                    <a href="{{ route('login') }}">Sign In</a>
+                                    <a data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</a>
                                 </p>
                             </div>
 

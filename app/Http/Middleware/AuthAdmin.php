@@ -25,7 +25,7 @@ class AuthAdmin
         // Logged in but not admin
         if (Auth::user()->utype !== 'ADM') {
             Auth::logout();
-            return redirect()->route('login')
+            return redirect()->route('home')
                 ->with('error', 'You are not allowed to access admin panel');
         }
 

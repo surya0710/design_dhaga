@@ -3,61 +3,51 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
-    public function redirectToGoogle()
+    public function redirect()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback()
+    public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
-        // Find or create the user
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
-            [
-                'name' => $googleUser->getName(),
-                'email_verified_at' => now(),
-                'password' => bcrypt(uniqid()), // random password
-            ]
-        );
+            // Check if user exists
+            $user = User::where('email', $googleUser->getEmail())->first();
 
-        Auth::login($user);
-
-        return redirect('/my-account');
-    }
-
-    public function authenticate(Request $request) {
-        $idToken = $request->input('credential');
-
-        $client = new \Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
-        $payload = $client->verifyIdToken($idToken);
-
-        if ($payload) {
-            $email = $payload['email'];
-            $name = $payload['name'];
-
-            $user = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $name,
+            if (!$user) {
+                // Auto Register User
+                $user = User::create([
+                    'name' => $googleUser->getName() ?? 'User',
+                    'email' => $googleUser->getEmail(),
+                    'password' => bcrypt(Str::random(16)), // random password
+                    'google_id' => $googleUser->getId(),
                     'email_verified_at' => now(),
-                    'password' => bcrypt(uniqid()),
-                ]
-            );
+                ]);
+            } else {
+                // Update google_id if missing
+                if (!$user->google_id) {
+                    $user->update([
+                        'google_id' => $googleUser->getId()
+                    ]);
+                }
+            }
 
-            Auth::login($user);
+            // Login user
+            Auth::login($user, true);
 
-            return response()->json(['success' => true]);
+            return redirect()->intended('/');
+
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'Google login failed');
         }
-
-        return response()->json(['success' => false], 401);
     }
 }

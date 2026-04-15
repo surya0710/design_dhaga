@@ -821,7 +821,7 @@
                         cancelButtonText: 'Cancel',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = @json(route('login'));
+                            $("#loginModal").modal('toggle');
                         }
                     });
                     return;

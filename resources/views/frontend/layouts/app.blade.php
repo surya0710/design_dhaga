@@ -48,8 +48,9 @@
     <!-- JS -->
     <script src="{{ asset('frontend_assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
     <script src="{{ asset('frontend_assets/js/script.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     {{-- Scripts --}}
     @stack('scripts')
-
+    
 </body>
 </html>

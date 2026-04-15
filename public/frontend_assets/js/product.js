@@ -264,7 +264,7 @@ function showWishlistAuthPopup() {
         cancelButtonText: 'Cancel',
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = wishlistConfig.loginUrl;
+            $("#loginModal").modal('toggle');
         }
     });
 }

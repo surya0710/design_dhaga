@@ -13,7 +13,7 @@
         "intervention/image-laravel": "^1.2",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.9",
-        "laravel/socialite": "^5.21",
+        "laravel/socialite": "^5.26",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
         "maatwebsite/excel": "^3.1",

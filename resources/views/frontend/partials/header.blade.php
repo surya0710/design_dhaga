@@ -44,10 +44,7 @@
 
                 <!-- Wishlist -->
                 <div>
-                    @php 
-                        $url = (Auth::check() && Auth::user()->utype === 'USR') ? route('wishlist.index') : route('login');
-                    @endphp
-                    <a class="btn p-0 bg-transparent border-0" href="{{ $url }}">
+                    <a class="btn p-0 bg-transparent border-0" href="{{ (Auth::check() && Auth::user()->utype === 'USR') ? route('wishlist.index') : '#loginModal' }}" data-bs-toggle="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : 'modal' }}" data-bs-target="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : '#loginModal' }}">
                         <i class="fa-2x fa-regular fa-heart"></i>
                     </a>
                 </div>
@@ -94,7 +91,7 @@
                         {{ Auth::user()->name }}
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-secondary border-rounded text-white bg-dark px-3 py-1 font-normal">
+                    <a class="btn btn-outline-secondary border-rounded text-white bg-dark px-3 py-1 font-normal" data-bs-toggle="modal" data-bs-target="#loginModal">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-person" viewBox="0 0 18 20">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />

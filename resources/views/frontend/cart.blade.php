@@ -16,7 +16,7 @@
             <div class="empty-cart-box">
                 <div>
                     <h2 class="empty-cart-title">Your cart is empty</h2>
-                    <p class="empty-cart-text">Looks like you haven’t added anything yet.</p>
+                    <p class="empty-cart-text">Looks like you haven't added anything yet.</p>
 
                     <a href="{{ url('/') }}" class="btn btn-dark">
                         Continue Shopping
@@ -40,7 +40,7 @@
                             <img src="{{ asset('storage/'.$item['image']) }}" class="product-image">
 
                             <div>
-                                <h5 class="product-name">{{ $item['name'] }}</h5>
+                                <h5 class="product-name mb-0">{{ $item['name'] }}</h5>
 
                                 {{-- PRICE --}}
                                 <div class="price-text">
@@ -61,7 +61,7 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $item['id'] }}">
 
-                                <div class="qty-box">
+                                <div class="qty-box mt-0">
                                     <button type="button" class="qty-btn" onclick="changeQty(this, -1)">−</button>
 
                                     <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="qty-input">
@@ -69,11 +69,6 @@
                                     <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
                                 </div>
                             </form>
-                        </div>
-
-                        {{-- TOTAL --}}
-                        <div class="total-text">
-                            ₹{{ number_format($item['price'] * $item['quantity'], 2) }}
                         </div>
 
                     </div>
@@ -92,12 +87,64 @@
                         <span>₹{{ number_format($subtotal, 2) }}</span>
                     </div>
 
+                    {{-- DISCOUNT ROW (shows only when coupon is applied) --}}
+                    @if(session('coupon'))
+                    <div class="d-flex justify-content-between summary-row">
+                        <span style="color: green;">Discount</span>
+                        <span style="color: green;">−₹{{ number_format(session('coupon.discount'), 2) }}</span>
+                    </div>
+                    @endif
+
                     <hr>
 
                     <div class="d-flex justify-content-between summary-total">
                         <span>Total</span>
                         <span>₹{{ number_format($total, 2) }}</span>
                     </div>
+
+                    {{-- COUPON SECTION --}}
+                    <div class="mt-3" id="coupon-section">
+
+                        @if(session('coupon'))
+
+                            {{-- APPLIED STATE --}}
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded"
+                                 style="background-color: #f0fff4; border: 1px solid #b7ebc0;">
+                                <span style="color: green; font-size: 13px; font-weight: 500;">
+                                    ✓ {{ session('coupon.code') }} applied
+                                </span>
+                                <form method="POST" action="{{ route('coupon.remove') }}">
+                                    @csrf
+                                    <button type="submit" class="remove-btn">Remove</button>
+                                </form>
+                            </div>
+
+                        @else
+
+                            {{-- INPUT STATE --}}
+                            <form method="POST" action="{{ route('coupon.apply') }}" class="d-flex gap-2">
+                                @csrf
+                                <input
+                                    type="text"
+                                    name="code"
+                                    placeholder="Enter coupon code"
+                                    class="form-control form-control-sm"
+                                    style="text-transform: uppercase; letter-spacing: 0.05em;"
+                                    value="{{ old('code') }}"
+                                >
+                                <button type="submit" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
+                                    Apply
+                                </button>
+                            </form>
+
+                            @error('code')
+                                <p class="mt-1" style="font-size: 12px; color: red;">{{ $message }}</p>
+                            @enderror
+
+                        @endif
+
+                    </div>
+                    {{-- END COUPON SECTION --}}
 
                     <a href="{{ route('checkout') }}" class="btn btn-dark w-100 mt-4 checkout-btn">
                         Proceed to Checkout

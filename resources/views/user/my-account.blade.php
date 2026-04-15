@@ -494,7 +494,7 @@ your orders.')
                                         <p class="text-muted">
                                             Start shopping to see your orders here.
                                         </p>
-                                        <a href="{{ route('shop') }}" class="btn btn-dark mt-2">
+                                        <a href="{{ route('home') }}" class="btn btn-dark mt-2">
                                             Start Shopping
                                         </a>
                                     </div>

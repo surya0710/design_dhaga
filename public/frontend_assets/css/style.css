@@ -3473,3 +3473,17 @@ ol.breadcrumb li {
     margin-bottom: 15px;
   }
 }
+
+#loginModal .modal-content {
+    background-color: #f8f9fa;
+}
+
+#loginModal .form-control {
+    background-color: #eef1f5;
+    border: 1px solid #e0e0e0;
+}
+
+#loginModal .form-control:focus {
+    box-shadow: none;
+    border-color: #ccc;
+}

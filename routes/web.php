@@ -17,6 +17,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CkeditorController;
 use App\Http\Controllers\ShiprocketController;
+use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,9 @@ Route::get('/collaborations', [HomeController::class, 'collaborations'])->name('
 
 Route::post('/pincode/serviceable', [ShiprocketController::class, 'checkPincode'])->name('pincode.serviceable');
 
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+
 /*
 |--------------------------------------------------------------------------
 | User Routes
@@ -118,6 +122,9 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::get('/order/{id}/invoice', [CheckoutController::class, 'invoice'])->name('order.invoice');
 
     Route::get('/order/{id}/invoice/download', function ($id) { return app(\App\Http\Controllers\CheckoutController::class)->invoice($id, 'download');})->name('order.invoice.download');
+
+    Route::post('/coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
+    Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
 
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
