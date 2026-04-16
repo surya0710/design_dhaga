@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
 use App\Models\Address;
-use App\Models\Wishlist;
 
 class AccountController extends Controller
 {
@@ -38,12 +37,7 @@ class AccountController extends Controller
         // Total Spend Calculation
         $totalSpend = $orders->sum('total');
 
-        return view('user.my-account', compact(
-            'categories',
-            'addresses',
-            'orders',
-            'totalSpend'
-        ));
+        return view('user.my-account', compact('categories','addresses','orders', 'totalSpend'));
     }
 
     public function logout(){

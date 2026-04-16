@@ -767,7 +767,7 @@
     const wishlistConfig = {
         addUrl: "{{ route('wishlist.add') }}",
         removeUrl: "{{ route('wishlist.remove') }}",
-        loginUrl: "{{ route('login') }}",
+        loginUrl: "",
         csrfToken: "{{ csrf_token() }}"
     };
 
