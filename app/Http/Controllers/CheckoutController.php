@@ -73,6 +73,12 @@ class CheckoutController extends Controller
 
         $categories = $this->categories;
 
+        $coupon = session()->get('coupon');
+        if ($coupon) {
+            $couponDiscount = $coupon['discount'];
+            $total = $total - $couponDiscount;
+        }
+
         return view('frontend.checkout', compact(
             'cartItems',
             'subtotal',
@@ -81,7 +87,8 @@ class CheckoutController extends Controller
             'total',
             'categories',
             'defaultAddress',
-            'gstData'
+            'gstData',
+            'coupon'
         ));
     }
 

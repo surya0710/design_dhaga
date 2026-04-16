@@ -227,12 +227,12 @@
                                     </a>
                                 </li>
 
-                                <li class="menu-item">
+                                <!-- <li class="menu-item">
                                     <a href="settings" class="">
                                         <div class="icon"><i class="icon-settings"></i></div>
                                         <div class="text">Settings</div>
                                     </a>
-                                </li>
+                                </li> -->
 
                                 <li class="menu-item">
                                     <form method="post" action="{{route('logout')}}" id="logout-form">

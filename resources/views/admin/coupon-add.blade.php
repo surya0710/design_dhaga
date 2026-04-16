@@ -35,8 +35,7 @@
                 @enderror
                 <fieldset class="name">
                     <div class="body-title">Coupon Code <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Coupon Code" name="code"
-                        tabindex="0" value="{{old('code')}}" aria-required="true" required="">
+                    <input class="flex-grow" type="text" placeholder="Coupon Code" name="code" tabindex="0" value="{{old('code')}}" aria-required="true" required="">
                     @error('code')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -121,3 +120,11 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+    const codeInput = document.querySelector('input[name="code"]');
+    codeInput.addEventListener('input', function(){
+        this.value = this.value.toUpperCase();
+    });
+</script>
+@endpush

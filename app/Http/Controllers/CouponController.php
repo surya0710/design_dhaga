@@ -96,11 +96,12 @@ class CouponController extends Controller
 
     public function apply(Request $request)
     {
-        $request->validate([
-            'coupon_code' => 'required|string'
-        ]);
+        $request->validate(['code' => 'required|string']);
 
-        $coupon = Coupon::where('code', $request->coupon_code)->first();
+        $coupon = Coupon::where('code', $request->code)
+            ->where('start_date', '<=', today())
+            ->where('end_date', '>=', today())
+            ->first();
 
         if (!$coupon) {
             return back()->with('error', 'Invalid coupon code.');
@@ -112,9 +113,7 @@ class CouponController extends Controller
             return back()->with('error', "Minimum cart value should be ₹{$coupon->min_cart_value}.");
         }
 
-        $discount = $coupon->type === 'fixed'
-            ? $coupon->value
-            : ($subtotal * $coupon->value / 100);
+        $discount = $coupon->type === 'fixed' ? $coupon->value : ($subtotal * $coupon->value / 100);
 
         session()->put('coupon', [ 
             'coupon_id' => $coupon->id,
@@ -125,5 +124,11 @@ class CouponController extends Controller
         ]);
         
         return back()->with('success', 'Coupon applied successfully!');
+    }
+
+    public function remove()
+    {
+        session()->forget('coupon');
+        return back()->with('success', 'Coupon removed successfully!');
     }
 }

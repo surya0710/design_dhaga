@@ -99,7 +99,7 @@
 
                     <div class="d-flex justify-content-between summary-total">
                         <span>Total</span>
-                        <span>₹{{ number_format($total, 2) }}</span>
+                        <span>₹{{ number_format($total - (session('coupon') ? session('coupon.discount') : 0), 2) }}</span>
                     </div>
 
                     {{-- COUPON SECTION --}}
@@ -122,16 +122,13 @@
                         @else
 
                             {{-- INPUT STATE --}}
-                            <form method="POST" action="{{ route('coupon.apply') }}" class="d-flex gap-2">
+                            <form method="POST" action="{{ route('coupon.apply') }}" class="d-flex gap-1">
                                 @csrf
-                                <input
-                                    type="text"
-                                    name="code"
-                                    placeholder="Enter coupon code"
-                                    class="form-control form-control-sm"
-                                    style="text-transform: uppercase; letter-spacing: 0.05em;"
-                                    value="{{ old('code') }}"
-                                >
+                                <input type="text" name="code" placeholder="Enter coupon code" class="form-control form-control-sm" 
+                                style="text-transform: uppercase; letter-spacing: 0.05em;" value="{{ old('code') }}" >
+                                @error('code')
+                                    <p class="mt-1" style="font-size: 12px; color: red;">{{ $message }}</p>
+                                @enderror
                                 <button type="submit" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
                                     Apply
                                 </button>
