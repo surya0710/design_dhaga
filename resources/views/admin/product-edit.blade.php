@@ -335,21 +335,22 @@
             <div class="artisan-grid">
                 @for($i = 1; $i <= 6; $i++)
                 @php
-                    $icon = $product->icons->firstWhere('position', $i);
-                    $hasImg = $icon && $icon->image;
-                    $src = $hasImg ? asset('storage/'.$icon->image) : '';
+                    $icon           = $product->icons->firstWhere('position', $i);
+                    $defaultIcon    = ["1776046237_1.svg", "1776046238_2.svg", "1776046239_3.svg", "1776046240_4.svg", "1776046240_5.svg", "1776046241_6.svg"];
+                    $icon           = $icon ? $icon : (object)['image' => $defaultIcon[$i-1]];  
+                    $src            = $icon ? asset('storage/'.$icon->image) : asset('frontend_assets/images/icons/'.$defaultIcon[$i-1]);
                 @endphp
                 <div class="row">
-                    <div class="image-picker {{ $hasImg ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
+                    <div class="image-picker {{ $icon->image ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
                         onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
 
                         {{-- Hidden image --}}
-                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $icon->image ?? '' }}">
+                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $icon->image ?? $defaultIcon[$i-1] }}">
 
-                        <div class="pick-icon" style="{{ $hasImg ? 'display:none' : '' }}">🖼</div>
-                        <span class="pick-btn" style="{{ $hasImg ? 'display:none' : '' }}">Select</span>
+                        <div class="pick-icon">🖼</div>
+                        <span class="pick-btn">Select</span>
 
-                        <img id="preview_productIcons_{{ $i }}" src="{{ $src }}" style="{{ $hasImg ? '' : 'display:none' }}">
+                        <img id="preview_productIcons_{{ $i }}" src="{{ $src }}">
 
                         <div class="overlay">
                             <button type="button" onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">

@@ -127,7 +127,7 @@ class AdminController extends Controller
     public function index()
     {
         $totalOrders     = Order::count();
-        $recentOrders    = Order::with('items')->orderBy('created_at', 'desc')->take(5)->get();
+        $recentOrders    = Order::where('payment_status', 'paid')->with('items')->orderBy('created_at', 'desc')->take(5)->get();
         $deliveredOrders = Order::where('order_status', 'delivered')->count();
         $pendingOrders   = Order::where('order_status', 'pending')->count();
         $cancelledOrders = Order::where('order_status', 'cancelled')->count();
@@ -156,7 +156,11 @@ class AdminController extends Controller
         $months    = collect(range(1, 12))->map(fn($m) => Carbon::create()->month($m)->format('M'));
         $totalData = $pendingData = $deliveredData = $canceledData = array_fill(0, 12, 0);
 
-        $orders = Order::selectRaw('MONTH(created_at) as month, order_status, SUM(total) as total')->whereYear('created_at', now()->year)->groupBy('month', 'order_status')->get();
+        $orders = Order::selectRaw('MONTH(created_at) as month, order_status, SUM(total) as total')
+            ->whereYear('created_at', now()->year)
+            ->where('payment_status', 'paid')
+            ->groupBy('month', 'order_status')
+            ->get();
 
         foreach ($orders as $order) {
             $index = $order->month - 1;

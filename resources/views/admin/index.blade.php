@@ -221,7 +221,7 @@
                                 <tbody>
                                     @foreach ($recentOrders as $recentOrder)
                                         <tr>
-                                            <td class="text-center">{{ $recentOrder->id }}</td>
+                                            <td class="text-center">{{ $loop->index + 1 }}</td>
                                             <td class="text-center">{{ $recentOrder->name }}</td>
                                             <td class="text-center">{{ $recentOrder->phone }}</td>
                                             <td class="text-center">{{ $recentOrder->total }}</td>
@@ -249,28 +249,6 @@
                                         </tr>
                                         
                                     @endforeach
-                                    <!-- <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">Divyansh Kumar</td>
-                                        <td class="text-center">1234567891</td>
-                                        <td class="text-center">$172.00</td>
-                                        <td class="text-center">$36.12</td>
-                                        <td class="text-center">$208.12</td>
-
-                                        <td class="text-center">ordered</td>
-                                        <td class="text-center">2024-07-11 00:54:14</td>
-                                        <td class="text-center">2</td>
-                                        <td></td>
-                                        <td class="text-center">
-                                            <a href="#">
-                                                <div class="list-icon-function view-icon">
-                                                    <div class="item eye">
-                                                        <i class="icon-eye"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </td>
-                                    </tr> -->
                                 </tbody>
                             </table>
                         </div>

@@ -20,10 +20,6 @@ class CheckoutController extends Controller
 
     // Registered business state
     protected string $companyState = 'Haryana';
-
-    // GST slab for your product
-    // Same state: CGST 2.5% + SGST 2.5%
-    // Different state: IGST 5%
     protected float $gstRate = 5;
 
     public function __construct()
