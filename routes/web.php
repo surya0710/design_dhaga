@@ -117,6 +117,8 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::get('/order/{id}/invoice', [CheckoutController::class, 'invoice'])->name('order.invoice');
 
+    Route::post('/checkout/calculate-gst', [CheckoutController::class, 'calculateGst'])->name('checkout.calculate.gst');
+
     Route::get('/order/{id}/invoice/download', function ($id) { return app(\App\Http\Controllers\CheckoutController::class)->invoice($id, 'download');})->name('order.invoice.download');
 
     Route::post('/coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Address;
+use App\Models\HaryanaPincode;
 use Razorpay\Api\Api;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\OrderCompletedMail;
@@ -207,14 +208,10 @@ class CheckoutController extends Controller
             'shiprocket_courier_id' => 'required',
         ]);
 
-        $subtotal = $cartItems->sum(function ($item) {
-            return ((float) $item['price']) * ((int) $item['quantity']);
-        });
-
+        $subtotal = $cartItems->sum(fn($item) => $item['price'] * $item['quantity']);
         $couponDiscount = 0;
         $taxableAmount = max($subtotal - $couponDiscount, 0);
 
-        // Always re-fetch current delivery options from Shiprocket on server
         try {
             $deliveryOptions = $this->fetchDeliveryOptionsFromShiprocket(
                 $validated['pincode'],
@@ -222,34 +219,48 @@ class CheckoutController extends Controller
             );
         } catch (\Throwable $e) {
             return response()->json([
-                'message' => 'Unable to validate delivery option.',
-                'error' => config('app.debug') ? $e->getMessage() : null,
+                'message' => 'Unable to validate delivery option.'
             ], 500);
         }
 
+        // ✅ Select correct option
         $selectedOption = null;
 
-        if ($validated['delivery_type'] === 'regular' && !empty($deliveryOptions['regular'])) {
-            $selectedOption = $deliveryOptions['regular'];
-        }
-
-        if ($validated['delivery_type'] === 'express' && !empty($deliveryOptions['express'])) {
-            $selectedOption = $deliveryOptions['express'];
+        if ($validated['delivery_type'] === 'regular') {
+            $selectedOption = $deliveryOptions['regular'] ?? null;
+        } elseif ($validated['delivery_type'] === 'express') {
+            $selectedOption = $deliveryOptions['express'] ?? null;
         }
 
         if (
             !$selectedOption ||
-            (string) ($selectedOption['courier_id'] ?? '') !== (string) $validated['shiprocket_courier_id']
+            (string)($selectedOption['courier_id'] ?? '') !== (string)$validated['shiprocket_courier_id']
         ) {
             return response()->json([
-                'message' => 'Selected delivery option is no longer valid. Please check delivery options again.'
+                'message' => 'Selected delivery option is invalid. Please recheck.'
             ], 422);
         }
 
-        $shipping = (float) ($selectedOption['charge'] ?? 0);
+        // ✅ Extract delivery details (SOURCE OF TRUTH)
+        $shipping = (float)($selectedOption['charge'] ?? 0);
+        $deliveryEta = $selectedOption['etd'] ?? null;
+        $courierName = $selectedOption['courier_name'] ?? null;
+        $deliveryLabel = $selectedOption['label'] ?? null;
 
+        // ✅ Convert ETA → expected date
+        $expectedDate = null;
+        if (!empty($deliveryEta)) {
+            preg_match('/\d+/', $deliveryEta, $matches);
+            if (!empty($matches)) {
+                $days = (int)$matches[0];
+                $expectedDate = now()->addDays($days);
+            }
+        }
+
+        // GST
         $gstData = $this->calculateGstBreakup($taxableAmount, $validated['state']);
         $gstAmount = $gstData['gst_amount'];
+
         $total = $taxableAmount + $shipping + $gstAmount;
 
         DB::beginTransaction();
@@ -257,42 +268,40 @@ class CheckoutController extends Controller
         try {
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'address_id' => null,
 
+                // customer
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
 
+                // address
                 'country' => 'India',
                 'state' => $validated['state'],
                 'city' => $validated['city'],
                 'pincode' => $validated['pincode'],
                 'address_line_1' => $validated['address'],
-                'address_line_2' => null,
-                'landmark' => null,
-                'address_type' => 'home',
 
+                // pricing
                 'subtotal' => $subtotal,
                 'shipping' => $shipping,
-                'coupon_discount' => $couponDiscount,
+                'delivery_charge' => $shipping,
 
-                'gst_rate' => $gstData['gst_rate'],
+                // ✅ DELIVERY DETAILS
+                'delivery_type' => $validated['delivery_type'],
+                'delivery_eta' => $deliveryEta,
+                'expected_delivery_date' => $expectedDate,
+                'courier_name' => $courierName,
+                'delivery_label' => $deliveryLabel,
+                'shiprocket_courier_id' => (string)$validated['shiprocket_courier_id'],
+
+                // GST
+                'gst_amount' => $gstAmount,
                 'gst_type' => $gstData['gst_type'],
-                'cgst_rate' => $gstData['cgst_rate'],
-                'sgst_rate' => $gstData['sgst_rate'],
-                'igst_rate' => $gstData['igst_rate'],
                 'cgst_amount' => $gstData['cgst_amount'],
                 'sgst_amount' => $gstData['sgst_amount'],
                 'igst_amount' => $gstData['igst_amount'],
-                'gst_amount' => $gstData['gst_amount'],
-
-                'delivery_type' => $validated['delivery_type'],
-                'shiprocket_courier_id' => (string) $validated['shiprocket_courier_id'],
 
                 'total' => $total,
-
-                'coupon_code' => null,
-                'coupon_id' => null,
 
                 'payment_method' => 'razorpay',
                 'payment_status' => 'pending',
@@ -300,26 +309,24 @@ class CheckoutController extends Controller
             ]);
 
             foreach ($cartItems as $item) {
-                $lineSubtotal = ((float) $item['price']) * ((int) $item['quantity']);
-
                 $order->items()->create([
                     'product_id' => $item['id'] ?? null,
                     'product_name' => $item['name'],
                     'product_image' => $item['image'] ?? null,
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],
-                    'total' => $lineSubtotal,
+                    'total' => $item['price'] * $item['quantity'],
                 ]);
             }
 
-            $api = new Api(
+            $api = new \Razorpay\Api\Api(
                 config('services.razorpay.key'),
                 config('services.razorpay.secret')
             );
 
             $razorpayOrder = $api->order->create([
                 'receipt' => 'order_' . $order->id,
-                'amount' => (int) round($total * 100),
+                'amount' => (int)round($total * 100),
                 'currency' => 'INR'
             ]);
 
@@ -339,24 +346,9 @@ class CheckoutController extends Controller
                     'name' => $order->name,
                     'email' => $order->email,
                     'phone' => $order->phone,
-                ],
-                'billing' => [
-                    'subtotal' => round($subtotal, 2),
-                    'coupon_discount' => round($couponDiscount, 2),
-                    'shipping' => round($shipping, 2),
-                    'delivery_type' => $validated['delivery_type'],
-                    'gst_type' => $gstData['gst_type'],
-                    'gst_rate' => $gstData['gst_rate'],
-                    'cgst_rate' => round($gstData['cgst_rate'], 2),
-                    'sgst_rate' => round($gstData['sgst_rate'], 2),
-                    'igst_rate' => round($gstData['igst_rate'], 2),
-                    'cgst_amount' => round($gstData['cgst_amount'], 2),
-                    'sgst_amount' => round($gstData['sgst_amount'], 2),
-                    'igst_amount' => round($gstData['igst_amount'], 2),
-                    'gst_amount' => round($gstData['gst_amount'], 2),
-                    'total' => round($total, 2),
                 ]
             ]);
+
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -577,5 +569,52 @@ class CheckoutController extends Controller
 
         // DOWNLOAD PDF
         return $pdf->download('invoice-'.$order->id.'.pdf');
+    }
+
+    public function calculateGst(Request $request)
+    {
+        $request->validate([
+            'pincode' => 'required|digits:6',
+            'taxable_amount' => 'required|numeric|min:0'
+        ]);
+
+        $pincode = $request->pincode;
+        $taxableAmount = $request->taxable_amount;
+
+        // ✅ Check from DB (BEST METHOD)
+        $isHaryana = HaryanaPincode::where('pincode', $pincode)->exists();
+
+        // ⚠️ Optional fallback (can remove if DB is complete)
+        if (!$isHaryana && $pincode >= 120001 && $pincode <= 136156) {
+            $isHaryana = true;
+        }
+
+        if ($isHaryana) {
+            $cgstRate = 2.5;
+            $sgstRate = 2.5;
+
+            $cgstAmount = ($taxableAmount * $cgstRate) / 100;
+            $sgstAmount = ($taxableAmount * $sgstRate) / 100;
+
+            return response()->json([
+                'gst_type' => 'cgst_sgst',
+                'cgst_rate' => $cgstRate,
+                'sgst_rate' => $sgstRate,
+                'cgst_amount' => round($cgstAmount, 2),
+                'sgst_amount' => round($sgstAmount, 2),
+                'gst_amount' => round($cgstAmount + $sgstAmount, 2),
+            ]);
+        }
+
+        // IGST
+        $igstRate = 5;
+        $igstAmount = ($taxableAmount * $igstRate) / 100;
+
+        return response()->json([
+            'gst_type' => 'igst',
+            'igst_rate' => $igstRate,
+            'igst_amount' => round($igstAmount, 2),
+            'gst_amount' => round($igstAmount, 2),
+        ]);
     }
 }

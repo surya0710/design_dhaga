@@ -285,9 +285,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Pincode <span class="required-mark">*</span></label>
-                                <input type="text" name="pincode" id="pincode" class="form-control"
-                                    value="{{ old('pincode', $defaultAddress->pincode ?? '') }}"
-                                    placeholder="Enter pincode">
+                                <input type="text" name="pincode" id="pincode" class="form-control" value="{{ old('pincode', $defaultAddress->pincode ?? '') }}" placeholder="Enter pincode">
                                 <small class="text-danger error-text" data-error="pincode"></small>
                             </div>
 
@@ -351,7 +349,7 @@
                                     <span>- ₹{{ number_format($couponDiscount, 2) }}</span>
                                 </div>
                             @endif
-
+                            <div id="gst-section">
                             @if(($gstData['gst_type'] ?? '') === 'cgst_sgst')
                                 <div class="summary-row">
                                     <span>CGST ({{ number_format($gstData['cgst_rate'], 2) }}%)</span>
@@ -368,6 +366,7 @@
                                     <span>₹<span id="summary-igst">{{ number_format($gstData['igst_amount'], 2) }}</span></span>
                                 </div>
                             @endif
+                            </div>
 
                             <div class="summary-row d-none" id="shipping-row">
                                 <span>Shipping</span>
@@ -540,20 +539,47 @@
 
     document.getElementById('rzp-pay-btn').addEventListener('click', function () {
         const button = this;
+
         button.disabled = true;
         button.innerText = 'Please wait...';
 
-        document.querySelectorAll('.error-text').forEach(function(el) {
-            el.innerText = '';
-        });
+        document.querySelectorAll('.error-text').forEach(el => el.innerText = '');
 
+        // ✅ STEP 1: If delivery options not loaded → auto trigger check
+        if (!document.querySelector('.delivery-option')) {
+            document.getElementById('check-delivery-btn').click();
+
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerText = 'Place Order';
+                document.getElementById('rzp-pay-btn').click();
+            }, 800);
+
+            return;
+        }
+
+        // ✅ STEP 2: If no delivery selected → auto select first
+        if (!document.getElementById('delivery_type').value) {
+
+            const firstOption = document.querySelector('.delivery-option');
+
+            if (firstOption) {
+                firstOption.click(); // triggers selectDeliveryOption()
+            }
+        }
+
+        // ✅ STEP 3: Final safety check
         if (!document.getElementById('delivery_type').value) {
             const errorBox = document.querySelector('[data-error="delivery_type"]');
-            if (errorBox) errorBox.innerText = 'Please select a delivery type.';
+            if (errorBox) errorBox.innerText = 'Please select delivery option.';
+
             button.disabled = false;
             button.innerText = 'Place Order';
             return;
         }
+
+        // ✅ DEBUG (optional)
+        console.log("Delivery Type:", document.getElementById('delivery_type').value);
 
         let form = document.getElementById('checkout-form');
         let formData = new FormData(form);
@@ -618,11 +644,6 @@
                             button.disabled = false;
                             button.innerText = 'Place Order';
                         }
-                    })
-                    .catch(() => {
-                        alert('Payment verification failed.');
-                        button.disabled = false;
-                        button.innerText = 'Place Order';
                     });
                 },
                 prefill: {
@@ -630,9 +651,7 @@
                     email: data.customer.email,
                     contact: data.customer.phone
                 },
-                theme: {
-                    color: "#111111"
-                },
+                theme: { color: "#111111" },
                 modal: {
                     ondismiss: function () {
                         button.disabled = false;
@@ -650,6 +669,89 @@
             button.innerText = 'Place Order';
         });
     });
+
+    let currentGstAmount = 0;
+
+    function renderGst(data) {
+        let html = '';
+
+        if (data.gst_type === 'cgst_sgst') {
+            html = `
+                <div class="summary-row">
+                    <span>CGST (${data.cgst_rate}%)</span>
+                    <span>₹${formatINR(data.cgst_amount)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>SGST (${data.sgst_rate}%)</span>
+                    <span>₹${formatINR(data.sgst_amount)}</span>
+                </div>
+            `;
+
+            document.querySelector('.gst-note').innerText =
+                'Intra-state supply: CGST + SGST applied.';
+        } else {
+            html = `
+                <div class="summary-row">
+                    <span>IGST (${data.igst_rate}%)</span>
+                    <span>₹${formatINR(data.igst_amount)}</span>
+                </div>
+            `;
+
+            document.querySelector('.gst-note').innerText =
+                'Inter-state supply: IGST applied.';
+        }
+
+        document.getElementById('gst-section').innerHTML = html;
+    }
+
+    function fetchGst() {
+        const pincode = document.getElementById('pincode').value;
+        const state = document.getElementById('state').value;
+
+        if (pincode.length !== 6) return;
+
+        fetch("{{ route('checkout.calculate.gst') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                pincode: pincode,
+                taxable_amount: taxableAmount,
+                state: state
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            currentGstAmount = data.gst_amount;   // ✅ IMPORTANT
+            renderGst(data);
+            updateSummary(document.getElementById('shipping_charge').value);
+        })
+        .catch(() => {
+            console.log("GST fetch failed");
+        });
+    }
+
+    // 🔥 Trigger on both inputs
+    document.getElementById("pincode").addEventListener("input", fetchGst);
+    document.getElementById("state").addEventListener("change", fetchGst);
+
+    // 🔥 Update total calculation to use dynamic GST
+    function updateSummary(shippingCharge) {
+        shippingCharge = Number(shippingCharge || 0);
+
+        const total = taxableAmount + currentGstAmount + shippingCharge;
+
+        document.getElementById('summary-shipping').innerText =
+            shippingCharge <= 0 ? 'Free' : '₹' + formatINR(shippingCharge);
+
+        document.getElementById('summary-total').innerText = formatINR(total);
+        document.getElementById('shipping_charge').value = shippingCharge;
+    }
+
+    document.getElementById('delivery_type').value = type;
+    document.getElementById('shiprocket_courier_id').value = courierId;
 </script>
 
 @endsection
