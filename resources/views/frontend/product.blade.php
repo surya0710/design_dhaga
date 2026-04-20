@@ -104,7 +104,7 @@
 
                 <div class="d-md-none">
                     <div class="mb-2">
-                        <h2 class="mb-0 mt-0">{{ $product->name }}</h2>
+                        <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
 
                         <div class="d-flex align-items-center gap-2 mb-1">
                             @php
@@ -184,7 +184,7 @@
                 <div class="sticky-md-top h-100">
                     <div class="d-flex justify-content-between align-items-start d-none d-md-flex">
                         <div>
-                            <h1 class="h3 fw-bold mb-1 mt-0" style="font-size: 25px;">
+                            <h1 class="h3 fw-bold mb-0 mt-0" style="font-size: 25px;">
                                 {{ $product->name }}
                             </h1>
 
