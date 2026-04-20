@@ -27,8 +27,16 @@ class Order extends Model
 
         'subtotal',
         'shipping',
+        'delivery_charge', // ✅ ADD
         'coupon_discount',
         'total',
+
+        'delivery_type', // ✅ ADD
+        'delivery_eta', // ✅ ADD
+        'expected_delivery_date', // ✅ ADD
+        'courier_name', // ✅ ADD
+        'delivery_label', // ✅ ADD
+        'shiprocket_courier_id', // ✅ ADD
 
         'coupon_code',
         'coupon_id',
@@ -48,8 +56,12 @@ class Order extends Model
     protected $casts = [
         'subtotal' => 'decimal:2',
         'shipping' => 'decimal:2',
+        'delivery_charge' => 'decimal:2', // ✅
         'coupon_discount' => 'decimal:2',
         'total' => 'decimal:2',
+
+        'expected_delivery_date' => 'date', // ✅
+
         'paid_at' => 'datetime',
         'delivered_at' => 'datetime',
         'cancelled_at' => 'datetime',
