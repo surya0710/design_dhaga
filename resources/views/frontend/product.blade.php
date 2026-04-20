@@ -244,7 +244,7 @@
                         </a>
                     @endif
 
-                    <div class="row g-2 mt-2 mb-2 p-3 rounded bg-body-secondary text-center">
+                    <div class="row g-2 mt-2 p-1 rounded bg-body-secondary text-center">
                         @foreach($product->icons as $icon)
                         <div class="col-4">
                             <svg width="40" height="40">
