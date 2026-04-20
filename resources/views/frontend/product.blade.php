@@ -298,12 +298,12 @@
                                             <div class="label">
                                                 <i class="fa-solid fa-location-dot me-1"></i>
                                             </div>
+                                            <div class="label">DELIVER TO:</div> &nbsp;
                                             <div class="value" id="deliveryPincodeValue"></div>
                                         </div>
 
                                         <div class="d-flex">
-                                            <div class="label">Delivery by:</div> &nbsp;
-                                            <div class="value" id="deliveryDateValue"></div>
+                                            <div class="label confirm-delivery-label text-success">We deliver to your zipcode.</div> &nbsp;
                                         </div>
                                     </div>
 
@@ -853,7 +853,7 @@
             checkBtn: document.getElementById('checkDeliveryBtn'),
             errorBox: document.getElementById('deliveryError'),
             pincodeValue: document.getElementById('deliveryPincodeValue'),
-            dateValue: document.getElementById('deliveryDateValue'),
+            confirmLabel: document.getElementById('confirm-delivery-label'),
             daysValue: document.getElementById('deliveryDaysValue'),
             courierValue: document.getElementById('deliveryCourierValue'),
             courierRow: document.getElementById('deliveryCourierRow'),
@@ -920,11 +920,11 @@
         const courierName = bestOption?.courier_name || '';
 
         els.pincodeValue.textContent = pincode;
-        els.dateValue.textContent = formattedDate;
 
         els.inputSection.classList.add('d-none');
         els.unavailableSection.classList.add('d-none');
         els.successSection.classList.remove('d-none');
+        els.confirmLabel.classList.add("text-success");
 
         localStorage.setItem(deliveryConfig.storageKey, JSON.stringify({
             status: 'success',
