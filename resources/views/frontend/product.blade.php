@@ -228,7 +228,7 @@
                     </div>
 
                     @if ($product->type == 1)
-                        <button id="addToCartBtn" class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2 btn-add-to-cart" onclick="handleAddToCart({{ $product->id }})">
+                        <button id="addToCartBtn" class="btn bg-maroon text-white w-100 py-3 fw-bold btn-add-to-cart" onclick="handleAddToCart({{ $product->id }})">
                             <span class="btn-text">
                                 Add To Cart &nbsp;|&nbsp; ₹ <span id="total">{{ $product->sale_price ?? $product->regular_price }}</span>
                             </span>
@@ -238,7 +238,7 @@
                             </span>
                         </button>
                     @else
-                        <a class="btn bg-maroon text-white w-100 py-3 fw-bold mb-2"
+                        <a class="btn bg-maroon text-white w-100 py-3 fw-bold"
                            href="https://api.whatsapp.com/send/?phone=919671941303&text={{ urlencode('Hi! I am interested in this product: ' . url()->current()) }}">
                             Request To Purchase
                         </a>
