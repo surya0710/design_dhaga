@@ -285,7 +285,7 @@
                     <div class="pick-icon">🖼</div>
                     <span class="pick-btn">Select</span>
 
-                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $defaultIcon[$i-1]) }}">
+                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $defaultIcon[$i-1]) }}" style="width:100px;">
 
                     <div class="overlay">
                         <button type="button"
