@@ -337,12 +337,11 @@
                 @php
                     $icon           = $product->icons->firstWhere('position', $i);
                     $defaultIcon    = ["1776047104_1.svg", "1776047104_2.svg", "1776047104_3.svg", "1776047104_4.svg", "1776047104_5.svg", "1776047104_6.svg"];
-                    $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"]
-                    $icon           = $icon ? $icon : (object)['image' => $defaultIcon[$i-1]];  
-                    $src            = $icon ? asset('storage/'.$icon->image) : asset('frontend_assets/images/icons/'.$defaultIcon[$i-1]);
+                    $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"];
+                    $src            = $icon ? asset('storage/'.$icon->image) : asset('storage/'.$defaultIcon[$i-1]);
                 @endphp
                 <div class="row">
-                    <div class="image-picker {{ $icon->image ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
+                    <div class="image-picker {{ isset($icon) && $icon->image ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
                         onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
 
                         {{-- Hidden image --}}
@@ -365,7 +364,7 @@
                     </div>
 
                     {{-- Text --}}
-                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ $icon->text ?? '' }}">
+                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ $icon->text ?? $defaultText[$i-1] }}">
                 </div>
                 @endfor
             </div>
