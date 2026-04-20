@@ -298,10 +298,9 @@
                             ✕
                         </button>
                     </div>
+                    {{-- Text --}}
+                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text', $defaultText[$i-1]) }}">
                 </div>
-
-                {{-- Text --}}
-                <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text', $defaultText[$i-1]) }}">
                 @endfor
             </div>
         </div>
