@@ -28,9 +28,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ShiprocketService;
 
 class AdminController extends Controller
 {
+    protected $shiprocket;
+
+    public function __construct(ShiprocketService $shiprocket)
+    {
+        $this->shiprocket = $shiprocket;
+    }
 
     private function resizeAndSaveImage($sourcePath, $destinationPath, $maxWidth, $maxHeight)
     {
@@ -846,11 +853,28 @@ class AdminController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+
+        $status = $request->status;
+
+        if ($status === 'packed' && !$order->shiprocket_order_id) {
+            try {
+                $result = $shiprocket->createOrder($order);
+
+                $order->shiprocket_order_id = $result['order_id'];
+                $order->shiprocket_shipment_id = $result['shipment_id'];
+
+            } catch (\Throwable $e) {
+                return back()->with('error', $e->getMessage());
+            }
+        }
+
         if ($request->status === 'delivered' && !$order->delivered_at) {
             $order->delivered_at = now();
         }
+
         $order->status = $request->status;
         $order->save();
+
         return redirect()->back()->with('status', 'Order status updated successfully');
     }
 
