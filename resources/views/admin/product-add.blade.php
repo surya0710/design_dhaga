@@ -270,17 +270,22 @@
 
             <div class="artisan-grid">
                 @for($i = 1; $i <= 6; $i++)
+                @php
+                    $defaultIcon    = ["uploads/media/1776047104_1.svg", "uploads/media/1776047104_2.svg", "uploads/media/1776047104_3.svg", "uploads/media/1776047104_4.svg", 
+                    "uploads/media/1776047104_5.svg", "uploads/media/1776047104_6.svg"];
+                    $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"];
+                @endphp
                 <div class="image-picker"
                     id="picker_productIcons_{{ $i }}"
                     onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
 
                     {{-- Hidden image --}}
-                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}">
+                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $defaultIcon[$i-1] }}">
 
                     <div class="pick-icon">🖼</div>
                     <span class="pick-btn">Select</span>
 
-                    <img id="preview_productIcons_{{ $i }}" style="display:none">
+                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $defaultIcon[$i-1]) }}">
 
                     <div class="overlay">
                         <button type="button"
@@ -296,7 +301,7 @@
                 </div>
 
                 {{-- Text --}}
-                <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text') }}">
+                <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text', $defaultText[$i-1]) }}">
                 @endfor
             </div>
         </div>
