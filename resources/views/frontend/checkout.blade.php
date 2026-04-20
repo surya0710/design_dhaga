@@ -415,9 +415,11 @@
         return Number(value).toFixed(2);
     }
 
+    // 🔥 Update total calculation to use dynamic GST
     function updateSummary(shippingCharge) {
         shippingCharge = Number(shippingCharge || 0);
-        const total = taxableAmount + gstAmount + shippingCharge;
+
+        const total = taxableAmount + currentGstAmount + shippingCharge;
 
         document.getElementById('summary-shipping').innerText =
             shippingCharge <= 0 ? 'Free' : '₹' + formatINR(shippingCharge);
@@ -435,6 +437,7 @@
 
         document.getElementById('delivery_type').value = type;
         document.getElementById('shiprocket_courier_id').value = courierId || '';
+
         updateSummary(charge);
     }
 
@@ -484,7 +487,7 @@
 
             if (data.regular) {
                 html += `
-                    <div class="delivery-option" onclick="selectDeliveryOption(this, 'regular', '${data.regular.charge}', '${data.regular.courier_id ?? ''}')">
+                    <div class="delivery-option" onclick="selectDeliveryOption(this, 'regular', ${data.regular.charge}, '${data.regular.courier_id}')">
                         <label style="width:100%;margin:0;cursor:pointer;">
                             <input type="radio" name="delivery_option_ui">
                             <span class="delivery-option-title">Regular Delivery - ₹${formatINR(data.regular.charge)}</span>
@@ -736,22 +739,6 @@
     // 🔥 Trigger on both inputs
     document.getElementById("pincode").addEventListener("input", fetchGst);
     document.getElementById("state").addEventListener("change", fetchGst);
-
-    // 🔥 Update total calculation to use dynamic GST
-    function updateSummary(shippingCharge) {
-        shippingCharge = Number(shippingCharge || 0);
-
-        const total = taxableAmount + currentGstAmount + shippingCharge;
-
-        document.getElementById('summary-shipping').innerText =
-            shippingCharge <= 0 ? 'Free' : '₹' + formatINR(shippingCharge);
-
-        document.getElementById('summary-total').innerText = formatINR(total);
-        document.getElementById('shipping_charge').value = shippingCharge;
-    }
-
-    document.getElementById('delivery_type').value = type;
-    document.getElementById('shiprocket_courier_id').value = courierId;
 </script>
 
 @endsection

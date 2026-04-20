@@ -223,38 +223,57 @@ class CheckoutController extends Controller
             ], 500);
         }
 
-        // ✅ Select correct option
-        $selectedOption = null;
+        // ✅ IMPORTANT: Match selected courier dynamically (handles all key variations)
+        $selectedOption = collect($deliveryOptions)->first(function ($option) use ($validated) {
 
-        if ($validated['delivery_type'] === 'regular') {
-            $selectedOption = $deliveryOptions['regular'] ?? null;
-        } elseif ($validated['delivery_type'] === 'express') {
-            $selectedOption = $deliveryOptions['express'] ?? null;
-        }
+            $optionCourierId =
+                $option['courier_id']
+                ?? $option['courier_company_id']
+                ?? $option['id']
+                ?? null;
 
-        if (
-            !$selectedOption ||
-            (string)($selectedOption['courier_id'] ?? '') !== (string)$validated['shiprocket_courier_id']
-        ) {
+            return (string)$optionCourierId === (string)$validated['shiprocket_courier_id'];
+        });
+
+        // ❌ If still not found → debug response
+        if (!$selectedOption) {
             return response()->json([
-                'message' => 'Selected delivery option is invalid. Please recheck.'
+                'message' => 'Delivery option not matched.',
+                'debug' => $deliveryOptions // remove after testing
             ], 422);
         }
 
-        // ✅ Extract delivery details (SOURCE OF TRUTH)
-        $shipping = (float)($selectedOption['charge'] ?? 0);
-        $deliveryEta = $selectedOption['etd'] ?? null;
-        $courierName = $selectedOption['courier_name'] ?? null;
-        $deliveryLabel = $selectedOption['label'] ?? null;
+        // ✅ Extract delivery charge safely
+        $shipping = (float)(
+            $selectedOption['charge']
+            ?? $selectedOption['rate']
+            ?? $selectedOption['shipping_amount']
+            ?? 0
+        );
+
+        // ✅ Extract ETA safely
+        $deliveryEta =
+            $selectedOption['etd']
+            ?? $selectedOption['estimated_delivery_days']
+            ?? $selectedOption['delivery_days']
+            ?? null;
+
+        // ✅ Extract courier name safely
+        $courierName =
+            $selectedOption['courier_name']
+            ?? $selectedOption['courier_company']
+            ?? null;
+
+        // ✅ Label (based on selection)
+        $deliveryLabel =
+            $validated['delivery_type'] === 'express'
+                ? 'Fastest'
+                : 'Economical';
 
         // ✅ Convert ETA → expected date
         $expectedDate = null;
-        if (!empty($deliveryEta)) {
-            preg_match('/\d+/', $deliveryEta, $matches);
-            if (!empty($matches)) {
-                $days = (int)$matches[0];
-                $expectedDate = now()->addDays($days);
-            }
+        if (!empty($deliveryEta) && preg_match('/\d+/', $deliveryEta, $matches)) {
+            $expectedDate = now()->addDays((int)$matches[0]);
         }
 
         // GST
@@ -286,7 +305,7 @@ class CheckoutController extends Controller
                 'shipping' => $shipping,
                 'delivery_charge' => $shipping,
 
-                // ✅ DELIVERY DETAILS
+                // ✅ DELIVERY DETAILS (FIXED)
                 'delivery_type' => $validated['delivery_type'],
                 'delivery_eta' => $deliveryEta,
                 'expected_delivery_date' => $expectedDate,
