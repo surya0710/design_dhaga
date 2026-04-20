@@ -103,8 +103,8 @@
                 </div>
 
                 <div class="d-md-none">
-                    <div class="mb-3">
-                        <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
+                    <div class="mb-2">
+                        <h2 class="mb-0 mt-0">{{ $product->name }}</h2>
 
                         <div class="d-flex align-items-center gap-2 mb-1">
                             @php
