@@ -350,7 +350,7 @@
                         <div class="pick-icon">🖼</div>
                         <span class="pick-btn">Select</span>
 
-                        <img id="preview_productIcons_{{ $i }}" src="{{ $src }}">
+                        <img id="preview_productIcons_{{ $i }}" src="{{ $src }}" style="width:100px;">
 
                         <div class="overlay">
                             <button type="button" onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
