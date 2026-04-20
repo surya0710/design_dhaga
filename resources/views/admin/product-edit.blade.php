@@ -336,7 +336,8 @@
                 @for($i = 1; $i <= 6; $i++)
                 @php
                     $icon           = $product->icons->firstWhere('position', $i);
-                    $defaultIcon    = ["1776046237_1.svg", "1776046238_2.svg", "1776046239_3.svg", "1776046240_4.svg", "1776046240_5.svg", "1776046241_6.svg"];
+                    $defaultIcon    = ["1776047104_1.svg", "1776047104_2.svg", "1776047104_3.svg", "1776047104_4.svg", "1776047104_5.svg", "1776047104_6.svg"];
+                    $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"]
                     $icon           = $icon ? $icon : (object)['image' => $defaultIcon[$i-1]];  
                     $src            = $icon ? asset('storage/'.$icon->image) : asset('frontend_assets/images/icons/'.$defaultIcon[$i-1]);
                 @endphp
