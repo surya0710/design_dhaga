@@ -26,17 +26,26 @@ class UserController extends Controller
 
     public function loginPost(Request $request)
     {
-        $credentials = array_merge(
-            $request->only('email', 'password'),
-            ['utype' => 'USR']
-        );
+        $credentials = $request->only('email', 'password');
+        $redirectTo  = $request->input('redirect_to', route('home'));
 
         if (Auth::attempt($credentials)) {
-            return redirect($request->redirect_to ?? route('home'))
-                ->with('success', 'Login successful!');
-        } else {
-            return redirect()->back()->with('error', 'Invalid credentials');
+            $request->session()->regenerate();
+
+            // Adjust redirect logic to your needs
+            $user = Auth::user();
+            $redirect = $user->utype === 'ADM' ? route('admin.dashboard') : $redirectTo;
+
+            return response()->json([
+                'success'  => true,
+                'redirect' => $redirect,
+            ]);
         }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Email or password is incorrect.',
+        ], 401);
     }
 
     public function register()

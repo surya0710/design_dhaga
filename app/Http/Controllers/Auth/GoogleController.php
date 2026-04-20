@@ -20,28 +20,26 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
 
-            // Check if user exists
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if (!$user) {
-                // Auto Register User
                 $user = User::create([
-                    'name' => $googleUser->getName() ?? 'User',
-                    'email' => $googleUser->getEmail(),
-                    'password' => bcrypt(Str::random(16)), // random password
-                    'google_id' => $googleUser->getId(),
+                    'name'              => $googleUser->getName() ?? 'User',
+                    'email'             => $googleUser->getEmail(),
+                    'password'          => bcrypt(Str::random(16)),
+                    'google_id'         => $googleUser->getId(),
+                    'avatar'            => $googleUser->getAvatar(),
                     'email_verified_at' => now(),
+                    'utype'             => 'USR',
                 ]);
             } else {
-                // Update google_id if missing
-                if (!$user->google_id) {
-                    $user->update([
-                        'google_id' => $googleUser->getId()
-                    ]);
-                }
+                // Always sync google_id and latest avatar
+                $user->update([
+                    'google_id' => $user->google_id ?? $googleUser->getId(),
+                    'avatar'    => $googleUser->getAvatar(),
+                ]);
             }
 
-            // Login user
             Auth::login($user, true);
 
             return redirect()->intended('/');

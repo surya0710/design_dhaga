@@ -657,16 +657,17 @@ h5 {
   flex-shrink: 0;
 }
 
-div:where(.swal2-icon){
-  width: 4em!important;
-  height: 4em!important;
-}
-div:where(.swal2-icon) .swal2-icon-content{
-  font-size: 3em!important;
+div:where(.swal2-icon) {
+  width: 4em !important;
+  height: 4em !important;
 }
 
-div:where(.swal2-container) h2:where(.swal2-title){
-  padding: 0!important;
+div:where(.swal2-icon) .swal2-icon-content {
+  font-size: 3em !important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  padding: 0 !important;
 }
 
 @keyframes scroll-left {
@@ -3146,6 +3147,10 @@ ol.breadcrumb li {
   .text-small-center {
     text-align: center;
   }
+
+  .navbar .logo {
+    max-width: 160px;
+  }
 }
 
 .login-logo-section {
@@ -3475,15 +3480,27 @@ ol.breadcrumb li {
 }
 
 #loginModal .modal-content {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 #loginModal .form-control {
-    background-color: #eef1f5;
-    border: 1px solid #e0e0e0;
+  background-color: #eef1f5;
+  border: 1px solid #e0e0e0;
 }
 
 #loginModal .form-control:focus {
-    box-shadow: none;
-    border-color: #ccc;
+  box-shadow: none;
+  border-color: #ccc;
+}
+
+.bg-dark-grey {
+  background-color: #434343 !important;
+}
+
+.bg-dark-grey .fa-solid{
+  color: #C51104;
+}
+.user-image{
+  width : 25px;
+  height: 25px;
 }

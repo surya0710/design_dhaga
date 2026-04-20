@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->date('expected_delivery_date')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('avatar')->nullable()->after('google_id');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

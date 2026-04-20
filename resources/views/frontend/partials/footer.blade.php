@@ -81,100 +81,133 @@
     <button id="goToTop" aria-label="Go to top">↑</button>
     @push('scripts')
     @if(!Auth::check() || (Auth::check() && Auth::user()->utype != 'USR'))
-    <!-- LOGIN MODAL -->
     <div class="modal fade" id="loginModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content border-0 rounded-4 overflow-hidden">
+        <div class="modal-content border-0 rounded-4 overflow-hidden">
+          <div class="row g-0">
 
-              <div class="row g-0">
-
-                  <!-- LEFT SIDE (LOGO) -->
-                  <div class="col-md-6 bg-dark d-flex align-items-center justify-content-center">
-                      <div class="text-center p-4">
-                          <img src="{{ asset('frontend_assets/images/logo/white-logo.svg') }}" class="img-fluid mb-2">
-                          <p class="text-white small mb-0 opacity-75">
-                              Welcome to Design Dhaga
-                          </p>
-                      </div>
-                  </div>
-
-                  <!-- RIGHT SIDE (FORM) -->
-                  <div class="col-md-6 p-4 position-relative">
-
-                      <!-- CLOSE -->
-                      <button type="button" class="btn-close position-absolute top-0 end-0 m-3"  data-bs-dismiss="modal">
-                      </button>
-
-                      <h5 class="fw-semibold mb-3">Login / Signup</h5>
-
-                      <form method="POST" action="{{ route('login.post') }}">
-                          @csrf
-
-                          <!-- STEP 1 -->
-                          <div id="step1">
-                              <input type="hidden" name="redirect_to" value="{{ request()->url() }}">
-                              <label class="form-label text-uppercase small text-muted fw-semibold">
-                                  Email
-                              </label>
-
-                              <input type="email" name="email" id="email" class="form-control form-control-lg rounded-3 mb-3" placeholder="Enter your email" required>
-
-                              <button type="button" class="btn btn-dark w-100 rounded-3 py-2" onclick="nextStep()">
-                                  Continue
-                              </button>
-
-                              <div class="text-center my-3 text-muted small">or</div>
-
-                              <a href="{{ route('google.login') }}" 
-                                class="btn btn-outline-secondary w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 py-2">
-                                  <img src="https://developers.google.com/identity/images/g-logo.png" width="18">
-                                  Continue with Google
-                              </a>
-
-                          </div>
-
-                          <!-- STEP 2 -->
-                          <div id="step2" class="d-none">
-
-                              <label class="form-label text-uppercase small text-muted fw-semibold">
-                                  Password
-                              </label>
-
-                              <input type="password" name="password" class="form-control form-control-lg rounded-3 mb-3" placeholder="Enter your password" required>
-
-                              <button type="submit" class="btn btn-dark w-100 rounded-3 py-2">
-                                  Login
-                              </button>
-
-                              <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted" onclick="prevStep()">
-                                  ← Back
-                              </button>
-
-                          </div>
-
-                      </form>
-
-                  </div>
-
+            <!-- LEFT SIDE -->
+            <div class="col-md-6 bg-dark d-flex align-items-center justify-content-center">
+              <div class="text-center p-4">
+                <img src="{{ asset('frontend_assets/images/logo/white-logo.svg') }}" class="img-fluid mb-2">
+                <p class="text-white small mb-0 opacity-75">Welcome to Design Dhaga</p>
               </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="col-md-6 p-4 position-relative">
+              <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+
+              <h5 class="fw-semibold mb-3">Login / Signup</h5>
+
+              {{-- Global error alert --}}
+              <div id="login-error" class="alert alert-danger py-2 small d-none" role="alert"></div>
+
+              <div id="step1">
+                <input type="hidden" id="redirect_to" value="{{ request()->url() }}">
+                <label class="form-label text-uppercase small text-muted fw-semibold">Email</label>
+                <input type="email" id="login-email" class="form-control form-control-lg rounded-3 mb-3" placeholder="Enter your email" required>
+                <button type="button" class="btn btn-dark w-100 rounded-3 py-2" onclick="nextStep()">Continue</button>
+                <div class="text-center my-3 text-muted small">or</div>
+                <a href="{{ route('google.login') }}"
+                  class="btn btn-outline-secondary w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 py-2">
+                  <img src="https://developers.google.com/identity/images/g-logo.png" width="18">
+                  Continue with Google
+                </a>
+              </div>
+
+              <div id="step2" class="d-none">
+                <label class="form-label text-uppercase small text-muted fw-semibold">Password</label>
+                <input type="password" id="login-password" class="form-control form-control-lg rounded-3 mb-3" placeholder="Enter your password">
+                <button type="button" id="login-btn" class="btn btn-dark w-100 rounded-3 py-2" onclick="submitLogin()">
+                  <span id="login-btn-text">Login</span>
+                  <span id="login-btn-spinner" class="spinner-border spinner-border-sm ms-1 d-none" role="status"></span>
+                </button>
+                <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted" onclick="prevStep()">← Back</button>
+              </div>
+
+            </div>
           </div>
+        </div>
       </div>
-  </div>
+    </div>
+
     <script>
-      let loginModal = $('#loginModal');
-
       function nextStep() {
-          let email = document.getElementById('email').value;
-          if (!email) return alert("Enter email");
-
-          document.getElementById('step1').classList.add('d-none');
-          document.getElementById('step2').classList.remove('d-none');
+        const email = document.getElementById('login-email').value.trim();
+        if (!email) return alert('Please enter your email.');
+        document.getElementById('login-error').classList.add('d-none');
+        document.getElementById('step1').classList.add('d-none');
+        document.getElementById('step2').classList.remove('d-none');
+        document.getElementById('login-password').focus();
       }
 
       function prevStep() {
-          document.getElementById('step2').classList.add('d-none');
-          document.getElementById('step1').classList.remove('d-none');
+        document.getElementById('login-error').classList.add('d-none');
+        document.getElementById('login-password').value = '';
+        document.getElementById('step2').classList.add('d-none');
+        document.getElementById('step1').classList.remove('d-none');
       }
+
+      function submitLogin() {
+        const email     = document.getElementById('login-email').value.trim();
+        const password  = document.getElementById('login-password').value;
+        const errorBox  = document.getElementById('login-error');
+        const btn       = document.getElementById('login-btn');
+        const btnText   = document.getElementById('login-btn-text');
+        const spinner   = document.getElementById('login-btn-spinner');
+        const redirectTo = document.getElementById('redirect_to').value;
+
+        errorBox.classList.add('d-none');
+
+        if (!password) {
+          errorBox.textContent = 'Please enter your password.';
+          errorBox.classList.remove('d-none');
+          return;
+        }
+
+        // Show loading state
+        btn.disabled = true;
+        btnText.textContent = 'Logging in…';
+        spinner.classList.remove('d-none');
+
+        fetch('{{ route("login.post") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({ email, password, redirect_to: redirectTo })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = data.redirect ?? redirectTo;
+          } else {
+            errorBox.textContent = data.message ?? 'Invalid email or password. Please try again.';
+            errorBox.classList.remove('d-none');
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-password').focus();
+          }
+        })
+        .catch(() => {
+          errorBox.textContent = 'Something went wrong. Please try again.';
+          errorBox.classList.remove('d-none');
+        })
+        .finally(() => {
+          btn.disabled = false;
+          btnText.textContent = 'Login';
+          spinner.classList.add('d-none');
+        });
+      }
+
+      // Allow Enter key on password field
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('login-password')?.addEventListener('keydown', e => {
+          if (e.key === 'Enter') submitLogin();
+        });
+      });
     </script>
     @endif
     @endpush
