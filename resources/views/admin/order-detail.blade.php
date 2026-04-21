@@ -241,7 +241,7 @@
                                         <input type="number" step="0.01" name="height" placeholder="Height (cm)" class="form-control" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="number" step="0.01" name="weight" placeholder="Weight (kg)" class="form-control" required>
+                                        <input type="number" step="0.01" name="weight" placeholder="Weight (g)" class="form-control" required>
                                     </div>
                                 </div>
                             </div>

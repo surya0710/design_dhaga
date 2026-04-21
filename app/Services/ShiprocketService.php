@@ -146,6 +146,11 @@ class ShiprocketService
             ];
         }
 
+        $weightInGrams = (float) ($package['weight'] ?? 500);
+
+        // Convert to kg for Shiprocket
+        $weightInKg = $weightInGrams / 1000;
+
         $payload = [
             "order_id" => (string) $order->id,
             "order_date" => now()->format('Y-m-d H:i'),
@@ -173,7 +178,7 @@ class ShiprocketService
             "length"  => $package['length'] ?? 10,
             "breadth" => $package['breadth'] ?? 10,
             "height"  => $package['height'] ?? 10,
-            "weight"  => $package['weight'] ?? 0.5,
+            "weight"  => $weightInKg ?? 0.5,
         ];
 
         $response = Http::timeout(30)
@@ -217,5 +222,49 @@ class ShiprocketService
         $data = $response->json();
 
         return $data['tracking_data'] ?? [];
+    }
+
+    public function assignCourier(int $shipmentId, ?int $courierId = null): array
+    {
+        $token = $this->getToken();
+
+        $payload = [
+            "shipment_id" => $shipmentId,
+        ];
+
+        // Optional: force a specific courier
+        if ($courierId) {
+            $payload["courier_id"] = $courierId;
+        }
+
+        $response = Http::timeout(30)
+            ->withToken($token)
+            ->acceptJson()
+            ->post("{$this->baseUrl}/courier/assign/awb", $payload);
+
+        // Retry on token expiry
+        if ($response->status() === 401) {
+            Cache::forget('shiprocket_token');
+            $token = $this->getToken();
+
+            $response = Http::timeout(30)
+                ->withToken($token)
+                ->acceptJson()
+                ->post("{$this->baseUrl}/courier/assign/awb", $payload);
+        }
+
+        $response->throw();
+
+        $data = $response->json();
+
+        if (empty($data['awb_code'])) {
+            throw new \RuntimeException('Courier assignment failed: ' . json_encode($data));
+        }
+
+        return [
+            'awb_code' => $data['awb_code'],
+            'courier_name' => $data['courier_name'] ?? null,
+            'raw' => $data
+        ];
     }
 }
