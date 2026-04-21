@@ -852,30 +852,80 @@ class AdminController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
-
-        $status = $request->status;
+        $order = Order::with('items')->findOrFail($id);
+        $status = $request->order_status;
 
         if ($status === 'packed' && !$order->shiprocket_order_id) {
-            try {
-                $result = $shiprocket->createOrder($order);
 
-                $order->shiprocket_order_id = $result['order_id'];
-                $order->shiprocket_shipment_id = $result['shipment_id'];
+            $request->validate([
+                'length'  => 'required|numeric|min:0.1',
+                'breadth' => 'required|numeric|min:0.1',
+                'height'  => 'required|numeric|min:0.1',
+                'weight'  => 'required|numeric|min:0.1',
+            ]);
+
+            try {
+                // 1️⃣ Create Order
+                $created = $this->shiprocket->createOrder($order, [
+                    'length'  => $request->length,
+                    'breadth' => $request->breadth,
+                    'height'  => $request->height,
+                    'weight'  => $request->weight,
+                ]);
+
+                $order->shiprocket_order_id = $created['order_id'];
+                $order->shiprocket_shipment_id = $created['shipment_id'];
+
+                // 2️⃣ Get Couriers
+                $serviceability = $this->shiprocket->checkServiceability(
+                    config('services.shiprocket.pickup_pincode', '400013'),
+                    $order->pincode,
+                    $request->weight
+                );
+
+                $couriers = $serviceability['couriers'];
+
+                if (empty($couriers)) {
+                    throw new \Exception('No courier available for this pincode');
+                }
+
+                // 3️⃣ Select Courier (AUTO LOGIC)
+                if ($order->delivery_type === 'express') {
+                    usort($couriers, fn($a, $b) =>
+                        $a['estimated_delivery_days'] <=> $b['estimated_delivery_days']
+                    );
+                } else {
+                    usort($couriers, fn($a, $b) =>
+                        $a['total_charge'] <=> $b['total_charge']
+                    );
+                }
+
+                $selected = $couriers[0];
+
+                // 4️⃣ Assign Courier + Generate AWB
+                $awb = $this->shiprocket->assignCourier(
+                    $created['shipment_id'],
+                    $selected['courier_company_id']
+                );
+
+                // 5️⃣ Save Everything
+                $order->awb_code = $awb['awb_code'];
+                $order->courier_name = $selected['courier_name'];
+                $order->delivery_eta = $selected['estimated_delivery_days'];
 
             } catch (\Throwable $e) {
                 return back()->with('error', $e->getMessage());
             }
         }
 
-        if ($request->status === 'delivered' && !$order->delivered_at) {
+        if ($status === 'delivered' && !$order->delivered_at) {
             $order->delivered_at = now();
         }
 
-        $order->status = $request->status;
+        $order->order_status = $status;
         $order->save();
 
-        return redirect()->back()->with('status', 'Order status updated successfully');
+        return back()->with('status', 'Order processed with Shiprocket successfully 🚀');
     }
 
     // =========================================================================

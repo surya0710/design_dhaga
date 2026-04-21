@@ -138,7 +138,7 @@
                             <td>₹{{ number_format($orders->subtotal, 2) }}</td>
 
                             <th>Shipping</th>
-                            <td>₹{{ number_format($orders->shipping, 2) }}</td>
+                            <td>{{$orders->delivery_type}} <br> ₹{{ number_format($orders->shipping, 2) }}</td>
 
                             <th>Discount</th>
                             <td>₹{{ number_format($orders->coupon_discount, 2) }}</td>
@@ -213,25 +213,78 @@
                 <h5>Update Order Status</h5>
                 <div class="my-account__address-item">
                     <div class="my-account__address-item__detail">
-                        <form action="{{ route('orders.updateStatus', $orders->id) }}" method="POST">
+                        <form method="POST" action="{{ route('orders.updateStatus', $orders->id) }}">
                             @csrf
-                            <label for="order_status" class="form-label">Select Order Status:</label>
-                            <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
-                                <select name="order_status" id="order_status">
+
+                            <fieldset class="status">
+                                <div class="body-title">Status</div>
+                                <select name="order_status" id="order_status" class="flex-grow">
                                     <option value="pending" {{ $orders->order_status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="confirmed" {{ $orders->order_status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                                     <option value="packed" {{ $orders->order_status == 'packed' ? 'selected' : '' }}>Packed</option>
                                     <option value="shipped" {{ $orders->order_status == 'shipped' ? 'selected' : '' }}>Shipped</option>
                                     <option value="delivered" {{ $orders->order_status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                                    <option value="cancelled" {{ $orders->order_status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                 </select>
+                            </fieldset>
 
-                                <button type="submit" class="btn btn-primary mt-2">Update Status</button>
+                            <!-- Package Fields -->
+                            <div id="package_fields" style="display:none; border:1px solid #eee; padding:15px; border-radius:8px; margin-top: 15px;">
+                                <h6>Package Details</h6>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="number" step="0.01" name="length" placeholder="Length (cm)" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="0.01" name="breadth" placeholder="Breadth (cm)" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="0.01" name="height" placeholder="Height (cm)" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="0.01" name="weight" placeholder="Weight (kg)" class="form-control" required>
+                                    </div>
+                                </div>
                             </div>
+                            <button class="tf-button w208" type="submit">Update</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        const statusEl = document.getElementById('order_status');
+        const packageBox = document.getElementById('package_fields');
+
+        // Show on load (edit case)
+        if (statusEl.value === 'packed') {
+            packageBox.style.display = 'block';
+        }
+
+        statusEl.addEventListener('change', function () {
+            packageBox.style.display = this.value === 'packed' ? 'block' : 'none';
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const status = statusEl.value;
+
+            if (status === 'packed') {
+                const fields = ['length', 'breadth', 'height', 'weight'];
+
+                for (let field of fields) {
+                    const val = document.querySelector(`[name="${field}"]`).value;
+                    if (!val || val <= 0) {
+                        e.preventDefault();
+                        alert('Please fill all valid package details');
+                        return;
+                    }
+                }
+
+                if (!confirm('Create Shiprocket order with these package details?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
 @endsection

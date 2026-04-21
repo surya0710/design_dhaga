@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\CkeditorController;
 use App\Http\Controllers\ShiprocketController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ShiprocketWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +129,7 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
 });
 
+Route::post('/webhook/shiprocket', [ShiprocketWebhookController::class, 'handle']);
 
 /*
 |--------------------------------------------------------------------------

@@ -132,7 +132,7 @@ class ShiprocketService
         return $couriers[0];
     }
 
-    public function createOrder($order): array
+    public function createOrder($order, array $package = []): array
     {
         $token = $this->getToken();
 
@@ -149,7 +149,8 @@ class ShiprocketService
         $payload = [
             "order_id" => (string) $order->id,
             "order_date" => now()->format('Y-m-d H:i'),
-            "pickup_location" => "Primary",
+            "pickup_location" => config('services.shiprocket.pickup_location', 'Home'),
+
             "billing_customer_name" => $order->name,
             "billing_last_name" => "",
             "billing_address" => $order->address_line_1,
@@ -159,16 +160,20 @@ class ShiprocketService
             "billing_country" => $order->country ?? "India",
             "billing_email" => $order->email,
             "billing_phone" => $order->phone,
+
             "shipping_is_billing" => true,
+
             "order_items" => $items,
+
             "payment_method" => strtoupper($order->payment_method) === 'COD' ? 'COD' : 'Prepaid',
+
             "sub_total" => $order->total,
 
-            // ⚠️ Replace later with real product/package data
-            "length" => 10,
-            "breadth" => 10,
-            "height" => 10,
-            "weight" => 0.5
+            // ✅ Dynamic package details
+            "length"  => $package['length'] ?? 10,
+            "breadth" => $package['breadth'] ?? 10,
+            "height"  => $package['height'] ?? 10,
+            "weight"  => $package['weight'] ?? 0.5,
         ];
 
         $response = Http::timeout(30)
@@ -176,7 +181,6 @@ class ShiprocketService
             ->acceptJson()
             ->post("{$this->baseUrl}/orders/create/adhoc", $payload);
 
-        // 🔁 Retry if token expired
         if ($response->status() === 401) {
             Cache::forget('shiprocket_token');
             $token = $this->getToken();
@@ -200,5 +204,18 @@ class ShiprocketService
             'shipment_id' => $data['shipment_id'],
             'raw' => $data
         ];
+    }
+
+    public function trackShipment($awb)
+    {
+        $token = $this->getToken();
+
+        $response = Http::withToken($token)->get("{$this->baseUrl}/courier/track/awb/{$awb}");
+
+        $response->throw();
+
+        $data = $response->json();
+
+        return $data['tracking_data'] ?? [];
     }
 }
