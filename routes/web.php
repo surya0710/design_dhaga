@@ -129,7 +129,7 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
 });
 
-Route::post('/webhook/shiprocket', [ShiprocketWebhookController::class, 'handle']);
+Route::post('/webhook/shipment', [ShiprocketWebhookController::class, 'handle']);
 
 /*
 |--------------------------------------------------------------------------
