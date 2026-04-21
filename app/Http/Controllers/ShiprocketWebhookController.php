@@ -11,6 +11,10 @@ class ShiprocketWebhookController extends Controller
     public function handle(Request $request)
     {
         try {
+            if ($request->header('x-api-key') !== 'my-secret-123') {
+                return response()->json(['status' => 'unauthorized'], 200);
+            }
+
             // Log raw payload (important for debugging)
             Log::info('Shiprocket Webhook Raw', [
                 'body' => $request->getContent()
