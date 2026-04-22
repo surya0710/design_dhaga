@@ -387,8 +387,11 @@
                                     Inter-state supply: IGST applied.
                                 @endif
                             </div>
-
-                            <button type="button" id="rzp-pay-btn" class="btn btn-dark place-order-btn mt-4">
+                            <div class="d-flex my-1">
+                                <input type="checkbox" name="terms" id="terms" class="form-check-input" required> &nbsp;
+                                <label for="terms" class="form-check-label">I agree to all <a href="#">Terms & Conditions</a></label>
+                            </div>
+                            <button type="button" id="rzp-pay-btn" class="btn btn-dark place-order-btn mt-4" disabled>
                                 Place Order
                             </button>
 
@@ -543,49 +546,47 @@
     document.getElementById('rzp-pay-btn').addEventListener('click', function () {
         const button = this;
 
+        document.querySelectorAll('.error-text').forEach(el => el.innerText = '');
+
+        // STEP 1: Validate required fields first
+        const fields = ['name', 'email', 'phone', 'city', 'state', 'pincode', 'address'];
+        let hasError = false;
+
+        fields.forEach(function (field) {
+            const input = document.getElementById(field);
+            if (!input || !input.value.trim()) {
+                const errorBox = document.querySelector('[data-error="' + field + '"]');
+                if (errorBox) errorBox.innerText = 'This field is required.';
+                hasError = true;
+            }
+        });
+
+        if (hasError) return;
+
+        // STEP 2: Check if delivery options have been loaded
+        if (!document.querySelector('.delivery-option')) {
+            const errorBox = document.querySelector('[data-error="delivery_type"]');
+            if (errorBox) errorBox.innerText = 'Please click "Check Delivery Options" before placing your order.';
+            return;
+        }
+
+        // STEP 3: Auto-select first delivery option if none selected
+        if (!document.getElementById('delivery_type').value) {
+            const firstOption = document.querySelector('.delivery-option');
+            if (firstOption) firstOption.click();
+        }
+
+        // STEP 4: Final safety check
+        if (!document.getElementById('delivery_type').value) {
+            const errorBox = document.querySelector('[data-error="delivery_type"]');
+            if (errorBox) errorBox.innerText = 'Please select a delivery option.';
+            return;
+        }
+
         button.disabled = true;
         button.innerText = 'Please wait...';
 
-        document.querySelectorAll('.error-text').forEach(el => el.innerText = '');
-
-        // ✅ STEP 1: If delivery options not loaded → auto trigger check
-        if (!document.querySelector('.delivery-option')) {
-            document.getElementById('check-delivery-btn').click();
-
-            setTimeout(() => {
-                button.disabled = false;
-                button.innerText = 'Place Order';
-                document.getElementById('rzp-pay-btn').click();
-            }, 800);
-
-            return;
-        }
-
-        // ✅ STEP 2: If no delivery selected → auto select first
-        if (!document.getElementById('delivery_type').value) {
-
-            const firstOption = document.querySelector('.delivery-option');
-
-            if (firstOption) {
-                firstOption.click(); // triggers selectDeliveryOption()
-            }
-        }
-
-        // ✅ STEP 3: Final safety check
-        if (!document.getElementById('delivery_type').value) {
-            const errorBox = document.querySelector('[data-error="delivery_type"]');
-            if (errorBox) errorBox.innerText = 'Please select delivery option.';
-
-            button.disabled = false;
-            button.innerText = 'Place Order';
-            return;
-        }
-
-        // ✅ DEBUG (optional)
-        console.log("Delivery Type:", document.getElementById('delivery_type').value);
-
-        let form = document.getElementById('checkout-form');
-        let formData = new FormData(form);
+        let formData = new FormData(document.getElementById('checkout-form'));
 
         fetch("{{ route('razorpay.order') }}", {
             method: "POST",
@@ -602,15 +603,12 @@
                 if (data.errors) {
                     Object.keys(data.errors).forEach(function (key) {
                         const errorBox = document.querySelector('[data-error="' + key + '"]');
-                        if (errorBox) {
-                            errorBox.innerText = data.errors[key][0];
-                        }
+                        if (errorBox) errorBox.innerText = data.errors[key][0];
                     });
                 } else {
                     alert(data.message || 'Something went wrong.');
                 }
-
-                button.disabled = false;
+                button.disabled = !document.getElementById('terms').checked;
                 button.innerText = 'Place Order';
                 return;
             }
@@ -644,7 +642,7 @@
                             window.location.href = result.redirect_url;
                         } else {
                             alert(result.message || 'Payment verification failed.');
-                            button.disabled = false;
+                            button.disabled = !document.getElementById('terms').checked;
                             button.innerText = 'Place Order';
                         }
                     });
@@ -657,7 +655,7 @@
                 theme: { color: "#111111" },
                 modal: {
                     ondismiss: function () {
-                        button.disabled = false;
+                        button.disabled = !document.getElementById('terms').checked;
                         button.innerText = 'Place Order';
                     }
                 }
@@ -668,7 +666,7 @@
         })
         .catch(() => {
             alert('Unable to initiate payment.');
-            button.disabled = false;
+            button.disabled = !document.getElementById('terms').checked;
             button.innerText = 'Place Order';
         });
     });
@@ -739,6 +737,14 @@
     // 🔥 Trigger on both inputs
     document.getElementById("pincode").addEventListener("input", fetchGst);
     document.getElementById("state").addEventListener("change", fetchGst);
+
+    // Terms checkbox controls Place Order button
+    const termsCheckbox = document.getElementById('terms');
+    const placeOrderBtn = document.getElementById('rzp-pay-btn');
+
+    termsCheckbox.addEventListener('change', function () {
+        placeOrderBtn.disabled = !this.checked;
+    });
 </script>
 
 @endsection
