@@ -3504,3 +3504,24 @@ ol.breadcrumb li {
   width : 25px;
   height: 25px;
 }
+
+#sideMenu {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#sideMenu .menu-section:nth-child(2) {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+
+/* Social icons - always at bottom */
+#sideMenu .social-icons-wrapper {
+  flex-shrink: 0;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+  background: #fff; /* match your sidebar bg */
+}

@@ -164,8 +164,9 @@
         <div class="menu-title"><a href="{{ route('contact-us') }}" class="submenu-item">CONTACT US</a></div>
     </div>
 
-    <div class="position-absolute bottom-0 w-100 align-items-center">
-        <div class="d-flex gap-3 justify-content-center social-media-icons mb-2">
+    <!-- REMOVE position-absolute bottom-0, ADD class social-icons-wrapper -->
+    <div class="w-100 d-flex align-items-center social-icons-wrapper">
+        <div class="d-flex gap-3 justify-content-center w-100 social-media-icons mb-2">
             <a href="https://www.facebook.com/share/1A9mCmVNy2/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
             <a href="https://www.instagram.com/design.dhaga?igsh=MW5maXJraTgzbnYzOA==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://youtube.com/@designdhaga?si=A5rYdj_bpGZB_D1b" target="_blank"><i class="fa-brands fa-youtube"></i></a>
