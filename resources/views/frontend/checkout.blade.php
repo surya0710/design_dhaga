@@ -389,7 +389,7 @@
                             </div>
                             <div class="d-flex my-1">
                                 <input type="checkbox" name="terms" id="terms" class="form-check-input" required> &nbsp;
-                                <label for="terms" class="form-check-label">I agree to all <a href="#">Terms & Conditions</a></label>
+                                <label for="terms" class="form-check-label">I agree to all <a href="{{ route('terms-and-condition') }}">Terms & Conditions</a></label>
                             </div>
                             <button type="button" id="rzp-pay-btn" class="btn btn-dark place-order-btn mt-4" disabled>
                                 Place Order
