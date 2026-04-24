@@ -332,7 +332,7 @@
 
                 <div class="item">
                     <img src="frontend_assets/images/graphic-design-portfolio.jpg" class="w-100 border rounded" alt="Graphic Design Portfolio">
-                    <a href="{{ route('portfolio') }}">
+                    <a href="{{ route('portfolio') }}#Graphics-Gallery">
                         <div class="item-box">
                             <span>Graphic Design Portfolio</span>
                         </div>
