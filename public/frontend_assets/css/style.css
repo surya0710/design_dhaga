@@ -3150,6 +3150,8 @@ ol.breadcrumb li {
 
   .navbar .logo {
     max-width: 160px;
+    text-align: center;
+    margin-right: 0;
   }
 }
 

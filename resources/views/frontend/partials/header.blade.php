@@ -31,7 +31,7 @@
 
             <!-- CENTER: LOGO -->
             <div class="text-center">
-                <a class="navbar-brand logo mr-0" href="{{ route('home') }}">
+                <a class="navbar-brand logo" href="{{ route('home') }}">
                     <img src="{{ asset('frontend_assets/images/logo/landscape-logo.svg') }}" alt="Logo" class="img-fluid">
                 </a>
             </div>
