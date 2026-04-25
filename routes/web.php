@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
@@ -175,9 +176,6 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/coupon/edit/{id}', [CouponController::class,'coupon_edit'])->name('admin.coupon.edit');
     Route::post('/admin/coupon/update', [CouponController::class,'coupon_update'])->name('admin.coupon.update');
     Route::get('/admin/coupon/delete/{id}', [CouponController::class,'coupon_delete'])->name('admin.coupon.delete');
-    // Route::get('/admin/brand/edit/{id}', [AdminController::class,'brand_edit'])->name('admin.brand.edit');
-    // Route::put('/admin/brand/update', [AdminController::class,'brand_update'])->name('admin.brand.update');
-    // Route::delete('/admin/brand/{id}/delete', [AdminController::class,'brand_delete'])->name('admin.brand.delete');
 
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/admin/order/detail/{id}', [AdminController::class, 'orders_detail'])->name('admin.order.detail');
@@ -204,8 +202,8 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::put('/admin/testimonials/update', [AdminController::class, 'testimonial_update'])->name('admin.testimonial.update');
     Route::delete('/admin/testimonials/delete/{id}', [AdminController::class, 'testimonial_delete'])->name('admin.testimonial.delete');
 
-    Route::get('/admin/sliders/list', [AdminController::class, 'sliders'])->name('admin.sliders');
-    Route::get('/admin/sliders/create', [AdminController::class, 'sliders_add'])->name('admin.sliders.create');
+    Route::get('/admin/sliders/list', [SliderController::class, 'sliders'])->name('admin.sliders');
+    Route::match(['get', 'post'], '/admin/sliders/create/{id?}', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');
 
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 

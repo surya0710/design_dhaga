@@ -68,7 +68,7 @@
                         href="{{ (Auth::check() && Auth::user()->utype === 'USR') ? route('wishlist.index') : '#loginModal' }}"
                         data-bs-toggle="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : 'modal' }}"
                         data-bs-target="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : '#loginModal' }}">
-                        <i class="fa-2x fa-regular fa-heart"></i>
+                        <i class="fa-regular fa-heart wishlist-icon-header"></i>
                     </a>
                 </div>
 

@@ -3504,6 +3504,9 @@ ol.breadcrumb li {
   width : 25px;
   height: 25px;
 }
+.wishlist-icon-header{
+  font-size: 20px;
+}
 
 #sideMenu {
   display: flex;
