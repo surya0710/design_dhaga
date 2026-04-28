@@ -12,13 +12,17 @@ class GoogleController extends Controller
 {
     public function redirect()
     {
+        // Store the page user came from
+        session(['url.intended' => url()->previous()]);
         return Socialite::driver('google')->redirect();
     }
 
     public function callback()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser     = Socialite::driver('google')->stateless()->user();
+            $intendedUrl    = session('url.intended', '/');
+            session()->forget('url.intended');
 
             $user = User::where('email', $googleUser->getEmail())->first();
 
@@ -33,7 +37,6 @@ class GoogleController extends Controller
                     'utype'             => 'USR',
                 ]);
             } else {
-                // Always sync google_id and latest avatar
                 $user->update([
                     'google_id' => $user->google_id ?? $googleUser->getId(),
                     'avatar'    => $googleUser->getAvatar(),
@@ -42,7 +45,8 @@ class GoogleController extends Controller
 
             Auth::login($user, true);
 
-            return redirect()->intended('/');
+            // Redirect back to previous page
+            return redirect()->to($intendedUrl);
 
         } catch (\Exception $e) {
             return redirect('/')->with('error', 'Google login failed');

@@ -68,19 +68,24 @@
                         href="{{ (Auth::check() && Auth::user()->utype === 'USR') ? route('wishlist.index') : '#loginModal' }}"
                         data-bs-toggle="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : 'modal' }}"
                         data-bs-target="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : '#loginModal' }}">
-                        <i class="fa-regular fa-heart wishlist-icon-header"></i>
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.8 4.6c-1.5-1.5-4-1.5-5.5 0L12 7l-3.3-2.4c-1.5-1.5-4-1.5-5.5 0s-1.5 4 0 5.5L12 21l8.8-10.9c1.5-1.5 1.5-4 0-5.5z"/>
+                        </svg>
                     </a>
                 </div>
 
                 <!-- Cart -->
                 <div class="position-relative">
-                    <button class="btn p-0 bg-transparent border-0" onclick="window.location.href = '{{ route('cart.index') }}'">
+                    <a class="btn p-0 bg-transparent border-0" 
+                    href="{{ (Auth::check() && Auth::user()->utype === 'USR') ? route('cart.index') : '#loginModal' }}"
+                    data-bs-toggle="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : 'modal' }}"
+                    data-bs-target="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : '#loginModal' }}">
                         <svg width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="10" cy="20" r="1.5"></circle>
                             <circle cx="18" cy="20" r="1.5"></circle>
                             <path d="M3 3h3l2.5 12h11.5l2-8H8"></path>
                         </svg>
-                    </button>
+                    </a>
                     <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 12px;">
                         {{ getCartItemsCount() }}
                     </span>
@@ -97,9 +102,9 @@
 
     <div class="menu-section">
         <div class="d-flex align-items-center justify-content-between border-1 px-3 py-2">
-            <div class="sidebar-logo">
+            <a class="sidebar-logo" href="{{ route('home') }}">
                 <img src="{{ asset('frontend_assets/images/logo/logo.svg') }}" class="img-fluid" alt="">
-            </div>
+            </a>
 
             <div class="d-flex justify-content-space-between gap-3">
                 @if (Auth::check() && Auth::user()->utype === 'USR')
@@ -162,6 +167,12 @@
         <div class="menu-title"><a href="{{ route('blogs') }}" class="submenu-item">BLOGS</a></div>
         <div class="menu-title"><a href="{{ route('collaborations') }}" class="submenu-item">COLLABORATIONS</a></div>
         <div class="menu-title"><a href="{{ route('contact-us') }}" class="submenu-item">CONTACT US</a></div>
+        @if(Auth::check() && Auth::user()->utype === 'USR')
+        <form method="post" action="{{ route('account.logout') }}" id="logoutForm">
+        @csrf
+        <div class="menu-title"><a onclick="document.getElementById('logoutForm').submit()" class="submenu-item">LOGOUT</a></div>
+        </form>
+        @endif
     </div>
 
     <!-- REMOVE position-absolute bottom-0, ADD class social-icons-wrapper -->

@@ -133,8 +133,11 @@ your orders.')
         <div class="col-lg-3">
             <div class="card text-center p-4 mb-4">
                 <div class="position-relative mx-auto mb-3">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80"
-                        class="rounded-circle border border-3 border-white shadow-sm" />
+                    @if(Auth::user()->avatar != null)
+                    <img src="{{ Auth::user()->avatar }}" width="80" class="rounded-circle border border-3 border-white shadow-sm" />
+                    @else
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80" class="rounded-circle border border-3 border-white shadow-sm" />
+                    @endif
                     <span
                         class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-2"></span>
                 </div>

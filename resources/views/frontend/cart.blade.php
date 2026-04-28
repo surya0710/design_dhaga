@@ -47,7 +47,7 @@
                                     ₹{{ number_format($item['price'], 2) }}
                                 </div>
 
-                                <form method="POST" action="{{ route('cart.remove') }}">
+                                <form method="POST" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $item['id'] }}">
                                     <button class="remove-btn">Remove</button>
@@ -64,7 +64,7 @@
                                 <div class="qty-box mt-0">
                                     <button type="button" class="qty-btn" onclick="changeQty(this, -1)">−</button>
 
-                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="qty-input">
+                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="0" class="qty-input">
 
                                     <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
                                 </div>
@@ -159,17 +159,29 @@
 <script>
     function changeQty(button, change) {
         let input = button.parentElement.querySelector('input');
-        let form = button.closest('form');
+        let updateForm = button.closest('form');
 
         let current = parseInt(input.value);
         let newQty = current + change;
 
-        if (newQty < 1) return;
+        let productId = updateForm.querySelector('input[name="product_id"]').value;
+
+        // 👉 If quantity becomes 0 → remove item
+        if (newQty <= 0) {
+            let removeForm = document.getElementById('remove-product-' + productId);
+
+            if (removeForm) {
+                removeForm.submit();
+            } else {
+                console.error('Remove form not found for product:', productId);
+            }
+            return;
+        }
 
         input.value = newQty;
 
-        // auto submit
-        form.submit();
+        // auto submit update
+        updateForm.submit();
     }
 </script>
 

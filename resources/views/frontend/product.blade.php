@@ -602,111 +602,9 @@
         </section>
     @endif
 
-    @if (Auth::check())
-        <section class="py-5 pt-0">
-            <div class="container">
-                <div id="reviewSummary" class="shadow p-4 p-md-5 rounded-1 d-flex flex-column align-items-center">
-                    <h2 class="text-center fw-bold fs-1 mb-5">Customer Reviews</h2>
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 gap-md-5 text-center">
-                        <div class="text-center text-md-start">
-                            <div class="mb-2">
-                                <i class="fa-regular fa-star fs-4" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star fs-4" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star fs-4" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star fs-4" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star fs-4" style="color: #c05a65;"></i>
-                            </div>
-                            <p class="m-0 fs-5 text-dark text-nowrap">Be the first to write a review</p>
-                        </div>
-                        <div class="d-none d-md-block" style="width: 1px; height: 70px; background-color: #ddd;"></div>
-                        <div class="w-100 w-md-auto">
-                            <button onclick="toggleReviewForm()"
-                                    class="btn rounded-0 fw-semibold fs-5 px-5 py-3 btn-brand-custom w-100 w-md-auto"
-                                    style="border: none;">
-                                Write a review
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="reviewForm" class="bg-white p-4 p-md-5 rounded shadow-sm mx-auto d-none" style="max-width: 800px;">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h3 class="fw-bold mb-1">Customer Reviews</h3>
-                            <div class="mb-1">
-                                <i class="fa-regular fa-star" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star" style="color: #c05a65;"></i>
-                                <i class="fa-regular fa-star" style="color: #c05a65;"></i>
-                            </div>
-                            <small class="text-muted">Be the first to write a review</small>
-                        </div>
-                        <button onclick="toggleReviewForm()" class="btn btn-brand-custom px-4">Cancel review</button>
-                    </div>
-
-                    <div class="text-center mb-4">
-                        <h4 class="fw-bold">Write a review</h4>
-                        <div class="mt-3">
-                            <label class="d-block mb-2 text-muted small">Rating</label>
-                            <div class="star-rating fs-3" style="color: #c05a65;">
-                                <i class="fa-regular fa-star" onclick="setRating(1)"></i>
-                                <i class="fa-regular fa-star" onclick="setRating(2)"></i>
-                                <i class="fa-regular fa-star" onclick="setRating(3)"></i>
-                                <i class="fa-regular fa-star" onclick="setRating(4)"></i>
-                                <i class="fa-regular fa-star" onclick="setRating(5)"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form>
-                        <div class="mb-4">
-                            <label class="form-label text-muted small">Review Title (100)</label>
-                            <input type="text" class="form-control p-3 bg-light border-0" placeholder="Give your review a title">
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label text-muted small">Review content</label>
-                            <textarea class="form-control p-3 bg-light border-0" rows="5" placeholder="Start writing here..."></textarea>
-                        </div>
-                        <div class="mb-4 text-center">
-                            <label class="form-label text-muted small d-block">Picture (optional)</label>
-                            <div class="mx-auto upload-box" onclick="document.getElementById('fileInput').click()">
-                                <i class="fa-solid fa-arrow-up-from-bracket fs-3 text-muted"></i>
-                                <input type="file" id="fileInput" hidden>
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label text-muted small">Display name</label>
-                            <input type="text" class="form-control p-3 bg-light border-0" placeholder="Enter your name">
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label text-muted small">Email address</label>
-                            <input type="email" class="form-control p-3 bg-light border-0" placeholder="Your email address">
-                        </div>
-                        <p class="small text-muted text-center mb-4">
-                            How we use your data: We'll only contact you about the review you left, and only if necessary.
-                            By submitting your review, you agree to Judge.me's
-                            <a href="#" class="text-decoration-underline text-muted">terms</a>,
-                            <a href="#" class="text-decoration-underline text-muted">privacy</a> and
-                            <a href="#" class="text-decoration-underline text-muted">content</a> policies.
-                        </p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <button type="button" onclick="toggleReviewForm()" class="btn px-4 py-2" style="border: 1px solid #8b1e2d; color: #8b1e2d;">
-                                Cancel review
-                            </button>
-                            <button type="button" class="btn btn-brand-custom px-4 py-2">Submit Review</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    @endif
-
 </div>
 
-<div id="imageModal"
-     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 9999; align-items: center;
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center;
             justify-content: center; flex-direction: column; padding: 20px;">
 
     <button onclick="closeImageModal()"
@@ -802,9 +700,17 @@
                     timer: 5000,
                     timerProgressBar: true,
                 }).then((result) => {
+
+                    // 👉 If user clicks "View Cart"
                     if (result.isConfirmed) {
                         window.location.href = @json(route('cart.index'));
                     }
+
+                    // 👉 If popup closes due to timer
+                    else if (result.dismiss === Swal.DismissReason.timer) {
+                        location.reload();
+                    }
+
                 });
             },
             error: function (xhr) {
