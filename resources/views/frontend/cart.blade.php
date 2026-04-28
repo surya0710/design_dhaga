@@ -30,7 +30,7 @@
 
             {{-- LEFT --}}
             <div class="col-lg-8">
-                <div class="cart-box p-4">
+                <div class="cart-box p-2">
 
                     @foreach($cartItems as $item)
                     <div class="cart-item d-lg-flex justify-content-between align-items-center gap-2">
@@ -40,23 +40,23 @@
                             <img src="{{ asset('storage/'.$item['image']) }}" class="product-image">
 
                             <div>
-                                <h5 class="product-name mb-0">{{ $item['name'] }}</h5>
+                                <h5 class="product-name mb-0 mt-0">{{ $item['name'] }}</h5>
 
                                 {{-- PRICE --}}
                                 <div class="price-text">
                                     ₹{{ number_format($item['price'], 2) }}
                                 </div>
 
-                                <form method="POST" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
+                                <form method="POST" class="d-none d-sm-block" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $item['id'] }}">
-                                    <button class="remove-btn">Remove</button>
+                                    <button class="remove-btn remove-item-cart">Remove</button>
                                 </form>
                             </div>
                         </div>
 
                         {{-- QTY (+ -) --}}
-                        <div>
+                        <div class="d-flex justify-content-space-between align-items-center">
                             <form method="POST" action="{{ route('cart.update') }}">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $item['id'] }}">
@@ -68,6 +68,14 @@
 
                                     <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
                                 </div>
+                            </form>
+                            <form method="POST" class="d-sm-block d-md-none" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $item['id'] }}">
+                                <button class="remove-btn remove-item-cart">
+                                    <i class="fa fa-trash"></i>&nbsp;
+                                    Remove
+                                </button>
                             </form>
                         </div>
 
