@@ -67,9 +67,9 @@ document.querySelectorAll(".menu-title").forEach(title => {
     let icon = this.querySelector(".toggle-icon");
 
     // Close other submenus
-    document.querySelectorAll(".submenu").forEach(sm => {
-      if (sm !== submenu) sm.style.display = "none";
-    });
+    // document.querySelectorAll(".submenu").forEach(sm => {
+    //   if (sm !== submenu) sm.style.display = "none";
+    // });
 
     // Reset icons
     document.querySelectorAll(".toggle-icon").forEach(ic => {
