@@ -7,12 +7,6 @@
 @section('og_description', $product->meta_description ?? '')
 @section('og_image', asset('storage/' . $product->image))
 
-@php
-    $isInWishlist = auth()->check()
-        ? \App\Models\Wishlist::where('user_id', auth()->id())->where('product_id', $product->id)->exists()
-        : false;
-@endphp
-
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
@@ -56,6 +50,9 @@
 @endpush
 
 @section('content')
+@php
+    $gallery = $product->galleryImages;
+@endphp
 <div class="container-fluid">
     <div class="px-2 px-md-5 mt-3">
         <div class="row g-4 align-items-stretch">
@@ -70,7 +67,7 @@
                                  style="width: 80px;"
                                  onclick="setDesktopImage(this)" />
 
-                            @foreach ($product->galleryImages as $img)
+                            @foreach ($gallery as $img)
                                 <img src="{{ asset('storage/' . $img->image) }}" class="desktop-thumb cursor-pointer" style="width: 80px; opacity: 0.6;" onclick="setDesktopImage(this)" />
                             @endforeach
                         </div>
@@ -103,11 +100,6 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-2 mb-1">
-                            @php
-                                $totalReviews = $product->reviews->count();
-                                $totalRatings = $product->reviews->sum('rating');
-                                $averageRating = $totalReviews ? number_format($totalRatings / $totalReviews, 1) : 0;
-                            @endphp
                             <div class="text-warning">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($averageRating >= $i)
@@ -117,7 +109,9 @@
                                     @endif
                                 @endfor
                             </div>
-                            <span class="small text-muted">{{ $averageRating ?? 0 }} ({{ $totalReviews }} reviews)</span>
+                            <span class="small text-muted">
+                                {{ $averageRating }} ({{ $totalReviews }} reviews)
+                            </span>
                         </div>
                         <p class="text-black mb-0 small">{{ $product->short_description }}</p>
 
@@ -155,7 +149,7 @@
                             <img src="{{ asset('storage/' . $product->image) }}" class="border border-2 border-danger mobile-thumb" style="width: 70px;" onclick="changeImage(this)"
                             ondblclick="openImageModal(this.src)" />
 
-                            @foreach ($product->galleryImages as $img)
+                            @foreach ($gallery as $img)
                                 <img src="{{ asset('storage/' . $img->image) }}" class="mobile-thumb" style="width: 70px; opacity: 0.6;"
                                 onclick="changeImage(this)" ondblclick="openImageModal(this.src)" />
                             @endforeach
@@ -528,7 +522,7 @@
                         <div class="col-lg-4 col-md-4">
                             @if ($artisan->image)
                                 <div class="mb-4">
-                                    <img src="{{ asset('storage/' . $artisan->image) }}" class="w-100" alt="{{ $artisan->title ?? 'Artisan' }}" />
+                                    <img src="{{ asset('storage/' . $artisan->image) }}" loading="lazy" class="w-100" alt="{{ $artisan->title ?? 'Artisan' }}" />
                                 </div>
                             @endif
 
@@ -562,7 +556,7 @@
 
                     <div class="col-lg-5">
                         <div class="style-comfort-img rounded-3 overflow-hidden">
-                            <img src="{{ asset('storage/' . $product->square_banner) }}" class="img-fluid w-100" alt="{{ $product->square_banner_title ?? $product->name }}"
+                            <img src="{{ asset('storage/' . $product->square_banner) }}" loading="lazy" class="img-fluid w-100" alt="{{ $product->square_banner_title ?? $product->name }}"
                                  style="object-fit: cover;" />
                         </div>
                     </div>
@@ -585,6 +579,34 @@
         </section>
     @endif
 
+    <section class="pt-2 bg-white pb-4">
+        <div class="container-fluid px-0 overflow-hidden">
+            <div class="row position-relative px-3 m-0 align-items-center justify-content-center text-center">
+                <div class="col-12 col-md-8 position-relative" style="z-index: 2;">
+                    <h2 class="px-md-5 mt-0">Related Products</h2>
+                </div>
+            </div>
+        </div>
+        <div id="recentBlogsCarousel">
+            <div class="owl-carousel">
+                @foreach($relatedProducts as $product)
+                @php $productUrl = getProductUrl($product); @endphp
+                <div>
+                    <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="ratio ratio-4x3">
+                                <img src="{{ Storage::url($product->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="mb-2 mt-0">{{ $product->name }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 </div>
 
 <div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center;
@@ -622,7 +644,7 @@
                     border: 2px solid white; cursor: pointer; opacity: 1;"
              onclick="setModalImage(this)" />
 
-        @foreach ($product->galleryImages as $img)
+        @foreach ($gallery as $img)
             <img src="{{ asset('storage/' . $img->image) }}"
                  class="modal-thumb"
                  style="width: 70px; height: 90px; object-fit: cover; flex-shrink: 0;
@@ -640,7 +662,7 @@
 <script>
     const imageUrls = [
         "{{ asset('storage/' . $product->image) }}",
-        @foreach ($product->galleryImages as $img)
+        @foreach ($gallery as $img)
             "{{ asset('storage/' . $img->image) }}",
         @endforeach
     ];
@@ -951,4 +973,31 @@
     });
 </script>
 <script src="{{ asset('frontend_assets/js/product.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#recentBlogsCarousel .owl-carousel").owlCarousel({
+            loop: true,
+            margin: 12,
+            nav: true,
+            dots: true,
+            autoplay: false,
+            smartSpeed: 800,
+            responsive: {
+                0: {
+                    items: 1   // mobile
+                },
+                576: {
+                    items: 2   // tablet
+                },
+                992: {
+                    items: 2   // up to lg breakpoint
+                },
+                1200:{
+                    items: 4
+                }
+            }
+        });
+    });
+</script>
 @endpush

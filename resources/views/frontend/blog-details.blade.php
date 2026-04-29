@@ -32,13 +32,12 @@
                 <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
-            <div id="recentBlogsCarousel" class="carousel slide d-lg-none" data-bs-ride="carousel">
-                <div class="carousel-inner">
+            <div id="recentBlogsCarousel" class="d-lg-none">
+                <div class="owl-carousel">
                     @foreach($featuredProducts as $product)
                     @php $productUrl = getProductUrl($product); @endphp
-                    <div class="carousel-item active">
-                        <a href="{{ $productUrl }}"
-                            class="text-decoration-none text-dark">
+                    <div>
+                        <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="ratio ratio-4x3">
                                     <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
@@ -51,18 +50,6 @@
                     </div>
                     @endforeach
                 </div>
-                <button class="carousel-control-prev bg-white border rounded-circle shadow-sm" type="button"
-                data-bs-target="#recentBlogsCarousel" data-bs-slide="prev" style="width: 44px;height: 44px;top: 50%;transform: translateY(-50%);">
-                    <span class="carousel-control-prev-icon" style="filter: invert(1); width: 16px; height: 16px"
-                        aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next bg-white border rounded-circle shadow-sm" type="button"
-                data-bs-target="#recentBlogsCarousel" data-bs-slide="next" style="width: 44px;height: 44px;top: 50%;transform: translateY(-50%);">
-                    <span class="carousel-control-next-icon" style="filter: invert(1); width: 16px; height: 16px"
-                        aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
 
             <div class="d-none d-lg-flex flex-column gap-4">
@@ -85,3 +72,29 @@
 </div>
 
 @endsection
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#recentBlogsCarousel .owl-carousel").owlCarousel({
+            loop: true,
+            margin: 12,
+            nav: true,
+            dots: true,
+            autoplay: false,
+            smartSpeed: 800,
+            responsive: {
+                0: {
+                    items: 1   // mobile
+                },
+                576: {
+                    items: 2   // tablet
+                },
+                992: {
+                    items: 2   // up to lg breakpoint
+                }
+            }
+        });
+    });
+</script>
+@endpush
