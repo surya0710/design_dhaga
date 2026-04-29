@@ -2804,7 +2804,7 @@ ol.breadcrumb li {
 
 @media (max-width: 1024px) {
   .product-item {
-    flex: 0 0 calc(25% - 10px);
+    flex: 0 0 calc(20%);
   }
 
   .slider__item {
@@ -2912,7 +2912,7 @@ ol.breadcrumb li {
   }
 
   #our-info h1 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   #our-info p {

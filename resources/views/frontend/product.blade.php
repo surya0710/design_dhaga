@@ -63,8 +63,7 @@
             <div class="col-md-6">
                 <div class="d-none d-md-block position-relative">
                     <div class="d-flex gap-3">
-                        <div class="d-flex flex-column gap-2 overflow-hidden"
-                             style="max-height: 700px; scrollbar-width: thin;">
+                        <div class="d-flex flex-column gap-2 overflow-hidden" style="max-height: 700px; scrollbar-width: thin;">
 
                             <img src="{{ asset('storage/' . $product->image) }}"
                                  class="desktop-thumb border-2 border-danger cursor-pointer"
@@ -72,30 +71,21 @@
                                  onclick="setDesktopImage(this)" />
 
                             @foreach ($product->galleryImages as $img)
-                                <img src="{{ asset('storage/' . $img->image) }}"
-                                     class="desktop-thumb cursor-pointer"
-                                     style="width: 80px; opacity: 0.6;"
-                                     onclick="setDesktopImage(this)" />
+                                <img src="{{ asset('storage/' . $img->image) }}" class="desktop-thumb cursor-pointer" style="width: 80px; opacity: 0.6;" onclick="setDesktopImage(this)" />
                             @endforeach
                         </div>
 
                         <div class="carousel-container position-relative overflow-hidden flex-grow-1">
-                            <img id="desktopMainImage"
-                                 src="{{ asset('storage/' . $product->image) }}"
-                                 class="cursor-pointer w-100"
-                                 style="object-fit: contain; display: block; max-height: 700px;"
-                                 alt="{{ $product->name }}"
-                                 onclick="openImageModal()" />
+                            <img id="desktopMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" style="object-fit: contain; display: block; max-height: 700px;"
+                            alt="{{ $product->name }}" onclick="openImageModal()" />
 
                             <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y ms-2 shadow"
-                                    style="z-index: 10; width: 45px; height: 45px;"
-                                    onclick="prevDesktopImage()">
+                            style="z-index: 10; width: 45px; height: 45px;" onclick="prevDesktopImage()">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
 
-                            <button class="btn btn-light rounded-circle position-absolute end-0 top-50 translate-middle-y me-2 shadow"
-                                    style="z-index: 10; width: 45px; height: 45px;"
-                                    onclick="nextDesktopImage()">
+                            <button class="btn btn-light rounded-circle position-absolute end-0 top-50 translate-middle-y me-2 shadow" style="z-index: 10; width: 45px; height: 45px;"
+                            onclick="nextDesktopImage()">
                                 <i class="fa-solid fa-chevron-right"></i>
                             </button>
                         </div>
@@ -142,38 +132,26 @@
 
                     <div class="d-flex flex-column gap-2">
                         <div class="position-relative" style="overflow: hidden;">
-                            <img id="mobileMainImage"
-                                 src="{{ asset('storage/' . $product->image) }}"
-                                 class="cursor-pointer w-100"
-                                 alt="{{ $product->name }}"
-                                 onclick="openImageModal()" />
+                            <img id="mobileMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" alt="{{ $product->name }}" onclick="openImageModal()" />
 
-                            <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y shadow"
-                                    style="z-index: 10; width: 35px; height: 35px; left: 4px;"
-                                    onclick="prevMobileImage()">
+                            <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y shadow" style="z-index: 10; width: 35px; height: 35px; left: 4px;" 
+                            onclick="prevMobileImage()">
                                 <i class="fa-solid fa-chevron-left" style="font-size: 12px;"></i>
                             </button>
 
-                            <button class="btn btn-light rounded-circle position-absolute end-0 top-50 translate-middle-y shadow"
-                                    style="z-index: 10; width: 35px; height: 35px; right: 4px;"
-                                    onclick="nextMobileImage()">
+                            <button class="btn btn-light rounded-circle position-absolute end-0 top-50 translate-middle-y shadow" style="z-index: 10; width: 35px; height: 35px; right: 4px;"
+                            onclick="nextMobileImage()">
                                 <i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i>
                             </button>
                         </div>
 
                         <div class="d-flex gap-2 overflow-auto pb-1" style="scrollbar-width: thin;">
-                            <img src="{{ asset('storage/' . $product->image) }}"
-                                 class="border border-2 border-danger mobile-thumb"
-                                 style="width: 70px;"
-                                 onclick="changeImage(this)"
-                                 ondblclick="openImageModal(this.src)" />
+                            <img src="{{ asset('storage/' . $product->image) }}" class="border border-2 border-danger mobile-thumb" style="width: 70px;" onclick="changeImage(this)"
+                            ondblclick="openImageModal(this.src)" />
 
                             @foreach ($product->galleryImages as $img)
-                                <img src="{{ asset('storage/' . $img->image) }}"
-                                     class="mobile-thumb"
-                                     style="width: 70px; opacity: 0.6;"
-                                     onclick="changeImage(this)"
-                                     ondblclick="openImageModal(this.src)" />
+                                <img src="{{ asset('storage/' . $img->image) }}" class="mobile-thumb" style="width: 70px; opacity: 0.6;"
+                                onclick="changeImage(this)" ondblclick="openImageModal(this.src)" />
                             @endforeach
                         </div>
                     </div>
@@ -542,7 +520,7 @@
             <div class="px-2 px-md-5 pt-2 pb-2">
                 <div class="row g-4 g-xl-5">
                     @foreach ($product->artisanImages as $artisan)
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-4">
                             @if ($artisan->image)
                                 <div class="mb-4">
                                     <img src="{{ asset('storage/' . $artisan->image) }}" class="w-100" alt="{{ $artisan->title ?? 'Artisan' }}" />

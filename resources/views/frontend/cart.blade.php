@@ -7,8 +7,8 @@
 <main class="cart-page">
     <div class="container">
 
-        <div class="text-center">
-            <h1 class="cart-title">Your Cart</h1>
+        <div class="text-center my-2">
+            <h1 class="m-0">Your Cart</h1>
         </div>
 
         @if($cartItems->isEmpty())
