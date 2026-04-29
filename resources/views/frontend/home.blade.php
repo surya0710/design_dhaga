@@ -84,15 +84,15 @@
 <section class="container d-none d-md-block" id="our-info">
     <div class="row">
         <div class="col-md-4 info-box px-5">
-            <h1>Art Meets</h1>
+            <h1 class="my-0">Art Meets</h1>
             <p>Craftsmanship</p>
         </div>
         <div class="col-md-4 text-center info-box">
-            <h1>Exclusive Designs</h1>
+            <h1 class="my-0">Exclusive Designs</h1>
             <p>Premium Detailing</p>
         </div>
         <div class="col-md-4 text-right info-box px-5">
-            <h1>Fully Customizable</h1>
+            <h1 class="my-0">Fully Customizable</h1>
             <p>Your Idea, Our Artwork</p>
         </div>
     </div>

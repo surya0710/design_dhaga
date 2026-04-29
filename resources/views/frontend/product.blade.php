@@ -94,7 +94,13 @@
 
                 <div class="d-md-none">
                     <div class="mb-2">
-                        <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
+                        <div class="d-flex align-items-start">
+                            <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
+                            <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                                data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
+                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg" style="color : {{ $isInWishlist ? '#C51104' : '#000' }}"></i>
+                            </button>
+                        </div>
 
                         <div class="d-flex align-items-center gap-2 mb-1">
                             @php
@@ -180,10 +186,9 @@
                             </div>
                         </div>
 
-                        <button type="button"
-                            class="btn bg-maroon rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
-                            data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
-                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
+                        <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                                data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
+                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg" style="color : {{ $isInWishlist ? '#C51104' : '#000' }}"></i>
                         </button>
                     </div>
 

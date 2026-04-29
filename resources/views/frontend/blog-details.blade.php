@@ -32,7 +32,7 @@
                 <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
-            <div id="recentBlogsCarousel" class="carousel slide d-md-none" data-bs-ride="carousel">
+            <div id="recentBlogsCarousel" class="carousel slide d-lg-none" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @foreach($featuredProducts as $product)
                     @php $productUrl = getProductUrl($product); @endphp
@@ -44,10 +44,7 @@
                                     <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                                 </div>
                                 <div class="card-body">
-                                    <h3 class="h6 fw-bold mb-2">{{ $product->name }}</h3>
-                                    <p class="small text-muted mb-0">
-                                        {{ $product->sale_price }}
-                                    </p>
+                                    <h3 class="h6 fw-bold mb-2 mt-0">{{ $product->name }}</h3>
                                 </div>
                             </div>
                         </a>
@@ -68,7 +65,7 @@
                 </button>
             </div>
 
-            <div class="d-none d-md-flex flex-column gap-4">
+            <div class="d-none d-lg-flex flex-column gap-4">
                 @foreach($featuredProducts as $product)
                 @php $productUrl = getProductUrl($product); @endphp
                 <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
@@ -77,10 +74,7 @@
                             <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                         </div>
                         <div class="card-body p-2">
-                            <h3 class="h6 fw-bold mb-2">{{ $product->name }}</h3>
-                            <p class="small text-muted mb-0">
-                                ₹ {{ $product->sale_price }}
-                            </p>
+                            <h3 class="h6 fw-bold mb-2 mt-0">{{ $product->name }}</h3>
                         </div>
                     </div>
                 </a>
