@@ -95,9 +95,10 @@ class ShopController extends Controller
             ->first();
 
         // ✅ Related products optimized
-        $relatedProducts = Product::select('id','name','slug','image')
+        $relatedProducts = Product::select('id','name','slug','image', 'category_id')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
+            ->with(['category.parent'])
             ->where('status', 1)
             ->latest()
             ->limit(8)
