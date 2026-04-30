@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Wishlist;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -66,6 +67,16 @@ class ShopController extends Controller
     {
         $categories = $this->categories;
 
+        $visitorId = $request->cookie('visitor_id');
+
+        $visitor = null;
+
+        if ($visitorId) {
+            $visitor = Visitor::where('visitor_id', $visitorId)->first();
+        }
+
+        $country = $visitor?->country;
+
         // ✅ Optimized product query
         $product = Product::where('slug', $slug)
             ->with([
@@ -108,6 +119,7 @@ class ShopController extends Controller
             'totalReviews' => $reviewStats->total ?? 0,
             'averageRating' => round($reviewStats->avg ?? 0, 1),
             'isInWishlist' => $isInWishlist,
+            'country' => $country
         ]);
     }
 }

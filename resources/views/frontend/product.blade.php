@@ -204,7 +204,7 @@
                         @endif
                     </div>
 
-                    @if ($product->type == 1)
+                    @if ($product->type == 1 && $country == "India")
                         <button id="addToCartBtn" class="btn bg-maroon text-white w-100 py-3 fw-bold btn-add-to-cart" onclick="handleAddToCart({{ $product->id }})">
                             <span class="btn-text">
                                 Add To Cart &nbsp;|&nbsp; ₹ <span id="total">{{ $product->sale_price ?? $product->regular_price }}</span>
