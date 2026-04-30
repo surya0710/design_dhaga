@@ -14,17 +14,13 @@ class ShopController extends Controller
 
     public function __construct()
     {
-        // ✅ Cache categories
-        $this->categories = Cache::remember('categories', 3600, function () {
-            return Category::where('status', 1)
-                ->where(function ($query) {
-                    $query->whereNull('parent_id')
-                          ->orWhere('parent_id', 0);
-                })
-                ->with('children:id,parent_id,name,slug')
-                ->select('id','name','slug','parent_id')
-                ->get();
-        });
+        $this->categories = Category::where('status', 1)
+            ->where(function ($query) {
+                $query->whereNull('parent_id')
+                    ->orWhere('parent_id', 0);
+            })
+            ->with('children')
+            ->get();
     }
 
 

@@ -146,14 +146,14 @@
     </div>
 
     <div class="menu-section p-3">
-        @foreach($categories as $category)
-            <div class="menu-title" data-toggle="{{ $category->slug }}">
-                {{ $category->name }}
+        @foreach($categories as $item)
+            <div class="menu-title" data-toggle="{{ $item->slug }}">
+                {{ $item->name }}
                 <span class="toggle-icon">{{ $loop->index == 0 ? '-' : '+' }}</span>
             </div>
-            <div class="submenu" id="{{ $category->slug }}" style="{{ $loop->index == 0 ? 'display:block;' : 'display:none;' }}">
-                @foreach($category->children as $subCategory)
-                    <a href="{{ route('shop.subcategory', [$category->slug, $subCategory->slug]) }}" class="submenu-item">
+            <div class="submenu" id="{{ $item->slug }}" style="{{ $loop->index == 0 ? 'display:block;' : 'display:none;' }}">
+                @foreach($item->children as $subCategory)
+                    <a href="{{ route('shop.subcategory', [$item->slug, $subCategory->slug]) }}" class="submenu-item">
                         <img src="{{ asset('uploads/categories/'.$subCategory->image) }}" />
                         {{ $subCategory->name }}
                     </a>
