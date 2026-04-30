@@ -14,13 +14,19 @@ class ShopController extends Controller
 
     public function __construct()
     {
-        $this->categories = Category::where('status', 1)
-            ->where(function ($query) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', 0);
-            })
-            ->with('children')
-            ->get();
+        $this->categories = Cache::remember('header_categories', 60 * 60, function () {
+            return Category::where('status', 1)
+                ->where(function ($query) {
+                    $query->whereNull('parent_id')
+                        ->orWhere('parent_id', 0);
+                })
+                ->with(['children' => function ($q) {
+                    $q->select('id', 'name', 'slug', 'image', 'parent_id')
+                    ->where('status', 1);
+                }])
+                ->select('id', 'name', 'slug')
+                ->get();
+        });
     }
 
 
@@ -68,13 +74,7 @@ class ShopController extends Controller
         $categories = $this->categories;
 
         // ✅ Optimized product query
-        $product = Product::select([
-                'id','name','slug','image','category_id',
-                'sale_price','regular_price','short_description',
-                'description','weight','type',
-                'meta_title','meta_description','meta_keywords'
-            ])
-            ->where('slug', $slug)
+        $product = Product::where('slug', $slug)
             ->with([
                 'galleryImages:id,product_id,image',
                 'artisanImages:id,product_id,image,title,description',

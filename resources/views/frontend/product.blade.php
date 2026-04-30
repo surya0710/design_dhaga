@@ -55,10 +55,10 @@
 @endphp
 <div class="container-fluid">
     <div class="px-2 px-md-5 mt-3">
-        <div class="row g-4 align-items-stretch">
+        <div class="row g-4 align-items-stretch flex-column flex-lg-row">
 
-            <div class="col-md-6">
-                <div class="d-none d-md-block position-relative">
+            <div class="col-12 col-lg-6">
+                <div class="d-none d-lg-block position-relative">
                     <div class="d-flex gap-3">
                         <div class="d-flex flex-column gap-2 overflow-hidden" style="max-height: 700px; scrollbar-width: thin;">
 
@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <div class="d-md-none">
+                <div class="d-lg-none">
                     <div class="mb-2">
                         <div class="d-flex align-items-start">
                             <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
@@ -158,9 +158,9 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-12 col-lg-6">
                 <div class="sticky-md-top h-100">
-                    <div class="d-flex justify-content-between align-items-start d-none d-md-flex">
+                    <div class="d-flex justify-content-between align-items-start d-none d-lg-flex">
                         <div>
                             <h1 class="h3 fw-bold mb-0 mt-0" style="font-size: 25px;">
                                 {{ $product->name }}
@@ -186,11 +186,11 @@
                         </button>
                     </div>
 
-                    <p class="text-black mb-0 d-none d-md-block">
+                    <p class="text-black mb-0 d-none d-lg-block">
                         {{ $product->short_description }}
                     </p>
 
-                    <div class="h4 mb-2 d-none d-md-block price">
+                    <div class="h4 mb-2 d-none d-lg-block price">
                         @if ($product->sale_price)
                             <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                             <span class="text-decoration-line-through text-muted small ms-2">
@@ -232,7 +232,7 @@
                         @endforeach
                     </div>
 
-                    <section class="features-box d-sm-block d-md-none" style="padding: 15px 0 !important;">
+                    <section class="features-box d-block d-lg-none" style="padding: 15px 0 !important;">
                         <div class="container">
                             <div class="row feature-items">
                                 <div class="feature-item col">
@@ -334,7 +334,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 px-2 px-md-5">
-                    <ul class="nav nav-underline border-bottom border-2 mb-0 gap-4 d-none d-md-flex justify-content-between"
+                    <ul class="nav nav-underline border-bottom border-2 mb-0 gap-4 d-none d-lg-flex justify-content-between"
                         role="tablist">
 
                         <li class="nav-item" role="presentation">
@@ -378,9 +378,9 @@
                         @endif
                     </ul>
 
-                    <div class="tab-content pt-2 pb-2 d-none d-md-block">
+                    <div class="tab-content pt-2 pb-2 d-none d-lg-block">
                         <div class="tab-pane fade show active" id="descTab" role="tabpanel">
-                            <div class="row g-4 align-items-stretch">
+                            <div class="row g-4 align-items-stretch flex-column flex-lg-row">
                                 <div class="col-lg-12">
                                     <p class="text-dark lh-lg mb-4 fs-6">{!! $product->description !!}</p>
                                 </div>
@@ -389,7 +389,7 @@
 
                         @if ($product->hand_painted_details)
                             <div class="tab-pane fade" id="handPaintedTab" role="tabpanel">
-                                <div class="row g-4 align-items-stretch">
+                                <div class="row g-4 align-items-stretch flex-column flex-lg-row">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
                                             {!! $product->hand_painted_details !!}
@@ -401,7 +401,7 @@
 
                         @if ($product->care_instructions)
                             <div class="tab-pane fade" id="careTab" role="tabpanel">
-                                <div class="row g-4 align-items-stretch">
+                                <div class="row g-4 align-items-stretch flex-column flex-lg-row">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
                                             {!! $product->care_instructions !!}
@@ -413,7 +413,7 @@
 
                         @if ($product->manufacturing_details)
                             <div class="tab-pane fade" id="manufacturingTab" role="tabpanel">
-                                <div class="row g-4 align-items-stretch">
+                                <div class="row g-4 align-items-stretch flex-column flex-lg-row">
                                     <div class="col-lg-12">
                                         <p class="text-dark lh-lg mb-4 fs-6">
                                             {!! $product->manufacturing_details !!}
@@ -424,7 +424,7 @@
                         @endif
                     </div>
 
-                    <div class="d-block d-md-none py-2">
+                    <div class="d-block d-lg-none py-2">
                         <div class="accordion accordion-flush" id="productAccordion">
                             <div class="accordion-item border-bottom">
                                 <h2 class="accordion-header" id="headingDesc">
