@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class ShopController extends Controller
 {
@@ -14,19 +13,13 @@ class ShopController extends Controller
 
     public function __construct()
     {
-        $this->categories = Cache::remember('header_categories', 60 * 60, function () {
-            return Category::where('status', 1)
-                ->where(function ($query) {
-                    $query->whereNull('parent_id')
-                        ->orWhere('parent_id', 0);
-                })
-                ->with(['children' => function ($q) {
-                    $q->select('id', 'name', 'slug', 'image', 'parent_id')
-                    ->where('status', 1);
-                }])
-                ->select('id', 'name', 'slug')
-                ->get();
-        });
+        $this->categories = Category::where('status', 1)
+            ->where(function ($query) {
+                $query->whereNull('parent_id')
+                    ->orWhere('parent_id', 0);
+            })
+            ->with('children')
+            ->get();
     }
 
 
