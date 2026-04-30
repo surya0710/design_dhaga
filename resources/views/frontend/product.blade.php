@@ -653,6 +653,53 @@
         @endforeach
     </div>
 </div>
+
+<!-- Overlay -->
+<div id="shareOverlay" class="share-overlay"></div>
+
+<!-- Floating Button -->
+<div id="shareToggleBtn" class="share-toggle-btn">
+    <i class="fa-solid fa-share-nodes"></i>
+</div>
+<!-- Share Panel -->
+<div id="sharePanel" class="share-panel">
+    <div class="share-header">
+        <h5>Share this article</h5>
+        <button id="closeShare"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    @php
+        $shareUrl = urlencode(request()->fullUrl());
+        $shareTitle = urlencode($product->title);
+    @endphp
+
+    <div class="share-grid">
+        <a href="https://wa.me/?text={{ $shareTitle }}%20{{ $shareUrl }}" target="_blank" class="share-card whatsapp">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp</span>
+        </a>
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}" target="_blank" class="share-card facebook">
+            <i class="fa-brands fa-facebook"></i>
+            <span>Facebook</span>
+        </a>
+
+        <a href="https://twitter.com/intent/tweet?text={{ $shareTitle }}&url={{ $shareUrl }}" target="_blank" class="share-card twitter">
+            <i class="fa-brands fa-twitter"></i>
+            <span>Twitter</span>
+        </a>
+
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" class="share-card linkedin">
+            <i class="fa-brands fa-linkedin"></i>
+            <span>LinkedIn</span>
+        </a>
+
+        <button class="share-card copy" onclick="copyLink()">
+            <i class="fa-solid fa-link"></i>
+            <span>Copy Link</span>
+        </button>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -999,5 +1046,29 @@
             }
         });
     });
+
+    const shareBtn = document.getElementById('shareToggleBtn');
+    const sharePanel = document.getElementById('sharePanel');
+    const shareoverlay = document.getElementById('shareOverlay');
+    const closeBtn = document.getElementById('closeShare');
+
+    function openShare() {
+        sharePanel.classList.add('active');
+        shareoverlay.classList.add('active');
+    }
+
+    function closeSharePanel() {
+        sharePanel.classList.remove('active');
+        shareoverlay.classList.remove('active');
+    }
+
+    shareBtn.addEventListener('click', openShare);
+    closeBtn.addEventListener('click', closeSharePanel);
+    shareoverlay.addEventListener('click', closeSharePanel);
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("🔗 Link copied!");
+    }
 </script>
 @endpush
