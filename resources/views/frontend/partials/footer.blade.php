@@ -82,7 +82,7 @@
     @push('scripts')
     @if(!Auth::check() || (Auth::check() && Auth::user()->utype != 'USR'))
     <div class="modal fade" id="loginModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-dialog modal-dialog-centered modal-lg padding-sm-2">
         <div class="modal-content border-0 rounded-4 overflow-hidden">
           <div class="row g-0">
 

@@ -3153,6 +3153,9 @@ ol.breadcrumb li {
     text-align: center;
     margin-right: 0;
   }
+  .padding-sm-2{
+    padding: 0 0.5rem;
+  }
 }
 
 .login-logo-section {
