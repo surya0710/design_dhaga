@@ -762,7 +762,7 @@
                                 <p style="font-size:14px; color:#374151; margin:0 0 10px; line-height:1.6;">{{ $review->review }}</p>
 
                                 @if($review->image)
-                                    <img src="{{ asset('storage/'.$review->image) }}" style="width:72px; height:72px; border-radius:8px; object-fit:cover; border:1px solid #e5e7eb;">
+                                    <img src="{{ asset('storage/'.$review->image) }}" style="width:150px; height:150px; border-radius:8px; object-fit:cover; border:1px solid #e5e7eb;">
                                 @endif
                             </div>
                         </div>
