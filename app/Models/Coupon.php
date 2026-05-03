@@ -8,7 +8,7 @@ class Coupon extends Model
 {
     protected $fillable = [
         'code', 'type', 'value', 'min_cart_value', 'max_discount',
-        'start_date', 'end_date', 'is_single_use', 'status'
+        'start_date', 'end_date', 'is_single_use', 'status', 'free_shipping'
     ];
     
 }

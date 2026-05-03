@@ -61,7 +61,7 @@
                         <tbody>
                             @foreach ($coupon as $coupons)
                             <tr>
-                                <td>{{$coupons -> id}}</td>
+                                <td>{{$loop->index + 1}}</td>
                                 <td>{{$coupons-> code}}</td>
                                 <td>{{$coupons-> type}}</td>
                                 <td>{{$coupons-> value}}</td>

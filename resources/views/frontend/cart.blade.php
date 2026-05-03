@@ -129,22 +129,16 @@
 
                         @else
 
-                            {{-- INPUT STATE --}}
-                            <form method="POST" action="{{ route('coupon.apply') }}" class="d-flex gap-1">
-                                @csrf
-                                <input type="text" name="code" placeholder="Enter coupon code" class="form-control form-control-sm" 
-                                style="text-transform: uppercase; letter-spacing: 0.05em;" value="{{ old('code') }}" >
-                                @error('code')
-                                    <p class="mt-1" style="font-size: 12px; color: red;">{{ $message }}</p>
-                                @enderror
-                                <button type="submit" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
+                            <div class="d-flex gap-1">
+                                <input type="text" id="coupon-code" placeholder="Enter coupon code" class="form-control form-control-sm"
+                                style="text-transform: uppercase; letter-spacing: 0.05em;">
+
+                                <button type="button" class="btn btn-outline-dark btn-sm" onclick="applyCoupon()">
                                     Apply
                                 </button>
-                            </form>
+                            </div>
 
-                            @error('code')
-                                <p class="mt-1" style="font-size: 12px; color: red;">{{ $message }}</p>
-                            @enderror
+                            <p id="coupon-message" style="font-size: 12px; margin-top:5px;"></p>
 
                         @endif
 
@@ -190,6 +184,45 @@
 
         // auto submit update
         updateForm.submit();
+    }
+
+    function applyCoupon() {
+        let code = document.getElementById('coupon-code').value;
+
+        if (!code) {
+            showMessage("Please enter a coupon code", "red");
+            return;
+        }
+
+        fetch("{{ route('coupon.apply') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ code: code })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showMessage(data.message, "green");
+
+                // reload only summary section OR full page (simple way)
+                location.reload();
+            } else {
+                showMessage(data.message, "red");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showMessage("Something went wrong", "red");
+        });
+    }
+
+    function showMessage(msg, color) {
+        let el = document.getElementById('coupon-message');
+        el.innerText = msg;
+        el.style.color = color;
     }
 </script>
 

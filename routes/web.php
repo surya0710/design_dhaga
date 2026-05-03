@@ -57,7 +57,7 @@ Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 
 Route::match(['GET', 'POST'], '/forgot-password', [UserController::class, 'forgotPassword'])->name('password.forgot');
 Route::match(['GET', 'POST'], '/reset-password/{token}', [UserController::class, 'resetPassword'])->name('password.reset');
-
+Route::get('login', function(){ return redirect()->route('home');})->name('login');
 
 /*
 |--------------------------------------------------------------------------

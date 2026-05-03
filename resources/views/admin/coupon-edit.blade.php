@@ -108,7 +108,16 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </fieldset>
-
+                <fieldset class="shipping">
+                    <div class="body-title">Free Shipping <span class="tf-color-1">*</span></div>
+                    <select name="free_shipping">
+                        <option value="0" {{ old('free_shipping', $coupon->free_shipping) == '0' ? 'selected' : '' }}>No</option>
+                        <option value="1" {{ old('free_shipping', $coupon->free_shipping) == '1' ? 'selected' : '' }}>Yes</option>
+                    </select>
+                    @error('free_shipping')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </fieldset>
                 <div class="bot">
                     <div></div>
                     <button class="tf-button w208" type="submit">Save</button>

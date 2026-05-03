@@ -75,7 +75,7 @@ class ShopController extends Controller
             $visitor = Visitor::where('visitor_id', $visitorId)->first();
         }
 
-        $country = $visitor?->country;
+        $country = $visitor->country ?? 'India';
 
         // ✅ Optimized product query
         $product = Product::where('slug', $slug)

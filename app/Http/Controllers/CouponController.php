@@ -26,10 +26,9 @@ class CouponController extends Controller
             'value' => 'required|numeric|min:0',
             'cart_value' => 'required|numeric|min:0',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'free_shipping' => 'required'
         ]);
-
-        // Coupon::create($request->all());
         Coupon::create([
             'code' => $request->code,
             'type' => $request->type,
@@ -39,6 +38,7 @@ class CouponController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'is_single_use' => $request->is_single_use == '1',
+            'free_shipping' => $request->free_shipping
         ]);
 
         return redirect()->route('admin.coupons')->with('success', 'Coupon created successfully!');
@@ -66,7 +66,8 @@ class CouponController extends Controller
             'value' => 'required|numeric|min:0',
             'cart_value' => 'required|numeric|min:0',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'free_shipping' => 'required'
         ]);
 
         $coupon->update([
@@ -78,6 +79,7 @@ class CouponController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'is_single_use' => $request->is_single_use == '1',
+            'free_shipping' => $request->free_shipping
         ]);
 
         return redirect()->route('admin.coupons')->with('success', 'Coupon updated successfully!');
@@ -96,34 +98,125 @@ class CouponController extends Controller
 
     public function apply(Request $request)
     {
-        $request->validate(['code' => 'required|string']);
+        $request->validate([
+            'code' => 'required|string'
+        ]);
 
-        $coupon = Coupon::where('code', $request->code)
-            ->where('start_date', '<=', today())
-            ->where('end_date', '>=', today())
-            ->first();
+        $coupon = Coupon::where('code', strtoupper($request->code))->first();
 
         if (!$coupon) {
-            return back()->with('error', 'Invalid coupon code.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid coupon code'
+            ]);
         }
 
-        $subtotal = floatval(str_replace(',', '', Cart::instance('cart')->subtotal())); 
-
-        if ($subtotal < $coupon->min_cart_value) {
-            return back()->with('error', "Minimum cart value should be ₹{$coupon->min_cart_value}.");
+        // ✅ Check status
+        if ($coupon->status != 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Coupon is inactive'
+            ]);
         }
 
-        $discount = $coupon->type === 'fixed' ? $coupon->value : ($subtotal * $coupon->value / 100);
+        $now = now();
 
-        session()->put('coupon', [ 
-            'coupon_id' => $coupon->id,
+        // ✅ Check start date
+        if ($coupon->start_date && $now->lt($coupon->start_date)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Coupon is not active yet'
+            ]);
+        }
+
+        // ✅ Check expiry
+        if ($coupon->end_date && $now->gt($coupon->end_date)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Coupon has expired'
+            ]);
+        }
+
+        // ✅ Get cart subtotal
+        $cartItems = session('cart', []);
+        $subtotal = collect($cartItems)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        // ✅ Min cart check
+        if ($coupon->min_cart_value && $subtotal < $coupon->min_cart_value) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Minimum cart value should be ₹' . $coupon->min_cart_value
+            ]);
+        }
+
+        // =========================
+        // ✅ FREE SHIPPING LOGIC
+        // =========================
+        $freeShipping = false;
+        $discount = 0;
+
+        if (
+            (isset($coupon->free_shipping) && $coupon->free_shipping) ||
+            $coupon->type === 'shipping'
+        ) {
+            $freeShipping = true;
+            $discount = 0; // no price discount
+        } else {
+
+            // =========================
+            // ✅ NORMAL DISCOUNT LOGIC
+            // =========================
+            if ($coupon->type === 'fixed') {
+                $discount = $coupon->value;
+            } else {
+                // percentage
+                $discount = ($subtotal * $coupon->value) / 100;
+            }
+
+            // ✅ Max discount cap
+            if ($coupon->max_discount && $discount > $coupon->max_discount) {
+                $discount = $coupon->max_discount;
+            }
+
+            // ✅ Prevent discount > subtotal
+            $discount = min($discount, $subtotal);
+        }
+
+        // =========================
+        // ✅ SINGLE USE CHECK
+        // =========================
+        if ($coupon->is_single_use) {
+            if (session()->has('coupon_used_' . $coupon->code)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Coupon already used'
+                ]);
+            }
+        }
+
+        // =========================
+        // ✅ STORE IN SESSION
+        // =========================
+        session()->put('coupon', [
             'code' => $coupon->code,
-            'type' => $coupon->type,
-            'value' => $coupon->value,
-            'discount' => $discount
+            'discount' => round($discount, 2),
+            'free_shipping' => $freeShipping
         ]);
-        
-        return back()->with('success', 'Coupon applied successfully!');
+
+        if ($coupon->is_single_use) {
+            session()->put('coupon_used_' . $coupon->code, true);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $freeShipping 
+                ? 'Free shipping applied successfully' 
+                : 'Coupon applied successfully',
+            'discount' => round($discount, 2),
+            'free_shipping' => $freeShipping
+        ]);
     }
 
     public function remove()
