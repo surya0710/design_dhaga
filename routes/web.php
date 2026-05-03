@@ -20,6 +20,7 @@ use App\Http\Controllers\CkeditorController;
 use App\Http\Controllers\ShiprocketController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ShiprocketWebhookController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +126,8 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::post('/coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
     Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
+
+    Route::post('/review/store', [ReviewController::class, 'store'])->name('review.store');
 
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
