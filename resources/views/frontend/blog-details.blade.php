@@ -128,8 +128,8 @@
             margin: 12,
             nav: true,
             dots: true,
-            autoplay: false,
-            smartSpeed: 800,
+            autoplay: true,
+            smartSpeed: 2000,
             responsive: {
                 0: {
                     items: 1   // mobile

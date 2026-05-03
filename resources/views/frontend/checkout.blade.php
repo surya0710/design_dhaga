@@ -550,6 +550,10 @@
         .co-summary-card { position: static; margin-top: 0; }
         .co-page { padding-top: 20px; }
     }
+    #goToTop,
+    .floating-whatsapp{
+        display: none!important;
+    }
 </style>
 
 @php
@@ -983,6 +987,7 @@
             renderDeliveryOptions(data);
             fetchGst();
             activateStep(2);
+            setPlaceOrderEnabled(true);
         })
         .catch(function(err) {
             btn.disabled = false;

@@ -81,12 +81,12 @@
                     data-bs-toggle="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : 'modal' }}"
                     data-bs-target="{{ (Auth::check() && Auth::user()->utype === 'USR') ? '' : '#loginModal' }}">
                         <svg width="26" height="26" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="10" cy="20" r="1.5"></circle>
-                            <circle cx="18" cy="20" r="1.5"></circle>
+                            <circle cx="10" cy="22" r="2"></circle>
+                            <circle cx="18" cy="22" r="2"></circle>
                             <path d="M3 3h3l2.5 12h11.5l2-8H8"></path>
                         </svg>
                     </a>
-                    <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 12px;">
+                    <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 9px;">
                         {{ getCartItemsCount() }}
                     </span>
                 </div>

@@ -136,14 +136,30 @@
 
         <!-- Tab Content -->
         <div class="tab-content" id="myTabContent">
-
+            @php
+                use App\Models\Wishlist;
+            @endphp
             <!-- New Arrival -->
             <div class="tab-pane fade show active" id="new-arrival-tab-pane" role="tabpanel">
                 <div class="products-conatiner">
                     @foreach ($newArrivals as $product)
-                    @php $url = getProductUrl($product); @endphp
+                    @php 
+                        $url = getProductUrl($product); 
+                        $isInWishlist = auth()->check()
+                            ? Wishlist::where('user_id', auth()->id())
+                                ->where('product_id', $product->id)
+                                ->exists()
+                            : false;
+                    @endphp
                     <a class="product-item" href="{{ $url }}">
+                        <div class="position-relative d-inline-block w-100">
                         <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}">
+                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
+                            style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
+                            aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
+                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                        </button>
+                        </div>
                         <p>{{ $product->name }}</p>
                     </a>
                     @endforeach
@@ -464,7 +480,9 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
@@ -518,6 +536,91 @@
                 }
             }
         });
+    });
+</script>
+<script>
+    const wishlistConfig = {
+        addUrl: "{{ route('wishlist.add') }}",
+        removeUrl: "{{ route('wishlist.remove') }}",
+        loginUrl: "",
+        csrfToken: "{{ csrf_token() }}"
+    };
+    function showWishlistAuthPopup() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please Login',
+            text: 'You need to be logged in to manage your wishlist.',
+            confirmButtonText: 'Login',
+            confirmButtonColor: '#8b1e2d',
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#loginModal").modal('toggle');
+            }
+        });
+    }
+
+    function setWishlistButtonState($button, inWishlist) {
+        $button.toggleClass('active', inWishlist);
+        $button.attr('data-in-wishlist', inWishlist ? '1' : '0');
+
+        // Toggle background classes
+        $button.toggleClass('bg-dark-grey', inWishlist);
+        $button.toggleClass('bg-white', !inWishlist);
+
+        const icon = $button.find('i');
+        icon.removeClass('fa-regular fa-solid');
+        icon.addClass(inWishlist ? 'fa-solid' : 'fa-regular');
+    }
+
+    function toggleWishlist($button) {
+        const productId  = $button.attr('data-product-id');
+        const inWishlist = String($button.attr('data-in-wishlist')) === '1';
+        const url        = inWishlist ? wishlistConfig.removeUrl : wishlistConfig.addUrl;
+
+        $button.prop('disabled', true);
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _token: wishlistConfig.csrfToken,
+                product_id: productId
+            },
+            success: function (response) {
+                setWishlistButtonState($button, response.in_wishlist);
+
+                Swal.fire({
+                    iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
+                    title: response.in_wishlist ? 'Added to Wishlist' : 'Removed from Wishlist',
+                    text: response.message,
+                    confirmButtonColor: '#8b1e2d',
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            },
+            error: function (xhr) {
+                if (xhr.status === 401) {
+                    showWishlistAuthPopup();
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: xhr.responseJSON?.message ?? 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#8b1e2d',
+                });
+            },
+            complete: function () {
+                $button.prop('disabled', false);
+            }
+        });
+    }
+
+    $(".wishlist-btn").click(function() {
+        toggleWishlist($(this));
     });
 </script>
 @endpush

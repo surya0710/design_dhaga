@@ -248,6 +248,10 @@ function setWishlistButtonState($button, inWishlist) {
     $button.toggleClass('active', inWishlist);
     $button.attr('data-in-wishlist', inWishlist ? '1' : '0');
 
+    // Toggle background classes
+    $button.toggleClass('bg-dark-grey', inWishlist);
+    $button.toggleClass('bg-white', !inWishlist);
+
     const icon = $button.find('i');
     icon.removeClass('fa-regular fa-solid');
     icon.addClass(inWishlist ? 'fa-solid' : 'fa-regular');

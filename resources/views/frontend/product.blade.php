@@ -46,6 +46,10 @@
         pointer-events: none;
         opacity: 0.7;
     }
+
+    .wishlist-btn .fa-regular{
+        color:#000!important;
+    }
 </style>
 @endpush
 
@@ -92,9 +96,9 @@
                     <div class="mb-2">
                         <div class="d-flex align-items-start">
                             <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
-                            <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                            <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
                                 data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
-                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg" style="color : {{ $isInWishlist ? '#C51104' : '#000' }}"></i>
+                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
                             </button>
                         </div>
 
@@ -181,9 +185,9 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center text-white wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                        <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
                                 data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
-                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg" style="color : {{ $isInWishlist ? '#C51104' : '#000' }}"></i>
+                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
                         </button>
                     </div>
 
@@ -534,7 +538,7 @@
                             @endif
 
                             @if ($artisan->description)
-                                <p class="text-secondary lh-lg">
+                                <p class="artisan-description text-secondary lh-lg">
                                     {!! nl2br(e($artisan->description)) !!}
                                 </p>
                             @endif
@@ -682,7 +686,7 @@
 
             <!-- Review -->
             <div class="mb-3">
-                <textarea name="review" class="form-control" placeholder="Write your review..." required></textarea>
+                <textarea name="review" class="form-control" placeholder="Write your review..." required rows="5"></textarea>
             </div>
 
             <!-- Image -->
@@ -827,10 +831,25 @@
 @endsection
 
 @push('scripts')
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    $('.artisan-description').each(function () {
+        let lines = $(this).html().split('<br>');
+        let newHtml = '<ul class="custom-check">';
+
+        lines.forEach(line => {
+            if (line.trim()) {
+                newHtml += `<li>${line.replace(/✔️|✔/g, '').trim()}</li>`;
+            }
+        });
+
+        newHtml += '</ul>';
+        $(this).html(newHtml);
+    });
+
     const imageUrls = [
         "{{ asset('storage/' . $product->image) }}",
         @foreach ($gallery as $img)
@@ -1152,8 +1171,8 @@
             margin: 12,
             nav: true,
             dots: true,
-            autoplay: false,
-            smartSpeed: 800,
+            autoplay: true,
+            smartSpeed: 2000,
             responsive: {
                 0: {
                     items: 1   // mobile
