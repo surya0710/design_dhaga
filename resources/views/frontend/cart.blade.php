@@ -33,7 +33,7 @@
                 <div class="cart-box p-2">
 
                     @foreach($cartItems as $item)
-                    <div class="cart-item d-lg-flex justify-content-between align-items-center gap-2">
+                    <div class="cart-item d-lg-flex justify-content-between gap-2">
 
                         {{-- PRODUCT --}}
                         <div class="d-flex gap-3 align-items-center">
@@ -56,7 +56,7 @@
                         </div>
 
                         {{-- QTY (+ -) --}}
-                        <div class="d-flex justify-content-space-between align-items-center">
+                        <div class="d-flex justify-content-space-between">
                             <form method="POST" action="{{ route('cart.update') }}">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $item['id'] }}">

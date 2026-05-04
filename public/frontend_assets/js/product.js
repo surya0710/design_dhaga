@@ -52,16 +52,20 @@ function prevMobileImage() {
     setMobileImageByIndex(mobileIndex);
 }
 
-function openImageModal() {
+function openImageModal(src = null) {
     const modal = document.getElementById('imageModal');
     modal.style.display = 'flex';
-    modal.style.flexDirection = 'column';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
     document.body.style.overflow = 'hidden';
 
-    modalImageIndex = window.innerWidth >= 768 ? desktopImageIndex : mobileIndex;
-    updateModalImage();
+    const modalMainImage = document.getElementById('modalMainImage');
+
+    if (src) {
+        modalMainImage.src = src;
+    } else {
+        modalMainImage.src = imageUrls[
+            window.innerWidth >= 768 ? desktopImageIndex : mobileIndex
+        ];
+    }
 }
 
 function closeImageModal() {

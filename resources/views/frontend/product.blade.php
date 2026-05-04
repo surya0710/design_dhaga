@@ -77,7 +77,7 @@
 
                         <div class="carousel-container position-relative overflow-hidden flex-grow-1">
                             <img id="desktopMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" style="object-fit: contain; display: block; max-height: 700px;"
-                            alt="{{ $product->name }}" onclick="openImageModal()" />
+                            alt="{{ $product->name }}" onclick="openImageModal(this.src)" />
 
                             <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y ms-2 shadow"
                             style="z-index: 10; width: 45px; height: 45px;" onclick="prevDesktopImage()">
@@ -135,7 +135,7 @@
 
                     <div class="d-flex flex-column gap-2">
                         <div class="position-relative" style="overflow: hidden;">
-                            <img id="mobileMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" alt="{{ $product->name }}" onclick="openImageModal()" />
+                            <img id="mobileMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" alt="{{ $product->name }}" onclick="openImageModal(this.src)" />
 
                             <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y shadow" style="z-index: 10; width: 35px; height: 35px; left: 4px;" 
                             onclick="prevMobileImage()">
@@ -617,19 +617,13 @@
 <div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center;
             justify-content: center; flex-direction: column; padding: 20px;">
 
-    <button onclick="closeImageModal()"
-            style="position: absolute; top: 20px; right: 30px; background: none; border: none;
-                   color: white; font-size: 32px; cursor: pointer; z-index: 10000;">
+    <button onclick="closeImageModal()" style="position: absolute; top: 20px; right: 30px; background: none; border: none; color: white; font-size: 32px; cursor: pointer; z-index: 10000;">
         &times;
     </button>
 
-    <div style="width: 100%; max-width: 600px; height: 60vh; position: relative;
-                display: flex; align-items: center; justify-content: center;
-                z-index: 9999; overflow: hidden;">
+    <div style="width: 100%; max-width: 600px; height: 60vh; position: relative; display: flex; align-items: center; justify-content: center; z-index: 9999; overflow: hidden;">
 
-        <img id="modalMainImage" src=""
-             style="width: 100%; height: 100%; object-fit: contain;
-                    cursor: grab; transition: transform 0.2s ease;" />
+        <img id="modalMainImage" src="" style="width: 100%; height: 100%; object-fit: contain; cursor: grab; transition: transform 0.2s ease;" />
 
         <div style="position: absolute; bottom: 15px; right: 0; z-index: 10000; display: flex; gap: 6px;">
             <button onclick="zoomIn()" class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">+</button>
@@ -640,8 +634,7 @@
         </div>
     </div>
 
-    <div style="width: 100%; max-width: 600px; display: flex; gap: 8px; margin-top: 20px;
-                overflow-x: auto; padding-bottom: 8px; justify-content: center; z-index: 9999;">
+    <div style="width: 100%; max-width: 600px; display: flex; gap: 8px; margin-top: 20px; overflow-x: auto; padding-bottom: 8px; justify-content: center; z-index: 9999;">
 
         <img src="{{ asset('storage/' . $product->image) }}"
              class="modal-thumb"

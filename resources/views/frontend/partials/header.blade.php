@@ -10,7 +10,7 @@
     </div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-white border-bottom p-0">
-        <div class="container-fluid d-flex justify-content-between align-items-center px-3 px-md-5">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-3 px-md-5 pt-1">
 
             <!-- LEFT: MENU + SEARCH -->
             <div class="d-flex align-items-center gap-3">
