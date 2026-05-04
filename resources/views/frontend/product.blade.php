@@ -839,7 +839,7 @@
     });
 
     const imageUrls = [
-        "{{ asset('storage/' . $product->image) }}",
+        "{{ asset('storage/' . $mainImage) }}",
         @foreach ($gallery as $img)
             "{{ asset('storage/' . $img->image) }}",
         @endforeach
