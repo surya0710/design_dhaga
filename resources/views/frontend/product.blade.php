@@ -636,18 +636,10 @@
 
     <div style="width: 100%; max-width: 600px; display: flex; gap: 8px; margin-top: 20px; overflow-x: auto; padding-bottom: 8px; justify-content: center; z-index: 9999;">
 
-        <img src="{{ asset('storage/' . $product->image) }}"
-             class="modal-thumb"
-             style="width: 70px; height: 90px; object-fit: cover; flex-shrink: 0;
-                    border: 2px solid white; cursor: pointer; opacity: 1;"
-             onclick="setModalImage(this)" />
+        <img src="{{ asset('storage/' . $product->image) }}" class="modal-thumb" onclick="setModalImage(this.src)" />
 
         @foreach ($gallery as $img)
-            <img src="{{ asset('storage/' . $img->image) }}"
-                 class="modal-thumb"
-                 style="width: 70px; height: 90px; object-fit: cover; flex-shrink: 0;
-                        cursor: pointer; opacity: 0.5;"
-                 onclick="setModalImage(this)" />
+            <img src="{{ asset('storage/' . $img->image) }}" class="modal-thumb" onclick="setModalImage(this.src)" />
         @endforeach
     </div>
 </div>
