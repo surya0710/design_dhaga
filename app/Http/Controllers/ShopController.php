@@ -109,7 +109,7 @@ class ShopController extends Controller
             ->get();
 
         // ✅ Related products
-        $relatedProducts = Product::select('id','name','slug','image','category_id')
+        $relatedProducts = Product::select('id','name','slug','image','category_id', 'sale_price','regular_price')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->with(['category.parent'])
