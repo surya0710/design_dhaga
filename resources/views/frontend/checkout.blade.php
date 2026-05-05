@@ -744,7 +744,7 @@
                         <div class="co-summary-items">
                             @foreach($cartItems as $item)
                             <div class="co-summary-item">
-                                <img src="{{ asset('storage/'.{{ $item->product->image }}) }}" class="co-summary-img" alt="{{ $item->product->name }}">
+                                <img src="{{ asset('storage/'. $item->product->image ) }}" class="co-summary-img" alt="{{ $item->product->name }}">
                                 <div class="co-summary-item-info">
                                     <div class="co-summary-item-name">{{ $item->product->name }}</div>
                                     <div class="co-summary-item-qty">Qty: {{ $item['quantity'] }}</div>
