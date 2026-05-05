@@ -37,44 +37,54 @@
 
                         {{-- PRODUCT --}}
                         <div class="d-flex gap-3 align-items-center">
-                            <img src="{{ asset('storage/'.$item['image']) }}" class="product-image">
+                            <img src="{{ asset('storage/'.$item->product->image) }}" class="product-image">
 
                             <div>
-                                <h5 class="product-name mb-0 mt-0">{{ $item['name'] }}</h5>
+                                <h5 class="product-name mb-0 mt-0">
+                                    {{ $item->product->name }}
+                                </h5>
 
                                 {{-- PRICE --}}
                                 <div class="price-text">
-                                    ₹{{ number_format($item['price'], 2) }}
+                                    ₹{{ number_format($item->price, 2) }}
                                 </div>
 
-                                <form method="POST" class="d-none d-sm-block" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
+                                <form method="POST" class="d-none d-sm-block"
+                                    action="{{ route('cart.remove') }}"
+                                    id="remove-product-{{ $item->product_id }}">
                                     @csrf
-                                    <input type="hidden" name="product_id" value="{{ $item['id'] }}">
+                                    <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                     <button class="remove-btn remove-item-cart">Remove</button>
                                 </form>
                             </div>
                         </div>
 
-                        {{-- QTY (+ -) --}}
+                        {{-- QTY --}}
                         <div class="d-flex justify-content-space-between">
                             <form method="POST" action="{{ route('cart.update') }}">
                                 @csrf
-                                <input type="hidden" name="product_id" value="{{ $item['id'] }}">
+                                <input type="hidden" name="product_id" value="{{ $item->product_id }}">
 
                                 <div class="qty-box mt-0">
                                     <button type="button" class="qty-btn" onclick="changeQty(this, -1)">−</button>
 
-                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="0" class="qty-input">
+                                    <input type="number"
+                                        name="quantity"
+                                        value="{{ $item->quantity }}"
+                                        min="1"
+                                        class="qty-input">
 
                                     <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
                                 </div>
                             </form>
-                            <form method="POST" class="d-sm-block d-md-none" action="{{ route('cart.remove') }}" id="remove-product-{{ $item['id'] }}">
+
+                            <form method="POST" class="d-sm-block d-md-none"
+                                action="{{ route('cart.remove') }}"
+                                id="remove-product-{{ $item->product_id }}">
                                 @csrf
-                                <input type="hidden" name="product_id" value="{{ $item['id'] }}">
+                                <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                 <button class="remove-btn remove-item-cart">
-                                    <i class="fa fa-trash"></i>&nbsp;
-                                    Remove
+                                    <i class="fa fa-trash"></i>&nbsp; Remove
                                 </button>
                             </form>
                         </div>

@@ -746,7 +746,7 @@
                             <div class="co-summary-item">
                                 <img src="{{ asset('storage/'.$item['image']) }}" class="co-summary-img" alt="{{ $item['name'] }}">
                                 <div class="co-summary-item-info">
-                                    <div class="co-summary-item-name">{{ $item['name'] }}</div>
+                                    <div class="co-summary-item-name">{{ $item->product->name }}</div>
                                     <div class="co-summary-item-qty">Qty: {{ $item['quantity'] }}</div>
                                 </div>
                                 <div class="co-summary-item-price">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</div>

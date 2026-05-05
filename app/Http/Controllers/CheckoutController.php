@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Address;
+use App\Models\Cart;
 use App\Models\HaryanaPincode;
 use Razorpay\Api\Api;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\OrderCompletedMail;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -36,7 +38,9 @@ class CheckoutController extends Controller
 
     public function checkout()
     {
-        $cartItems = collect(Session::get('cart', []));
+        $cartItems = Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
