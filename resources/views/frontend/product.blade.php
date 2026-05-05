@@ -875,8 +875,10 @@
                 product_id: productId,
                 quantity: 1,
             },
-            success: function () {
+            success: function (response) {
                 btn.classList.remove('loading');
+
+                $('#cartBadge').text(response.cart_count);
 
                 Swal.fire({
                     iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',

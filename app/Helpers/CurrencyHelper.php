@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 function getIconsByCategory($category){
     $categoryIcons = [
@@ -15,8 +17,8 @@ function getIconsByCategory($category){
 
 function getCartItemsCount(){
     $cartItemsCount = 0;
-    if(session()->has('cart')){
-        $cartItemsCount = count(session()->get('cart'));
+    if (Auth::check() && Auth::user()->utype === 'USR') {
+        $cartItemsCount = Cart::where('user_id', Auth::id())->count();
     }
     return $cartItemsCount;
 }

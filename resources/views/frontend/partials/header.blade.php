@@ -86,7 +86,7 @@
                             <path d="M3 3h3l2.5 12h11.5l2-8H8"></path>
                         </svg>
                     </a>
-                    <span class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 9px;">
+                    <span id="cartBadge" class="badge bg-warning text-dark rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 9px;">
                         {{ getCartItemsCount() }}
                     </span>
                 </div>

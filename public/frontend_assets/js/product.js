@@ -11,12 +11,23 @@ let startY = 0;
 let modalImg = null;
 let mobileThumbs = [];
 
-function setDesktopImage(element) {
-    const index = Array.from(document.querySelectorAll('.desktop-thumb')).indexOf(element);
-    if (index >= 0) {
-        desktopImageIndex = index;
-        updateDesktopImage();
+function setDesktopImage(el) {
+    const mainImg = document.getElementById('desktopMainImage');
+    mainImg.src = el.src;
+
+    // reset zoom background
+    const result = document.getElementById("zoomResult");
+    if (result) {
+        result.style.backgroundImage = `url('${el.src}')`;
     }
+
+    document.querySelectorAll('.desktop-thumb').forEach(img => {
+        img.style.opacity = "0.6";
+        img.classList.remove("border-danger");
+    });
+
+    el.style.opacity = "1";
+    el.classList.add("border-danger");
 }
 
 function nextDesktopImage() {

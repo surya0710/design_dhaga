@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,12 +25,12 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = session()->get('cart', []);
-
-        $cartItems = collect($cart);
+        $cartItems = Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
 
         $subtotal = $cartItems->sum(function ($item) {
-            return $item['price'] * $item['quantity'];
+            return $item->price * $item->quantity;
         });
 
         $total = $subtotal;
@@ -63,26 +64,28 @@ class CartController extends Controller
 
         $price = $product->sale_price ?? $product->regular_price;
 
-        $cart = session()->get('cart', []);
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->first();
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] += $request->quantity;
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity;
+            $cartItem->save();
         } else {
-            $cart[$product->id] = [
-                'id'       => $product->id,
-                'name'     => $product->name,
-                'price'    => $price,
-                'image'    => $product->image,
-                'quantity' => $request->quantity,
-            ];
+            Cart::create([
+                'user_id'   => Auth::id(),
+                'product_id'=> $product->id,
+                'quantity'  => $request->quantity,
+                'price'     => $price,
+            ]);
         }
 
-        session()->put('cart', $cart);
+        $cartCount = Cart::where('user_id', Auth::id())->count();
 
         return response()->json([
             'success'    => true,
             'message'    => 'Added to cart',
-            'cart_count' => count($cart),
+            'cart_count' => $cartCount,
         ]);
     }
 
@@ -95,12 +98,9 @@ class CartController extends Controller
             'product_id' => 'required',
         ]);
 
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$request->product_id])) {
-            unset($cart[$request->product_id]);
-            session()->put('cart', $cart);
-        }
+        Cart::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->delete();
 
         return redirect()->back()->with('success', 'Item removed');
     }
@@ -115,12 +115,11 @@ class CartController extends Controller
             'quantity'   => 'required|integer|min:1|max:99',
         ]);
 
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$request->product_id])) {
-            $cart[$request->product_id]['quantity'] = $request->quantity;
-            session()->put('cart', $cart);
-        }
+        Cart::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->update([
+                'quantity' => $request->quantity
+            ]);
 
         return redirect()->back()->with('success', 'Cart updated');
     }
