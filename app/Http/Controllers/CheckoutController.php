@@ -102,7 +102,9 @@ class CheckoutController extends Controller
             'address' => 'required|string',
         ]);
 
-        $cartItems = collect(Session::get('cart', []));
+        $cartItems = collect(Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get()->toArray());
 
         if ($cartItems->isEmpty()) {
             return response()->json([
@@ -192,7 +194,9 @@ class CheckoutController extends Controller
 
     public function createRazorpayOrder(Request $request)
     {
-        $cartItems = collect(Session::get('cart', []));
+        $cartItems = collect(Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get()->toArray());
 
         if ($cartItems->isEmpty()) {
             return response()->json([
