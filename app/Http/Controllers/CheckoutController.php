@@ -104,7 +104,7 @@ class CheckoutController extends Controller
 
         $cartItems = collect(Cart::with('product')
             ->where('user_id', Auth::id())
-            ->get()->toArray());
+            ->get());
 
         if ($cartItems->isEmpty()) {
             return response()->json([
@@ -194,9 +194,9 @@ class CheckoutController extends Controller
 
     public function createRazorpayOrder(Request $request)
     {
-        $cartItems = collect(Cart::with('product')
+        $cartItems = Cart::with('product')
             ->where('user_id', Auth::id())
-            ->get()->toArray());
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return response()->json([
@@ -337,9 +337,9 @@ class CheckoutController extends Controller
 
             foreach ($cartItems as $item) {
                 $order->items()->create([
-                    'product_id' => $item['id'] ?? null,
-                    'product_name' => $item['name'],
-                    'product_image' => $item['image'] ?? null,
+                    'product_id' => $item->product->id ?? null,
+                    'product_name' => $item->product->name,
+                    'product_image' => $item->product->image ?? null,
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],
                     'total' => $item['price'] * $item['quantity'],
