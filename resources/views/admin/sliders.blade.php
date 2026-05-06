@@ -102,19 +102,19 @@
                             <td>
                                 <div class="d-flex gap-2">
 
-                                    <a href="{{ route('admin.sliders.edit', $slider->id) }}" 
-                                       class="btn btn-sm btn-warning">
-                                        Edit
+                                    <a href="{{ route('admin.sliders.edit', $slider->id) }}">
+                                        <div class="item edit">
+                                            <i class="icon-edit-3"></i>
+                                        </div>
                                     </a>
 
-                                    <form action="{{ route('admin.sliders.destroy', $slider->id) }}" 
-                                          method="POST">
+                                    <form action="{{ route('admin.sliders.destroy', $slider->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
 
-                                        <button type="submit" class="btn btn-sm btn-danger delete">
-                                            Delete
-                                        </button>
+                                        <div class="item text-danger delete">
+                                            <i class="icon-trash-2"></i>
+                                        </div>
                                     </form>
 
                                 </div>

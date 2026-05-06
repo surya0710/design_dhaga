@@ -25,52 +25,16 @@
 <!-- ================= Banner Slider ================= -->
 <div id="homeSlider" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="frontend_assets/images/home-slider/slider-1.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption caption-left text-white">
-                <h2>Hand-Painted Elegance <br>for the <strong>Modern Man</strong></h2>
-                <p>Inspired by <i>culture</i>, and designed to stand apart</p>
-                <a href="{{ route('shop.index', ['men']) }}" class="btn btn-outline-primary">Shop Now</a>
+        @foreach($sliders as $index => $slider)
+        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+            <img src="{{ Storage::url($slider->image) }}" class="d-block w-100" alt=" {{ $slider->image_alt }}">
+            <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }}">
+                <h2>{!! $slider->heading !!}</h2>
+                <p>{!! $slider->description !!}</p>
+                <a href="{{ $slider->button_link }}" target="{{  $slider->target }}" class="btn btn-outline-primary">{{  $slider->button_text }}</a>
             </div>
         </div>
-        <div class="carousel-item">
-            <img src="frontend_assets/images/home-slider/slider-2.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption caption-right text-dark">
-                <h2>Hand-Painted Stories, <br><strong>for Womens</strong></h2>
-                <p>Every outfit is a canvas crafted by <br>skilled artists, who love timeless elegance.</p>
-                <a href="{{ route('shop.index', ['women']) }}" class="btn btn-outline-primary">Shop Now</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="frontend_assets/images/home-slider/slider-3.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption caption-left text-white">
-                <h2>Explore <strong>Twinning</strong> Styles</h2>
-                <p>Hand-painted twinning outfits for <i><strong>couples<br> families, and little ones</strong></i></p>
-                <a href="{{ route('store') }}" class="btn btn-outline-primary">Shop Now</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="frontend_assets/images/home-slider/slider-4.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption caption-right text-dark">
-                <h2><strong>Little Outfits</strong>. Big Smiles</h2>
-                <p>Hand-painted kidswear made with <br><strong><i>love, colors, and comfort</i></strong>.</p>
-                <a href="{{ route('shop.index', ['kids']) }}" class="btn btn-outline-primary">Shop Now</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="{{ route('contact-us') }}#form">
-                <img src="frontend_assets/images/home-slider/slider-5.jpg" class="d-block w-100" alt="...">
-                <!--<div class="carousel-caption caption-center text-dark">-->
-                <!--    <h2>Hand Painted<br><strong>Customize Design</strong></h2>-->
-                <!--    <a href="" class="btn btn-outline-primary">Customize Your Outfit</a>-->
-                <!--</div>-->
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href="{{ route('contact-us') }}#form">
-                <img src="frontend_assets/images/home-slider/slider-6.jpg" class="d-block w-100" alt="...">
-            </a>
-        </div>
+        @endforeach
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#homeSlider" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -180,25 +144,38 @@
             <!-- Best Seller -->
             <div class="tab-pane fade" id="best-seller-tab-pane" role="tabpanel">
                 <div class="products-conatiner">
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/best-seller/Celebrity-Outfits-Hand-painted.jpg"
-                            class="loaded" alt="">
-                        <p>Celebrity Outfits Hand Painted</p>
+                    @foreach ($bestSellers as $product)
+                    @php 
+                        $url = getProductUrl($product); 
+                        $isInWishlist = auth()->check()
+                            ? Wishlist::where('user_id', auth()->id())
+                                ->where('product_id', $product->id)
+                                ->exists()
+                            : false;
+                    @endphp
+                    <a class="product-item" href="{{ $url }}">
+                        <div class="position-relative d-inline-block w-100">
+                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}">
+                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
+                            style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
+                            aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
+                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                        </button>
+                        </div>
+                        <p>{{ $product->name }}</p>
+                        @if ($product->sale_price)
+                            <span class="text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
+                            <span class="text-decoration-line-through text-muted small ms-2">
+                                ₹ {{ number_format($product->regular_price, 0) }}
+                            </span>
+                            <span class="text-maroon small ms-2 fw-semibold">
+                                Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
+                            </span>
+                        @else
+                            <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
+                        @endif
                     </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/best-seller/Couple-Couture.jpg" class="loaded" alt="">
-                        <p>Couple Couture</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/best-seller/mens-designer-dresses.jpg" class="loaded"
-                            alt="">
-                        <p>Mens Designer Dresses</p>
-                    </a>
-                    <a class="product-item" href="{{ route('store') }}">
-                        <img src="frontend_assets/images/products/best-seller/Modren-art-Design-Saree.jpg" class="loaded"
-                            alt="">
-                        <p>Modren Art Design Saree</p>
-                    </a>
+                    @endforeach
                 </div>
             </div>
         </div>

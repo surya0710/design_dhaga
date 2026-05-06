@@ -206,7 +206,11 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::delete('/admin/testimonials/delete/{id}', [AdminController::class, 'testimonial_delete'])->name('admin.testimonial.delete');
 
     Route::get('/admin/sliders/list', [SliderController::class, 'sliders'])->name('admin.sliders');
-    Route::match(['get', 'post'], '/admin/sliders/create/{id?}', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');
+    Route::get('/admin/sliders/create/', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');
+    Route::post('/admin/sliders/create/', [SliderController::class, 'sliders_add'])->name('admin.sliders.store');
+    Route::get('/admin/sliders/edit/{id}', [SliderController::class, 'sliders_edit'])->name('admin.sliders.edit');
+    Route::put('/admin/sliders/edit/{id}', [SliderController::class, 'update'])->name('admin.sliders.update');
+    Route::get('/admin/sliders/delete/{id}', [SliderController::class, 'sliders_delete'])->name('admin.sliders.destroy');
 
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 

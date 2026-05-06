@@ -9,6 +9,7 @@ use App\Mail\ContactMail;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Contact;
+use App\Models\Sliders;
 
 class HomeController extends Controller
 {
@@ -34,7 +35,15 @@ class HomeController extends Controller
             ->limit(9)
             ->get();
 
-        return view('frontend.home', compact('categories', 'newArrivals'));
+        $bestSellers = Product::where('status', 1)->where('featured', 2)
+            ->with(['category.parent'])
+            ->latest()
+            ->limit(9)
+            ->get();
+
+        $sliders = Sliders::where('active_status', 1)->get();
+
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers'));
     }
 
     public function about()

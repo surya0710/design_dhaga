@@ -18,6 +18,8 @@ class Sliders extends Model
         'order',
         'active_status',
         'target',
+        'text_location',
+        'text_color'
     ];
 
     protected $casts = [

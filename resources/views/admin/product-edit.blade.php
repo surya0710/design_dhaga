@@ -418,10 +418,11 @@
             <div class="divider"></div>
 
             <div class="field">
-                <label>Featured</label>
+                <label>Featured/Best Seller</label>
                 <select name="featured">
                     <option value="0" {{ old('featured', $product->featured) == 0 ? 'selected' : '' }}>No</option>
-                    <option value="1" {{ old('featured', $product->featured) == 1 ? 'selected' : '' }}>Yes</option>
+                    <option value="1" {{ old('featured', $product->featured) == 1 ? 'selected' : '' }}>Featured</option>
+                    <option value="2" {{ old('featured', $product->featured) == 2 ? 'selected' : '' }}>Best Seller</option>
                 </select>
             </div>
         </div>
