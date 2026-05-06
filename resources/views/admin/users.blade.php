@@ -54,7 +54,7 @@
                         @foreach ($users as $user)
                             
                             <tr>
-                                <td>{{$user->id}}</td>
+                                <td>{{$loop->index + 1}}</td>
                                 <td class="pname">
                                     <div class="name">
                                         <a href="#" class="body-title-2">{{ $user->name }}</a>
