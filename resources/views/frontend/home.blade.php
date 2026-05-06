@@ -27,6 +27,7 @@
     <div class="carousel-inner">
         @foreach($sliders as $index => $slider)
         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+            @if(!empty($slider->button_text))
             <img src="{{ Storage::url($slider->image) }}" class="d-block w-100" alt=" {{ $slider->image_alt }}">
             <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }}">
                 <h2>{!! $slider->heading !!}</h2>
@@ -35,6 +36,15 @@
                 <a href="{{ $slider->button_link }}" target="{{  $slider->target }}" class="btn btn-outline-primary">{{ $slider->button_text }}</a>
                 @endif
             </div>
+            @else
+            <a href="{{ $slider->button_link }}" target="{{  $slider->target }}">
+                <img src="{{ Storage::url($slider->image) }}" class="d-block w-100" alt=" {{ $slider->image_alt }}">
+                <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }}">
+                <h2>{!! $slider->heading !!}</h2>
+                <p>{!! $slider->description !!}</p>
+            </div>
+            </a>
+            @endif
         </div>
         @endforeach
     </div>

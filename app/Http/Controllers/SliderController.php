@@ -20,7 +20,7 @@ class SliderController extends Controller
     public function sliders_add(Request $request, $id = null)
     {
         $data = $request->validate([
-            'heading'        => 'required|string',
+            'heading'        => 'nullable|string',
             'description'    => 'nullable|string',
             'image'          => $id ? 'nullable|image|mimes:jpg,jpeg,png,webp' : 'required|image|mimes:jpg,jpeg,png,webp',
             'image_alt'      => 'nullable|string|max:255',
@@ -81,7 +81,7 @@ class SliderController extends Controller
         $slider = Sliders::findOrFail($id);
 
         $data = $request->validate([
-            'heading'        => 'required|string',
+            'heading'        => 'nullable|string',
             'description'    => 'nullable|string',
             'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'image_alt'      => 'nullable|string|max:255',

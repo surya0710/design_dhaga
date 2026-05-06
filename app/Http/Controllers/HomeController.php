@@ -41,7 +41,7 @@ class HomeController extends Controller
             ->limit(9)
             ->get();
 
-        $sliders = Sliders::where('active_status', 1)->get();
+        $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
 
         return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers'));
     }
