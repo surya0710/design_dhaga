@@ -31,7 +31,9 @@
             <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }}">
                 <h2>{!! $slider->heading !!}</h2>
                 <p>{!! $slider->description !!}</p>
-                <a href="{{ $slider->button_link }}" target="{{  $slider->target }}" class="btn btn-outline-primary">{{  $slider->button_text }}</a>
+                @if(!empty($slider->button_text))
+                <a href="{{ $slider->button_link }}" target="{{  $slider->target }}" class="btn btn-outline-primary">{{ $slider->button_text }}</a>
+                @endif
             </div>
         </div>
         @endforeach
