@@ -230,9 +230,7 @@
                     <div class="row g-2 mt-2 p-1 rounded bg-body-secondary text-center">
                         @foreach($product->icons as $icon)
                         <div class="col-4">
-                            <svg width="40" height="40">
-                                <use xlink:href="{{ asset('storage/' . $icon->image) }}"></use>
-                            </svg>
+                            <img src="{{ asset('storage/' . $icon->image) }}" class="img-fluid">
                             <p class="text-black">{{ $icon->text }}</p>
                         </div>
                         @endforeach
