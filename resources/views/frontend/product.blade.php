@@ -230,7 +230,7 @@
                     <div class="row g-2 mt-2 p-1 rounded bg-body-secondary text-center">
                         @foreach($product->icons as $icon)
                         <div class="col-4">
-                            <img src="{{ asset('storage/' . $icon->image) }}" class="img-fluid">
+                            <img src="{{ asset('storage/' . $icon->image) }}" width="40" height="40">
                             <p class="text-black">{{ $icon->text }}</p>
                         </div>
                         @endforeach
