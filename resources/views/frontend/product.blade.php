@@ -95,7 +95,7 @@
 
                 <div class="d-lg-none">
                     <div class="mb-2">
-                        <div class="d-flex align-items-start">
+                        <div class="d-flex align-items-start justify-content-between">
                             <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
                             <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
                                 data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
