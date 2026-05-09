@@ -611,6 +611,10 @@
                     title: 'Oops!',
                     text: xhr.responseJSON?.message ?? 'Something went wrong. Please try again.',
                     confirmButtonColor: '#8b1e2d',
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload();
+                    }
                 });
             },
             complete: function () {
