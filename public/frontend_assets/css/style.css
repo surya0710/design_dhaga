@@ -3760,8 +3760,8 @@ ol.breadcrumb li {
 }
 
 .custom-check li::before {
-  content: "✔";
-  color: #28a745;
+  content: "\2714\FE0E";
+  color: green !important;
   margin-right: 8px;
   font-weight: 800;
 }
