@@ -1,5 +1,18 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: block;
+        white-space: nowrap;
+    }
+
+    .table-scroll table {
+        min-width: 1400px;
+    }
+</style>
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
@@ -33,46 +46,43 @@
                 </div>
             </div>
             <div class="wg-table table-all-user">
-                <div class="table-responsive">
+                <div class="table-scroll">
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th style="width:70px">OrderNo</th>
                                 <th class="text-center">Name</th>
                                 <th class="text-center">Phone</th>
-                                <!-- <th class="text-center">Subtotal</th>
-                                <th class="text-center">Tax</th> -->
                                 <th class="text-center">Total</th>
-
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Order Date</th>
                                 <th class="text-center">Total Items</th>
                                 <th class="text-center">Delivered On</th>
-                                <th></th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            @php
-                                $i = 1;
-                            @endphp
+                            @php $i = 1; @endphp
+
                             @foreach ($orders as $order)
                             <tr>
                                 <td class="text-center">{{$i++}}</td>
                                 <td class="text-center">{{$order->name}}</td>
                                 <td class="text-center">{{$order->mobile}}</td>
-                                <!-- <td class="text-center">{{$order->total}}</td>
-                                <td class="text-center">$36.12</td> -->
                                 <td class="text-center">{{$order->total}}</td>
-
                                 <td class="text-center">{{$order->status}}</td>
                                 <td class="text-center">{{$order->created_at->toDayDateTimeString()}}</td>
                                 <td class="text-center">{{$order->items()->count()}}</td>
-                                <td>@if ($order->delivered_at)
+
+                                <td>
+                                    @if ($order->delivered_at)
                                         {{ \Carbon\Carbon::parse($order->delivered_at)->toDayDateTimeString() }}
                                     @else
                                         Not delivered yet
                                     @endif
                                 </td>
+
                                 <td class="text-center">
                                     <a href="{{route('admin.order.detail',$order->id)}}">
                                         <div class="list-icon-function view-icon">

@@ -1,5 +1,18 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: block;
+        white-space: nowrap;
+    }
+
+    .table-scroll table {
+        min-width: 1400px;
+    }
+</style>
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
