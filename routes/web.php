@@ -185,6 +185,8 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/order/detail/{id}', [AdminController::class, 'orders_detail'])->name('admin.order.detail');
     Route::get('/admin/order/track', [AdminController::class, 'orders_track'])->name('admin.order.track');
     Route::post('/admin/order/{id}/status', [AdminController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::patch('/admin/orders/{id}/reset-shiprocket', [AdminController::class, 'resetShiprocket'])->name('orders.resetShiprocket');
+
 
 
     Route::get('admin/blogs', [AdminController::class, 'blogs'])->name('admin.blogs');

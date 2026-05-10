@@ -33,6 +33,36 @@
             text-transform: capitalize;
             background: #f3f3f3;
         }
+
+        .shiprocket-box {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .shiprocket-box h6 {
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .shiprocket-box p {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .btn-reset-shiprocket {
+            background: #e53935 !important;
+            color: #fff !important;
+            border-color: #e53935 !important;
+            margin-top: 10px;
+        }
+
+        .btn-reset-shiprocket:hover {
+            background: #b71c1c !important;
+            border-color: #b71c1c !important;
+        }
     </style>
 
     <div class="main-content-inner">
@@ -54,6 +84,7 @@
                 </ul>
             </div>
 
+            {{-- Ordered Items --}}
             <div class="wg-box">
                 <div class="flex items-center justify-between gap10 flex-wrap">
                     <div class="wg-filter flex-grow">
@@ -103,6 +134,7 @@
                 <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination"></div>
             </div>
 
+            {{-- Shipping Address --}}
             <div class="wg-box mt-5">
                 <h5>Shipping Address</h5>
                 <div class="my-account__address-item col-md-6">
@@ -129,6 +161,7 @@
                 </div>
             </div>
 
+            {{-- Transactions --}}
             <div class="wg-box mt-5">
                 <h5>Transactions</h5>
                 <table class="table table-striped table-bordered table-transaction">
@@ -138,7 +171,7 @@
                             <td>₹{{ number_format($orders->subtotal, 2) }}</td>
 
                             <th>Shipping</th>
-                            <td>{{$orders->delivery_type}} <br> ₹{{ number_format($orders->shipping, 2) }}</td>
+                            <td>{{ $orders->delivery_type }} <br> ₹{{ number_format($orders->shipping, 2) }}</td>
 
                             <th>Discount</th>
                             <td>₹{{ number_format($orders->coupon_discount, 2) }}</td>
@@ -209,10 +242,44 @@
                 </table>
             </div>
 
+            {{-- Update Order Status --}}
             <div class="wg-box mt-5">
                 <h5>Update Order Status</h5>
                 <div class="my-account__address-item">
                     <div class="my-account__address-item__detail">
+
+                        {{-- Shiprocket Details + Reset Button (only if SR order exists) --}}
+                        @if($orders->shiprocket_order_id)
+                            <div class="shiprocket-box">
+                                <h6>📦 Shiprocket Details</h6>
+                                <p><strong>Shiprocket Order ID:</strong> {{ $orders->shiprocket_order_id }}</p>
+                                <p><strong>Shipment ID:</strong> {{ $orders->shiprocket_shipment_id ?? 'N/A' }}</p>
+                                <p><strong>AWB Code:</strong> {{ $orders->awb_code ?? 'Not assigned' }}</p>
+                                <p><strong>Courier:</strong> {{ $orders->courier_name ?? 'Not assigned' }}</p>
+                                <p><strong>ETA:</strong> {{ $orders->delivery_eta ? $orders->delivery_eta . ' days' : 'N/A' }}</p>
+                                <p>
+                                    <strong>Package:</strong>
+                                    {{ $orders->package_length ?? '—' }} x
+                                    {{ $orders->package_breadth ?? '—' }} x
+                                    {{ $orders->package_height ?? '—' }} cm,
+                                    {{ $orders->package_weight ?? '—' }} g
+                                </p>
+
+                                <form method="POST" action="{{ route('orders.resetShiprocket', $orders->id) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button
+                                        type="submit"
+                                        onclick="return confirm('This will clear all Shiprocket details so you can retry. Are you sure?')"
+                                        class="tf-button btn-reset-shiprocket"
+                                    >
+                                        🔄 Reset & Retry Shiprocket
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+
+                        {{-- Status Update Form --}}
                         <form method="POST" action="{{ route('orders.updateStatus', $orders->id) }}">
                             @csrf
 
@@ -226,57 +293,91 @@
                                 </select>
                             </fieldset>
 
-                            <!-- Package Fields -->
-                            <div id="package_fields" style="display:none; border:1px solid #eee; padding:15px; border-radius:8px; margin-top: 15px;">
+                            {{-- Package Fields (shown when Packed is selected) --}}
+                            <div id="package_fields" style="display:none; border:1px solid #eee; padding:15px; border-radius:8px; margin-top:15px;">
                                 <h6>Package Details</h6>
-
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <input type="number" step="0.01" name="length" placeholder="Length (cm)" class="form-control" required>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="length"
+                                            placeholder="Length (cm)"
+                                            class="form-control"
+                                            value="{{ $orders->package_length }}"
+                                        >
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="number" step="0.01" name="breadth" placeholder="Breadth (cm)" class="form-control" required>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="breadth"
+                                            placeholder="Breadth (cm)"
+                                            class="form-control"
+                                            value="{{ $orders->package_breadth }}"
+                                        >
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="number" step="0.01" name="height" placeholder="Height (cm)" class="form-control" required>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="height"
+                                            placeholder="Height (cm)"
+                                            class="form-control"
+                                            value="{{ $orders->package_height }}"
+                                        >
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="number" step="0.01" name="weight" placeholder="Weight (g)" class="form-control" required>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="weight"
+                                            placeholder="Weight (g)"
+                                            class="form-control"
+                                            value="{{ $orders->package_weight }}"
+                                        >
                                     </div>
                                 </div>
                             </div>
-                            <button class="tf-button w208" type="submit">Update</button>
+
+                            <button class="tf-button w208" type="submit" style="margin-top:15px;">
+                                Update
+                            </button>
                         </form>
+
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script>
-        const statusEl = document.getElementById('order_status');
+        const statusEl   = document.getElementById('order_status');
         const packageBox = document.getElementById('package_fields');
 
-        // Show on load (edit case)
-        if (statusEl.value === 'packed') {
-            packageBox.style.display = 'block';
+        // Show on load if already packed and no SR order yet
+        const hasSROrder = {{ $orders->shiprocket_order_id ? 'true' : 'false' }};
+
+        function togglePackageFields() {
+            // Show package fields only if packed AND no existing SR order
+            packageBox.style.display =
+                (statusEl.value === 'packed' && !hasSROrder) ? 'block' : 'none';
         }
 
-        statusEl.addEventListener('change', function () {
-            packageBox.style.display = this.value === 'packed' ? 'block' : 'none';
-        });
+        togglePackageFields(); // run on page load
+
+        statusEl.addEventListener('change', togglePackageFields);
 
         document.querySelector('form').addEventListener('submit', function (e) {
-            const status = statusEl.value;
-
-            if (status === 'packed') {
+            if (statusEl.value === 'packed' && !hasSROrder) {
                 const fields = ['length', 'breadth', 'height', 'weight'];
 
                 for (let field of fields) {
                     const val = document.querySelector(`[name="${field}"]`).value;
-                    if (!val || val <= 0) {
+                    if (!val || parseFloat(val) <= 0) {
                         e.preventDefault();
-                        alert('Please fill all valid package details');
+                        alert('Please fill all valid package details.');
                         return;
                     }
                 }

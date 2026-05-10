@@ -253,7 +253,7 @@ class ShiprocketService
 
         $data = $response->json();
 
-        // Shiprocket sometimes returns 200 but with an error in the body
+        // Shiprocket sometimes returns 200 but with error in body
         if (!empty($data['status_code']) && $data['status_code'] !== 200) {
             throw new \RuntimeException(
                 'AWB assignment error: ' . ($data['message'] ?? json_encode($data))
