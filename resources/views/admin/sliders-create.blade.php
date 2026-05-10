@@ -210,6 +210,22 @@
 
 
 @push('scripts')
+<script>
+    $(function () {
+
+        $('#myFile').on('change', function () {
+
+            const file = this.files[0];
+
+            if (file) {
+                $('#previewImg').attr('src', URL.createObjectURL(file));
+                $('#imgpreview').show();
+            }
+
+        });
+
+    });
+</script>
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
 <script>
