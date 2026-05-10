@@ -224,25 +224,21 @@ class ShiprocketService
         return $data['tracking_data'] ?? [];
     }
 
-    public function assignCourier(int $shipmentId, ?int $courierId = null): array
+    public function assignCourier(int $shipmentId, int $courierId): array
     {
         $token = $this->getToken();
 
         $payload = [
-            "shipment_id" => $shipmentId,
+            'shipment_id' => $shipmentId,
+            'courier_id'  => $courierId,
         ];
-
-        // Optional: force a specific courier
-        if ($courierId) {
-            $payload["courier_id"] = $courierId;
-        }
 
         $response = Http::timeout(30)
             ->withToken($token)
             ->acceptJson()
             ->post("{$this->baseUrl}/courier/assign/awb", $payload);
 
-        // Retry on token expiry
+        // Retry once on token expiry
         if ($response->status() === 401) {
             Cache::forget('shiprocket_token');
             $token = $this->getToken();
@@ -253,18 +249,27 @@ class ShiprocketService
                 ->post("{$this->baseUrl}/courier/assign/awb", $payload);
         }
 
-        $response->throw();
+        $response->throw(); // Throws on 4xx/5xx
 
         $data = $response->json();
 
+        // Shiprocket sometimes returns 200 but with an error in the body
+        if (!empty($data['status_code']) && $data['status_code'] !== 200) {
+            throw new \RuntimeException(
+                'AWB assignment error: ' . ($data['message'] ?? json_encode($data))
+            );
+        }
+
         if (empty($data['awb_code'])) {
-            throw new \RuntimeException('Courier assignment failed: ' . json_encode($data));
+            throw new \RuntimeException(
+                'AWB code missing in response: ' . json_encode($data)
+            );
         }
 
         return [
-            'awb_code' => $data['awb_code'],
+            'awb_code'     => $data['awb_code'],
             'courier_name' => $data['courier_name'] ?? null,
-            'raw' => $data
+            'raw'          => $data,
         ];
     }
 }

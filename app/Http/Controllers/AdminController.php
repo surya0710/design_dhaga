@@ -840,7 +840,7 @@ class AdminController extends Controller
 
     public function orders()
     {
-        $orders = Order::orderBy('id', 'desc')->paginate(20);
+        $orders = Order::orderBy('id', 'desc')->where('payment_status', 'paid')->paginate(20);
         return view('admin.orders', compact('orders'));
     }
 
@@ -861,63 +861,118 @@ class AdminController extends Controller
                 'length'  => 'required|numeric|min:0.1',
                 'breadth' => 'required|numeric|min:0.1',
                 'height'  => 'required|numeric|min:0.1',
-                'weight'  => 'required|numeric|min:0.1',
+                'weight'  => 'required|numeric|min:1',   // min 1g; Shiprocket charges min 500g
             ]);
 
+            // Convert grams → kg for Shiprocket API
+            $weightInKg = $request->weight / 1000;
+
             try {
-                // 1️⃣ Create Order
+
+                // 1️⃣ Create Shiprocket Order
                 $created = $this->shiprocket->createOrder($order, [
                     'length'  => $request->length,
                     'breadth' => $request->breadth,
                     'height'  => $request->height,
-                    'weight'  => $request->weight,
+                    'weight'  => $weightInKg,           // ✅ kg
                 ]);
 
-                $order->shiprocket_order_id = $created['order_id'];
-                $order->shiprocket_shipment_id = $created['shipment_id'];
+                $order->shiprocket_order_id   = $created['order_id'] ?? null;
+                $order->shiprocket_shipment_id = $created['shipment_id'] ?? null;
 
-                // 2️⃣ Get Couriers
+                if (!$order->shiprocket_shipment_id) {
+                    throw new \Exception('Shipment ID not received from Shiprocket.');
+                }
+
+                // 2️⃣ Check Courier Serviceability
+                $pickupPincode = "125001";
+
                 $serviceability = $this->shiprocket->checkServiceability(
-                    config('services.shiprocket.pickup_pincode', '400013'),
+                    $pickupPincode,
                     $order->pincode,
-                    $request->weight
+                    $weightInKg                         // ✅ kg
                 );
 
-                $couriers = $serviceability['couriers'];
+                $couriers = $serviceability['couriers'] ?? [];
 
                 if (empty($couriers)) {
-                    throw new \Exception('No courier available for this pincode');
+                    throw new \Exception('No courier available for this pincode.');
                 }
 
-                // 3️⃣ Select Courier (AUTO LOGIC)
-                if ($order->delivery_type === 'express') {
-                    usort($couriers, fn($a, $b) =>
-                        $a['estimated_delivery_days'] <=> $b['estimated_delivery_days']
-                    );
-                } else {
-                    usort($couriers, fn($a, $b) =>
-                        $a['total_charge'] <=> $b['total_charge']
+                // 3️⃣ Filter COD couriers (if COD order)
+                if (
+                    isset($order->payment_method) &&
+                    strtolower($order->payment_method) === 'cod'
+                ) {
+                    $couriers = collect($couriers)
+                        ->filter(fn($courier) => ($courier['cod'] ?? 0) == 1)
+                        ->values()
+                        ->toArray();
+
+                    if (empty($couriers)) {
+                        throw new \Exception('No COD courier available for this pincode.');
+                    }
+                }
+
+                // 4️⃣ Sort: express = fastest, standard = cheapest
+                usort($couriers, function ($a, $b) use ($order) {
+                    if ($order->delivery_type === 'express') {
+                        return ($a['estimated_delivery_days'] ?? 999)
+                            <=> ($b['estimated_delivery_days'] ?? 999);
+                    }
+                    return ($a['total_charge'] ?? 999999)
+                        <=> ($b['total_charge'] ?? 999999);
+                });
+
+                // 5️⃣ Try couriers one-by-one until AWB is assigned
+                $awbAssigned    = false;
+                $awb            = null;
+                $selectedCourier = null;
+                $assignErrors   = [];
+
+                foreach ($couriers as $courier) {
+                    try {
+
+                        // assignCourier() throws if AWB is not generated — no extra check needed
+                        $awbResponse = $this->shiprocket->assignCourier(
+                            $order->shiprocket_shipment_id,
+                            $courier['courier_company_id']
+                        );
+
+                        $awb             = $awbResponse;
+                        $selectedCourier = $courier;
+                        $awbAssigned     = true;
+                        break;
+
+                    } catch (\Throwable $e) {
+                        $assignErrors[] = ($courier['courier_name'] ?? 'Unknown') . ': ' . $e->getMessage();
+                        continue;
+                    }
+                }
+
+                if (!$awbAssigned) {
+                    throw new \Exception(
+                        'All couriers failed. ' . implode(' | ', $assignErrors)
                     );
                 }
 
-                $selected = $couriers[0];
+                // 6️⃣ Save AWB + package details
+                $order->awb_code      = $awb['awb_code'];
+                $order->courier_name  = $awb['courier_name'] ?? $selectedCourier['courier_name'] ?? null;
+                $order->delivery_eta  = $selectedCourier['estimated_delivery_days'] ?? null;
 
-                // 4️⃣ Assign Courier + Generate AWB
-                $awb = $this->shiprocket->assignCourier(
-                    $created['shipment_id'],
-                    $selected['courier_company_id']
-                );
-
-                // 5️⃣ Save Everything
-                $order->awb_code = $awb['awb_code'];
-                $order->courier_name = $selected['courier_name'];
-                $order->delivery_eta = $selected['estimated_delivery_days'];
+                // Store original grams value in DB
+                $order->package_length  = $request->length;
+                $order->package_breadth = $request->breadth;
+                $order->package_height  = $request->height;
+                $order->package_weight  = $request->weight; // ✅ stored as grams
 
             } catch (\Throwable $e) {
-                return back()->with('error', $e->getMessage());
+                return back()->with('error', 'Shiprocket Error: ' . $e->getMessage());
             }
         }
 
+        // Stamp delivery time
         if ($status === 'delivered' && !$order->delivered_at) {
             $order->delivered_at = now();
         }
