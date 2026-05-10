@@ -227,18 +227,26 @@
                                     </a>
                                 </li>
 
-                                <!-- <li class="menu-item">
-                                    <a href="settings" class="">
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.settings') }}" >
                                         <div class="icon"><i class="icon-settings"></i></div>
                                         <div class="text">Settings</div>
                                     </a>
-                                </li> -->
+                                </li>
 
                                 <li class="menu-item">
                                     <form method="post" action="{{route('logout')}}" id="logout-form">
                                         @csrf
                                         <a href="#" class="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <div class="icon"><i class="icon-settings"></i></div>
+                                            <div class="icon">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M15 16L20 12L15 8" stroke="#181818" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    
+                                                    <path d="M20 12H9" stroke="#181818" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    
+                                                    <path d="M9 20H5C4.44772 20 4 19.5523 4 19V5C4 4.44772 4.44772 4 5 4H9" stroke="#181818" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
                                             <div class="text">Logout</div>
                                         </a>
                                     </form>

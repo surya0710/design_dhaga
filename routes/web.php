@@ -21,6 +21,7 @@ use App\Http\Controllers\ShiprocketController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ShiprocketWebhookController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -224,6 +225,8 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::post('/admin/media/upload', [MediaController::class,'upload']);
 
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
+    Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');
+    Route::post('/admin/settings/update', [SettingController::class, 'settings_update'])->name('admin.settings.update');
     Route::post('/admin/logout', [AdminController::class,'logout'])->name('logout');
     
 });

@@ -229,8 +229,10 @@
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
 <script>
-    const editorConfig = {
+    const commonConfig = {
         height: 120,
+        enterMode: CKEDITOR.ENTER_BR,
+        shiftEnterMode: CKEDITOR.ENTER_BR,
         toolbar: [
             ['Bold', 'Italic'],
             ['NumberedList', 'BulletedList'],
@@ -242,10 +244,72 @@
         removeButtons: 'Image,Table,HorizontalRule,SpecialChar,Styles,Format,Font,FontSize',
     };
 
-    CKEDITOR.replace('heading-editor', editorConfig);
+    // Heading Editor - Always H2
+    CKEDITOR.replace('heading-editor', {
+        ...commonConfig,
+        height: 120,
+
+        on: {
+            instanceReady: function (ev) {
+                const editor = ev.editor;
+
+                editor.dataProcessor.writer.setRules('h2', {
+                    indent: false,
+                    breakBeforeOpen: false,
+                    breakAfterOpen: false,
+                    breakBeforeClose: false,
+                    breakAfterClose: false
+                });
+
+                // Force content into h2
+                editor.on('change', function () {
+                    let data = editor.getData().trim();
+
+                    // Remove existing h2 wrapper if already exists
+                    data = data.replace(/^<h2>|<\/h2>$/g, '');
+
+                    editor.removeListener('change');
+
+                    editor.setData(`<h2>${data}</h2>`, function () {
+                        editor.on('change', arguments.callee);
+                    });
+                });
+            }
+        }
+    });
+
+    // Description Editor - Always P
     CKEDITOR.replace('description-editor', {
-        ...editorConfig,
-        height: 150
+        ...commonConfig,
+        height: 150,
+
+        on: {
+            instanceReady: function (ev) {
+                const editor = ev.editor;
+
+                editor.dataProcessor.writer.setRules('p', {
+                    indent: false,
+                    breakBeforeOpen: false,
+                    breakAfterOpen: false,
+                    breakBeforeClose: false,
+                    breakAfterClose: false
+                });
+
+                // Force content into p
+                editor.on('change', function () {
+                    let data = editor.getData().trim();
+
+                    // Remove existing p wrapper if already exists
+                    data = data.replace(/^<p>|<\/p>$/g, '');
+
+                    editor.removeListener('change');
+
+                    editor.setData(`<p>${data}</p>`, function () {
+                        editor.on('change', arguments.callee);
+                    });
+                });
+            }
+        }
     });
 </script>
 @endpush

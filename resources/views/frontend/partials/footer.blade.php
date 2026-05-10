@@ -44,22 +44,30 @@
             </ul>
             <p class="text-muted small mb-1">Follow us for daily inspiration:</p>
             <div class="d-flex mt-2 social-media-icons">
-              <a href="https://www.facebook.com/share/1A9mCmVNy2/" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+              @if($settings->facebook != null)
+              <a href="{{ $settings->facebook }}" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
                 style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
                 <i class="fa-brands fa-facebook" style="font-size:20px"></i>
               </a>
-              <a href="https://www.instagram.com/design.dhaga?igsh=MW5maXJraTgzbnYzOA==" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+              @endif
+              @if($settings->instagram != null)
+              <a href="{{ $settings->instagram }}" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
                 style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
                 <i class="fa-brands fa-instagram" style="font-size:20px"></i>
               </a>
+              @endif
+              @if($settings->youtube != null)
               <a href="https://youtube.com/@designdhaga?si=A5rYdj_bpGZB_D1b" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
                 style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
                 <i class="fa-brands fa-youtube" style="font-size:20px"></i>
               </a>
-              <a href="https://pin.it/Y79Q6uD62" target="_blank" class="p-2 d-flex align-items-center justify-content-center"
+              @endif
+              @if($settings->linkedin != null)
+              <a href="{{ $settings->linkedin }}" target="_blank" class="p-2 d-flex align-items-center justify-content-center"
                 style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
                 <i class="fa-brands fa-pinterest" style="font-size:20px"></i>
               </a>
+              @endif
             </div>
           </div>
         </div>
@@ -89,7 +97,7 @@
             <!-- LEFT SIDE -->
             <div class="col-md-6 bg-dark d-flex align-items-center justify-content-center">
               <div class="text-center p-4">
-                <img src="{{ asset('frontend_assets/images/logo/white-logo.svg') }}" class="img-fluid mb-2">
+                <img src="{{ asset('uploads/settings/' . $settings->dark_logo) }}" class="img-fluid mb-2">
                 <p class="text-white small mb-0 opacity-75">Welcome to Design Dhaga</p>
               </div>
             </div>

@@ -427,7 +427,7 @@ class CheckoutController extends Controller
                 );
             }
 
-            Session::forget('cart');
+            Cart::where('user_id', $order->user_id)->delete();
 
             return response()->json([
                 'status' => true,

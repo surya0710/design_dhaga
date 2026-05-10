@@ -231,20 +231,18 @@
                     <div class="addr-label">Bill From:</div>
                     <div class="addr-body">
                         Design Dhaga<br>
-                        {{ $company->address ?? '' }}<br>
-                        {{ $company->city ?? '' }}, {{ $company->state ?? '' }}-{{ $company->pincode ?? '' }}
+                        {{ $settings->office_address ?? '' }}
                     </div>
                 </div>
                 <div class="addr-right" style="padding-left:10px;">
                     <div class="addr-label">Ship From:</div>
                     <div class="addr-body">
                         Design Dhaga<br>
-                        {{ $company->address ?? '' }}<br>
-                        {{ $company->city ?? '' }}, {{ $company->state ?? '' }}-{{ $company->pincode ?? '' }}
+                        {{ $settings->office_address ?? '' }}
                     </div>
                 </div>
             </div>
-            <div class="gstin-row">GSTIN Number: {{ $company->gstin ?? '—' }}</div>
+            <div class="gstin-row">GSTIN Number: 06BBOPK8637H1Z7</div>
         </div>
     </div>
 
