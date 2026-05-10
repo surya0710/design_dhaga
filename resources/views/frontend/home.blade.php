@@ -40,8 +40,8 @@
             <a href="{{ $slider->button_link }}" target="{{  $slider->target }}">
                 <img src="{{ Storage::url($slider->image) }}" class="d-block w-100" alt=" {{ $slider->image_alt }}">
                 <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }}">
-                <h2>{!! $slider->heading !!}</h2>
-                <p>{!! $slider->description !!}</p>
+                {!! $slider->heading !!}
+                {!! $slider->description !!}
             </div>
             </a>
             @endif
