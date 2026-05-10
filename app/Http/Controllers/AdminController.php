@@ -861,10 +861,10 @@ class AdminController extends Controller
                 'length'  => 'required|numeric|min:0.1',
                 'breadth' => 'required|numeric|min:0.1',
                 'height'  => 'required|numeric|min:0.1',
-                'weight'  => 'required|numeric|min:1', // in grams, min 1g
+                'weight'  => 'required|numeric|min:1', // grams, min 1g
             ]);
 
-            // Convert grams → kg for Shiprocket API
+            // ✅ Convert grams → kg once here, pass to all Shiprocket calls
             $weightInKg = $request->weight / 1000;
 
             try {
@@ -874,14 +874,7 @@ class AdminController extends Controller
                     'length'  => $request->length,
                     'breadth' => $request->breadth,
                     'height'  => $request->height,
-                    'weight'  => $weightInKg,
-                ]);
-
-                Log::info('Shiprocket order created', [
-                    'order_id'    => $order->id,
-                    'sr_order_id' => $created['order_id'] ?? null,
-                    'sr_ship_id'  => $created['shipment_id'] ?? null,
-                    'status'      => $created['status'] ?? null,
+                    'weight'  => $weightInKg, // ✅ kg — createOrder no longer converts
                 ]);
 
                 $order->shiprocket_order_id    = $created['order_id'] ?? null;
@@ -892,12 +885,12 @@ class AdminController extends Controller
                 }
 
                 // 2️⃣ Check Courier Serviceability
-                $pickupPincode = "125001";
+                $pickupPincode = config('services.shiprocket.pickup_pincode');
 
                 $serviceability = $this->shiprocket->checkServiceability(
                     $pickupPincode,
                     $order->pincode,
-                    $weightInKg
+                    $weightInKg // ✅ kg
                 );
 
                 $couriers = $serviceability['couriers'] ?? [];
@@ -963,14 +956,14 @@ class AdminController extends Controller
                 }
 
                 // 6️⃣ Save AWB + package details
-                $order->awb_code      = $awb['awb_code'];
-                $order->courier_name  = $awb['courier_name'] ?? $selectedCourier['courier_name'] ?? null;
-                $order->delivery_eta  = $selectedCourier['estimated_delivery_days'] ?? null;
+                $order->awb_code     = $awb['awb_code'];
+                $order->courier_name = $awb['courier_name'] ?? $selectedCourier['courier_name'] ?? null;
+                $order->delivery_eta = $selectedCourier['estimated_delivery_days'] ?? null;
 
                 $order->package_length  = $request->length;
                 $order->package_breadth = $request->breadth;
                 $order->package_height  = $request->height;
-                $order->package_weight  = $request->weight; // stored as grams
+                $order->package_weight  = $request->weight; // ✅ stored as grams
 
             } catch (\Throwable $e) {
                 return back()->with('error', 'Shiprocket Error: ' . $e->getMessage());
@@ -988,6 +981,10 @@ class AdminController extends Controller
         return back()->with('status', 'Order processed successfully 🚀');
     }
 
+    // ─────────────────────────────────────────────
+    // Reset Shiprocket — clears saved IDs so order
+    // can be re-pushed after cancellation
+    // ─────────────────────────────────────────────
     public function resetShiprocket($id)
     {
         $order = Order::findOrFail($id);

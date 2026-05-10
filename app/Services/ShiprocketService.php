@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ShiprocketService
 {
@@ -139,32 +140,27 @@ class ShiprocketService
         $items = [];
         foreach ($order->items as $item) {
             $items[] = [
-                'name' => $item->product_name,
-                'sku' => 'SKU-' . $item->id,
-                'units' => $item->quantity,
+                'name'          => $item->product_name,
+                'sku'           => 'SKU-' . $item->id,
+                'units'         => $item->quantity,
                 'selling_price' => $item->price,
             ];
         }
 
-        $weightInGrams = (float) ($package['weight'] ?? 500);
-
-        // Convert to kg for Shiprocket
-        $weightInKg = $weightInGrams / 1000;
-
         $payload = [
-            "order_id" => (string) $order->id,
-            "order_date" => now()->format('Y-m-d H:i'),
+            "order_id"       => (string) $order->id,
+            "order_date"     => now()->format('Y-m-d H:i'),
             "pickup_location" => config('services.shiprocket.pickup_location', 'Home'),
 
             "billing_customer_name" => $order->name,
-            "billing_last_name" => "",
-            "billing_address" => $order->address_line_1,
-            "billing_city" => $order->city,
-            "billing_pincode" => $order->pincode,
-            "billing_state" => $order->state,
-            "billing_country" => $order->country ?? "India",
-            "billing_email" => $order->email,
-            "billing_phone" => $order->phone,
+            "billing_last_name"     => "",
+            "billing_address"       => $order->address_line_1,
+            "billing_city"          => $order->city,
+            "billing_pincode"       => $order->pincode,
+            "billing_state"         => $order->state,
+            "billing_country"       => $order->country ?? "India",
+            "billing_email"         => $order->email,
+            "billing_phone"         => $order->phone,
 
             "shipping_is_billing" => true,
 
@@ -174,11 +170,11 @@ class ShiprocketService
 
             "sub_total" => $order->total,
 
-            // ✅ Dynamic package details
-            "length"  => $package['length'] ?? 10,
-            "breadth" => $package['breadth'] ?? 10,
-            "height"  => $package['height'] ?? 10,
-            "weight"  => $weightInKg ?? 0.5,
+            // ✅ Weight already in kg — no conversion here
+            "length"  => (float) ($package['length']  ?? 10),
+            "breadth" => (float) ($package['breadth'] ?? 10),
+            "height"  => (float) ($package['height']  ?? 10),
+            "weight"  => (float) ($package['weight']  ?? 0.5),
         ];
 
         $response = Http::timeout(30)
@@ -186,6 +182,7 @@ class ShiprocketService
             ->acceptJson()
             ->post("{$this->baseUrl}/orders/create/adhoc", $payload);
 
+        // Retry once on token expiry
         if ($response->status() === 401) {
             Cache::forget('shiprocket_token');
             $token = $this->getToken();
@@ -200,28 +197,25 @@ class ShiprocketService
 
         $data = $response->json();
 
+        Log::info('Shiprocket createOrder response', [
+            'order_id'    => $order->id,
+            'sr_order_id' => $data['order_id'] ?? null,
+            'sr_ship_id'  => $data['shipment_id'] ?? null,
+            'status'      => $data['status'] ?? null,
+            'payload_weight' => $payload['weight'],
+        ]);
+
         if (empty($data['shipment_id'])) {
-            throw new \RuntimeException('Shiprocket order creation failed: ' . json_encode($data));
+            throw new \RuntimeException(
+                'Shiprocket order creation failed: ' . json_encode($data)
+            );
         }
 
         return [
-            'order_id' => $data['order_id'],
+            'order_id'    => $data['order_id'],
             'shipment_id' => $data['shipment_id'],
-            'raw' => $data
+            'raw'         => $data,
         ];
-    }
-
-    public function trackShipment($awb)
-    {
-        $token = $this->getToken();
-
-        $response = Http::withToken($token)->get("{$this->baseUrl}/courier/track/awb/{$awb}");
-
-        $response->throw();
-
-        $data = $response->json();
-
-        return $data['tracking_data'] ?? [];
     }
 
     public function assignCourier(int $shipmentId, int $courierId): array
@@ -249,7 +243,7 @@ class ShiprocketService
                 ->post("{$this->baseUrl}/courier/assign/awb", $payload);
         }
 
-        $response->throw(); // Throws on 4xx/5xx
+        $response->throw();
 
         $data = $response->json();
 
@@ -272,4 +266,18 @@ class ShiprocketService
             'raw'          => $data,
         ];
     }
+
+    public function trackShipment($awb)
+    {
+        $token = $this->getToken();
+
+        $response = Http::withToken($token)->get("{$this->baseUrl}/courier/track/awb/{$awb}");
+
+        $response->throw();
+
+        $data = $response->json();
+
+        return $data['tracking_data'] ?? [];
+    }
+
 }
