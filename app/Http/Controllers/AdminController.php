@@ -885,7 +885,7 @@ class AdminController extends Controller
                 }
 
                 // 2️⃣ Check Courier Serviceability
-                $pickupPincode = config('services.shiprocket.pickup_pincode');
+                $pickupPincode = "125001";
 
                 $serviceability = $this->shiprocket->checkServiceability(
                     $pickupPincode,
