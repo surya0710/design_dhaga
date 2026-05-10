@@ -117,7 +117,7 @@ class SliderController extends Controller
         $slider->update($data);
 
         return redirect()
-            ->route('admin.sliders.edit', $slider->id)
+            ->route('admin.sliders')
             ->with('success', 'Slider updated successfully');
     }
 }
