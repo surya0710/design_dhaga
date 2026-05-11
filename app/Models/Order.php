@@ -51,6 +51,11 @@ class Order extends Model
         'paid_at',
         'delivered_at',
         'cancelled_at',
+        'package_length',
+        'package_breadth',
+        'package_height',
+        'package_weight',
+        'awb_code',
     ];
 
     protected $casts = [
