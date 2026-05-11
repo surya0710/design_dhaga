@@ -283,4 +283,42 @@ class ShiprocketService
         return $data['tracking_data'] ?? [];
     }
 
+    public function trackOrder(string $awbCode): array
+    {
+        $token = $this->getToken();
+
+        $response = Http::timeout(30)
+            ->withToken($token)
+            ->acceptJson()
+            ->get("{$this->baseUrl}/courier/track/awb/{$awbCode}");
+
+        if ($response->status() === 401) {
+            Cache::forget('shiprocket_token');
+            $token = $this->getToken();
+
+            $response = Http::timeout(30)
+                ->withToken($token)
+                ->acceptJson()
+                ->get("{$this->baseUrl}/courier/track/awb/{$awbCode}");
+        }
+
+        $response->throw();
+
+        $data = $response->json();
+
+        $tracking = $data['tracking_data'] ?? [];
+
+        return [
+            'current_status'    => $tracking['shipment_track'][0]['current_status'] ?? 'N/A',
+            'courier_name'      => $tracking['shipment_track'][0]['courier_name'] ?? 'N/A',
+            'awb_code'          => $tracking['shipment_track'][0]['awb_code'] ?? $awbCode,
+            'eta'               => $tracking['shipment_track'][0]['etd'] ?? null,
+            'origin'            => $tracking['shipment_track'][0]['origin'] ?? 'N/A',
+            'destination'       => $tracking['shipment_track'][0]['destination'] ?? 'N/A',
+            'delivered_date'    => $tracking['shipment_track'][0]['delivered_date'] ?? null,
+            'activities'        => $tracking['shipment_track_activities'] ?? [],
+            'raw'               => $data,
+        ];
+    }
+
 }

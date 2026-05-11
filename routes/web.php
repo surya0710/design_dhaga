@@ -120,6 +120,7 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/razorpay/verify', [CheckoutController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
 
     Route::get('/order/{id}/invoice', [CheckoutController::class, 'invoice'])->name('order.invoice');
+    Route::get('order/track/{awb}', [AccountController::class, 'trackOrder'])->name('order.track');
 
     Route::post('/checkout/calculate-gst', [CheckoutController::class, 'calculateGst'])->name('checkout.calculate.gst');
 

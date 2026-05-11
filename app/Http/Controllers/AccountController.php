@@ -10,17 +10,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
 use App\Models\Address;
+use App\Services\ShiprocketService;
 
 class AccountController extends Controller
 {
     protected $categories;
+    protected $shiprocket;
 
-    public function __construct()
+    public function __construct(ShiprocketService $shiprocket)
     {
         $this->categories = Category::where('status', 1)
             ->whereNull('parent_id')
             ->with('children')
             ->get();
+
+        $this->shiprocket = $shiprocket;
     }
 
     public function index()
@@ -38,6 +42,16 @@ class AccountController extends Controller
         $totalSpend = $orders->sum('total');
 
         return view('user.my-account', compact('categories','addresses','orders', 'totalSpend'));
+    }
+
+    public function trackOrder(string $awbCode)
+    {
+        try {
+            $data = $this->shiprocket->trackOrder($awbCode);
+            return response()->json(['success' => true, 'data' => $data]);
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function logout(){
