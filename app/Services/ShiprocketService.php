@@ -148,7 +148,7 @@ class ShiprocketService
         }
 
         $payload = [
-            "order_id"       => (string) $order->id,
+            "order_id"       => (string) $order->id . '-' . time(),
             "order_date"     => now()->format('Y-m-d H:i'),
             "pickup_location" => config('services.shiprocket.pickup_location', 'Home'),
 
