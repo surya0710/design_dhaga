@@ -128,11 +128,6 @@
                                                 <div class="text">Orders</div>
                                             </a>
                                         </li>
-                                        <li class="sub-menu-item">
-                                            <a href="{{ route('admin.order.track')}}" class="">
-                                                <div class="text">Order tracking</div>
-                                            </a>
-                                        </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item has-children">
