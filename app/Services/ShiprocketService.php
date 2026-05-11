@@ -247,22 +247,25 @@ class ShiprocketService
 
         $data = $response->json();
 
-        // Shiprocket sometimes returns 200 but with error in body
-        if (!empty($data['status_code']) && $data['status_code'] !== 200) {
-            throw new \RuntimeException(
-                'AWB assignment error: ' . ($data['message'] ?? json_encode($data))
-            );
+        // ✅ Check awb_assign_status first
+        if (($data['awb_assign_status'] ?? 0) !== 1) {
+            $error = $data['response']['data']['awb_assign_error']
+                ?? json_encode($data);
+            throw new \RuntimeException('AWB assignment failed: ' . $error);
         }
 
-        if (empty($data['awb_code'])) {
+        // ✅ AWB is nested under response.data
+        $awbData = $data['response']['data'] ?? [];
+
+        if (empty($awbData['awb_code'])) {
             throw new \RuntimeException(
                 'AWB code missing in response: ' . json_encode($data)
             );
         }
 
         return [
-            'awb_code'     => $data['awb_code'],
-            'courier_name' => $data['courier_name'] ?? null,
+            'awb_code'     => $awbData['awb_code'],
+            'courier_name' => $awbData['courier_name'] ?? null,
             'raw'          => $data,
         ];
     }
