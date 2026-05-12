@@ -208,8 +208,16 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/testimonials/add', [AdminController::class, 'testimonial_add'])->name('admin.testimonial.add');
     Route::post('/admin/testimonials/store', [AdminController::class, 'testimonial_store'])->name('admin.testimonial.store');
     Route::get('/admin/testimonials/edit/{id}', [AdminController::class, 'testimonial_edit'])->name('admin.testimonial.edit');
-    Route::put('/admin/testimonials/update', [AdminController::class, 'testimonial_update'])->name('admin.testimonial.update');
+    Route::put('/admin/testimonials/{id}/update', [AdminController::class, 'testimonial_update'])->name('admin.testimonial.update');
     Route::delete('/admin/testimonials/delete/{id}', [AdminController::class, 'testimonial_delete'])->name('admin.testimonial.delete');
+
+    Route::get('/admin/stories', [AdminController::class, 'stories'])->name('admin.stories');
+    Route::get('/admin/story/add', [AdminController::class, 'story_add'])->name('admin.story.add');
+    Route::post('/admin/story/store', [AdminController::class, 'story_store'])->name('admin.story.store');
+    Route::get('/admin/story/edit/{id}', [AdminController::class, 'story_edit'])->name('admin.story.edit');
+    Route::put('/admin/story/update/{id}', [AdminController::class, 'story_update'])->name('admin.story.update');
+    Route::delete('/admin/story/delete/{id}', [AdminController::class, 'story_delete'])->name('admin.story.delete');
+
 
     Route::get('/admin/sliders/list', [SliderController::class, 'sliders'])->name('admin.sliders');
     Route::get('/admin/sliders/create/', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');

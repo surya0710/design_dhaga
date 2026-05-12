@@ -210,171 +210,65 @@ and premium branding services. Our products are handcrafted in India and loved b
 </section>
 
 <section class="timeline-section container py-4">
-  <div class="row position-relative">
-    <div class="col-2 col-md-2 timeline-sidebar-container">
-      <div class="timeline-sidebar">
-        <div class="timeline-line-track">
-          <div class="timeline-progress" id="progressLine"></div>
+    <div class="row position-relative">
+        {{-- Sidebar Years --}}
+        <div class="col-2 col-md-2 timeline-sidebar-container">
+            <div class="timeline-sidebar">
+                <div class="timeline-line-track">
+                    <div class="timeline-progress" id="progressLine"></div>
+                </div>
+                <ul class="timeline-years" id="yearList">
+                    @foreach($stories as $story)
+                        <li data-target="year-{{ $story->year }}" class="{{ $loop->first ? 'active' : '' }}">
+                            {{ $story->year }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
-
-        <ul class="timeline-years" id="yearList">
-          <li data-target="year-2019" class="active">2019</li>
-          <li data-target="year-2020">2020</li>
-          <li data-target="year-2021">2021</li>
-          <li data-target="year-2022">2022</li>
-          <li data-target="year-2023">2023</li>
-          <li data-target="year-2024">2024</li>
-          <li data-target="year-2025">2025</li>
-          <li data-target="year-2026">2026</li>
-        </ul>
-      </div>
+        {{-- Story Content --}}
+        <div class="col-10 col-md-10">
+            @foreach($stories as $story)
+                <div class="timeline-item1" id="year-{{ $story->year }}" data-year="{{ $story->year }}"> 
+                    @if($loop->odd)
+                        {{-- Image Left --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" />
+                            </div>
+                            <div class="col-md-6">
+                                <div class="px-xl-4">
+                                    <h2 class="fw-bold text-dark">
+                                        {{ $story->year }}
+                                    </h2>
+                                    <p class="text-justify text-muted">
+                                        {{ $story->description }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        {{-- Image Right --}}
+                        <div class="row align-items-center flex-column-reverse flex-md-row">
+                            <div class="col-md-6 mt-3 mt-md-0">
+                                <div class="px-xl-4">
+                                    <h2 class="fw-bold text-dark">
+                                        {{ $story->year }}
+                                    </h2>
+                                    <p class="text-justify text-muted">
+                                        {{ $story->description }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" />
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
     </div>
-
-    <div class="col-10 col-md-10">
-      <div class="timeline-item1" id="year-2019" data-year="2019">
-        <div class="row align-items-center">
-          <div class="col-md-6 mb-3 mb-md-0">
-            <img src="frontend_assets/images/journey/2019.jpg" class="w-100 img-fluid" alt="2019 Journey" />
-          </div>
-          <div class="col-md-6">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2019</h2>
-              <p class="text-justify text-muted">
-                ArtFactory PD began with Preeti Dhindhoria hand-painting
-                fabrics at home, while Lalit and Gunjan launched Lalit
-                Creatives, taking early Designing projects.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2020" data-year="2020">
-        <div class="row align-items-center flex-column-reverse flex-md-row">
-          <div class="col-md-6 mt-3 mt-md-0">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2020</h2>
-              <p class="text-justify text-muted">
-                Preeti started the ArtFactory PD YouTube channel and
-                received growing orders. Lalit Creatives expanded from
-                basic designs to full branding Skills.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <img src="frontend_assets/images/journey/2020.jpg" class="w-100 img-fluid" alt="2020 Journey" />
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2021" data-year="2021">
-        <div class="row align-items-center">
-          <div class="col-md-6 mb-3 mb-md-0">
-            <img src="frontend_assets/images/journey/2021.jpg" class="w-100 img-fluid" alt="2021 Journey" />
-          </div>
-          <div class="col-md-6">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2021</h2>
-              <p class="text-justify text-muted">
-                ArtFactory PD explored new painting styles and custom
-                clothing. Lalit Creatives strengthened workflows and
-                worked with brands like Pind Balluchi and Aieraa Overseas.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2022" data-year="2022">
-        <div class="row align-items-center flex-column-reverse flex-md-row">
-          <div class="col-md-6 mt-3 mt-md-0">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2022</h2>
-              <p class="text-justify text-muted">
-                ArtFactory PD gained recognition for detailed handcrafted
-                work. Lalit Creatives handled more branding and packaging
-                projects, building strong client relationships.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <img src="frontend_assets/images/journey/2022.jpg" class="w-100 img-fluid" alt="2022 Journey" />
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2023" data-year="2023">
-        <div class="row align-items-center">
-          <div class="col-md-6 mb-3 mb-md-0">
-            <img src="frontend_assets/images/journey/2023.jpg" class="w-100 img-fluid" alt="2023 Journey" />
-          </div>
-          <div class="col-md-6">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2023</h2>
-              <p class="text-justify text-muted">
-                ArtFactory PD introduced new collections and higher
-                customer engagement. Lalit Creatives focused on identity
-                design, digital ads, and social media branding.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2024" data-year="2024">
-        <div class="row align-items-center flex-column-reverse flex-md-row">
-          <div class="col-md-6 mt-3 mt-md-0">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2024</h2>
-              <p class="text-justify text-muted">
-                Both brands became well-established independently —
-                ArtFactory PD for handcrafted artistry and Lalit Creatives
-                for modern, reliable design solutions.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <img src="frontend_assets/images/journey/2024.jpg" class="w-100 img-fluid" alt="2024 Journey" />
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2025" data-year="2025">
-        <div class="row align-items-center">
-          <div class="col-md-6 mb-3 mb-md-0">
-            <img src="frontend_assets/images/journey/2025.jpg" class="w-100 img-fluid" alt="2025 Journey" />
-          </div>
-          <div class="col-md-6">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2025</h2>
-              <p class="text-justify text-muted">
-                Customer trust and creative clarity strengthened on both
-                sides, with a clear vision for larger & more refined work.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="timeline-item1" id="year-2026" data-year="2026">
-        <div class="row align-items-center flex-column-reverse flex-md-row">
-          <div class="col-md-6 mt-3 mt-md-0">
-            <div class="px-xl-4">
-              <h2 class="fw-bold text-dark">2026</h2>
-              <p class="text-justify text-muted">
-                Timeless designs. Honest work. Easy experiences.<br /><br />
-                A future woven together with creativity in every thread
-                and every pixel.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <img src="frontend_assets/images/journey/2026.jpg" class="w-100 img-fluid" alt="2026 Journey" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 @endsection
 @push('scripts')

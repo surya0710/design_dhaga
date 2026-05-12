@@ -12,6 +12,7 @@ use App\Models\Contact;
 use App\Models\Sliders;
 use App\Models\Menu;
 use App\Models\Testimonial;
+use App\Models\Story;
 
 class HomeController extends Controller
 {
@@ -57,7 +58,8 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.about', compact('categories', 'menu'));
+        $stories = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
+        return view('frontend.about', compact('categories', 'menu', 'stories'));
     }
 
     public function contact()

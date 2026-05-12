@@ -220,6 +220,13 @@
                                         <div class="text">Menu</div>
                                     </a>
                                 </li>
+
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.stories') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Story</div>
+                                    </a>
+                                </li>
                                 
 
                                 <li class="menu-item">

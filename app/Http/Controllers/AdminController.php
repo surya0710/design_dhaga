@@ -16,6 +16,7 @@ use App\Models\Subscribe;
 use App\Models\Tag;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Models\Story;
 use App\Models\Sliders;
 use App\Models\ProductIcon;
 use Carbon\Carbon;
@@ -1213,27 +1214,185 @@ class AdminController extends Controller
         return view('admin.testimonial-edit', compact('testimonial'));
     }
 
-    public function testimonial_update(Request $request)
+    public function testimonial_update(Request $request, $id)
     {
+        $testimonial = Testimonial::findOrFail($id);
+
         $request->validate([
             'name'        => 'required|min:3',
             'testimonial' => 'required|string',
-            'productid'   => 'required|exists:products,id',
+            'stars'       => 'required|integer|min:1|max:5',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status'      => 'required|in:0,1',
         ]);
 
-        Testimonial::findOrFail($request->id)->update([
+        $imagePath = $testimonial->image;
+
+        // Upload New Image
+        if ($request->hasFile('image')) {
+
+            // Delete old image
+            if ($testimonial->image && File::exists(public_path($testimonial->image))) {
+                File::delete(public_path($testimonial->image));
+            }
+
+            $image = $request->file('image');
+
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $destinationPath = public_path('uploads/testimonials');
+
+            // Create folder if not exists
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true);
+            }
+
+            $image->move($destinationPath, $imageName);
+
+            $imagePath = 'uploads/testimonials/' . $imageName;
+        }
+
+        $testimonial->update([
             'name'        => $request->name,
             'testimonial' => $request->testimonial,
-            'product_id'  => $request->productid,
+            'stars'       => $request->stars,
+            'image'       => $imagePath,
+            'status'      => $request->status,
         ]);
 
-        return redirect()->route('admin.testimonials')->with('status', 'Testimonial updated successfully');
+        return redirect()
+            ->route('admin.testimonials')
+            ->with('status', 'Testimonial updated successfully');
     }
 
     public function testimonial_delete($id)
     {
         Testimonial::findOrFail($id)->delete();
         return redirect()->route('admin.testimonials')->with('status', 'Testimonial deleted successfully');
+    }
+
+    public function stories()
+    {
+        $stories = Story::orderBy('display_order', 'ASC')->get();
+
+        return view('admin.story', compact('stories'));
+    }
+
+    public function story_add()
+    {
+        return view('admin.stories-add');
+    }
+
+    public function story_store(Request $request)
+    {
+        $request->validate([
+            'year'          => 'required|digits:4',
+            'description'   => 'required',
+            'image'         => 'required|image|mimes:jpg,jpeg,png,webp',
+            'display_order' => 'required|integer',
+            'status'        => 'required'
+        ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+
+            $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
+
+            $destination = public_path('uploads/stories');
+
+            if (!File::exists($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+
+            $image->move($destination, $imageName);
+
+            $imagePath = 'uploads/stories/'.$imageName;
+        }
+
+        Story::create([
+            'year'          => $request->year,
+            'description'   => $request->description,
+            'image'         => $imagePath,
+            'display_order' => $request->display_order,
+            'status'        => $request->status,
+        ]);
+
+        return redirect()
+            ->route('admin.stories')
+            ->with('status', 'Story added successfully');
+    }
+
+    public function story_edit($id)
+    {
+        $story = Story::findOrFail($id);
+
+        return view('admin.stories-edit', compact('story'));
+    }
+
+    public function story_update(Request $request, $id)
+    {
+        $story = Story::findOrFail($id);
+
+        $request->validate([
+            'year'          => 'required|digits:4',
+            'description'   => 'required',
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'display_order' => 'required|integer',
+            'status'        => 'required'
+        ]);
+
+        $imagePath = $story->image;
+
+        if ($request->hasFile('image')) {
+
+            if ($story->image && File::exists(public_path($story->image))) {
+                File::delete(public_path($story->image));
+            }
+
+            $image = $request->file('image');
+
+            $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
+
+            $destination = public_path('uploads/stories');
+
+            if (!File::exists($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+
+            $image->move($destination, $imageName);
+
+            $imagePath = 'uploads/stories/'.$imageName;
+        }
+
+        $story->update([
+            'year'          => $request->year,
+            'description'   => $request->description,
+            'image'         => $imagePath,
+            'display_order' => $request->display_order,
+            'status'        => $request->status,
+        ]);
+
+        return redirect()
+            ->route('admin.stories')
+            ->with('status', 'Story updated successfully');
+    }
+
+    public function story_delete($id)
+    {
+        $story = Story::findOrFail($id);
+
+        if ($story->image && File::exists(public_path($story->image))) {
+            File::delete(public_path($story->image));
+        }
+
+        $story->delete();
+
+        return redirect()
+            ->route('admin.stories')
+            ->with('status', 'Story deleted successfully');
     }
 
     // =========================================================================
