@@ -13,6 +13,7 @@ use App\Models\Sliders;
 use App\Models\Menu;
 use App\Models\Testimonial;
 use App\Models\Story;
+use App\Models\AboutSection;
 
 class HomeController extends Controller
 {
@@ -58,8 +59,9 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        $stories = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
-        return view('frontend.about', compact('categories', 'menu', 'stories'));
+        $stories    = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
+        $about      = AboutSection::where('status', 1)->first();
+        return view('frontend.about', compact('categories', 'menu', 'stories', 'about'));
     }
 
     public function contact()

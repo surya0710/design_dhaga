@@ -218,6 +218,9 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::put('/admin/story/update/{id}', [AdminController::class, 'story_update'])->name('admin.story.update');
     Route::delete('/admin/story/delete/{id}', [AdminController::class, 'story_delete'])->name('admin.story.delete');
 
+    Route::get('/admin/about-section', [AdminController::class, 'about_section'])->name('admin.about.section');
+
+    Route::post('/admin/about-section/update', [AdminController::class, 'about_section_update'])->name('admin.about.section.update');
 
     Route::get('/admin/sliders/list', [SliderController::class, 'sliders'])->name('admin.sliders');
     Route::get('/admin/sliders/create/', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');

@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Services\ShiprocketService;
+use App\Models\AboutSection;
 
 class AdminController extends Controller
 {
@@ -1393,6 +1394,66 @@ class AdminController extends Controller
         return redirect()
             ->route('admin.stories')
             ->with('status', 'Story deleted successfully');
+    }
+
+    public function about_section()
+    {
+        $section = AboutSection::first();
+
+        return view('admin.about-section', compact('section'));
+    }
+
+    public function about_section_update(Request $request)
+    {
+        $request->validate([
+            'heading'     => 'required',
+            'description' => 'required',
+            'signature'   => 'nullable',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        ]);
+
+        $section = AboutSection::first();
+
+        // Create if not exists
+        if (!$section) {
+            $section = new AboutSection();
+        }
+
+        $imagePath = $section->image;
+
+        // Upload Image
+        if ($request->hasFile('image')) {
+
+            // Delete old image
+            if ($section->image && File::exists(public_path($section->image))) {
+                File::delete(public_path($section->image));
+            }
+
+            $image = $request->file('image');
+
+            $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
+
+            $destination = public_path('uploads/about-section');
+
+            if (!File::exists($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+
+            $image->move($destination, $imageName);
+
+            $imagePath = 'uploads/about-section/'.$imageName;
+        }
+
+        $section->heading = $request->heading;
+        $section->description = $request->description;
+        $section->signature = $request->signature;
+        $section->image = $imagePath;
+
+        $section->save();
+
+        return redirect()
+            ->back()
+            ->with('status', 'About section updated successfully');
     }
 
     // =========================================================================

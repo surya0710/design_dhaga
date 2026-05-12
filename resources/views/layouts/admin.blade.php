@@ -227,6 +227,13 @@
                                         <div class="text">Story</div>
                                     </a>
                                 </li>
+
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.about.section') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">About Us</div>
+                                    </a>
+                                </li>
                                 
 
                                 <li class="menu-item">

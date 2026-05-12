@@ -137,23 +137,13 @@ and premium branding services. Our products are handcrafted in India and loved b
 <section class="container py-4">
   <div class="owners-box">
     <div class="col-md-6 owner-image">
-      <img src="frontend_assets/images/trio-size.png" class="img-fluid" alt="Design Dhaga Owners" />
+      <img src="{{ asset($about->image) }}" class="img-fluid" alt="Design Dhaga Owners" />
     </div>
     <div class="col-md-6 content">
-      <h1 class="text-center">Meet the Trio Behind Design Dhaga</h1>
-      <p class="text-justify px-xl-5 px-3">
-        <strong>Design Dhaga</strong> is built by three partners blending
-        art and design. <strong>Preeti</strong> Dhindhoria brings 8+ years
-        of hand-painted fabric expertise through
-        <strong>Art Factory PD</strong>. <strong>Lalit</strong>, a
-        certified designer, and <strong>Gunjan</strong>, an MBA with
-        creative vision, lead <strong>Lalit Creatives</strong>, crafting
-        strong brand identities. Together, their traditional artistry and
-        modern design unite to form <strong>Design Dhaga</strong>.
-      </p>
+      <h1 class="text-center">{{ $about->heading }}</h1>
+      {!! $about->description !!}
       <p class="text-center mt-xl-2 font-size-small">
-        -<strong>Preeti</strong>, <strong>Lalit</strong> &
-        <strong>Gunjan</strong>
+        <strong>{{ $about->signature }}</strong>
       </p>
     </div>
   </div>
