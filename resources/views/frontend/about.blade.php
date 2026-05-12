@@ -242,7 +242,7 @@ and premium branding services. Our products are handcrafted in India and loved b
                                         {{ $story->year }}
                                     </h2>
                                     <p class="text-justify text-muted">
-                                        {{ $story->description }}
+                                        {!! $story->description !!}
                                     </p>
                                 </div>
                             </div>
@@ -256,7 +256,7 @@ and premium branding services. Our products are handcrafted in India and loved b
                                         {{ $story->year }}
                                     </h2>
                                     <p class="text-justify text-muted">
-                                        {{ $story->description }}
+                                        {!! $story->description !!}
                                     </p>
                                 </div>
                             </div>
