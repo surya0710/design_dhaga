@@ -160,13 +160,14 @@
                 @endforeach
             </div>
         @endforeach
-
-        <div class="menu-title"><a href="{{ route('home') }}" class="submenu-item">HOME</a></div>
-        <div class="menu-title"><a href="{{ route('about-us') }}" class="submenu-item">ABOUT US</a></div>
-        <div class="menu-title"><a href="{{ route('portfolio') }}" class="submenu-item">PORTFOLIO</a></div>
-        <div class="menu-title"><a href="{{ route('blogs') }}" class="submenu-item">BLOGS</a></div>
-        <div class="menu-title"><a href="{{ route('collaborations') }}" class="submenu-item">COLLABORATIONS</a></div>
-        <div class="menu-title"><a href="{{ route('contact-us') }}" class="submenu-item">CONTACT US</a></div>
+       @foreach($menu as $item)
+            <div class="menu-title">
+                @php
+                    $url = $item->slug == '/' ? route('home') : $item->slug;
+                @endphp
+                <a href="{{ $url }}" class="submenu-item">{{ $item->name }}</a>
+            </div>
+        @endforeach
         @if(Auth::check() && Auth::user()->utype === 'USR')
         <form method="post" action="{{ route('account.logout') }}" id="logoutForm">
         @csrf

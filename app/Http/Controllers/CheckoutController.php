@@ -16,10 +16,12 @@ use Razorpay\Api\Api;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\OrderCompletedMail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Menu;
 
 class CheckoutController extends Controller
 {
     protected $categories;
+    protected $menu;
 
     // Registered business state
     protected string $companyState = 'Haryana';
@@ -34,6 +36,8 @@ class CheckoutController extends Controller
             })
             ->with('children')
             ->get();
+
+        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
     }
 
     public function checkout()
@@ -80,6 +84,8 @@ class CheckoutController extends Controller
             $total = $total - $couponDiscount;
         }
 
+        $menu       = $this->menu;
+
         return view('frontend.checkout', compact(
             'cartItems',
             'subtotal',
@@ -89,7 +95,8 @@ class CheckoutController extends Controller
             'categories',
             'defaultAddress',
             'gstData',
-            'coupon'
+            'coupon',
+            'menu'
         ));
     }
 

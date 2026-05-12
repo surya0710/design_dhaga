@@ -393,87 +393,42 @@
     <div class="row px-3">
         <div class="owl-carousel owl-theme testimonials-carousel">
 
-            <!-- ITEM 1 -->
+            @foreach($reviews as $review)
             <div class="item">
                 <div class="testimonial-card">
+
                     <div class="testimonial-img">
-                        <img src="frontend_assets/images/testimonials/meena.jpeg" alt="Meena">
+                        <img src="{{ asset($review->image) }}" alt="{{ $review->name }}">
                     </div>
+
                     <div class="testimonial-content">
+
                         <div class="rating-badge">
-                            <span><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i></span>
+                            <span>
+
+                                {{-- Filled Stars --}}
+                                @for($i = 1; $i <= $review->stars; $i++)
+                                    <i class="fas fa-star" style="color: gold;"></i>
+                                @endfor
+
+                                {{-- Empty Stars --}}
+                                @for($i = $review->stars + 1; $i <= 5; $i++)
+                                    <i class="far fa-star" style="color: #ccc;"></i>
+                                @endfor
+
+                            </span>
                         </div>
-                        <h4>Meena</h4>
+
+                        <h4>{{ $review->name }}</h4>
+
                         <p>
-                            Awesome experience, you also try friends. Beautiful hand-painted suit
-                            I bought from Design Dhaga and it is fabulous 🫰
-                            <br><br>
+                            {{ $review->testimonial }}
                         </p>
+
                     </div>
                 </div>
             </div>
-
-            <!-- ITEM 2 -->
-            <div class="item">
-                <div class="testimonial-card">
-                    <div class="testimonial-img">
-                        <img src="frontend_assets/images/testimonials/priyanka.jpg" alt="Priyanka">
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="rating-badge">
-                            <span><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i></span>
-                        </div>
-                        <h4>Priyanka</h4>
-                        <p>
-                            I customized the same coord set for me and my daughter.
-                            Seriously when we wear this hand-painted outfit,
-                            everyone asks about the art and artist.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ITEM 3 -->
-            <div class="item">
-                <div class="testimonial-card">
-                    <div class="testimonial-img">
-                        <img src="frontend_assets/images/testimonials/sakshi.jpg" alt="Sakshi">
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="rating-badge">
-                            <span><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i></span>
-                        </div>
-                        <h4>Sakshi</h4>
-                        <p>
-                            Amazing! Everyone should try this beautiful artistic dress
-                            designed by Design Dhaga. Pure hand-painting and I love it 😘
-                            <br><br>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ITEM 4 -->
-            <div class="item">
-                <div class="testimonial-card">
-                    <div class="testimonial-img">
-                        <img src="frontend_assets/images/testimonials/punam-mathur.jpeg" alt="Punam Mathur">
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="rating-badge">
-                            <span><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i><i class="fas fa-star" style="color:gold"></i></span>
-                        </div>
-                        <h4>Punam Mathur</h4>
-                        <p>
-                            Excellent work and lovely colours. I have worn it 8–10 times
-                            and the colours are exactly what I received.
-                            Truly lovely customization 😘
-                            <br><br>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
+            @endforeach
         </div>
     </div>
 </section>

@@ -213,7 +213,14 @@
                                         <div class="text">Slider</div>
                                     </a>
                                 </li>
-                        
+
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.menus.index') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Menu</div>
+                                    </a>
+                                </li>
+                                
 
                                 <li class="menu-item">
                                     <a href="{{route('admin.users')}}" class="">

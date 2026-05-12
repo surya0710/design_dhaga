@@ -10,10 +10,13 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Contact;
 use App\Models\Sliders;
+use App\Models\Menu;
+use App\Models\Testimonial;
 
 class HomeController extends Controller
 {
     protected $categories;
+    protected $menu;
 
     public function __construct()
     {
@@ -24,11 +27,15 @@ class HomeController extends Controller
             })
             ->with('children')
             ->get();
+
+        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
     }
 
     public function index()
     {
         $categories = $this->categories;
+        $menu       = $this->menu;
+        $reviews    = Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
         $newArrivals = Product::where('status', 1)
             ->with(['category.parent'])
             ->latest()
@@ -43,61 +50,70 @@ class HomeController extends Controller
 
         $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers'));
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews'));
     }
 
     public function about()
     {
         $categories = $this->categories;
-        return view('frontend.about', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.about', compact('categories', 'menu'));
     }
 
     public function contact()
     {
         $categories = $this->categories;
-        return view('frontend.contact', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.contact', compact('categories', 'menu'));
     }
 
     public function portfolio()
     {
         $categories = $this->categories;
-        return view('frontend.portfolio', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.portfolio', compact('categories', 'menu'));
     }
 
     public function terms()
     {
         $categories = $this->categories;
-        return view('frontend.terms', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.terms', compact('categories', 'menu'));
     }
 
     public function returnPolicy()
     {
         $categories = $this->categories;
-        return view('frontend.return-policy', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.return-policy', compact('categories', 'menu'));
     }
 
     public function orderShipping()
     {
         $categories = $this->categories;
-        return view('frontend.shipping-policy', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.shipping-policy', compact('categories', 'menu'));
     }
 
     public function privacyPolicy()
     {
         $categories = $this->categories;
-        return view('frontend.privacy-policy', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.privacy-policy', compact('categories', 'menu'));
     }
 
     public function store()
     {
         $categories = $this->categories;
-        return view('frontend.store', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.store', compact('categories', 'menu'));
     }
 
     public function collaborations()
     {
         $categories = $this->categories;
-        return view('frontend.collaborations', compact('categories'));
+        $menu       = $this->menu;
+        return view('frontend.collaborations', compact('categories', 'menu'));
     }
 
     public function sendmail(Request $request)

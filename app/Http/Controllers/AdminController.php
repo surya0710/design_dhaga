@@ -1173,16 +1173,38 @@ class AdminController extends Controller
         $request->validate([
             'name'        => 'required|min:3',
             'testimonial' => 'required|string',
-            'productid'   => 'required|exists:products,id',
+            'stars'       => 'required|integer|min:1|max:5',
+            'image'       => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status'      => 'required|in:0,1',
         ]);
+
+        $imageName = null;
+
+        // Upload Image
+        if ($request->hasFile('image')) {
+
+            $image      = $request->file('image');
+            $imageName  = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $destinationPath = public_path('uploads/testimonials');
+
+            // Create folder if not exists
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true);
+            }
+
+            $image->move($destinationPath, $imageName);
+        }
 
         Testimonial::create([
             'name'        => $request->name,
             'testimonial' => $request->testimonial,
-            'product_id'  => $request->productid,
+            'stars'       => $request->stars,
+            'image'       => 'uploads/testimonials/' . $imageName,
+            'status'      => $request->status,
         ]);
 
-        return redirect()->route('admin.testimonials')->with('status', 'Testimonial submitted.');
+        return redirect()->route('admin.testimonials')->with('status', 'Testimonial added successfully.');
     }
 
     public function testimonial_edit($id)

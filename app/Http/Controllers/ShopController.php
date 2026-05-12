@@ -8,10 +8,12 @@ use App\Models\Wishlist;
 use App\Models\Visitor;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use App\Models\Menu;
 
 class ShopController extends Controller
 {
     protected $categories;
+    protected $menu;
 
     public function __construct()
     {
@@ -22,12 +24,15 @@ class ShopController extends Controller
             })
             ->with('children')
             ->get();
+
+        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
     }
 
 
     public function category_products(Request $request, $categorySlug = null, $subcategorySlug = null)
     {
         $categories = $this->categories;
+        $menu       = $this->menu;
 
         if ($subcategorySlug) {
             $category = Category::where('slug', $subcategorySlug)->firstOrFail();
@@ -47,7 +52,7 @@ class ShopController extends Controller
                 ->get();
         }
 
-        return view('frontend.shop', compact('products', 'category', 'categories'));
+        return view('frontend.shop', compact('products', 'category', 'categories', 'menu'));
     }
 
 
@@ -60,13 +65,15 @@ class ShopController extends Controller
         ];
         $categories = $this->categories;
         $wishlistProductIds = Wishlist::where('user_id', auth()->user()->id)->pluck('product_id')->toArray();
-        $products = Product::whereIn('id', $wishlistProductIds)->get();
-        return view('frontend.shop', compact('products', 'categories', 'category'));
+        $products           = Product::whereIn('id', $wishlistProductIds)->get();
+        $menu               = $this->menu;
+        return view('frontend.shop', compact('products', 'categories', 'category', 'menu'));
     }
 
     public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
     {
         $categories = $this->categories;
+        $menu       = $this->menu;
 
         $visitorId = $request->cookie('visitor_id');
 
@@ -134,7 +141,8 @@ class ShopController extends Controller
             'averageRating' => round($reviewStats->avg ?? 0, 1),
             'allReviews' => $allReviews,
             'isInWishlist' => $isInWishlist,
-            'country' => $country
+            'country' => $country,
+            'menu' => $menu
         ]);
     }
 }

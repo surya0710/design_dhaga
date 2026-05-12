@@ -22,6 +22,8 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ShiprocketWebhookController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -226,6 +228,26 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::get('/admin/media', [MediaController::class,'index']);
     Route::post('/admin/media/upload', [MediaController::class,'upload']);
+
+    Route::resource('/admin/menus', MenuController::class)->names([
+        'index'   => 'admin.menus.index',
+        'create'  => 'admin.menus.create',
+        'store'   => 'admin.menus.store',
+        'show'    => 'admin.menus.show',
+        'edit'    => 'admin.menus.edit',
+        'update'  => 'admin.menus.update',
+        'destroy' => 'admin.menus.destroy',
+    ]);
+
+    Route::prefix('/admin/menus/{menu}/items')->name('admin.menu-items.')->group(function () {
+        Route::get('create',          [MenuItemController::class, 'create'])->name('create');
+        Route::post('/',              [MenuItemController::class, 'store'])->name('store');
+        Route::get('{menuItem}/edit', [MenuItemController::class, 'edit'])->name('edit');
+        Route::put('{menuItem}',      [MenuItemController::class, 'update'])->name('update');
+        Route::delete('{menuItem}',   [MenuItemController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::post('/admin/menu-items/reorder', [MenuItemController::class, 'reorder'])->name('admin.menu-items.reorder');
 
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
     Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');

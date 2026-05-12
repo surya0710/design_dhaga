@@ -42,24 +42,24 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th style="width: 30px">#</th>
                             <th>Name</th>
-                            <th>testimonial</th>
-                            <th>Product id</th>
+                            <th>Testimonial</th>
+                            <th>Stars</th>
+                            <th>Image</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($testimonials as $testimonial)
                         <tr>
-                            <td>{{$testimonial->id}}</td>
-                            <td class="pname">
-                                <div class="name">
-                                    <a href="{{$testimonial->name}}" class="body-title-2">{{$testimonial->name}}</a>
-                                </div>
-                            </td>
+                            <td style="width: 30px">{{$loop->iteration }}</td>
+                            <td>{{$testimonial->name}}</td>
                             <td>{{$testimonial->testimonial}}</td>
-                            <td><a href="javascript:void(0);" target="_blank">{{$testimonial->product_id}}</a></td>
+                            <td>{{$testimonial->stars}}</td>
+                            <td>
+                                <img src="{{ asset($testimonial->image) }}" alt="" width="50">
+                            </td>
                             <td>
                                 <div class="list-icon-function">
                                     <a href="{{route('admin.testimonial.edit',['id'=>$testimonial->id])}}">

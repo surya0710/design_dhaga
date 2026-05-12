@@ -11,11 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
 use App\Models\Address;
 use App\Services\ShiprocketService;
+use App\Models\Menu;
 
 class AccountController extends Controller
 {
     protected $categories;
     protected $shiprocket;
+    protected $menu;
 
     public function __construct(ShiprocketService $shiprocket)
     {
@@ -25,6 +27,7 @@ class AccountController extends Controller
             ->get();
 
         $this->shiprocket = $shiprocket;
+        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
     }
 
     public function index()
@@ -40,8 +43,9 @@ class AccountController extends Controller
 
         // Total Spend Calculation
         $totalSpend = $orders->sum('total');
+        $menu       = $this->menu;
 
-        return view('user.my-account', compact('categories','addresses','orders', 'totalSpend'));
+        return view('user.my-account', compact('categories','addresses','orders', 'totalSpend', 'menu'));
     }
 
     public function trackOrder(string $awbCode)
