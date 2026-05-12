@@ -12,9 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('testimonials', function (Blueprint $table) {
-            if (Schema::hasColumn('testimonials', 'product_id')) {
-                $table->dropColumn('product_id');
-            }
+
+            // Drop foreign key first
+            $table->dropForeign(['product_id']);
+
+            // Then drop column
+            $table->dropColumn('product_id');
         });
     }
 
@@ -24,9 +27,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('testimonials', function (Blueprint $table) {
-            if (Schema::hasColumn('testimonials', 'product_id')) {
-                $table->dropColumn('product_id');
-            }
+
+            $table->unsignedBigInteger('product_id')->nullable();
+
+            $table->foreign('product_id')
+                  ->references('id')
+                  ->on('products')
+                  ->onDelete('cascade');
         });
     }
 };
