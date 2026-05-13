@@ -234,6 +234,13 @@
                                         <div class="text">About Us</div>
                                     </a>
                                 </li>
+
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.pages') }}">
+                                        <div class="icon"><i class="icon-file-text"></i></div>
+                                        <div class="text">Pages</div>
+                                    </a>
+                                </li>
                                 
 
                                 <li class="menu-item">

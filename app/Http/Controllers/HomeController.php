@@ -14,6 +14,7 @@ use App\Models\Menu;
 use App\Models\Testimonial;
 use App\Models\Story;
 use App\Models\AboutSection;
+use App\Models\Pages;
 
 class HomeController extends Controller
 {
@@ -82,28 +83,32 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.terms', compact('categories', 'menu'));
+        $pageContent = Pages::where('slug', 'terms-and-condition')->first();
+        return view('frontend.terms', compact('categories', 'menu', 'pageContent'));
     }
 
     public function returnPolicy()
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.return-policy', compact('categories', 'menu'));
+        $pageContent = Pages::where('slug', 'return-policy')->first();
+        return view('frontend.return-policy', compact('categories', 'menu', 'pageContent'));
     }
 
     public function orderShipping()
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.shipping-policy', compact('categories', 'menu'));
+        $pageContent = Pages::where('slug', 'order-shipping-policy')->first();
+        return view('frontend.shipping-policy', compact('categories', 'menu', 'pageContent'));
     }
 
     public function privacyPolicy()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        return view('frontend.privacy-policy', compact('categories', 'menu'));
+        $categories  = $this->categories;
+        $menu        = $this->menu;
+        $pageContent = Pages::where('slug', 'privacy-policy')->first();
+        return view('frontend.privacy-policy', compact('categories', 'menu', 'pageContent'));
     }
 
     public function store()
@@ -117,7 +122,8 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.collaborations', compact('categories', 'menu'));
+        $pageContent = Pages::where('slug', 'collaborations')->first();
+        return view('frontend.collaborations', compact('categories', 'menu', 'pageContent'));
     }
 
     public function sendmail(Request $request)

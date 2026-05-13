@@ -24,6 +24,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -259,6 +260,15 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     });
 
     Route::post('/admin/menu-items/reorder', [MenuItemController::class, 'reorder'])->name('admin.menu-items.reorder');
+
+    Route::get('/admin/pages', [PageController::class, 'index'])->name('admin.pages');
+    Route::get('/admin/pages/create', [PageController::class, 'create'])->name('admin.pages.create');
+    Route::post('/admin/pages/store', [PageController::class, 'store'])->name('admin.pages.store');
+
+    Route::get('/admin/pages/edit/{id}', [PageController::class, 'edit'])->name('admin.pages.edit');
+    Route::post('/admin/pages/update/{id}', [PageController::class, 'update'])->name('admin.pages.update');
+
+    Route::delete('/admin/pages/delete/{id}', [PageController::class, 'destroy'])->name('admin.pages.delete');
 
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
     Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');
