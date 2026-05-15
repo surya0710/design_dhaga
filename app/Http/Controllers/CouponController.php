@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use Illuminate\Http\Request;
-use App\Models\Cart;
-use Illuminate\Support\Facades\Auth;
+use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class CouponController extends Controller
 {
@@ -103,11 +102,8 @@ class CouponController extends Controller
             'code' => 'required|string'
         ]);
 
-        $coupon = Coupon::where('code', strtoupper(trim($request->code)))->first();
+        $coupon = Coupon::where('code', strtoupper($request->code))->first();
 
-        // =========================
-        // Coupon Exists
-        // =========================
         if (!$coupon) {
             return response()->json([
                 'success' => false,
@@ -115,10 +111,8 @@ class CouponController extends Controller
             ]);
         }
 
-        // =========================
-        // Status Check
-        // =========================
-        if (!$coupon->status) {
+        // ✅ Check status
+        if ($coupon->status != 1) {
             return response()->json([
                 'success' => false,
                 'message' => 'Coupon is inactive'
@@ -127,9 +121,7 @@ class CouponController extends Controller
 
         $now = now();
 
-        // =========================
-        // Start Date Check
-        // =========================
+        // ✅ Check start date
         if ($coupon->start_date && $now->lt($coupon->start_date)) {
             return response()->json([
                 'success' => false,
@@ -137,9 +129,7 @@ class CouponController extends Controller
             ]);
         }
 
-        // =========================
-        // Expiry Check
-        // =========================
+        // ✅ Check expiry
         if ($coupon->end_date && $now->gt($coupon->end_date)) {
             return response()->json([
                 'success' => false,
@@ -147,130 +137,85 @@ class CouponController extends Controller
             ]);
         }
 
-        // =========================
-        // Get Cart
-        // =========================
-        $cartItems = Cart::where('user_id', Auth::id())->get();
-
-        if ($cartItems->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Your cart is empty'
-            ]);
-        }
-
-        // =========================
-        // Calculate Subtotal
-        // =========================
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
+        // ✅ Get cart subtotal
+        $cartItems = session('cart', []);
+        $subtotal = collect($cartItems)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
         });
 
-        // =========================
-        // Minimum Cart Value Check
-        // =========================
-        if (
-            $coupon->min_cart_value &&
-            $subtotal < $coupon->min_cart_value
-        ) {
+        // ✅ Min cart check
+        if ($coupon->min_cart_value && $subtotal < $coupon->min_cart_value) {
             return response()->json([
                 'success' => false,
-                'message' => 'Minimum cart value should be ₹' . number_format($coupon->min_cart_value, 2)
+                'message' => 'Minimum cart value should be ₹' . $coupon->min_cart_value
             ]);
         }
 
         // =========================
-        // Usage Limit Check
+        // ✅ FREE SHIPPING LOGIC
         // =========================
+        $freeShipping = false;
+        $discount = 0;
+
         if (
-            $coupon->usage_limit &&
-            $coupon->used_count >= $coupon->usage_limit
+            (isset($coupon->free_shipping) && $coupon->free_shipping) ||
+            $coupon->type === 'shipping'
         ) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Coupon usage limit exceeded'
-            ]);
+            $freeShipping = true;
+            $discount = 0; // no price discount
+        } else {
+
+            // =========================
+            // ✅ NORMAL DISCOUNT LOGIC
+            // =========================
+            if ($coupon->type === 'fixed') {
+                $discount = $coupon->value;
+            } else {
+                // percentage
+                $discount = ($subtotal * $coupon->value) / 100;
+            }
+
+            // ✅ Max discount cap
+            if ($coupon->max_discount && $discount > $coupon->max_discount) {
+                $discount = $coupon->max_discount;
+            }
+
+            // ✅ Prevent discount > subtotal
+            $discount = min($discount, $subtotal);
         }
 
         // =========================
-        // Single Use Per User Check
+        // ✅ SINGLE USE CHECK
         // =========================
         if ($coupon->is_single_use) {
-
-            $alreadyUsed = Order::where('user_id', Auth::id())
-                ->where('coupon_code', $coupon->code)
-                ->exists();
-
-            if ($alreadyUsed) {
+            if (session()->has('coupon_used_' . $coupon->code)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You have already used this coupon'
+                    'message' => 'Coupon already used'
                 ]);
             }
         }
 
         // =========================
-        // Discount Calculation
-        // =========================
-        $discount = 0;
-        $freeShipping = false;
-
-        // Free Shipping Coupon
-        if (
-            $coupon->free_shipping ||
-            $coupon->type === 'shipping'
-        ) {
-
-            $freeShipping = true;
-
-        } else {
-
-            // Fixed Discount
-            if ($coupon->type === 'fixed') {
-
-                $discount = $coupon->value;
-
-            } 
-            // Percentage Discount
-            else {
-
-                $discount = ($subtotal * $coupon->value) / 100;
-            }
-
-            // Max Discount Cap
-            if (
-                $coupon->max_discount &&
-                $discount > $coupon->max_discount
-            ) {
-                $discount = $coupon->max_discount;
-            }
-
-            // Prevent Over Discount
-            $discount = min($discount, $subtotal);
-        }
-
-        // =========================
-        // Store Coupon In Session
+        // ✅ STORE IN SESSION
         // =========================
         session()->put('coupon', [
-            'id' => $coupon->id,
             'code' => $coupon->code,
-            'type' => $coupon->type,
-            'value' => $coupon->value,
             'discount' => round($discount, 2),
             'free_shipping' => $freeShipping
         ]);
 
+        if ($coupon->is_single_use) {
+            session()->put('coupon_used_' . $coupon->code, true);
+        }
+
         return response()->json([
             'success' => true,
-            'message' => $freeShipping
-                ? 'Free shipping applied successfully'
+            'message' => $freeShipping 
+                ? 'Free shipping applied successfully' 
                 : 'Coupon applied successfully',
-            'coupon_code' => $coupon->code,
             'discount' => round($discount, 2),
-            'free_shipping' => $freeShipping,
-            'subtotal' => round($subtotal, 2),
-            'final_total' => round($subtotal - $discount, 2)
+            'free_shipping' => $freeShipping
         ]);
     }
 
