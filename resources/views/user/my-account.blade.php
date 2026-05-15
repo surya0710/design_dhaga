@@ -877,7 +877,7 @@ your orders.')
                                                 {{-- Actions --}}
                                                 <div class="col-md-2">
                                                     <div class="order-actions">
-                                                        <a href="{{ route('order.invoice', $order->id) }}" class="btn btn-outline-dark order-action-btn">
+                                                        <a href="{{ route('order.invoice', $order->id) }}" class="btn btn-outline-dark order-action-btn" target="_blank">
                                                             <i class="bi bi-receipt me-1"></i> Invoice
                                                         </a>
 
