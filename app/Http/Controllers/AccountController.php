@@ -52,6 +52,29 @@ class AccountController extends Controller
     {
         try {
             $data = $this->shiprocket->trackOrder($awbCode);
+
+            $order = auth()->user()
+                ->orders()
+                ->where('awb_code', $awbCode)
+                ->first();
+
+            if ($order) {
+                $order->tracking_status = $data['current_status'] ?? $order->tracking_status;
+                $order->tracking_last_update = now();
+                $order->tracking_raw_json = json_encode($data);
+
+                $currentStatus = strtolower((string) ($data['current_status'] ?? ''));
+
+                if (str_contains($currentStatus, 'deliver') || !empty($data['delivered_date'])) {
+                    $order->order_status = 'delivered';
+                    $order->delivered_at = $order->delivered_at ?? now();
+                } elseif (in_array($order->order_status, ['pending', 'confirmed', 'packed'], true)) {
+                    $order->order_status = 'shipped';
+                }
+
+                $order->save();
+            }
+
             return response()->json(['success' => true, 'data' => $data]);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

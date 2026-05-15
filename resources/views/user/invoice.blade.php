@@ -5,330 +5,311 @@
     <title>Tax Invoice</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
-            color: #111;
+            font-size: 11.5px;
+            color: #161616;
             background: #fff;
-            padding: 30px;
+            padding: 26px;
         }
-
-        .wrapper {
+        .invoice {
             max-width: 860px;
             margin: 0 auto;
+            border: 1px solid #202020;
         }
-
-        /* TITLE */
-        .title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 16px;
-        }
-
-        /* DIVIDER */
-        .divider {
-            border: none;
-            border-top: 1.5px solid #111;
-            margin: 10px 0;
-        }
-        .divider-thin {
-            border: none;
-            border-top: 0.5px solid #ccc;
-            margin: 10px 0;
-        }
-
-        /* META GRID */
-        .meta-grid {
+        .topbar {
+            background: #111;
+            color: #fff;
+            padding: 18px 20px;
             display: table;
             width: 100%;
-            margin-bottom: 4px;
         }
-        .meta-left {
+        .brand, .invoice-title {
             display: table-cell;
-            width: 55%;
             vertical-align: top;
+            width: 50%;
         }
-        .meta-right {
-            display: table-cell;
-            width: 45%;
-            vertical-align: top;
+        .brand-name {
+            font-size: 21px;
+            font-weight: bold;
+            letter-spacing: .5px;
+            margin-bottom: 5px;
+        }
+        .brand-meta {
+            color: #e8e8e8;
+            line-height: 1.5;
+            font-size: 10.5px;
+        }
+        .invoice-title {
             text-align: right;
         }
-        .meta-row {
-            margin-bottom: 3px;
-            font-size: 12px;
-            line-height: 1.7;
+        .invoice-title h1 {
+            font-size: 24px;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
-        .meta-row b {
-            font-weight: bold;
+        .invoice-title p {
+            color: #e8e8e8;
+            line-height: 1.5;
         }
-
-        /* ADDRESS SECTION */
-        .addr-grid {
+        .section {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d6d6d6;
+        }
+        .grid {
             display: table;
             width: 100%;
-            margin: 10px 0;
         }
-        .addr-left {
+        .col {
             display: table-cell;
-            width: 50%;
             vertical-align: top;
-            padding-right: 20px;
-        }
-        .addr-right {
-            display: table-cell;
             width: 50%;
-            vertical-align: top;
-            padding-left: 20px;
         }
-        .addr-label {
+        .col + .col { padding-left: 24px; }
+        .label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: .7px;
             font-weight: bold;
-            margin-bottom: 4px;
-            font-size: 12px;
+            margin-bottom: 6px;
         }
-        .addr-body {
-            font-size: 12px;
-            line-height: 1.75;
-            color: #111;
+        .value {
+            line-height: 1.65;
         }
-
-        /* GSTIN ROW */
-        .gstin-row {
-            font-size: 12px;
-            font-weight: bold;
-            margin: 8px 0 4px 0;
-        }
-
-        /* TABLE */
-        table {
+        .value strong { font-size: 12.5px; }
+        .meta-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11.5px;
-            margin-top: 8px;
         }
-        thead tr {
-            border-top: 1.5px solid #111;
-            border-bottom: 1.5px solid #111;
+        .meta-table td {
+            padding: 3px 0;
+            border: none;
+            line-height: 1.45;
         }
-        th {
-            padding: 7px 6px;
+        .meta-table td:first-child {
+            color: #666;
+            width: 44%;
+        }
+        .items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .items th {
+            background: #f1f1f1;
+            color: #111;
+            border-top: 1px solid #111;
+            border-bottom: 1px solid #111;
+            padding: 8px 5px;
             text-align: right;
-            font-weight: bold;
-            font-size: 11.5px;
+            font-size: 10px;
+            text-transform: uppercase;
             white-space: nowrap;
         }
-        th:first-child { text-align: left; padding-left: 0; }
-        th:last-child { padding-right: 0; }
-
-        .product-row td {
-            padding: 6px 6px 2px 6px;
-            vertical-align: top;
+        .items th:first-child,
+        .items td:first-child {
+            text-align: left;
         }
-        .product-name-cell {
-            font-weight: bold;
-            font-size: 11.5px;
-            padding-left: 0 !important;
-        }
-
-        .item-row td {
-            padding: 4px 6px;
+        .items td {
+            padding: 8px 5px;
+            border-bottom: 1px solid #e1e1e1;
             text-align: right;
             vertical-align: top;
-            font-size: 11.5px;
-            border-bottom: 0.5px solid #ddd;
+            line-height: 1.45;
         }
-        .item-row td:first-child {
-            text-align: left;
-            padding-left: 0;
+        .money {
+            white-space: nowrap;
+            word-break: keep-all;
         }
-        .item-row td:last-child { padding-right: 0; }
-
-        .total-row td {
-            padding: 7px 6px;
+        .product-name {
+            font-weight: bold;
+            color: #111;
+        }
+        .product-meta {
+            color: #666;
+            font-size: 10.5px;
+            margin-top: 2px;
+        }
+        .totals {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .totals td {
+            border: none;
+            padding: 4px 0;
+        }
+        .totals td:last-child {
             text-align: right;
             font-weight: bold;
-            font-size: 12px;
-            border-top: 1.5px solid #111;
-            border-bottom: 1.5px solid #111;
         }
-        .total-row td:first-child {
-            text-align: left;
-            padding-left: 0;
+        .grand td {
+            border-top: 1px solid #111;
+            padding-top: 8px;
+            font-size: 14px;
         }
-        .total-row td:last-child { padding-right: 0; }
-
-        /* DECLARATION */
-        .declaration {
-            margin-top: 14px;
-            font-size: 11.5px;
-            line-height: 1.7;
-        }
-        .declaration b {
-            font-weight: bold;
-        }
-
-        /* REG ADDRESS */
-        .reg-address {
-            margin-top: 10px;
-            font-size: 11px;
-            color: #333;
+        .note {
             line-height: 1.6;
-        }
-        .reg-address b { font-weight: bold; }
-
-        /* FOOTER */
-        .footer {
-            margin-top: 14px;
-            padding-top: 10px;
-            border-top: 0.5px solid #ccc;
-            font-size: 11px;
             color: #444;
+            font-size: 10.5px;
+        }
+        .footer {
+            background: #f7f7f7;
+            padding: 12px 20px;
+            color: #555;
+            font-size: 10.5px;
             line-height: 1.6;
         }
     </style>
 </head>
 <body>
+@php
+    $subtotal = (float) ($order->subtotal ?? $order->items->sum('total'));
+    $couponDiscount = (float) ($order->coupon_discount ?? 0);
+    $shipping = (float) (($order->shipping ?? 0) ?: ($order->delivery_charge ?? 0));
+    $taxableTotal = max($subtotal - $couponDiscount, 0);
+    $gstType = $order->gst_type ?: 'igst';
+    $cgstRate = (float) ($order->cgst_rate ?? 0);
+    $sgstRate = (float) ($order->sgst_rate ?? 0);
+    $igstRate = (float) ($order->igst_rate ?? 5);
+    $gstLabel = $gstType === 'cgst_sgst'
+        ? number_format($cgstRate, 1) . '% CGST + ' . number_format($sgstRate, 1) . '% SGST'
+        : number_format($igstRate, 1) . '% IGST';
+    $distributedDiscount = 0;
+    $itemCount = $order->items->count();
+@endphp
 
-<div class="wrapper">
-
-    <!-- TITLE -->
-    <div class="title">Tax Invoice</div>
-
-    <div class="divider"></div>
-
-    <!-- META -->
-    <div class="meta-grid">
-        <div class="meta-left">
-            <div class="meta-row"><b>Invoice Number:</b> {{ $order->invoice_number ?? $order->id }}</div>
-            <div class="meta-row"><b>Order Number:</b> {{ $order->id }}</div>
-            <div class="meta-row"><b>Nature of Transaction:</b> Inter-State</div>
-            <div class="meta-row"><b>Place of Supply:</b> {{ strtoupper($order->state) }}</div>
-        </div>
-        <div class="meta-right">
-            <div class="meta-row"><b>PacketID:</b> {{ $order->packet_id ?? '—' }}</div>
-            <div class="meta-row"><b>Invoice Date:</b> {{ $order->created_at->format('d M Y') }}</div>
-            <div class="meta-row"><b>Order Date:</b> {{ $order->created_at->format('d M Y') }}</div>
-            <div class="meta-row"><b>Nature of Supply:</b> Goods</div>
-        </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- ADDRESSES -->
-    <div class="addr-grid">
-        <div class="addr-left">
-            <div class="addr-label">Bill to / Ship to:</div>
-            <div class="addr-body">
-                <b>{{ $order->name }}</b><br>
-                {{ $order->address_line_1 }}<br>
-                City {{ $order->city }} - {{ $order->pincode }} {{ $order->state_code ?? '' }}, {{ $order->country }}<br>
+<div class="invoice">
+    <div class="topbar">
+        <div class="brand">
+            <div class="brand-name">Design Dhaga</div>
+            <div class="brand-meta">
+                GSTIN: 06BBOPK8637H1Z7<br>
+                {{ $settings->office_address ?? '' }}
             </div>
         </div>
-        <div class="addr-right">
-            <div class="addr-grid" style="margin:0;">
-                <div class="addr-left" style="padding-right:10px;">
-                    <div class="addr-label">Bill From:</div>
-                    <div class="addr-body">
-                        Design Dhaga<br>
-                        {{ $settings->office_address ?? '' }}
-                    </div>
-                </div>
-                <div class="addr-right" style="padding-left:10px;">
-                    <div class="addr-label">Ship From:</div>
-                    <div class="addr-body">
-                        Design Dhaga<br>
-                        {{ $settings->office_address ?? '' }}
-                    </div>
-                </div>
-            </div>
-            <div class="gstin-row">GSTIN Number: 06BBOPK8637H1Z7</div>
+        <div class="invoice-title">
+            <h1>Tax Invoice</h1>
+            <p>Invoice #{{ $order->invoice_number ?? $order->id }}<br>
+            Date: {{ optional($order->paid_at ?? $order->created_at)->format('d M Y') }}</p>
         </div>
     </div>
 
-    <!-- TABLE -->
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align:left; width:30%;">Qty</th>
-                <th style="width:10%;">Gross<br>Amount</th>
-                <th style="width:10%;">Discount</th>
-                <th style="width:10%;">Other<br>Charges</th>
-                <th style="width:12%;">Taxable<br>Amount</th>
-                <th style="width:8%;">CGST</th>
-                <th style="width:8%;">SGST/<br>UGST</th>
-                <th style="width:8%;">IGST</th>
-                <th style="width:4%;">Cess</th>
-                <th style="width:10%;">Total<br>Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($order->items as $item)
-            @php
-                $taxable = $item->total / 1.18;
-                $igst    = $item->total - $taxable;
-            @endphp
-
-            <!-- Product name row -->
-            <tr class="product-row">
-                <td colspan="10" class="product-name-cell">
-                    {{ $item->product_name }}
-                    @if($item->sku ?? false) ({{ $item->sku }}) @endif<br>
-                    <span style="font-weight:normal;">HSN: {{ $item->hsn ?? '—' }}, 5.0% IGST</span>
-                </td>
-            </tr>
-
-            <!-- Item values row -->
-            <tr class="item-row">
-                <td>{{ $item->quantity }}</td>
-                <td>Rs {{ number_format($item->price, 2) }}</td>
-                <td>Rs {{ number_format($item->discount ?? 0, 2) }}</td>
-                <td>Rs 0.00</td>
-                <td>Rs {{ number_format($taxable, 2) }}</td>
-                <td></td>
-                <td></td>
-                <td>Rs {{ number_format($igst, 2) }}</td>
-                <td></td>
-                <td>Rs {{ number_format($item->total, 2) }}</td>
-            </tr>
-
-            @endforeach
-
-            <!-- TOTAL -->
-            <tr class="total-row">
-                <td><b>TOTAL</b></td>
-                <td>Rs {{ number_format($order->items->sum('price'), 2) }}</td>
-                <td>Rs {{ number_format($order->items->sum('discount') ?? 0, 2) }}</td>
-                <td>Rs 0.00</td>
-                <td>Rs {{ number_format($order->items->sum(fn($i) => $i->total / 1.18), 2) }}</td>
-                <td></td>
-                <td></td>
-                <td>Rs {{ number_format($order->items->sum(fn($i) => $i->total - $i->total / 1.18), 2) }}</td>
-                <td></td>
-                <td>Rs {{ number_format($order->total, 2) }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- DECLARATION -->
-    <div class="declaration">
-        <b>DECLARATION</b><br>
-        The goods sold are intended for end-user consumption and are not for retail sale.
+    <div class="section">
+        <div class="grid">
+            <div class="col">
+                <div class="label">Bill To / Ship To</div>
+                <div class="value">
+                    <strong>{{ $order->name }}</strong><br>
+                    {{ $order->address_line_1 }}<br>
+                    {{ $order->city }}, {{ $order->state }} - {{ $order->pincode }}<br>
+                    {{ $order->country ?? 'India' }}<br>
+                    Phone: {{ $order->phone }}<br>
+                    Email: {{ $order->email }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="label">Order Details</div>
+                <table class="meta-table">
+                    <tr><td>Order Number</td><td>#{{ $order->id }}</td></tr>
+                    <tr><td>Order Date</td><td>{{ optional($order->created_at)->format('d M Y') }}</td></tr>
+                    <tr><td>Payment ID</td><td>{{ $order->razorpay_payment_id ?? 'Pending' }}</td></tr>
+                    <tr><td>Payment Method</td><td>{{ strtoupper($order->payment_method ?? 'Razorpay') }}</td></tr>
+                    <tr><td>Place of Supply</td><td>{{ strtoupper($order->state ?? '') }}</td></tr>
+                    <tr><td>Nature of Supply</td><td>Goods</td></tr>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="divider-thin" style="margin-top:12px;"></div>
+    <div class="section">
+        <div class="label">Fabric Items - Prices Exclusive of GST</div>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th style="width:26%;">Item</th>
+                    <th style="width:7%;">Qty</th>
+                    <th style="width:12%;">Gross</th>
+                    <th style="width:10%;">Discount</th>
+                    <th style="width:12%;">Taxable</th>
+                    <th style="width:8%;">CGST</th>
+                    <th style="width:8%;">SGST</th>
+                    <th style="width:8%;">IGST</th>
+                    <th style="width:9%;">Line<br>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($order->items as $index => $item)
+                    @php
+                        $grossAmount = (float) ($item->total ?? ((float) $item->price * (int) $item->quantity));
+                        $lineDiscount = 0;
 
-    <!-- REG ADDRESS -->
-    <div class="reg-address">
-        <b>Reg Address:</b> Design Dhaga, {{ $company->reg_address ?? '' }}
+                        if ($couponDiscount > 0 && $subtotal > 0) {
+                            $lineDiscount = $index === $itemCount - 1
+                                ? round($couponDiscount - $distributedDiscount, 2)
+                                : round(($couponDiscount * $grossAmount) / $subtotal, 2);
+                            $distributedDiscount += $lineDiscount;
+                        }
+
+                        $taxable = max($grossAmount - $lineDiscount, 0);
+                        $cgst = $gstType === 'cgst_sgst' ? round(($taxable * $cgstRate) / 100, 2) : 0;
+                        $sgst = $gstType === 'cgst_sgst' ? round(($taxable * $sgstRate) / 100, 2) : 0;
+                        $igst = $gstType === 'igst' ? round(($taxable * $igstRate) / 100, 2) : 0;
+                        $lineTotal = $taxable + $cgst + $sgst + $igst;
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="product-name">{{ $item->product_name }}</div>
+                            <div class="product-meta">HSN: {{ $item->hsn ?? 'N/A' }} | {{ $gstLabel }}</div>
+                        </td>
+                        <td>{{ $item->quantity }}</td>
+                        <td class="money">₹{{ number_format($grossAmount, 2) }}</td>
+                        <td class="money">₹{{ number_format($lineDiscount, 2) }}</td>
+                        <td class="money">₹{{ number_format($taxable, 2) }}</td>
+                        <td class="money">{{ $cgst > 0 ? '₹'.number_format($cgst, 2) : '-' }}</td>
+                        <td class="money">{{ $sgst > 0 ? '₹'.number_format($sgst, 2) : '-' }}</td>
+                        <td class="money">{{ $igst > 0 ? '₹'.number_format($igst, 2) : '-' }}</td>
+                        <td class="money">₹{{ number_format($lineTotal, 2) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
-    <!-- FOOTER -->
+    <div class="section">
+        <div class="grid">
+            <div class="col">
+                <div class="label">Declaration</div>
+                <div class="note">
+                    The goods sold are intended for end-user consumption and are not for retail sale.
+                    GST is calculated on the exclusive product value after discount.
+                </div>
+            </div>
+            <div class="col">
+                <table class="totals">
+                    <tr><td>Subtotal</td><td class="money">₹{{ number_format($subtotal, 2) }}</td></tr>
+                    @if($couponDiscount > 0)
+                        <tr><td>Coupon Discount</td><td class="money">- ₹{{ number_format($couponDiscount, 2) }}</td></tr>
+                    @endif
+                    <tr><td>Taxable Amount</td><td class="money">₹{{ number_format($taxableTotal, 2) }}</td></tr>
+                    @if($gstType === 'cgst_sgst')
+                        <tr><td>CGST ({{ number_format($cgstRate, 2) }}%)</td><td class="money">₹{{ number_format((float) $order->cgst_amount, 2) }}</td></tr>
+                        <tr><td>SGST ({{ number_format($sgstRate, 2) }}%)</td><td class="money">₹{{ number_format((float) $order->sgst_amount, 2) }}</td></tr>
+                    @else
+                        <tr><td>IGST ({{ number_format($igstRate, 2) }}%)</td><td class="money">₹{{ number_format((float) $order->igst_amount, 2) }}</td></tr>
+                    @endif
+                    <tr><td>Shipping</td><td class="money">₹{{ number_format($shipping, 2) }}</td></tr>
+                    <tr class="grand"><td>Grand Total</td><td class="money">₹{{ number_format((float) $order->total, 2) }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
-        If you have any questions, feel free to contact us.
+        Registered Address: Design Dhaga, {{ $company->reg_address ?? ($settings->store_address ?? '') }}<br>
+        For support, contact {{ $settings->support_email ?? 'support@designdhaga.com' }}.
     </div>
-
 </div>
-
 </body>
 </html>

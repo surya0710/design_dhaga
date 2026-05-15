@@ -12,13 +12,12 @@ your orders.')
 <style>
     :root {
         --primary-color: #212529;
-        --accent-color: #4f46e5;
         --bg-color: #f8f9fa;
         --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
     body {
-        font-family: "Poppins", sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background-color: var(--bg-color);
         color: #4a5568;
     }
@@ -127,151 +126,268 @@ your orders.')
         overflow: hidden;
     }
 
+    .tracking-modal .modal-dialog {
+        max-width: 580px;
+    }
+
+    .tracking-modal .modal-content {
+        border: 0;
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(15, 23, 42, 0.24);
+        overflow: hidden;
+    }
+
+    /* Header */
     .tracking-header {
-        background: linear-gradient(135deg, #212529 0%, #495057 100%);
-        color: white;
-        padding: 24px;
+        background: #ffffff;
+        color: #111827;
+        padding: 18px 22px;
+        border-bottom: 1px solid #edf2f7;
     }
 
     .tracking-header h5 {
+        font-size: 16px;
         font-weight: 700;
-        margin: 0;
+        color: #111827;
+        margin: 0 0 2px;
     }
 
     .tracking-header small {
-        opacity: 0.75;
         font-size: 12px;
+        color: #6b7280;
     }
 
-    .tracking-status-badge {
-        display: inline-block;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 20px;
-        padding: 4px 14px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #fff;
-        margin-top: 8px;
-    }
-
-    .tracking-info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        padding: 20px;
-        background: #f8f9fa;
-    }
-
-    .tracking-info-item {
-        background: #fff;
-        border-radius: 12px;
-        padding: 14px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .tracking-info-item .label {
-        font-size: 11px;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: #9ca3af;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
-    }
-
-    .tracking-info-item .value {
-        font-size: 14px;
-        font-weight: 600;
-        color: #212529;
-    }
-
-    /* Timeline */
-    .tracking-timeline {
-        padding: 20px;
-        max-height: 320px;
-        overflow-y: auto;
-    }
-
-    .tracking-timeline::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .tracking-timeline::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .tracking-timeline::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
-    }
-
-    .timeline-item {
+    /* Delivery summary banner */
+    .tracking-delivery-summary {
         display: flex;
-        gap: 16px;
-        position: relative;
-        padding-bottom: 20px;
+        align-items: center;
+        gap: 12px;
+        background: #f0fdf4;
+        border-bottom: 1px solid #bbf7d0;
+        padding: 14px 22px;
     }
 
-    .timeline-item:last-child {
-        padding-bottom: 0;
-    }
-
-    .timeline-item:not(:last-child)::before {
-        content: '';
-        position: absolute;
-        left: 15px;
-        top: 32px;
-        bottom: 0;
-        width: 2px;
-        background: #e5e7eb;
-    }
-
-    .timeline-dot {
-        width: 32px;
-        height: 32px;
+    .tracking-delivery-icon {
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        background: #212529;
+        background: #fff;
+        border: 1px solid #bbf7d0;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        color: #047857;
+        font-size: 16px;
+    }
+
+    .tracking-delivery-primary {
+        font-size: 13px;
+        font-weight: 700;
+        color: #047857;
+        margin-bottom: 1px;
+    }
+
+    .tracking-delivery-secondary {
+        font-size: 12px;
+        color: #065f46;
+    }
+
+    /* Progress Steps */
+    .tracking-steps-section {
+        padding: 20px 22px 4px;
+    }
+
+    .tracking-steps-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        color: #9ca3af;
+        margin-bottom: 16px;
+    }
+
+    .tracking-steps-row {
+        display: flex;
+        align-items: flex-start;
+        position: relative;
+        margin-bottom: 22px;
+    }
+
+    /* Grey base track — runs between dot centres. Each dot centre is at 12.5% of total.
+       So track starts at 12.5% and spans 75% (ending at 87.5%). */
+    .tracking-steps-row::before {
+        content: '';
+        position: absolute;
+        top: 13px;
+        left: 12.5%;
+        width: 75%;
+        height: 2px;
+        background: #e5e7eb;
+        z-index: 0;
+    }
+
+    /* Active fill track. Width is set via JS as a % of the 75% span.
+       For 4 steps: confirmed=0%, packed=33%, shipped=66%, delivered=100%
+       The fill goes left: 12.5%, and its width = (progress/100) * 75% of container */
+    .tracking-steps-row .track-fill {
+        position: absolute;
+        top: 13px;
+        left: 12.5%;
+        height: 2px;
+        background: #111827;
+        z-index: 0;
+        transition: width 0.4s ease;
+        border-radius: 999px;
+    }
+
+    .tracking-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
         z-index: 1;
     }
 
-    .timeline-dot.inactive {
-        background: #e5e7eb;
+    .tracking-step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #e5e7eb;
+        background: #fff;
+        margin: 0 auto 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-size: 12px;
     }
 
-    .timeline-dot i {
-        font-size: 13px;
-        color: white;
+    .tracking-step.done .tracking-step-dot,
+    .tracking-step.active .tracking-step-dot {
+        background: #111827;
+        border-color: #111827;
+        color: #fff;
     }
 
-    .timeline-dot.inactive i {
+    .tracking-step-label {
+        font-size: 11px;
+        font-weight: 600;
         color: #9ca3af;
     }
 
-    .timeline-content {
-        flex: 1;
-        padding-top: 4px;
+    .tracking-step.done .tracking-step-label,
+    .tracking-step.active .tracking-step-label {
+        color: #111827;
     }
 
-    .timeline-content .activity {
-        font-size: 13px;
-        font-weight: 600;
-        color: #212529;
-        margin-bottom: 2px;
-    }
-
-    .timeline-content .location {
+    /* Info strip (delivered date / ETA only — no courier clutter) */
+    .tracking-info-strip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 22px 18px;
         font-size: 12px;
         color: #6b7280;
-        margin-bottom: 2px;
     }
 
-    .timeline-content .time {
+    .tracking-info-strip i { color: #9ca3af; }
+    .tracking-info-strip strong { color: #111827; font-weight: 600; }
+
+    /* Timeline */
+    .tracking-timeline {
+        border-top: 1px solid #f1f5f9;
+        padding: 18px 22px 22px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .tracking-timeline::-webkit-scrollbar { width: 4px; }
+    .tracking-timeline::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+    .tracking-timeline::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+    .tracking-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: #9ca3af;
+        margin-bottom: 12px;
+    }
+
+    /* ── Flipkart-style grouped milestone timeline ── */
+    .tl-group {
+        display: flex;
+        gap: 14px;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .tl-group:last-child { padding-bottom: 0; }
+
+    .tl-spine {
+        position: relative;
+        flex-shrink: 0;
+        width: 12px;
+        margin-top: 4px;
+    }
+
+    .tl-group:not(:last-child) .tl-spine::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 13px;
+        bottom: -20px;
+        width: 2px;
+        background: #e5e7eb;
+        z-index: 0;
+    }
+
+    .tl-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid #047857;
+        background: #047857;
+        position: relative;
+        z-index: 1;
+    }
+
+    .tl-dot.inactive {
+        background: #fff;
+        border-color: #d1d5db;
+    }
+
+    .tl-body { flex: 1; min-width: 0; }
+
+    .tl-head {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .tl-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .tl-group.inactive .tl-label { color: #6b7280; }
+
+    .tl-date {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+    .tl-sub {
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.6;
+        padding-left: 2px;
+    }
+
+    .tl-sub-time {
         font-size: 11px;
         color: #9ca3af;
     }
@@ -287,6 +403,196 @@ your orders.')
     @keyframes shimmer {
         0% { background-position: -200% 0; }
         100% { background-position: 200% 0; }
+    }
+
+    .orders-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .orders-toolbar h4 { margin: 0; color: #111827; }
+    .orders-toolbar .subtitle { color: #6b7280; font-size: 13px; margin-top: 2px; }
+
+    .order-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .order-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px 20px;
+        background: #f8fafc;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .order-id { color: #111827; font-weight: 800; font-size: 16px; }
+
+    .order-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .order-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: capitalize;
+        border: 1px solid transparent;
+        white-space: nowrap;
+    }
+
+    .order-status-pill::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .order-status-pending   { background: #f3f4f6; color: #4b5563; border-color: #e5e7eb; }
+    .order-status-confirmed { background: #eef6ff; color: #075985; border-color: #bae6fd; }
+    .order-status-packed    { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+    .order-status-shipped   { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+    .order-status-delivered { background: #ecfdf5; color: #047857; border-color: #bbf7d0; }
+    .order-status-cancelled { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+    .order-card-body { padding: 20px; }
+
+    .order-product-img {
+        width: 92px;
+        height: 112px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+    }
+
+    .order-product-title {
+        color: #111827;
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.35;
+        margin: 0 0 6px;
+    }
+
+    .shipment-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #374151;
+        background: #f3f4f6;
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 8px;
+    }
+
+    /* ── Redesigned Order Progress (no phantom line) ── */
+    .order-progress {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 18px;
+        padding-top: 10px;
+    }
+
+    /* Grey background track — only between first and last dot centres (~12% to ~88%) */
+    .order-progress-track {
+        position: absolute;
+        top: 22px;
+        left: 12.5%;
+        width: 75%;
+        height: 3px;
+        border-radius: 999px;
+        background: #e5e7eb;
+    }
+
+    /* Active fill — width set inline via style attribute */
+    .order-progress-fill {
+        position: absolute;
+        top: 22px;
+        left: 12.5%;
+        height: 3px;
+        border-radius: 999px;
+        background: #111827;
+        transition: width 0.4s ease;
+    }
+
+    .progress-step {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .progress-dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        margin: 0 auto 7px;
+        border: 2px solid #e5e7eb;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+    }
+
+    .progress-step.done .progress-dot,
+    .progress-step.active .progress-dot {
+        background: #111827;
+        border-color: #111827;
+        color: #fff;
+    }
+
+    .progress-step.done,
+    .progress-step.active {
+        color: #111827;
+    }
+
+    .order-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .order-action-btn {
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    @media (max-width: 767.98px) {
+        .orders-toolbar,
+        .order-card-head {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .order-product-img { width: 76px; height: 92px; }
+        .tracking-info-grid { grid-template-columns: 1fr; }
+        .order-progress { overflow-x: auto; min-width: 420px; }
     }
 </style>
 
@@ -467,79 +773,142 @@ your orders.')
 
                 {{-- Orders Tab --}}
                 <div class="tab-pane fade" id="orders">
-                    <h4 class="fw-bold mb-4">Your Orders</h4>
+                    <div class="orders-toolbar">
+                        <div>
+                            <h4 class="fw-bold">Your Orders</h4>
+                            <div class="subtitle">Track shipments, view invoices, and review recent purchases.</div>
+                        </div>
+                        <span class="badge bg-dark rounded-pill px-3 py-2">{{ count($orders) }} Orders</span>
+                    </div>
                     <div id="ordersList">
                         <div class="row g-3">
                             @forelse($orders as $order)
                                 @foreach($order->items as $item)
+                                @php
+                                    $statusSteps = ['confirmed', 'packed', 'shipped', 'delivered'];
+                                    $normalizedStatus = strtolower($order->order_status ?? 'pending');
+                                    $trackingStatus = strtolower((string) ($order->tracking_status ?? ''));
+
+                                    if ($order->delivered_at || str_contains($trackingStatus, 'deliver')) {
+                                        $normalizedStatus = 'delivered';
+                                    } elseif (str_contains($trackingStatus, 'transit') || str_contains($trackingStatus, 'shipped') || str_contains($trackingStatus, 'pickup')) {
+                                        $normalizedStatus = 'shipped';
+                                    }
+
+                                    $statusIndex = array_search($normalizedStatus, $statusSteps);
+                                    $statusIndex = $statusIndex === false ? 0 : $statusIndex;
+
+                                    // Fill width: spans from first to last dot (75% of container)
+                                    // Each step advances by 25% of 75% = 18.75% of total
+                                    $fillWidths = [0, 25, 50, 75];
+                                    $fillWidth = $normalizedStatus === 'cancelled' ? 0 : $fillWidths[$statusIndex];
+
+                                    $statusClass = 'order-status-' . $normalizedStatus;
+                                    $statusLabel = $normalizedStatus === 'delivered'
+                                        ? 'Delivered'
+                                        : ucwords(str_replace('_', ' ', $order->order_status));
+                                    $productImage = $item->product_image ? asset('storage/' . $item->product_image) : 'https://via.placeholder.com/180x220/f3f4f6/9ca3af?text=Design+Dhaga';
+                                @endphp
                                 <div class="col-12">
-                                    <div class="card p-4 border-1">
-                                        <div class="row g-4 align-items-start">
+                                    <div class="order-card">
+                                        <div class="order-card-head">
+                                            <div>
+                                                <div class="order-id">Order #{{ $order->id }}</div>
+                                                <div class="order-meta">
+                                                    <span><i class="bi bi-calendar3 me-1"></i>{{ $order->created_at->format('M d, Y') }}</span>
+                                                    <span><i class="bi bi-credit-card me-1"></i>{{ ucfirst($order->payment_status) }}</span>
+                                                    @if($order->expected_delivery_date)
+                                                        <span><i class="bi bi-clock-history me-1"></i>Expected {{ $order->expected_delivery_date->format('M d') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <span class="order-status-pill {{ $statusClass }}">
+                                                {{ $statusLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="order-card-body">
+                                            <div class="row g-4 align-items-start">
 
-                                            {{-- Product Image --}}
-                                            <div class="col-md-2">
-                                                <img src="{{ asset('storage/' . $item->product_image) }}" class="img-fluid rounded" alt="Product">
+                                                {{-- Product Image --}}
+                                                <div class="col-md-2 col-4">
+                                                    <img src="{{ $productImage }}" class="order-product-img" alt="{{ $item->product_name }}">
+                                                </div>
+
+                                                {{-- Product Info --}}
+                                                <div class="col-md-5 col-8">
+                                                    <h5 class="order-product-title">{{ $item->product_name }}</h5>
+                                                    <div class="text-muted small">Qty: {{ $item->quantity }} | Item total ₹{{ number_format($item->total, 2) }}</div>
+
+                                                    @if($order->awb_code)
+                                                        <div class="shipment-chip">
+                                                            <i class="bi bi-truck"></i>
+                                                            {{ $order->courier_name ?? 'Courier' }} | AWB {{ $order->awb_code }}
+                                                        </div>
+                                                    @else
+                                                        <div class="shipment-chip">
+                                                            <i class="bi bi-box-seam"></i>
+                                                            Shipment will be assigned soon
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                {{-- Tracking Progress --}}
+                                                <div class="col-md-3">
+                                                    @if($normalizedStatus === 'cancelled')
+                                                        <div class="alert alert-danger py-2 px-3 small mb-0">
+                                                            This order has been cancelled.
+                                                        </div>
+                                                    @else
+                                                        <div class="order-progress">
+                                                            <div class="order-progress-track"></div>
+                                                            <div class="order-progress-fill" style="width: {{ $fillWidth }}%;"></div>
+                                                            @foreach($statusSteps as $stepIndex => $step)
+                                                                <div class="progress-step {{ $stepIndex < $statusIndex ? 'done' : ($stepIndex === $statusIndex ? 'active' : '') }}">
+                                                                    <div class="progress-dot">
+                                                                        <i class="bi {{ $stepIndex <= $statusIndex ? 'bi-check' : 'bi-circle' }}"></i>
+                                                                    </div>
+                                                                    {{ ucfirst($step) }}
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                {{-- Actions --}}
+                                                <div class="col-md-2">
+                                                    <div class="order-actions">
+                                                        <a href="{{ route('order.invoice', $order->id) }}" class="btn btn-outline-dark order-action-btn">
+                                                            <i class="bi bi-receipt me-1"></i> Invoice
+                                                        </a>
+
+                                                        @if($order->awb_code)
+                                                            <button
+                                                                class="btn btn-dark order-action-btn"
+                                                                onclick="openTracking('{{ $order->awb_code }}', '#{{ $order->id }}', '{{ $order->id }}')"
+                                                            >
+                                                                <i class="bi bi-geo-alt me-1"></i> Track
+                                                            </button>
+                                                        @else
+                                                            <button class="btn btn-light order-action-btn" disabled>
+                                                                <i class="bi bi-hourglass-split me-1"></i> Awaiting AWB
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
                                             </div>
 
-                                            {{-- Product Info --}}
-                                            <div class="col-md-5">
-                                                <h4 class="fw-bold mb-2 mt-0">{{ $item->product_name }}</h4>
-                                                <p class="text-muted d-block mb-2">Order ID: #{{ $order->id }}</p>
-                                                <p class="text-muted d-block mb-2">Ordered on: {{ $order->created_at->format('M d, Y') }}</p>
-
-                                                @php
-                                                    $statusColors = [
-                                                        'pending'   => 'secondary',
-                                                        'confirmed' => 'info',
-                                                        'packed'    => 'warning',
-                                                        'shipped'   => 'primary',
-                                                        'delivered' => 'success',
-                                                        'cancelled' => 'danger',
-                                                    ];
-                                                @endphp
-
-                                                <span class="badge bg-{{ $statusColors[$order->order_status] ?? 'secondary' }}">
-                                                    {{ ucfirst($order->order_status) }}
-                                                </span>
-
-                                                @if($order->delivered_at)
-                                                    <small class="text-muted d-block mt-1">
-                                                        Delivered on {{ $order->delivered_at->format('M d, Y') }}
-                                                    </small>
-                                                @endif
-
-                                                {{-- Courier + AWB info --}}
-                                                @if($order->awb_code)
-                                                    <small class="text-muted d-block mt-1">
-                                                        <i class="bi bi-truck me-1"></i>
-                                                        {{ $order->courier_name ?? 'Courier' }} &bull; AWB: {{ $order->awb_code }}
-                                                    </small>
-                                                @endif
-                                            </div>
-
-                                            {{-- Price --}}
-                                            <div class="col-md-2">
-                                                <p class="fw-bold">₹ {{ number_format($item->total, 2) }}</p>
-                                                <p class="text-muted">Qty: {{ $item->quantity }}</p>
-                                            </div>
-
-                                            {{-- Actions --}}
-                                            <div class="col-md-3 text-end">
-                                                <a href="{{ route('order.invoice', $order->id) }}" class="btn btn-sm btn-outline-dark w-100 mb-2">
-                                                    View Bill
-                                                </a>
-
-                                                {{-- Track Order Button — only if AWB exists --}}
-                                                @if($order->awb_code)
-                                                    <button
-                                                        class="btn btn-sm btn-dark w-100"
-                                                        onclick="openTracking('{{ $order->awb_code }}', '#{{ $order->id }}')"
-                                                    >
-                                                        <i class="bi bi-geo-alt me-1"></i> Track Order
-                                                    </button>
-                                                @endif
-                                            </div>
-
+                                            @if($order->delivered_at)
+                                                <div class="mt-3 text-success small fw-semibold">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                                    Delivered on {{ $order->delivered_at->format('M d, Y') }}
+                                                </div>
+                                            @elseif($order->delivery_eta)
+                                                <div class="mt-3 text-muted small">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Estimated delivery: {{ $order->delivery_eta }} days after dispatch.
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -567,7 +936,7 @@ your orders.')
 
 {{-- ── Tracking Modal ── --}}
 <div class="modal fade tracking-modal" id="trackingModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             {{-- Header --}}
@@ -577,37 +946,68 @@ your orders.')
                         <h5><i class="bi bi-geo-alt-fill me-2"></i> Order Tracking</h5>
                         <small id="trackingOrderId">Loading...</small>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div id="trackingCurrentStatus">
-                    <div class="skeleton mt-3" style="height: 28px; width: 160px; border-radius: 20px;"></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
             </div>
 
-            {{-- Info Grid --}}
-            <div class="tracking-info-grid" id="trackingInfoGrid">
-                <div class="tracking-info-item">
-                    <div class="label">AWB Code</div>
-                    <div class="value skeleton" style="height:18px; width:80%;">&nbsp;</div>
+            {{-- Delivery Summary Banner --}}
+            <div id="trackingDeliverySummary" style="display:none;" class="tracking-delivery-summary">
+                <div class="tracking-delivery-icon">
+                    <i class="bi bi-check-circle-fill"></i>
                 </div>
-                <div class="tracking-info-item">
-                    <div class="label">Courier</div>
-                    <div class="value skeleton" style="height:18px; width:70%;">&nbsp;</div>
+                <div>
+                    <div class="tracking-delivery-primary" id="trackingDeliveryPrimary">Package delivered</div>
+                    <div class="tracking-delivery-secondary" id="trackingDeliverySecondary"></div>
                 </div>
-                <div class="tracking-info-item">
-                    <div class="label">Origin</div>
-                    <div class="value skeleton" style="height:18px; width:60%;">&nbsp;</div>
+            </div>
+
+            {{-- In-transit banner --}}
+            <div id="trackingTransitSummary" style="display:none; background:#eff6ff; border-bottom:1px solid #bfdbfe; padding:14px 22px;">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#1d4ed8;font-size:16px;">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1d4ed8;" id="trackingTransitPrimary">On the way</div>
+                        <div style="font-size:12px;color:#1e40af;" id="trackingTransitSecondary"></div>
+                    </div>
                 </div>
-                <div class="tracking-info-item">
-                    <div class="label">Destination</div>
-                    <div class="value skeleton" style="height:18px; width:60%;">&nbsp;</div>
+            </div>
+
+            {{-- Progress Steps --}}
+            <div class="tracking-steps-section" id="trackingStepsSection">
+                <div class="tracking-steps-label">Shipment progress</div>
+                <div class="tracking-steps-row" id="trackingStepsRow">
+                    <div class="track-fill" id="trackFill" style="width:0%;"></div>
+                    <div class="tracking-step" id="step-confirmed">
+                        <div class="tracking-step-dot"><i class="bi bi-circle"></i></div>
+                        <div class="tracking-step-label">Confirmed</div>
+                    </div>
+                    <div class="tracking-step" id="step-packed">
+                        <div class="tracking-step-dot"><i class="bi bi-circle"></i></div>
+                        <div class="tracking-step-label">Packed</div>
+                    </div>
+                    <div class="tracking-step" id="step-shipped">
+                        <div class="tracking-step-dot"><i class="bi bi-circle"></i></div>
+                        <div class="tracking-step-label">Shipped</div>
+                    </div>
+                    <div class="tracking-step" id="step-delivered">
+                        <div class="tracking-step-dot"><i class="bi bi-circle"></i></div>
+                        <div class="tracking-step-label">Delivered</div>
+                    </div>
                 </div>
+            </div>
+
+            {{-- Info strip (date/ETA only) --}}
+            <div class="tracking-info-strip" id="trackingInfoStrip" style="display:none;">
+                <i class="bi bi-calendar-check"></i>
+                <span id="trackingInfoStripText"></span>
             </div>
 
             {{-- Timeline --}}
             <div class="tracking-timeline" id="trackingTimeline">
                 <p class="text-muted text-center py-3">
-                    <span class="skeleton d-inline-block" style="height:14px; width:200px;">&nbsp;</span>
+                    <span class="skeleton d-inline-block" style="height:14px;width:200px;">&nbsp;</span>
                 </p>
             </div>
 
@@ -619,20 +1019,27 @@ your orders.')
 
 @push('scripts')
 <script>
-    // ── Tracking Modal ──────────────────────────────
     const trackUrl = "{{ url('order/track') }}";
 
-    function openTracking(awbCode, orderId) {
-        // Reset to skeleton state
+    function openTracking(awbCode, orderId, localOrderId = null) {
         document.getElementById('trackingOrderId').textContent = 'Order ' + orderId;
-        document.getElementById('trackingCurrentStatus').innerHTML = `
-            <div class="skeleton mt-3" style="height:28px; width:160px; border-radius:20px;"></div>`;
-        document.getElementById('trackingInfoGrid').innerHTML = `
-            ${infoSkeleton('AWB Code')}${infoSkeleton('Courier')}
-            ${infoSkeleton('Origin')}${infoSkeleton('Destination')}`;
+        document.getElementById('trackingDeliverySummary').style.display = 'none';
+        document.getElementById('trackingTransitSummary').style.display = 'none';
+        document.getElementById('trackingInfoStrip').style.display = 'none';
+
+        // Reset steps
+        ['confirmed','packed','shipped','delivered'].forEach(s => {
+            const el = document.getElementById('step-' + s);
+            if (el) {
+                el.className = 'tracking-step';
+                el.querySelector('.tracking-step-dot').innerHTML = '<i class="bi bi-circle"></i>';
+            }
+        });
+        document.getElementById('trackFill').style.width = '0%';
+
         document.getElementById('trackingTimeline').innerHTML = `
             <p class="text-center py-4 text-muted">
-                <i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite; display:inline-block;"></i>
+                <i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block;"></i>
                 &nbsp;Fetching tracking details...
             </p>`;
 
@@ -643,7 +1050,7 @@ your orders.')
             .then(r => r.json())
             .then(res => {
                 if (!res.success) throw new Error(res.message || 'Failed to fetch tracking');
-                renderTracking(res.data, orderId, awbCode);
+                renderTracking(res.data, orderId, awbCode, localOrderId);
             })
             .catch(err => {
                 document.getElementById('trackingTimeline').innerHTML = `
@@ -651,58 +1058,121 @@ your orders.')
                         <i class="bi bi-exclamation-circle fs-3 d-block mb-2"></i>
                         <p class="mb-0">${err.message}</p>
                     </div>`;
-                document.getElementById('trackingInfoGrid').innerHTML = '';
-                document.getElementById('trackingCurrentStatus').innerHTML = `
-                    <span class="tracking-status-badge">Unavailable</span>`;
             });
     }
 
-    function infoSkeleton(label) {
-        return `<div class="tracking-info-item">
-            <div class="label">${label}</div>
-            <div class="value skeleton" style="height:18px; width:70%;">&nbsp;</div>
-        </div>`;
+    function esc(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;').replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
     }
 
-    function renderTracking(data, orderId, awbCode) {
-        // Status badge
-        document.getElementById('trackingCurrentStatus').innerHTML =
-            `<span class="tracking-status-badge">
-                <i class="bi bi-circle-fill me-1" style="font-size:8px;"></i>
-                ${data.current_status}
-             </span>`;
+    function normalizeTrackingStatus(status) {
+        const lower = String(status ?? '').toLowerCase();
+        if (lower.includes('deliver')) return 'delivered';
+        if (lower.includes('out for')) return 'shipped';
+        if (lower.includes('transit') || lower.includes('pickup') || lower.includes('shipped') || lower.includes('manifest')) return 'shipped';
+        if (lower.includes('packed') || lower.includes('ready') || lower.includes('assigned')) return 'packed';
+        if (lower.includes('cancel') || lower.includes('rto')) return 'cancelled';
+        return 'shipped';
+    }
 
-        // Info grid
-        document.getElementById('trackingInfoGrid').innerHTML = `
-            <div class="tracking-info-item">
-                <div class="label">AWB Code</div>
-                <div class="value">${data.awb_code ?? awbCode}</div>
-            </div>
-            <div class="tracking-info-item">
-                <div class="label">Courier</div>
-                <div class="value">${data.courier_name ?? '—'}</div>
-            </div>
-            <div class="tracking-info-item">
-                <div class="label">Origin</div>
-                <div class="value">${data.origin ?? '—'}</div>
-            </div>
-            <div class="tracking-info-item">
-                <div class="label">Destination</div>
-                <div class="value">${data.destination ?? '—'}</div>
-            </div>
-            ${data.eta ? `
-            <div class="tracking-info-item">
-                <div class="label">Estimated Delivery</div>
-                <div class="value">${data.eta}</div>
-            </div>` : ''}
-            ${data.delivered_date ? `
-            <div class="tracking-info-item">
-                <div class="label">Delivered On</div>
-                <div class="value">${data.delivered_date}</div>
-            </div>` : ''}
-        `;
+    function activityTitle(act) {
+        const raw = act['sr-status-label'] || act['sr_status_label'] || act.activity || act.status || act['sr-status'];
+        const lower = String(raw ?? '').toLowerCase();
+        if (lower.includes('deliver')) return 'Delivered';
+        if (lower.includes('out for')) return 'Out for delivery';
+        if (lower.includes('pickup')) return 'Picked up by courier';
+        if (lower.includes('transit') || lower.includes('shipped')) return 'In transit';
+        if (lower.includes('manifest') || lower.includes('assign')) return 'Shipment booked';
+        if (/^\d+$/.test(String(raw ?? ''))) return 'Shipment update';
+        return raw || 'Shipment update';
+    }
 
-        // Timeline
+    function updateOrderCardStatus(orderId, normalizedStatus, label) {
+        const button = document.querySelector(`[onclick*="'#${orderId}'"]`);
+        const card = button ? button.closest('.order-card') : null;
+        if (!card) return;
+
+        const pill = card.querySelector('.order-status-pill');
+        if (pill) {
+            pill.className = `order-status-pill order-status-${normalizedStatus}`;
+            pill.textContent = normalizedStatus === 'delivered' ? 'Delivered' : label;
+        }
+
+        const progress = card.querySelector('.order-progress');
+        if (progress && normalizedStatus !== 'cancelled') {
+            const steps = ['confirmed', 'packed', 'shipped', 'delivered'];
+            const index = Math.max(0, steps.indexOf(normalizedStatus));
+            const fillWidths = [0, 25, 50, 75];
+            const fill = progress.querySelector('.order-progress-fill');
+            if (fill) fill.style.width = fillWidths[index] + '%';
+
+            progress.querySelectorAll('.progress-step').forEach((step, stepIndex) => {
+                step.classList.toggle('done', stepIndex < index);
+                step.classList.toggle('active', stepIndex === index);
+                const icon = step.querySelector('i');
+                if (icon) icon.className = `bi ${stepIndex <= index ? 'bi-check' : 'bi-circle'}`;
+            });
+        }
+    }
+
+    function renderTracking(data, orderId, awbCode, localOrderId = null) {
+        const status = data.current_status || 'In transit';
+        const normalizedStatus = normalizeTrackingStatus(status);
+
+        if (localOrderId) {
+            updateOrderCardStatus(localOrderId, normalizedStatus, status);
+        }
+
+        // ── Banner ──────────────────────────────────────
+        if (normalizedStatus === 'delivered') {
+            document.getElementById('trackingDeliverySummary').style.display = 'flex';
+            document.getElementById('trackingDeliveryPrimary').textContent = 'Package delivered';
+            document.getElementById('trackingDeliverySecondary').textContent =
+                data.delivered_date ? `Delivered on ${data.delivered_date}` : 'Your order has been delivered';
+        } else if (normalizedStatus === 'shipped') {
+            document.getElementById('trackingTransitSummary').style.display = 'block';
+            document.getElementById('trackingTransitPrimary').textContent = 'On the way';
+            document.getElementById('trackingTransitSecondary').textContent =
+                data.eta ? `Expected by ${data.eta}` : 'Your order is in transit';
+        }
+
+        // ── Progress steps ──────────────────────────────
+        const stepOrder = ['confirmed', 'packed', 'shipped', 'delivered'];
+        const stepIndex = Math.max(0, stepOrder.indexOf(normalizedStatus));
+
+        // Fill width: track spans 75% of row (left 12.5% → right 12.5%).
+        // Each of the 3 gaps = 25% of that 75% span = 25% of container width.
+        // stepIndex 0 → 0%, 1 → 25%, 2 → 50%, 3 → 75%
+        const fillWidthPct = [0, 25, 50, 75][stepIndex];
+        document.getElementById('trackFill').style.width = fillWidthPct + '%';
+
+        stepOrder.forEach((step, i) => {
+            const el = document.getElementById('step-' + step);
+            if (!el) return;
+            if (i <= stepIndex) {
+                el.className = 'tracking-step done';
+                el.querySelector('.tracking-step-dot').innerHTML = '<i class="bi bi-check"></i>';
+            } else {
+                el.className = 'tracking-step';
+                el.querySelector('.tracking-step-dot').innerHTML = '<i class="bi bi-circle"></i>';
+            }
+        });
+
+        // ── Info strip (date/ETA only) ──────────────────
+        const stripEl = document.getElementById('trackingInfoStrip');
+        const stripText = document.getElementById('trackingInfoStripText');
+        if (data.delivered_date) {
+            stripText.innerHTML = `Delivered on <strong>${esc(data.delivered_date)}</strong>`;
+            stripEl.style.display = 'flex';
+        } else if (data.eta) {
+            stripText.innerHTML = `Estimated delivery: <strong>${esc(data.eta)}</strong>`;
+            stripEl.style.display = 'flex';
+        }
+
+        // ── Timeline ────────────────────────────────────
         const activities = data.activities ?? [];
 
         if (activities.length === 0) {
@@ -714,40 +1184,63 @@ your orders.')
             return;
         }
 
-        const icons = {
-            'delivered'  : 'bi-check-circle-fill',
-            'picked up'  : 'bi-box-seam',
-            'in transit' : 'bi-truck',
-            'out for'    : 'bi-bicycle',
-            'rto'        : 'bi-arrow-return-left',
-            'default'    : 'bi-geo-alt-fill',
-        };
+        // Group consecutive activities with the same milestone label together.
+        // The first (most recent) activity is the active milestone; rest are inactive.
+        const milestoneOrder = ['delivered', 'out for delivery', 'in transit', 'picked up', 'shipment booked'];
 
-        function getIcon(activity) {
-            const lower = (activity ?? '').toLowerCase();
-            for (const [key, cls] of Object.entries(icons)) {
-                if (lower.includes(key)) return cls;
-            }
-            return icons.default;
+        function getMilestone(act) {
+            const t = activityTitle(act).toLowerCase();
+            if (t.includes('deliver') && !t.includes('out')) return 'Delivered';
+            if (t.includes('out for')) return 'Out For Delivery';
+            if (t.includes('transit') || t.includes('shipped')) return 'In Transit';
+            if (t.includes('pickup') || t.includes('picked')) return 'Picked Up';
+            if (t.includes('manifest') || t.includes('booked') || t.includes('confirmed')) return 'Order Confirmed';
+            return activityTitle(act);
         }
 
-        const timelineHtml = activities.map((act, index) => `
-            <div class="timeline-item">
-                <div class="timeline-dot ${index > 0 ? 'inactive' : ''}">
-                    <i class="bi ${getIcon(act['sr-status'] ?? act.activity ?? '')}"></i>
-                </div>
-                <div class="timeline-content">
-                    <div class="activity">${act['sr-status'] ?? act.activity ?? 'Update'}</div>
-                    <div class="location"><i class="bi bi-geo me-1"></i>${act.location ?? '—'}</div>
-                    <div class="time"><i class="bi bi-clock me-1"></i>${act.date ?? ''}</div>
-                </div>
-            </div>
-        `).join('');
+        // Group by milestone label
+        const groups = [];
+        activities.forEach(act => {
+            const label = getMilestone(act);
+            const last = groups[groups.length - 1];
+            if (last && last.label === label) {
+                last.items.push(act);
+            } else {
+                groups.push({ label, items: [act] });
+            }
+        });
+
+        const timelineHtml = `<div class="tracking-section-title">Shipment activity</div>` +
+            groups.map((group, gi) => {
+                const isActive = gi === 0;
+                // Use date from first item in group as the milestone date
+                const milestoneDate = group.items[0]?.date ?? '';
+                // Sub-items: show location + time for each activity in the group
+                const subHtml = group.items.map(act => {
+                    const loc = act.location ?? '';
+                    const dt  = act.date ?? '';
+                    return `<div class="tl-sub">${esc(loc)}${loc && dt ? ' <span class="tl-sub-time">· ' + esc(dt) + '</span>' : esc(dt)}</div>`;
+                }).join('');
+
+                return `
+                <div class="tl-group ${isActive ? '' : 'inactive'}">
+                    <div class="tl-spine">
+                        <div class="tl-dot ${isActive ? '' : 'inactive'}"></div>
+                    </div>
+                    <div class="tl-body">
+                        <div class="tl-head">
+                            <span class="tl-label">${esc(group.label)}</span>
+                            <span class="tl-date">${esc(milestoneDate)}</span>
+                        </div>
+                        ${subHtml}
+                    </div>
+                </div>`;
+            }).join('');
 
         document.getElementById('trackingTimeline').innerHTML = timelineHtml;
     }
 
-    // ── Navigation Persistence ──────────────────────
+    // Navigation persistence
     document.addEventListener('DOMContentLoaded', function () {
         const lastTab = localStorage.getItem('dashboard-active-tab');
         if (lastTab) {
@@ -763,7 +1256,7 @@ your orders.')
         });
     });
 
-    // ── Profile Edit ────────────────────────────────
+    // Profile edit
     function enableEdit() {
         document.querySelectorAll("#profileForm input, #profileForm select").forEach((el) => {
             el.removeAttribute("readonly");
@@ -791,7 +1284,7 @@ your orders.')
         document.getElementById("editBtn").classList.remove("d-none");
     }
 
-    // ── Address Form ────────────────────────────────
+    // Address form
     function showForm() {
         document.getElementById("addressList").classList.add("d-none");
         document.getElementById("addressForm").classList.remove("d-none");
@@ -802,7 +1295,6 @@ your orders.')
         document.getElementById("addressList").classList.remove("d-none");
     }
 
-    // Spinner for loading state
     const style = document.createElement('style');
     style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
     document.head.appendChild(style);

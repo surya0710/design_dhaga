@@ -30,6 +30,15 @@ class Order extends Model
         'delivery_charge', // ✅ ADD
         'coupon_discount',
         'total',
+        'gst_rate',
+        'gst_type',
+        'cgst_rate',
+        'sgst_rate',
+        'igst_rate',
+        'cgst_amount',
+        'sgst_amount',
+        'igst_amount',
+        'gst_amount',
 
         'delivery_type', // ✅ ADD
         'delivery_eta', // ✅ ADD
@@ -64,6 +73,14 @@ class Order extends Model
         'delivery_charge' => 'decimal:2', // ✅
         'coupon_discount' => 'decimal:2',
         'total' => 'decimal:2',
+        'gst_rate' => 'decimal:2',
+        'cgst_rate' => 'decimal:2',
+        'sgst_rate' => 'decimal:2',
+        'igst_rate' => 'decimal:2',
+        'cgst_amount' => 'decimal:2',
+        'sgst_amount' => 'decimal:2',
+        'igst_amount' => 'decimal:2',
+        'gst_amount' => 'decimal:2',
 
         'expected_delivery_date' => 'date', // ✅
 

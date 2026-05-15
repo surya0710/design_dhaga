@@ -55,7 +55,8 @@ class CheckoutController extends Controller
         });
 
         $shipping = 0;
-        $couponDiscount = 0;
+        $coupon = session()->get('coupon');
+        $couponDiscount = (float) ($coupon['discount'] ?? 0);
         $defaultAddress = null;
 
         if (auth()->check()) {
@@ -77,12 +78,6 @@ class CheckoutController extends Controller
         $total = $taxableAmount + $shipping + $gstData['gst_amount'];
 
         $categories = $this->categories;
-
-        $coupon = session()->get('coupon');
-        if ($coupon) {
-            $couponDiscount = $coupon['discount'];
-            $total = $total - $couponDiscount;
-        }
 
         $menu       = $this->menu;
 
@@ -224,7 +219,8 @@ class CheckoutController extends Controller
         ]);
 
         $subtotal = $cartItems->sum(fn($item) => $item['price'] * $item['quantity']);
-        $couponDiscount = 0;
+        $coupon = session()->get('coupon');
+        $couponDiscount = (float) ($coupon['discount'] ?? 0);
         $taxableAmount = max($subtotal - $couponDiscount, 0);
 
         try {
@@ -265,6 +261,10 @@ class CheckoutController extends Controller
             ?? $selectedOption['shipping_amount']
             ?? 0
         );
+
+        if ((bool) ($coupon['free_shipping'] ?? false)) {
+            $shipping = 0.0;
+        }
 
         // ✅ Extract ETA safely
         $deliveryEta =
@@ -319,6 +319,8 @@ class CheckoutController extends Controller
                 'subtotal' => $subtotal,
                 'shipping' => $shipping,
                 'delivery_charge' => $shipping,
+                'coupon_discount' => $couponDiscount,
+                'coupon_code' => $coupon['code'] ?? null,
 
                 // ✅ DELIVERY DETAILS (FIXED)
                 'delivery_type' => $validated['delivery_type'],
@@ -329,8 +331,12 @@ class CheckoutController extends Controller
                 'shiprocket_courier_id' => (string)$validated['shiprocket_courier_id'],
 
                 // GST
+                'gst_rate' => $gstData['gst_rate'],
                 'gst_amount' => $gstAmount,
                 'gst_type' => $gstData['gst_type'],
+                'cgst_rate' => $gstData['cgst_rate'],
+                'sgst_rate' => $gstData['sgst_rate'],
+                'igst_rate' => $gstData['igst_rate'],
                 'cgst_amount' => $gstData['cgst_amount'],
                 'sgst_amount' => $gstData['sgst_amount'],
                 'igst_amount' => $gstData['igst_amount'],
@@ -423,10 +429,9 @@ class CheckoutController extends Controller
                 'paid_at' => now(),
             ]);
 
-            $pdf = Pdf::loadView('pdf.invoice', [
+            $pdf = Pdf::loadView('user.invoice', [
                 'order' => $order,
-                'companyState' => $this->companyState,
-            ]);
+            ])->setPaper('A4', 'portrait');
 
             if (!empty($order->email)) {
                 Mail::to($order->email)->send(
