@@ -2920,6 +2920,10 @@ ol.breadcrumb li {
   .timeline-item1 .content {
     height: 30vh !important;
   }
+
+  .gallery-grid {
+    column-count: 3;
+  }
 }
 
 @media (max-width: 991px) {
