@@ -39,11 +39,11 @@
                     <div class="body-title">Show On Home <span class="tf-color-1">*</span>
                     </div>
                     <select class="flex-grow" name="show_on_home" tabindex="0" aria-required="true" required="">
-                        <option value="1"> Yes</option>
-                        <option value="0"> No</option>
+                        <option value="1" {{ $category->show_on_home == '1' ? 'selected' : '' }}> Yes</option>
+                        <option value="0" {{ $category->show_on_home == '0' ? 'selected' : '' }}> No</option>
                     </select>
                 </fieldset>
-                @error('name')
+                @error('show_on_home')
                     <span class="invalid-feedback">{{$message}}</span>
                 @enderror
 

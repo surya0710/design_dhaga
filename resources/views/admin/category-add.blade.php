@@ -32,6 +32,18 @@
             <form class="form-new-product form-style-1" action="{{route('admin.category.store')}}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
+                
+                <fieldset class="Show">
+                    <div class="body-title">Show On Home <span class="tf-color-1">*</span>
+                    </div>
+                    <select class="flex-grow" name="show_on_home" tabindex="0" aria-required="true" required="">
+                        <option value="1"> Yes</option>
+                        <option value="0"> No</option>
+                    </select>
+                </fieldset>
+                @error('show_on_home')
+                    <span class="invalid-feedback">{{$message}}</span>
+                @enderror
                 <fieldset class="parent_category">
                     <div class="body-title">Parent Category <span class="tf-color-1">*</span>
                     </div>
