@@ -49,6 +49,8 @@ return [
     'razorpay' => [
         'key' => env('RAZORPAY_KEY'),
         'secret' => env('RAZORPAY_SECRET'),
+        'test_key' => env('RAZORPAY_TEST_KEY'),
+        'test_secret' => env('RAZORPAY_TEST_SECRET'),
     ],
 
     'shiprocket' => [

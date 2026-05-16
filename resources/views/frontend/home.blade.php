@@ -13,12 +13,14 @@
 <div class="container py-2 category-icons">
     <div class="d-flex justify-content-center gap-3">
         @foreach($categories as $category)
+            @if($category->show_on_home == 1)
             <div class="text-center">
                 <a href="{{ route('shop.index', [$category->slug]) }}" class="text-decoration-none">
                     <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }}') }}" class="img-fluid">
                     <h4>{{ $category->name }}</h4>
                 </a>
             </div>
+            @endif
         @endforeach
     </div>
 </div>

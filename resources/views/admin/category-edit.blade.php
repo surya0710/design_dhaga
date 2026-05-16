@@ -34,6 +34,19 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" value="{{$category->id}}" name="id">
+
+                <fieldset class="Show">
+                    <div class="body-title">Show On Home <span class="tf-color-1">*</span>
+                    </div>
+                    <select class="flex-grow" name="show_on_home" tabindex="0" aria-required="true" required="">
+                        <option value="1"> Yes</option>
+                        <option value="0"> No</option>
+                    </select>
+                </fieldset>
+                @error('name')
+                    <span class="invalid-feedback">{{$message}}</span>
+                @enderror
+
                 <fieldset class="name">
                     <div class="body-title">Category Name <span class="tf-color-1">*</span>
                     </div>

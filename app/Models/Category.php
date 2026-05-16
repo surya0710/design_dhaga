@@ -16,7 +16,8 @@ class Category extends Model
         'status',
         'meta_title',
         'meta_keywords',
-        'meta_description'
+        'meta_description',
+        'show_on_home'
     ];
     
     public function parent()

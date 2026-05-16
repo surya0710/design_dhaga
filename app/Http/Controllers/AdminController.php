@@ -321,6 +321,7 @@ class AdminController extends Controller
             'meta_title'       => 'nullable|max:255|unique:categories,meta_title',
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
+            'show_on_home'     => 'nullable',
         ]);
 
         $category                    = new Category();
@@ -330,6 +331,7 @@ class AdminController extends Controller
         $category->meta_title        = $request->meta_title;
         $category->meta_keywords     = $request->meta_keywords;
         $category->meta_description  = $request->meta_description;
+        $category->show_on_home      = $request->show_on_home;
         $category->image             = '';
 
         if ($request->hasFile('image')) {
@@ -367,6 +369,7 @@ class AdminController extends Controller
             'meta_title'       => 'nullable|unique:categories,meta_title,' . $request->id,
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
+            'show_on_home'     => 'nullable',
         ]);
 
         $category = Category::findOrFail($request->id);
@@ -376,6 +379,7 @@ class AdminController extends Controller
         $category->meta_title = $request->meta_title;
         $category->meta_keywords = $request->meta_keywords;
         $category->meta_description = $request->meta_description;
+        $category->show_on_home = $request->show_on_home ?? 1;
 
         if ($request->hasFile('image')) {
 
