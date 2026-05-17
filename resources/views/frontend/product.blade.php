@@ -633,7 +633,7 @@
 
     <div style="width: 100%; max-width: 600px; height: 60vh; position: relative; display: flex; align-items: center; justify-content: center; z-index: 9999; overflow: hidden;">
 
-        <img id="modalMainImage" src="" style="width: 100%; height: 100%; object-fit: contain; cursor: grab; transition: transform 0.2s ease;" />
+        <img id="modalMainImage" style="width:100%;height:100%;object-fit:contain; cursor:grab; transition:transform 0.2s ease; touch-action:none;">
 
         <div style="position: absolute; bottom: 15px; right: 0; z-index: 10000; display: flex; gap: 6px;">
             <button onclick="zoomIn()" class="btn btn-light rounded-circle shadow" style="width: 40px; height: 40px;">+</button>

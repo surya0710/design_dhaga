@@ -3,6 +3,7 @@ let modalImageIndex = 0;
 let mobileIndex = 0;
 
 let scale = 1;
+let currentScale = 1;
 let translateX = 0;
 let translateY = 0;
 let isDragging = false;
@@ -11,6 +12,8 @@ let startY = 0;
 let modalImg = null;
 let mobileThumbs = [];
 
+
+const modalImage = document.getElementById('modalMainImage');
 function setDesktopImage(el) {
     const mainImg = document.getElementById('desktopMainImage');
     mainImg.src = el.src;
@@ -339,33 +342,94 @@ document.addEventListener('DOMContentLoaded', function () {
     modalImg = document.getElementById('modalMainImage');
 
     if (modalImg) {
-        modalImg.addEventListener('mousedown', function (e) {
-            if (scale <= 1) return;
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            e.preventDefault();
-            applyTransform();
-        });
 
+        // Prevent default image drag
         modalImg.addEventListener('dragstart', function (e) {
             e.preventDefault();
         });
+
+        // =========================
+        // DESKTOP DRAG SUPPORT
+        // =========================
+        modalImg.addEventListener('mousedown', function (e) {
+
+            if (scale <= 1) return;
+
+            isDragging = true;
+
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+
+            modalImg.style.cursor = 'grabbing';
+
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+
+            if (!isDragging || scale <= 1) return;
+
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+
+            applyTransform();
+        });
+
+        document.addEventListener('mouseup', function () {
+
+            isDragging = false;
+
+            if (scale > 1) {
+                modalImg.style.cursor = 'grab';
+            }
+        });
+
+        // =========================
+        // MOBILE TOUCH DRAG SUPPORT
+        // =========================
+
+        modalImg.style.touchAction = 'none';
+
+        modalImg.addEventListener('touchstart', function (e) {
+
+            if (scale <= 1) return;
+
+            if (e.touches.length !== 1) return;
+
+            isDragging = true;
+
+            const touch = e.touches[0];
+
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
+
+        }, { passive: false });
+
+        modalImg.addEventListener('touchmove', function (e) {
+
+            if (!isDragging || scale <= 1) return;
+
+            if (e.touches.length !== 1) return;
+
+            e.preventDefault();
+
+            const touch = e.touches[0];
+
+            translateX = touch.clientX - startX;
+            translateY = touch.clientY - startY;
+
+            applyTransform();
+
+        }, { passive: false });
+
+        modalImg.addEventListener('touchend', function () {
+            isDragging = false;
+        });
+
+        modalImg.addEventListener('touchcancel', function () {
+            isDragging = false;
+        });
     }
-
-    document.addEventListener('mousemove', function (e) {
-        if (!isDragging || scale <= 1) return;
-        translateX += e.clientX - startX;
-        translateY += e.clientY - startY;
-        startX = e.clientX;
-        startY = e.clientY;
-        applyTransform();
-    });
-
-    document.addEventListener('mouseup', function () {
-        isDragging = false;
-        applyTransform();
-    });
 
     $(document).on('click', '.wishlist-btn', function () {
         toggleWishlist($(this));

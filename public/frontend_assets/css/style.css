@@ -3700,7 +3700,7 @@ ol.breadcrumb li {
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  z-index: 700;
   transition: 0.3s;
 }
 
