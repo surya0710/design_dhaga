@@ -43,7 +43,7 @@
                                     <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                                 </div>
                                 <div class="card-body">
-                                    <p class="mt-2 text-left">{{ $product->name }}</p>
+                                    <p class="mt-2 text-left mb-0">{{ $product->name }}</p>
                                      @if ($product->sale_price)
                                         <span class="text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                                         <span class="text-decoration-line-through text-muted small ms-2">
@@ -72,7 +72,7 @@
                             <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                         </div>
                         <div class="card-body p-2">
-                            <p class="mt-2 text-left">{{ $product->name }}</p>
+                            <p class="mt-2 text-left mb-0">{{ $product->name }}</p>
                             @if ($product->sale_price)
                                 <span class="text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                                 <span class="text-decoration-line-through text-muted small ms-2">
