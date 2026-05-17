@@ -138,17 +138,17 @@
                             <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                         </button>
                         </div>
-                        <p>{{ $product->name }}</p>
+                        <p class="mb-1">{{ $product->name }}</p>
                         @if ($product->sale_price)
-                            <span class="text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
-                            <span class="text-decoration-line-through text-muted small ms-2">
-                                ₹ {{ number_format($product->regular_price, 0) }}
+                            <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
+                            <span class="text-decoration-line-through text-muted small text-light">
+                                ₹{{ number_format($product->regular_price, 0) }}
                             </span>
-                            <span class="text-maroon small ms-2 fw-semibold">
+                            <span class="text-maroon small">
                                 Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
                             </span>
                         @else
-                            <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
+                            <span class="text-black">₹{{ number_format($product->regular_price, 0) }}</span>
                         @endif
                     </a>
                     @endforeach
@@ -176,13 +176,13 @@
                             <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                         </button>
                         </div>
-                        <p>{{ $product->name }}</p>
+                        <p class="mb-1">{{ $product->name }}</p>
                         @if ($product->sale_price)
-                            <span class="text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
-                            <span class="text-decoration-line-through text-muted small ms-2">
-                                ₹ {{ number_format($product->regular_price, 0) }}
+                            <span class="text-black text-bold">₹ {{ number_format($product->sale_price, 0) }}</span>
+                            <span class="text-decoration-line-through text-muted small text-light">
+                                ₹{{ number_format($product->regular_price, 0) }}
                             </span>
-                            <span class="text-maroon small ms-2 fw-semibold">
+                            <span class="text-maroon small">
                                 Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
                             </span>
                         @else
@@ -214,7 +214,7 @@
                         <li>Your story guides every brushstroke.</li>
                         <li>No repeats. No templates. Just personal art</li>
                     </ul>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2" href="{{ route('contact-us') }}#form">Customize Now</a>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ route('contact-us') }}#form">Customize Now</a>
                 </div>
             </div>
         </div>
@@ -302,7 +302,7 @@
                         <li>Personal, original, and meaningful</li>
                         <li>Designed to reflect identity</li>
                     </ul>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2" href="{{ route('contact-us') }}#form">Customize Now</a>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ route('contact-us') }}#form">Customize Now</a>
                 </div>
             </div>
             <div class="col text-md-right text-small-center">

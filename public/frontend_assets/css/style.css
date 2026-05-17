@@ -523,8 +523,12 @@ h5 {
 .products-conatiner {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 5px;
   justify-content: center;
+}
+
+.text-bold {
+  font-weight: bold;
 }
 
 .product-item {
@@ -557,6 +561,14 @@ h5 {
 
 .product-item p {
   margin-bottom: 0 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-weight: 400;
+  color: #5A5E80;
 }
 
 .product-details {
@@ -686,8 +698,9 @@ h5 {
 /* ============================================
    YOUR IDEA / OUR BRUSH
    ============================================ */
-#your-idea-our-brush ul {
-  padding-left: 2rem !important;
+#your-idea-our-brush ul,
+#graphics-section ul {
+  padding-left: 1rem !important;
 }
 
 .customize-image {
@@ -3078,7 +3091,7 @@ ol.breadcrumb li {
   }
 
   .product-item {
-    flex: 0 0 calc(33% - 10px);
+    flex: 0 0 calc(50% - 10px);
   }
 
   .view-all-btn {
