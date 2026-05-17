@@ -14,6 +14,7 @@ use App\Models\Menu;
 use App\Models\Testimonial;
 use App\Models\Story;
 use App\Models\AboutSection;
+use App\Models\PortfolioCategory;
 use App\Models\Pages;
 
 class HomeController extends Controller
@@ -76,7 +77,8 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.portfolio', compact('categories', 'menu'));
+        $portfolio  = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
+        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio'));
     }
 
     public function terms()

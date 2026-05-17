@@ -24,6 +24,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
+use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\PageController;
 
 /*
@@ -218,6 +219,26 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/story/edit/{id}', [AdminController::class, 'story_edit'])->name('admin.story.edit');
     Route::put('/admin/story/update/{id}', [AdminController::class, 'story_update'])->name('admin.story.update');
     Route::delete('/admin/story/delete/{id}', [AdminController::class, 'story_delete'])->name('admin.story.delete');
+
+    Route::prefix('/admin/portfolio')->name('admin.portfolio.')->group(function () {
+        Route::get('/categories', [PortfolioController::class, 'categories'])->name('categories.index');
+        Route::post('/categories', [PortfolioController::class, 'storeCategory'])->name('categories.store');
+        Route::put('/categories/{category}', [PortfolioController::class, 'updateCategory'])->name('categories.update');
+        Route::delete('/categories/{category}', [PortfolioController::class, 'deleteCategory'])->name('categories.destroy');
+
+        Route::get('/subcategories', [PortfolioController::class, 'subcategories'])->name('subcategories.index');
+        Route::post('/subcategories', [PortfolioController::class, 'storeSubcategory'])->name('subcategories.store');
+        Route::put('/subcategories/{subcategory}', [PortfolioController::class, 'updateSubcategory'])->name('subcategories.update');
+        Route::delete('/subcategories/{subcategory}', [PortfolioController::class, 'deleteSubcategory'])->name('subcategories.destroy');
+        Route::get('/subcategories/by-category/{category}', [PortfolioController::class, 'subcategoriesForCategory'])->name('subcategories.by-category');
+
+        Route::get('/gallery', [PortfolioController::class, 'gallery'])->name('gallery.index');
+        Route::get('/gallery/create', [PortfolioController::class, 'createGallery'])->name('gallery.create');
+        Route::post('/gallery', [PortfolioController::class, 'storeGallery'])->name('gallery.store');
+        Route::get('/gallery/{gallery}/edit', [PortfolioController::class, 'editGallery'])->name('gallery.edit');
+        Route::put('/gallery/{gallery}', [PortfolioController::class, 'updateGallery'])->name('gallery.update');
+        Route::delete('/gallery/{gallery}', [PortfolioController::class, 'deleteGallery'])->name('gallery.destroy');
+    });
 
     Route::get('/admin/about-section', [AdminController::class, 'about_section'])->name('admin.about.section');
 

@@ -69,443 +69,64 @@ and premium branding services. Our products are handcrafted in India and loved b
 <section class="my-4">
     <div class="d-flex justify-content-center portfolio-category">
         <ul class="nav nav-tabs custom-tabs border-0 gap-2" id="myTab" role="tablist">
+            @foreach ($portfolio as $category)
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="fabric-tab" data-bs-toggle="tab" data-bs-target="#fabric-tab-pane"
-                    type="button" role="tab" aria-controls="new-arrival-tab-pane" aria-selected="true">
-                    <img src="frontend_assets/images/portfolio-icons/hand-painted-fabric-icon.png" class="img-fluid"
-                        alt="fabric-icon">
-                    <span>Fabric Painting</span>
+                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $category->slug }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $category->slug }}-tab-pane"
+                    type="button" role="tab" aria-controls="{{ $category->slug }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    <img src="{{ asset($category->image) }}" class="img-fluid" alt="">
+                    <span>{{ $category->name }}</span>
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="best-seller-tab" data-bs-toggle="tab" data-bs-target="#graphics-tab-pane"
-                    type="button" role="tab" aria-controls="best-seller-tab-pane" aria-selected="false" tabindex="-1">
-                    <img src="frontend_assets/images/portfolio-icons/Graphics-icons.png" class="img-fluid"
-                        alt="graphics-icon">
-                    <span>Graphics Gallery</span>
-                </button>
-            </li>
+            @endforeach
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="fabric-tab-pane" role="tabpanel">
+        @foreach ($portfolio as $category)
+        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $category->slug }}-tab-pane" role="tabpanel">
             <!-- FILTER -->
             <div class="gallery-filter">
                 <span class="active" data-filter="*">All</span>
-                <span data-filter="Acrylic">Acrylic</span>
-                <span data-filter="foil-painting">Foil</span>
-                <span data-filter="leather-printing">Leather</span>
-                <span data-filter="milky-printing">Milky</span>
-                <span data-filter="puffy-printing">Puffy</span>
-                <span data-filter="silky-printing">Silky</span>
-                <span data-filter="stencil-printing">Stencil</span>
+                @foreach ($category->subcategories as $subcategory)
+                <span data-filter="{{ $subcategory->slug }}">{{ $subcategory->name }}</span>
+                @endforeach
             </div>
 
             <!-- GALLERY -->
             <div class="container mb-2 px-3">
                 <div class="gallery-grid">
-
-                    <div class="gallery-item Acrylic">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/01.webp"
+                    @foreach ($category->subcategories as $subcategory)
+                    @foreach ($subcategory->galleries as $gallery)
+                    <div class="gallery-item {{ $gallery->subcategory->slug }}">
+                        <a href="{{ asset($gallery->image) }}"
                             class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/01.webp">
+                            <img src="{{ asset($gallery->image) }}" alt="">
                         </a>
                     </div>
-                    <div class="gallery-item Acrylic">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/02.webp"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item Acrylic">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/03.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/03.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item Acrylic">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/04.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Acrylic Painting/04.webp">
-                        </a>
-                    </div>
-
-                    <div class="gallery-item foil-painting">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item foil-painting">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item foil-painting">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/03.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/03.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item foil-painting">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/04.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Foil Painting/04.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item leather-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Leather painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Leather painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item leather-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Leather painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Leather painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item milky-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Milky painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Milky painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item milky-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Milky painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Milky painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item puffy-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item puffy-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item puffy-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/03.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Puffy painting/03.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item silky-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Silk painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Silk painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item silky-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Silk painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Silk painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item stencil-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/01.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item stencil-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/02.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item stencil-printing">
-                        <a href="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/03.webp" class="glightbox">
-                            <img src="frontend_assets/images/portfolio/fabric-painting-portfolio/Stencil painting/03.webp">
-                        </a>
-                    </div>
+                    @endforeach
+                    @endforeach
                 </div>
 
             </div>
 
+            @if($category->name == "Fabric Painting")
             <div class="sliding-text bg-dark py-3 px-2 w-100">
                 <div class="scroll-container">
                     <div class="scroll-content">
                         <!-- ORIGINAL ITEMS -->
+                        @foreach ($category->subcategories as $subcategory)
                         <div class="item">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                                 <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
                                 l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Acrylic
+                            </svg> {{ $subcategory->name }}
                         </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Foil
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Leather
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Milky
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Puffy
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Silky
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Stencil
-                        </div>
-
-                        <!-- DUPLICATED ITEMS FOR INFINITE LOOP -->
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Acrylic
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Foil
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Leather
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Milky
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Puffy
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Silky
-                        </div>
-                        <div class="item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                                <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                                l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                            </svg> Stencil
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
+            @endif
 
-        </div>
-        <div class="tab-pane" id="graphics-tab-pane" role="tabpanel">
-            <!-- FILTER -->
-            <div class="gallery-filter">
-                <span class="active" data-filter="*">ALL</span>
-                <span data-filter="social-media">Social Media</span>
-                <span data-filter="logo-brand">Logo & Brand</span>
-                <span data-filter="packaging">Packaging</span>
-            </div>
-
-            <!-- GALLERY -->
-            <div class="container mb-2">
-                <div class="gallery-grid">
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/01.webp"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/02.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/a4-bella-monde-sm.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/a4-bella-monde-sm.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/emrald.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/emrald.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/herbnest 01.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/herbnest 01.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/hotel.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/hotel.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/HYPHEN-MEERUT.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/HYPHEN-MEERUT.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item social-media">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/insta scholarship 02.webp"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Content & Social Media Strategy/insta scholarship 02.webp">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/A4 FEBRIC NAMA.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/A4 FEBRIC NAMA.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/abroad-educo-landscape.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/abroad-educo-landscape.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/Bitamin.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/Bitamin.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/cake xpress.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/cake xpress.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/herbnest.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/herbnest.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/HOW TO COOK.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/HOW TO COOK.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/mssa.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/mssa.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/samshot.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/samshot.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/TEV.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/TEV.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item logo-brand">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/Ziddi Fitness.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Logo & Brand Identity System/Ziddi Fitness.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/Arogya-Delight.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/Arogya-Delight.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/bitamin-products.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/bitamin-products.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/cookies .jpg"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/cookies .jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/cubwalk.jpg"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/cubwalk.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/herbnest-products.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/herbnest-products.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/honey-wall.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/honey-wall.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/honey.jpg"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/honey.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/indri-dhoop.jpg"
-                            class="glightbox">
-                            <img
-                                src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/indri-dhoop.jpg">
-                        </a>
-                    </div>
-                    <div class="gallery-item packaging">
-                        <a href="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/milk-pack.jpg"
-                            class="glightbox">
-                            <img src="frontend_assets/images/portfolio/graphics-gallery/Packaging Designs/milk-pack.jpg">
-                        </a>
-                    </div>
-                </div>
-            </div>
-
+            @if($category->name == "Graphics Gallery")
             <!-- ✅ BRANDS MARQUEE - Pure CSS, no Owl Carousel -->
             <div class="brands-marquee-wrapper py-3">
                 <div class="brands-scroll-track">
@@ -589,8 +210,10 @@ and premium branding services. Our products are handcrafted in India and loved b
                     </div>
                 </div>
             </div>
-
+            @endif
         </div>
+        @endforeach
+        
     </div>
 </section>
 @endsection
@@ -645,51 +268,48 @@ and premium branding services. Our products are handcrafted in India and loved b
     });
 
     document.addEventListener("DOMContentLoaded", function () {
+
         if (!window.bootstrap || !window.bootstrap.Tab) return;
-    
-        const normalizeHash = (hash) =>
-            decodeURIComponent(hash || "")
-                .replace(/^#/, "")
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g, "-");
-    
-        const activateTabFromHash = () => {
-            const normalized = normalizeHash(window.location.hash);
-            if (!normalized) return;
-    
-            if (normalized === "fabric-painting") {
-                const tab = document.getElementById("fabric-tab");
-                if (tab) new bootstrap.Tab(tab).show();
+
+        // Open tab from URL hash
+        function activateTabFromHash() {
+
+            let hash = window.location.hash.replace('#', '');
+
+            if (!hash) return;
+
+            const tabTrigger = document.querySelector(
+                `#${hash}-tab`
+            );
+
+            if (tabTrigger) {
+                new bootstrap.Tab(tabTrigger).show();
             }
-    
-            if (normalized === "graphics-gallery") {
-                const tab = document.getElementById("best-seller-tab");
-                if (tab) new bootstrap.Tab(tab).show();
-            }
-        };
-    
-        // Update URL when tab changes
-        document
-            .querySelectorAll('#myTab button[data-bs-toggle="tab"]')
+        }
+
+        // Change URL when tab changes
+        document.querySelectorAll('#myTab button[data-bs-toggle="tab"]')
             .forEach((btn) => {
-                btn.addEventListener("shown.bs.tab", function (event) {
-                    const id = event.target.id;
-    
-                    if (id === "fabric-tab") {
-                        history.replaceState(null, "", "#Fabric-Painting");
-                    }
-    
-                    if (id === "best-seller-tab") {
-                        history.replaceState(null, "", "#Graphics-Gallery");
-                    }
+
+                btn.addEventListener('shown.bs.tab', function (e) {
+
+                    const id = e.target.id.replace('-tab', '');
+
+                    history.replaceState(
+                        null,
+                        null,
+                        `#${id}`
+                    );
                 });
+
             });
-    
+
+        // Listen hash changes
         window.addEventListener("hashchange", activateTabFromHash);
-    
-        // 🔥 Activate immediately on DOM ready
+
+        // Initial load
         activateTabFromHash();
+
     });
 </script>
 @endpush

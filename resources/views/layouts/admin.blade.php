@@ -228,6 +228,30 @@
                                     </a>
                                 </li>
 
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-image"></i></div>
+                                        <div class="text">Portfolio</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="{{ route('admin.portfolio.gallery.index') }}" class="">
+                                                <div class="text">Gallery</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="{{ route('admin.portfolio.categories.index') }}" class="">
+                                                <div class="text">Categories</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="{{ route('admin.portfolio.subcategories.index') }}" class="">
+                                                <div class="text">Subcategories</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
                                 <li class="menu-item">
                                     <a href="{{ route('admin.about.section') }}" class="">
                                         <div class="icon"><i class="icon-grid"></i></div>
