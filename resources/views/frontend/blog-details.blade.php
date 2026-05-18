@@ -29,7 +29,7 @@
 
         <div class="col-lg-3 mt-lg-3">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <h2 class="h4 fw-bold mb-0 mt-0">Featured Products</h2>
+                <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
             <div id="recentBlogsCarousel" class="d-lg-none">
