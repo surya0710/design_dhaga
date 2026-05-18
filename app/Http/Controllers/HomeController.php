@@ -73,7 +73,7 @@ class HomeController extends Controller
     {
         $categories     = $this->categories;
         $menu           = $this->menu;
-        $pageContent    = Pages::where('slug', 'about-us')->first();
+        $pageContent    = Pages::where('slug', 'contact-us')->first();
         return view('frontend.contact', compact('categories', 'menu', 'pageContent'));
     }
 
