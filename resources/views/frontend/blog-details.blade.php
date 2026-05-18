@@ -149,7 +149,7 @@
             loop: true,
             margin: 12,
             nav: true,
-            dots: true,
+            dots: false,
             autoplay: true,
             smartSpeed: 2000,
             responsive: {
