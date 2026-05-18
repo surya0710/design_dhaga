@@ -71,9 +71,10 @@ class HomeController extends Controller
 
     public function contact()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        return view('frontend.contact', compact('categories', 'menu'));
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'about-us')->first();
+        return view('frontend.contact', compact('categories', 'menu', 'pageContent'));
     }
 
     public function portfolio()
@@ -81,6 +82,7 @@ class HomeController extends Controller
         $categories = $this->categories;
         $menu       = $this->menu;
         $portfolio  = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
+
         return view('frontend.portfolio', compact('categories', 'menu', 'portfolio'));
     }
 
