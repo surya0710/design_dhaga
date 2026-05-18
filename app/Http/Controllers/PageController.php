@@ -15,12 +15,19 @@ class PageController extends Controller
     {
         $query = Pages::query();
 
-        // Search
-        if ($request->search) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+        $search = trim((string) $request->get('search', ''));
+
+        if ($search !== '') {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('slug', 'like', '%' . $search . '%')
+                    ->orWhere('meta_title', 'like', '%' . $search . '%')
+                    ->orWhere('meta_description', 'like', '%' . $search . '%')
+                    ->orWhere('meta_keywords', 'like', '%' . $search . '%');
+            });
         }
 
-        $pages = $query->latest()->paginate(10);
+        $pages = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.pages', compact('pages'));
     }

@@ -22,10 +22,10 @@
         <div class="wg-box">
             <div class="flex items-center justify-between gap10 flex-wrap">
                 <div class="wg-filter flex-grow">
-                    <form class="form-search">
+                    <form class="form-search" method="GET" action="{{ route('admin.coupons') }}">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search here..." class="" name="name"
-                                tabindex="2" value="" aria-required="true" required="">
+                            <input type="text" placeholder="Search coupons by code, type, value..." class="" name="search"
+                                tabindex="2" value="{{ request('search') }}">
                         </fieldset>
                         <div class="button-submit">
                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -59,9 +59,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($coupon as $coupons)
+                            @forelse ($coupon as $coupons)
                             <tr>
-                                <td>{{$loop->index + 1}}</td>
+                                <td>{{ $coupon->firstItem() + $loop->index }}</td>
                                 <td>{{$coupons-> code}}</td>
                                 <td>{{$coupons-> type}}</td>
                                 <td>{{$coupons-> value}}</td>
@@ -85,14 +85,18 @@
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="10" class="text-center">No coupons found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-
+                {{ $coupon->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

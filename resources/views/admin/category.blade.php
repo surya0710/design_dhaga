@@ -22,10 +22,10 @@
         <div class="wg-box">
             <div class="flex items-center justify-between gap10 flex-wrap">
                 <div class="wg-filter flex-grow">
-                    <form class="form-search">
+                    <form class="form-search" method="GET" action="{{ route('admin.categories') }}">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search here..." class="" name="name"
-                                tabindex="2" value="" aria-required="true" required="">
+                            <input type="text" placeholder="Search categories by name, slug, parent..." class="" name="search"
+                                tabindex="2" value="{{ request('search') }}">
                         </fieldset>
                         <div class="button-submit">
                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -50,9 +50,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($categories as $category)
+                        @forelse ($categories as $category)
                         <tr>
-                            <td>{{$loop->index + 1}}</td>
+                            <td>{{ $categories->firstItem() + $loop->index }}</td>
                             <td class="pname">
                                 <div class="image">
                                     <img src="{{asset('uploads/categories'.'/'.$category->image)}}" alt="" class="image">
@@ -80,12 +80,17 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No categories found.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
+                {{ $categories->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

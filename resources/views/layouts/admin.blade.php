@@ -486,6 +486,87 @@
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/apexcharts/apexcharts.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script>
+        $(function () {
+            $('.wg-table table, .table-all-user table').each(function (index) {
+                const table = $(this);
+                const tableShell = table.closest('.wg-table, .table-all-user');
+                const box = table.closest('.wg-box');
+                const tableId = table.attr('id') || 'admin-filter-table-' + index;
+                const columnCount = table.find('thead th').length || table.find('tr:first-child td').length || 1;
+                let searchInput = box.find('.form-search input[type="text"], .form-search input[type="search"]').first();
+                let countLabel = box.find('.admin-table-filter-count').first();
+
+                table.attr('id', tableId);
+                tableShell.addClass('admin-table-scroll');
+
+                if (!searchInput.length) {
+                    const filter = $(`
+                        <div class="admin-table-filter">
+                            <form class="form-search admin-generated-filter" autocomplete="off">
+                                <fieldset class="name">
+                                    <input type="search" placeholder="Search list..." aria-label="Search table">
+                                </fieldset>
+                                <div class="button-submit">
+                                    <button type="submit"><i class="icon-search"></i></button>
+                                </div>
+                            </form>
+                            <div class="admin-table-filter-count"></div>
+                        </div>
+                    `);
+
+                    tableShell.before(filter);
+                    searchInput = filter.find('input');
+                    countLabel = filter.find('.admin-table-filter-count');
+                } else {
+                    searchInput.attr('placeholder', searchInput.attr('placeholder') || 'Search list...');
+
+                    if (!countLabel.length) {
+                        countLabel = $('<div class="admin-table-filter-count"></div>');
+                        searchInput.closest('.form-search').after(countLabel);
+                    }
+                }
+
+                const rows = table.find('tbody tr').filter(function () {
+                    return !$(this).find('td[colspan]').length;
+                });
+
+                if (!rows.length) {
+                    countLabel.text('');
+                    return;
+                }
+
+                const emptyRow = $('<tr class="admin-table-empty-row" style="display:none;"><td colspan="' + columnCount + '">No matching records found.</td></tr>');
+                table.find('tbody').append(emptyRow);
+
+                function filterRows() {
+                    const query = String(searchInput.val() || '').toLowerCase().trim();
+                    let visible = 0;
+
+                    rows.each(function () {
+                        const row = $(this);
+                        const matches = !query || row.text().toLowerCase().indexOf(query) !== -1;
+                        row.toggle(matches);
+
+                        if (matches) {
+                            visible++;
+                        }
+                    });
+
+                    emptyRow.toggle(visible === 0);
+                    countLabel.text(visible + ' of ' + rows.length + ' shown');
+                }
+
+                searchInput.on('input', filterRows);
+                searchInput.closest('.admin-generated-filter').on('submit', function (event) {
+                    event.preventDefault();
+                    filterRows();
+                });
+
+                filterRows();
+            });
+        });
+    </script>
     
     @stack("scripts")
 </body>

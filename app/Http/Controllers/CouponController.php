@@ -8,9 +8,26 @@ use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class CouponController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $coupon = Coupon::orderBy('id', 'desc')->get();
+        $search = trim((string) $request->get('search', ''));
+
+        $coupon = Coupon::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('code', 'like', '%' . $search . '%')
+                        ->orWhere('type', 'like', '%' . $search . '%')
+                        ->orWhere('value', 'like', '%' . $search . '%')
+                        ->orWhere('min_cart_value', 'like', '%' . $search . '%')
+                        ->orWhere('max_discount', 'like', '%' . $search . '%')
+                        ->orWhere('start_date', 'like', '%' . $search . '%')
+                        ->orWhere('end_date', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.coupons', compact('coupon'));
     }
 

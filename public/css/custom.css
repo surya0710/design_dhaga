@@ -6,8 +6,36 @@ body {
     max-width: 190px;
 }
 
-.wg-table.table-all-user>* {
-    min-width: 1260px;
+.wg-table,
+.table-all-user {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f1f5f9;
+}
+
+.wg-table::-webkit-scrollbar,
+.table-all-user::-webkit-scrollbar {
+    height: 10px;
+}
+
+.wg-table::-webkit-scrollbar-track,
+.table-all-user::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 999px;
+}
+
+.wg-table::-webkit-scrollbar-thumb,
+.table-all-user::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 999px;
+}
+
+.wg-table::-webkit-scrollbar-thumb:hover,
+.table-all-user::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
 }
 
 .wgp-pagination svg {
@@ -64,8 +92,11 @@ body {
     overflow: hidden;
 }
 
+.wg-table table,
+.table-all-user table,
 .table-striped {
     min-width: 1200px;
+    white-space: nowrap;
 }
 
 .table-striped th:nth-child(2),
@@ -84,8 +115,28 @@ body {
     margin: 0 auto;
 }
 
-.wg-table.table-all-user>* {
-    min-width: 1260px;
+.admin-table-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-table-filter .form-search {
+    width: min(100%, 420px);
+}
+
+.admin-table-filter-count {
+    color: #64748b;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.admin-table-empty-row td {
+    color: #64748b;
+    font-weight: 600;
+    text-align: center;
 }
 
 /*------*/
@@ -151,6 +202,7 @@ body {
 .table-striped td:nth-child(2) {
     width: 250px;
     padding-bottom: 18px;
+    text-wrap: auto;
 }
 
 .pname {

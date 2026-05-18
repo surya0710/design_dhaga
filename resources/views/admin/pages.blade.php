@@ -30,11 +30,11 @@
 
                 {{-- Search --}}
                 <div class="wg-filter flex-grow">
-                    <form class="form-search" method="GET">
+                    <form class="form-search" method="GET" action="{{ route('admin.pages') }}">
 
                         <fieldset class="name">
                             <input type="text"
-                                   placeholder="Search by title..."
+                                   placeholder="Search pages by title, slug, meta..."
                                    name="search"
                                    value="{{ request('search') }}">
                         </fieldset>
@@ -80,7 +80,7 @@
 
                         <tr>
 
-                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $pages->firstItem() + $key }}</td>
 
                             {{-- Title --}}
                             <td>
@@ -177,7 +177,7 @@
             {{-- Pagination --}}
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
 
-                {{ $pages->links() }}
+                {{ $pages->links('pagination::bootstrap-5') }}
 
             </div>
 

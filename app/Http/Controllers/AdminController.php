@@ -297,11 +297,25 @@ class AdminController extends Controller
         return redirect()->back()->with('status', 'Brand has been deleted successfully!');
     }
 
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = Category::withCount('products')
+        $search = trim((string) $request->get('search', ''));
+
+        $categories = Category::with(['parent'])
+            ->withCount('products')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%')
+                        ->orWhere('meta_title', 'like', '%' . $search . '%')
+                        ->orWhereHas('parent', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.category', compact('categories'));
     }
@@ -418,9 +432,28 @@ class AdminController extends Controller
     // PRODUCTS
     // =========================================================================
 
-    public function products()
+    public function products(Request $request)
     {
-        $product = Product::orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $product = Product::with('category')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%')
+                        ->orWhere('sku', 'like', '%' . $search . '%')
+                        ->orWhere('stock_status', 'like', '%' . $search . '%')
+                        ->orWhere('regular_price', 'like', '%' . $search . '%')
+                        ->orWhere('sale_price', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.products', compact('product'));
     }
 
@@ -1013,9 +1046,23 @@ class AdminController extends Controller
     // BLOGS  (Intervention kept — blog images are always single uploads)
     // =========================================================================
 
-    public function blogs()
+    public function blogs(Request $request)
     {
-        $blogs = Blog::orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $blogs = Blog::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%')
+                        ->orWhere('content', 'like', '%' . $search . '%')
+                        ->orWhere('meta_title', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.blogs', compact('blogs'));
     }
 
