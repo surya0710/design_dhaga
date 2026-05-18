@@ -3322,6 +3322,17 @@ ol.breadcrumb li {
   padding: 10px;
 }
 
+.featured-product-name{
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-weight: 400;
+  color: #5A5E80;
+}
+
 .accordion-button::after {
   content: none !important;
   background-image: none !important;
