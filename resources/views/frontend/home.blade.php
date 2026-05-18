@@ -178,7 +178,7 @@
                         </div>
                         <p class="mb-1">{{ $product->name }}</p>
                         @if ($product->sale_price)
-                            <span class="text-black text-bold">₹ {{ number_format($product->sale_price, 0) }}</span>
+                            <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
                             <span class="text-decoration-line-through text-muted small text-light">
                                 ₹{{ number_format($product->regular_price, 0) }}
                             </span>
