@@ -79,11 +79,12 @@ class HomeController extends Controller
 
     public function portfolio()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'portfolio')->first();
         $portfolio  = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
 
-        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio'));
+        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio', 'pageContent'));
     }
 
     public function terms()
