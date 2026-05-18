@@ -37,24 +37,26 @@ class HomeController extends Controller
 
     public function index()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $reviews    = Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
-        $newArrivals = Product::where('status', 1)
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $reviews        = Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
+        $newArrivals    = Product::where('status', 1)
             ->with(['category.parent'])
             ->latest()
             ->limit(9)
             ->get();
 
-        $bestSellers = Product::where('status', 1)->where('featured', 2)
+        $bestSellers    = Product::where('status', 1)->where('featured', 2)
             ->with(['category.parent'])
             ->latest()
             ->limit(9)
             ->get();
+
+        $pageContent    = Pages::where('slug', '/')->first();
 
         $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews'));
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent'));
     }
 
     public function about()
@@ -83,33 +85,33 @@ class HomeController extends Controller
 
     public function terms()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $pageContent = Pages::where('slug', 'terms-and-condition')->first();
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'terms-and-condition')->first();
         return view('frontend.terms', compact('categories', 'menu', 'pageContent'));
     }
 
     public function returnPolicy()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $pageContent = Pages::where('slug', 'return-policy')->first();
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'return-policy')->first();
         return view('frontend.return-policy', compact('categories', 'menu', 'pageContent'));
     }
 
     public function orderShipping()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $pageContent = Pages::where('slug', 'order-shipping-policy')->first();
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'order-shipping-policy')->first();
         return view('frontend.shipping-policy', compact('categories', 'menu', 'pageContent'));
     }
 
     public function privacyPolicy()
     {
-        $categories  = $this->categories;
-        $menu        = $this->menu;
-        $pageContent = Pages::where('slug', 'privacy-policy')->first();
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'privacy-policy')->first();
         return view('frontend.privacy-policy', compact('categories', 'menu', 'pageContent'));
     }
 
