@@ -3318,6 +3318,10 @@ ol.breadcrumb li {
   display: block;
 }
 
+.blogs-card{
+  padding: 10px;
+}
+
 .accordion-button::after {
   content: none !important;
   background-image: none !important;
