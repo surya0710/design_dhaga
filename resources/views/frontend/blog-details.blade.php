@@ -42,8 +42,8 @@
                                 <div class="ratio ratio-4x3">
                                     <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                                 </div>
-                                <div class="card-body blogs-card featured-product-name">
-                                    <p class="mt-0 text-left mb-0">{{ $product->name }}</p>
+                                <div class="card-body blogs-card">
+                                    <p class="mt-0 text-left mb-0 featured-product-name">{{ $product->name }}</p>
                                      @if ($product->sale_price)
                                         <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
                                         <span class="text-decoration-line-through text-muted small text-light">
