@@ -61,11 +61,12 @@ class HomeController extends Controller
 
     public function about()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $stories    = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
-        $about      = AboutSection::where('status', 1)->first();
-        return view('frontend.about', compact('categories', 'menu', 'stories', 'about'));
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $stories        = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
+        $about          = AboutSection::where('status', 1)->first();
+        $pageContent    = Pages::where('slug', 'about-us')->first();
+        return view('frontend.about', compact('categories', 'menu', 'stories', 'about', 'pageContent'));
     }
 
     public function contact()

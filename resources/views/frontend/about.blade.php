@@ -1,14 +1,14 @@
 @extends('frontend.layouts.app')
-@section('title', 'About Us')
+@section('title', $pageContent->meta_title ?? 'About Us')
 
-@section('meta_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
+@section('meta_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
 and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 
-@section('meta_keywords', 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade
+@section('meta_keywords', $pageContent->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade
 clothing, made in India')
 
-@section('og_title', 'Design Dhaga - Hand-Painted Fashion')
-@section('og_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
+@section('og_title', $pageContent->meta_title ?? 'Design Dhaga - Hand-Painted Fashion')
+@section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
 and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset('frontend_assets/images/og-home.jpg'))
 @push('extras')
