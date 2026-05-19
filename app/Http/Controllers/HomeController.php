@@ -14,6 +14,7 @@ use App\Models\Menu;
 use App\Models\Testimonial;
 use App\Models\Story;
 use App\Models\AboutSection;
+use App\Models\HomeSection;
 use App\Models\PortfolioCategory;
 use App\Models\Pages;
 
@@ -55,8 +56,15 @@ class HomeController extends Controller
         $pageContent    = Pages::where('slug', '/')->first();
 
         $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
+        $homeSections = HomeSection::where('status', 1)
+            ->with(['items' => function ($query) {
+                $query->where('status', 1);
+            }])
+            ->orderBy('sort_order')
+            ->get()
+            ->keyBy('key');
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent'));
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections'));
     }
 
     public function about()

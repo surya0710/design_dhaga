@@ -25,6 +25,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\PortfolioController;
+use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\PageController;
 
 /*
@@ -243,6 +244,12 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/about-section', [AdminController::class, 'about_section'])->name('admin.about.section');
 
     Route::post('/admin/about-section/update', [AdminController::class, 'about_section_update'])->name('admin.about.section.update');
+
+    Route::get('/admin/home-page', [HomePageController::class, 'index'])->name('admin.home-page.index');
+    Route::put('/admin/home-page/sections/{section}', [HomePageController::class, 'updateSection'])->name('admin.home-page.sections.update');
+    Route::post('/admin/home-page/sections/{section}/items', [HomePageController::class, 'storeItem'])->name('admin.home-page.items.store');
+    Route::put('/admin/home-page/items/{item}', [HomePageController::class, 'updateItem'])->name('admin.home-page.items.update');
+    Route::delete('/admin/home-page/items/{item}', [HomePageController::class, 'deleteItem'])->name('admin.home-page.items.destroy');
 
     Route::get('/admin/sliders/list', [SliderController::class, 'sliders'])->name('admin.sliders');
     Route::get('/admin/sliders/create/', [SliderController::class, 'sliders_create'])->name('admin.sliders.create');

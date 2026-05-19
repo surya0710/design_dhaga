@@ -586,12 +586,12 @@ h5 {
 .view-all-btn {
   font-size: small;
   display: inline-block;
-  padding: 10px 100px;
+  padding: 10px 50px;
   color: #000;
   border: 1px solid #1F1F1D;
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast);
-  border-radius: 7px;
+  border-radius: 20px;
 }
 
 .view-all-btn:hover,

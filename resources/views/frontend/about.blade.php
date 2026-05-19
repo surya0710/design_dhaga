@@ -199,7 +199,7 @@ and premium branding services. Our products are handcrafted in India and loved b
   </div>
 </section>
 
-<section class="timeline-section container py-4">
+<section class="timeline-section container py-4" id="timeline">
     <div class="row position-relative">
         {{-- Sidebar Years --}}
         <div class="col-2 col-md-2 timeline-sidebar-container">

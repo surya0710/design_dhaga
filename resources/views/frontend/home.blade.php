@@ -9,6 +9,23 @@
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset('frontend_assets/images/og-home.jpg'))
 
+@php
+    $desktopInfo    = $homeSections->get('desktop_info');
+    $mobileFeatures = $homeSections->get('mobile_features');
+    $ideaBrush      = $homeSections->get('idea_brush');
+    $graphicsDesign = $homeSections->get('graphics_design');
+    $whoWeAre       = $homeSections->get('who_we_are');
+    $inspiredArt    = $homeSections->get('inspired_art');
+
+    $bodyParts = function ($body) {
+        $parts = preg_split("/\r\n|\n|\r/", (string) $body);
+        $intro = trim(array_shift($parts) ?? '');
+        $items = collect($parts)->map(fn ($line) => trim($line))->filter()->values();
+
+        return [$intro, $items];
+    };
+@endphp
+
 @section('content')
 <div class="container py-2 category-icons">
     <div class="d-flex justify-content-center gap-3">
@@ -59,42 +76,32 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
+@if($desktopInfo && $desktopInfo->items->isNotEmpty())
 <section class="container d-none d-md-block" id="our-info">
     <div class="row">
-        <div class="col-md-4 info-box px-5">
-            <h1 class="my-0">Art Meets</h1>
-            <p>Craftsmanship</p>
-        </div>
-        <div class="col-md-4 text-center info-box">
-            <h1 class="my-0">Exclusive Designs</h1>
-            <p>Premium Detailing</p>
-        </div>
-        <div class="col-md-4 text-right info-box px-5">
-            <h1 class="my-0">Fully Customizable</h1>
-            <p>Your Idea, Our Artwork</p>
-        </div>
+        @foreach($desktopInfo->items as $item)
+            <div class="col-md-4 {{ $loop->first ? 'info-box px-5' : ($loop->last ? 'text-right info-box px-5' : 'text-center info-box') }}">
+                <h1 class="my-0">{{ $item->title }}</h1>
+                <p>{{ $item->subtitle }}</p>
+            </div>
+        @endforeach
     </div>
 </section>
+@endif
+@if($mobileFeatures && $mobileFeatures->items->isNotEmpty())
 <section class="features-box d-sm-block d-md-none">
     <div class="container">
         <div class="row feature-items">
-            <div class="feature-item col">
-                <img src="frontend_assets/images/easy-delivery-process.svg" class="mobile-icons" />
-                <h4>Easy Delivery</h4>
-            </div>
-
-            <div class="feature-item col">
-                <img src="frontend_assets/images/exquisite-product.svg" class="mobile-icons" />
-                <h4>Exquisite Product</h4>
-            </div>
-
-            <div class="feature-item col">
-                <img src="frontend_assets/images/intricate-design.svg" class="mobile-icons" />
-                <h4>Intricate Design</h4>
-            </div>
+            @foreach($mobileFeatures->items as $item)
+                <div class="feature-item col p-0">
+                    <img src="{{ asset($item->image) }}" class="mobile-icons" />
+                    <h4>{{ $item->title }}</h4>
+                </div>
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 <section class="bg-body-primary py-4">
     <div class="container">
 
@@ -195,26 +202,18 @@
         </div>
     </div>
 </section>
+
 <section class="py-4 bg-body-secondary" id="your-idea-our-brush">
     <div class="container">
         <div class="d-flex align-items-center">
             <div class="col text-small-center">
-                <img src="frontend_assets/images/hand-painting-fabric-image.png" alt="Custmize Now" class="w-80" />
+                <img src="{{ asset($ideaBrush->image) }}" alt="Custmize Now" class="w-80" />
             </div>
             <div class="col">
                 <div class="py-md-3 px-3">
-                    <h1>Your Idea. Our Brush.</h1>
-                    <p class="text-justify">At Design Dhaga, we believe that fashion is a form of
-                        self-expression. That's why we create outfits that reflect your personality, values, and
-                        style. Whether you're looking for a statement piece or a wardrobe staple, our team of
-                        skilled designers and artisans will work with you to bring your vision to life.
-                    </p>
-                    <ul class="unordered-list">
-                        <li>Every outfit is hand-painted, one of a kind.</li>
-                        <li>Your story guides every brushstroke.</li>
-                        <li>No repeats. No templates. Just personal art</li>
-                    </ul>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ route('contact-us') }}#form">Customize Now</a>
+                    <h1>{{ $ideaBrush->title }}</h1>
+                    <p class="text-justify">{!! $ideaBrush->body !!}</p>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ $ideaBrush->button_url }} ">{{ $ideaBrush->button_text }}</a>
                 </div>
             </div>
         </div>
@@ -294,15 +293,9 @@
         <div class="d-flex align-items-center reverse-sm">
             <div class="col">
                 <div class="py-md-3 px-3">
-                    <h1>Design That Speaks Your Identity</h1>
-                    <p class="text-justify">At Design Dhaga, we see visual design as a powerful language one that expresses a brand’s values, personality, and purpose. From logos and brand identities to digital creatives, every design is crafted from scratch through close collaboration, ensuring it reflects you, not passing trends. Guided by your ideas and refined with intention, our work is personal, original, and meaningful designed to communicate your identity with clarity and authenticity.</p>
-                    <ul class="unordered-list">
-                        <li>Your ideas shape every detail</li>
-                        <li>Created from scratch, with intention</li>
-                        <li>Personal, original, and meaningful</li>
-                        <li>Designed to reflect identity</li>
-                    </ul>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ route('contact-us') }}#form">Customize Now</a>
+                    <h1>{{ $graphicsDesign->title }}</h1>
+                    <p class="text-justify">{!! $graphicsDesign->body !!}</p>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ $graphicsDesign->button_url }}">{{ $graphicsDesign->button_text }}</a>
                 </div>
             </div>
             <div class="col text-md-right text-small-center">
@@ -313,50 +306,23 @@
 </section>
 <section class="container-fluid py-3" id="who-we-are">
     <div class="row px-4">
-        <h2 class="mb-0">Where Art, Fabric & Design Come Together</h2>
-        <p class="mt-2">A closer look at who we are.</p>
+        <h2 class="mb-0">{{ $whoWeAre->title }}</h2>
+        <p class="mt-2">{{ $whoWeAre->subtitle }}</p>
     </div>
 
     <div class="row mt-2 px-3">
         <div id="whoWeAreSlider">
             <div class="owl-carousel owl-theme">
-
+                @foreach($whoWeAre->items as $item)
                 <div class="item">
-                    <img src="frontend_assets/images/our-story.jpg" class="w-100 border rounded" alt="Our Story">
-                    <a href="{{ route('about-us') }}">
+                    <img src="{{ asset($item->image) }}" class="w-100 border rounded" alt="Our Story">
+                    <a href="{{ $item->link_url }}">
                         <div class="item-box ">
-                            <span>Our Story</span>
+                            <span>{{ $item->title }}</span>
                         </div>
                     </a>
                 </div>
-
-                <div class="item">
-                    <img src="frontend_assets/images/hand-painted-portfolio.jpg" class="w-100 border rounded" alt="Hand-Painted Portfolio">
-                    <a href="{{ route('portfolio') }}">
-                        <div class="item-box ">
-                            <span>Hand-Painted Portfolio</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="item">
-                    <img src="frontend_assets/images/our-online-store.jpg" class="w-100 border rounded" alt="Our Online Store">
-                    <a href="#">
-                        <div class="item-box ">
-                            <span>Our Online Store</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="item">
-                    <img src="frontend_assets/images/graphic-design-portfolio.jpg" class="w-100 border rounded" alt="Graphic Design Portfolio">
-                    <a href="{{ route('portfolio') }}#graphics-gallery">
-                        <div class="item-box">
-                            <span>Graphic Design Portfolio</span>
-                        </div>
-                    </a>
-                </div>
-
+                @endforeach
             </div>
         </div>
     </div>
@@ -364,26 +330,19 @@
 <section class="bg-body-primary py-3" id="inspired-by-art">
     <div class="container">
         <div class="row">
-            <h2 class="text-center">Inspired By Art, <strong>Powered By Design</strong></h2>
-            <p class="text-center">Read the Story and Meet The Makers</p>
+            <h2 class="text-center">{{ $inspiredArt->title }}</h2>
+            <p class="text-center">{{ $inspiredArt->subtitle }}</p>
         </div>
         <div class="row">
+            @foreach($inspiredArt->items as $item)
             <div class="col text-center">
-                <img alt="Timeless" src="frontend_assets/images/icons/TimeLess icon.svg" />
-                <h4>Timeless</h4>
+                <img alt="Timeless" src="{{ asset($item->image) }}" />
+                <h4>{{ $item->title }}</h4>
             </div>
-            <div class="col text-center">
-                <img alt="Timeless" src="frontend_assets/images/icons/Easy Icon.svg" />
-                <h4>Easy</h4>
-            </div>
-            <div class="col text-center">
-                <img alt="Timeless" src="frontend_assets/images/icons/Honest icon.svg" />
-                <h4>Honest</h4>
-            </div>
+            @endforeach
         </div>
         <div class="row text-center mt-4">
-            <p>Together, let's discover a better life</p>
-            <p class="mb-0">#DESIGNDHAGA #HANDPAINT #GRAPHICS</p>
+            {!! $inspiredArt->body !!}
         </div>
     </div>
 </section>

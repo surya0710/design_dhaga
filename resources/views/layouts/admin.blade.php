@@ -260,6 +260,13 @@
                                 </li>
 
                                 <li class="menu-item">
+                                    <a href="{{ route('admin.home-page.index') }}" class="">
+                                        <div class="icon"><i class="icon-home"></i></div>
+                                        <div class="text">Home Page</div>
+                                    </a>
+                                </li>
+
+                                <li class="menu-item">
                                     <a href="{{ route('admin.pages') }}">
                                         <div class="icon"><i class="icon-file-text"></i></div>
                                         <div class="text">Pages</div>
