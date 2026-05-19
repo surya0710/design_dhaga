@@ -288,7 +288,7 @@
                 </div>
             </div>
             <div class="col text-md-right text-small-center">
-                <img src="frontend_assets/images/graphics-image.png" alt="Custmize Now" class="customize-image" />
+                <img src="{{ asset($graphicsDesign->image) }}" alt="Custmize Now" class="customize-image" />
             </div>
         </div>
     </div>

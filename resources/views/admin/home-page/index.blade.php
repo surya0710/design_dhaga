@@ -31,7 +31,7 @@
             'title' => '3. your-idea-our-brush',
             'where' => 'Image on left and content on right.',
             'hint' => 'Use first line as paragraph and next lines as bullet points.',
-            'fields' => ['title', 'body', 'button'],
+            'fields' => ['title', 'body', 'button', 'image'],
             'heading_label' => 'Right Side Heading',
             'body_label' => 'Right Side Content',
         ],
@@ -40,7 +40,7 @@
             'title' => '4. graphics',
             'where' => 'Content on left and image on right.',
             'hint' => 'Use first line as paragraph and next lines as bullet points.',
-            'fields' => ['title', 'body', 'button'],
+            'fields' => ['title', 'body', 'button', 'image'],
             'heading_label' => 'Left Side Heading',
             'body_label' => 'Left Side Content',
         ],
@@ -222,8 +222,7 @@
     }
 
     .home-item-preview{
-        width:100%;
-        height:190px;
+        width:200px;
         object-fit:cover;
         border-radius:16px;
         border:1px solid #e5e7eb;
@@ -290,50 +289,33 @@
 
                 <div class="home-section-body">
 
-                    <form id="section-form-{{ $section->id }}"
-                          class="form-style-modern"
-                          action="{{ route('admin.home-page.sections.update', $section) }}"
-                          method="POST"
-                          enctype="multipart/form-data">
+                    <form id="section-form-{{ $section->id }}" class="form-style-modern" action="{{ route('admin.home-page.sections.update', $section) }}"
+                    method="POST" enctype="multipart/form-data">
 
                         @csrf
                         @method('PUT')
 
                         @if($fields->contains('title'))
                             <div class="modern-field">
-                                <label>
-                                    {{ $meta['heading_label'] ?? 'Section Heading' }}
-                                </label>
+                                <label>{{ $meta['heading_label'] ?? 'Section Heading' }}</label>
 
-                                <input type="text"
-                                       name="title"
-                                       value="{{ old('title',$section->title) }}">
+                                <input type="text" name="title" value="{{ old('title',$section->title) }}">
                             </div>
                         @endif
 
                         @if($fields->contains('subtitle'))
                             <div class="modern-field">
-                                <label>
-                                    {{ $meta['subtitle_label'] ?? 'Sub Heading' }}
-                                </label>
+                                <label>{{ $meta['subtitle_label'] ?? 'Sub Heading' }}</label>
 
-                                <input type="text"
-                                       name="subtitle"
-                                       value="{{ old('subtitle',$section->subtitle) }}">
+                                <input type="text" name="subtitle" value="{{ old('subtitle',$section->subtitle) }}">
                             </div>
                         @endif
 
                         @if($fields->contains('body'))
                             <div class="modern-field">
-                                <label>
-                                    {{ $meta['body_label'] ?? 'Content' }}
-                                </label>
+                                <label>{{ $meta['body_label'] ?? 'Content' }}</label>
 
-                                <textarea
-                                    name="body"
-                                    rows="8"
-                                    class="rich-editor"
-                                >{{ old('body',$section->body) }}</textarea>
+                                <textarea name="body" rows="8" class="rich-editor">{{ old('body',$section->body) }}</textarea>
 
                                 <span class="home-field-note">
                                     {{ $meta['hint'] }}
@@ -341,22 +323,36 @@
                             </div>
                         @endif
 
+                        @if($fields->contains('image'))
+
+                            <div class="modern-field">
+
+                                <label>Section Image</label>
+
+                                @if($section->image)
+                                    <img src="{{ asset($section->image) }}?v={{ time() }}" class="home-item-preview" alt="">
+                                @endif
+
+                                <input type="file"
+                                    name="image"
+                                    accept="image/*">
+
+                            </div>
+
+                        @endif
+
                         @if($fields->contains('button'))
 
                             <div class="modern-field">
                                 <label>Button Text</label>
 
-                                <input type="text"
-                                       name="button_text"
-                                       value="{{ old('button_text',$section->button_text) }}">
+                                <input type="text" name="button_text" value="{{ old('button_text',$section->button_text) }}">
                             </div>
 
                             <div class="modern-field">
                                 <label>Button URL</label>
 
-                                <input type="text"
-                                       name="button_url"
-                                       value="{{ old('button_url',$section->button_url) }}">
+                                <input type="text" name="button_url" value="{{ old('button_url',$section->button_url) }}">
                             </div>
 
                             <div class="modern-field">
@@ -377,9 +373,7 @@
 
                         @endif
 
-                        <input type="hidden"
-                               name="bg_class"
-                               value="{{ $section->bg_class }}">
+                        <input type="hidden" name="bg_class" value="{{ $section->bg_class }}">
 
                         @if(
                             $fields->contains('title') ||
@@ -388,8 +382,7 @@
                             $fields->contains('button')
                         )
 
-                            <button type="submit"
-                                    class="section-save-btn">
+                            <button type="submit" class="section-save-btn">
                                 Save Section Content
                             </button>
 
