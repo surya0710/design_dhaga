@@ -8,11 +8,13 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
+use App\Models\HomepageHighlight;
 
 class CartController extends Controller
 {
     protected $categories;
     protected $menu;
+    protected $highlights;
 
     public function __construct()
     {
@@ -22,6 +24,8 @@ class CartController extends Controller
             ->get();
 
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+
+        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
     /**
@@ -29,23 +33,25 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cartItems = Cart::with('product')
+        $cartItems      = Cart::with('product')
             ->where('user_id', Auth::id())
             ->get();
 
-        $subtotal   = $cartItems->sum(function ($item) {
+        $subtotal       = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
 
-        $total      = $subtotal;
-        $menu       = $this->menu;
+        $total          = $subtotal;
+        $menu           = $this->menu;
+        $highlights     = HomepageHighlight::where('status', 1)->get();
 
         return view('frontend.cart', [
-            'cartItems' => $cartItems,
-            'subtotal'  => $subtotal,
-            'total'     => $total,
-            'categories'=> $this->categories,
-            'menu'      => $menu
+            'cartItems'     => $cartItems,
+            'subtotal'      => $subtotal,
+            'total'         => $total,
+            'categories'    => $this->categories,
+            'menu'          => $menu,
+            'highlights'    => $highlights
         ]);
     }
 

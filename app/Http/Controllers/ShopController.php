@@ -9,11 +9,13 @@ use App\Models\Visitor;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Menu;
+use App\Models\HomepageHighlight;
 
 class ShopController extends Controller
 {
     protected $categories;
     protected $menu;
+    protected $highlights;
 
     public function __construct()
     {
@@ -26,6 +28,8 @@ class ShopController extends Controller
             ->get();
 
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+
+        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
 
@@ -52,7 +56,9 @@ class ShopController extends Controller
                 ->get();
         }
 
-        return view('frontend.shop', compact('products', 'category', 'categories', 'menu'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+
+        return view('frontend.shop', compact('products', 'category', 'categories', 'menu', 'highlights'));
     }
 
 
@@ -67,13 +73,15 @@ class ShopController extends Controller
         $wishlistProductIds = Wishlist::where('user_id', auth()->user()->id)->pluck('product_id')->toArray();
         $products           = Product::whereIn('id', $wishlistProductIds)->get();
         $menu               = $this->menu;
-        return view('frontend.shop', compact('products', 'categories', 'category', 'menu'));
+        $highlights         = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights'));
     }
 
     public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $highlights     = HomepageHighlight::where('status', 1)->get();
 
         $visitorId = $request->cookie('visitor_id');
 
@@ -142,7 +150,8 @@ class ShopController extends Controller
             'allReviews' => $allReviews,
             'isInWishlist' => $isInWishlist,
             'country' => $country,
-            'menu' => $menu
+            'menu' => $menu,
+            'highlights' => $highlights
         ]);
     }
 }

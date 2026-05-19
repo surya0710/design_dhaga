@@ -17,11 +17,13 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\OrderCompletedMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
+use App\Models\HomepageHighlight;
 
 class CheckoutController extends Controller
 {
     protected $categories;
     protected $menu;
+    protected $highlights;
 
     // Registered business state
     protected string $companyState = 'Haryana';
@@ -38,6 +40,8 @@ class CheckoutController extends Controller
             ->get();
 
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+
+        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
     public function checkout()
@@ -80,6 +84,7 @@ class CheckoutController extends Controller
         $categories = $this->categories;
 
         $menu       = $this->menu;
+        $highlights     = HomepageHighlight::where('status', 1)->get();
 
         return view('frontend.checkout', compact(
             'cartItems',
@@ -91,7 +96,8 @@ class CheckoutController extends Controller
             'defaultAddress',
             'gstData',
             'coupon',
-            'menu'
+            'menu',
+            'highlights'
         ));
     }
 

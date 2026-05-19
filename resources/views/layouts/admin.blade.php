@@ -265,6 +265,13 @@
                                         <div class="text">About Us</div>
                                     </a>
                                 </li>
+                                
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.homepage-highlights.index') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Highlights</div>
+                                    </a>
+                                </li>
 
                                 <li class="menu-item">
                                     <a href="{{ route('admin.pages') }}">

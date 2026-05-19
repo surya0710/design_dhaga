@@ -17,11 +17,13 @@ use App\Models\AboutSection;
 use App\Models\HomeSection;
 use App\Models\PortfolioCategory;
 use App\Models\Pages;
+use App\Models\HomepageHighlight;
 
 class HomeController extends Controller
 {
     protected $categories;
     protected $menu;
+    protected $highlights;
 
     public function __construct()
     {
@@ -34,6 +36,8 @@ class HomeController extends Controller
             ->get();
 
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+
+        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
     public function index()
@@ -55,6 +59,8 @@ class HomeController extends Controller
 
         $pageContent    = Pages::where('slug', '/')->first();
 
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+
         $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
         $homeSections = HomeSection::where('status', 1)
             ->with(['items' => function ($query) {
@@ -64,7 +70,7 @@ class HomeController extends Controller
             ->get()
             ->keyBy('key');
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections'));
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights'));
     }
 
     public function about()
@@ -74,7 +80,8 @@ class HomeController extends Controller
         $stories        = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
         $about          = AboutSection::where('status', 1)->first();
         $pageContent    = Pages::where('slug', 'about-us')->first();
-        return view('frontend.about', compact('categories', 'menu', 'stories', 'about', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.about', compact('categories', 'menu', 'stories', 'about', 'pageContent', 'highlights'));
     }
 
     public function contact()
@@ -82,7 +89,8 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'contact-us')->first();
-        return view('frontend.contact', compact('categories', 'menu', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.contact', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function portfolio()
@@ -90,9 +98,10 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'portfolio')->first();
-        $portfolio  = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
+        $portfolio      = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
+        $highlights     = HomepageHighlight::where('status', 1)->get();
 
-        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio', 'pageContent'));
+        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio', 'pageContent', 'highlights'));
     }
 
     public function terms()
@@ -100,7 +109,8 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'terms-and-condition')->first();
-        return view('frontend.terms', compact('categories', 'menu', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.terms', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function returnPolicy()
@@ -108,7 +118,8 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'return-policy')->first();
-        return view('frontend.return-policy', compact('categories', 'menu', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.return-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function orderShipping()
@@ -116,7 +127,8 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'order-shipping-policy')->first();
-        return view('frontend.shipping-policy', compact('categories', 'menu', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.shipping-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function privacyPolicy()
@@ -124,22 +136,25 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'privacy-policy')->first();
-        return view('frontend.privacy-policy', compact('categories', 'menu', 'pageContent'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.privacy-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function store()
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        return view('frontend.store', compact('categories', 'menu'));
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.store', compact('categories', 'menu', 'highlights'));
     }
 
     public function collaborations()
     {
-        $categories = $this->categories;
-        $menu       = $this->menu;
-        $pageContent = Pages::where('slug', 'collaborations')->first();
-        return view('frontend.collaborations', compact('categories', 'menu', 'pageContent'));
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'collaborations')->first();
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.collaborations', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
     public function sendmail(Request $request)

@@ -1,15 +1,5 @@
 'use strict';
 
-const textData = [
-  "<span>Hand-painted fashion</span> <img src='/frontend_assets/images/emoji/Hand-painted-fashion.png' class='emoji' alt='Hand Painted Fashion'>",
-  "<span>Custom design</span> <img src='/frontend_assets/images/emoji/Custom-design.png' class='emoji' alt='Custom Design'>",
-  "<span>Premium branding services</span> <img src='/frontend_assets/images/emoji/Premium.png' class='emoji' alt='Premium Branding Services'>",
-  "<span>Made In India</span> <img src='/frontend_assets/images/emoji/india-flag.png' class='emoji' alt='Made in India'>",
-  "<span>Made with heart</span> <img src='/frontend_assets/images/emoji/heart.png' class='emoji' alt='Made with Heart'>",
-  "<span>Loved by 400+ Customers</span> <img src='/frontend_assets/images/emoji/Customers.png' class='emoji' alt='Loved by 400+ Customers'>",
-];
-
-
 let index = 0;
 const textElement = document.querySelector(".rotating-text p");
 

@@ -212,68 +212,14 @@
     <div class="scroll-container">
         <div class="scroll-content">
             <!-- ORIGINAL ITEMS -->
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Hand-painted fashion <img src="frontend_assets/images/emoji/Hand-painted-fashion.png"
-                    class="emoji" alt="Hand Painted Fashion"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Custom Design <img src="frontend_assets/images/emoji/Custom-design.png" class="emoji"
-                    alt="Custom Design"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Premium branding services <img src="frontend_assets/images/emoji/Premium.png" class="emoji"
-                    alt="Premium Branding Services"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Made in India <img src="frontend_assets/images/emoji/india-flag.png" class="emoji"
-                    alt="Made in India"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Made with heart <img src="frontend_assets/images/emoji/heart.png" class="emoji"
-                    alt="Made with heart"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Loved by 400+ Customers <img src="frontend_assets/images/emoji/Customers.png" class="emoji"
-                    alt="Premium Branding Services"></div>
-
-            <!-- DUPLICATED ITEMS FOR INFINITE LOOP -->
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Hand-painted fashion <img src="frontend_assets/images/emoji/Hand-painted-fashion.png"
-                    class="emoji" alt="Hand Painted Fashion"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Custom Design <img src="frontend_assets/images/emoji/Custom-design.png" class="emoji"
-                    alt="Custom Design"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Premium branding services <img src="frontend_assets/images/emoji/Premium.png" class="emoji"
-                    alt="Premium Branding Services"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Made in India <img src="frontend_assets/images/emoji/india-flag.png" class="emoji"
-                    alt="Made in India"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Made with heart <img src="frontend_assets/images/emoji/heart.png" class="emoji"
-                    alt="Made with heart"></div>
-            <div class="item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                </svg> Loved by 400+ Customers <img src="frontend_assets/images/emoji/Customers.png" class="emoji"
-                    alt="Premium Branding Services"></div>
+             @foreach($highlights as $highlight)
+            <div class="item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                    <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1 l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                </svg> {{ $highlight->title }}
+                <img src="{{ Storage::url($highlight->image) }}" class="emoji" alt="Hand Painted Fashion">
+            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -382,6 +328,15 @@
         </div>
     </div>
 </section>
+<script>
+    const textData = [];
+    @foreach($highlights as $highlight)
+        textData.push(`<span>{{ $highlight->title }}</span>
+             <img src="{{ Storage::url($highlight->emoji) }}"
+                  class="emoji"
+                  alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
+    @endforeach
+</script>
 @endsection
 
 @push('scripts')

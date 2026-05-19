@@ -2977,7 +2977,7 @@ form.form-style-1 > * {
 }
 form.form-style-1 > * > *:first-child {
   width: 100%;
-  max-width: 300px;
+  max-width: 200px;
 }
 form.form-style-1 .upload-image .item.up-load {
   min-height: 250px;

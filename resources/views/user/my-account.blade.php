@@ -1014,7 +1014,15 @@ your orders.')
         </div>
     </div>
 </div>
-
+<script>
+    const textData = [];
+    @foreach($highlights as $highlight)
+    textData.push(`<span>{{ $highlight->title }}</span>
+             <img src="{{ Storage::url($highlight->emoji) }}"
+                  class="emoji"
+                  alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
+    @endforeach
+</script>
 @endsection
 
 @push('scripts')

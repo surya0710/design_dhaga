@@ -665,7 +665,7 @@ h5 {
 
 @media (min-width: 1200px) {
   #homeSlider .carousel-inner {
-    height: 450px;
+    height: 70vh;
   }
 }
 

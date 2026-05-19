@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\Admin\HomepageHighlightController;
 
 /*
 |--------------------------------------------------------------------------
@@ -297,6 +298,11 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::post('/admin/pages/update/{id}', [PageController::class, 'update'])->name('admin.pages.update');
 
     Route::delete('/admin/pages/delete/{id}', [PageController::class, 'destroy'])->name('admin.pages.delete');
+
+    Route::get('/homepage-highlights', [HomepageHighlightController::class, 'index'])->name('admin.homepage-highlights.index');
+    Route::post('/homepage-highlights/store', [HomepageHighlightController::class, 'store'])->name('admin.highlights.store');
+    Route::post('/homepage-highlights/update/{id}', [HomepageHighlightController::class, 'update'])->name('admin.highlights.edit');
+    Route::delete('/homepage-highlights/delete/{id}', [HomepageHighlightController::class, 'destroy'])->name('admin.highlights.destroy');
 
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
     Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');

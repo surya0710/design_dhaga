@@ -12,12 +12,14 @@ use App\Models\Category;
 use App\Models\Address;
 use App\Services\ShiprocketService;
 use App\Models\Menu;
+use App\Models\HomepageHighlight;
 
 class AccountController extends Controller
 {
     protected $categories;
     protected $shiprocket;
     protected $menu;
+    protected $highlights;
 
     public function __construct(ShiprocketService $shiprocket)
     {
@@ -28,6 +30,7 @@ class AccountController extends Controller
 
         $this->shiprocket = $shiprocket;
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
     public function index()
@@ -44,8 +47,9 @@ class AccountController extends Controller
         // Total Spend Calculation
         $totalSpend = $orders->sum('total');
         $menu       = $this->menu;
+        $highlights     = HomepageHighlight::where('status', 1)->get();
 
-        return view('user.my-account', compact('categories','addresses','orders', 'totalSpend', 'menu'));
+        return view('user.my-account', compact('categories','addresses','orders', 'totalSpend', 'menu', 'highlights'));
     }
 
     public function trackOrder(string $awbCode)
