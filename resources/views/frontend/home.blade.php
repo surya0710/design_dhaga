@@ -217,7 +217,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                     <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1 l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
                 </svg> {{ $highlight->title }}
-                <img src="{{ Storage::url($highlight->image) }}" class="emoji" alt="Hand Painted Fashion">
+                <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" alt="{{ $highlight->alt_text }}">
             </div>
             @endforeach
         </div>
@@ -332,8 +332,7 @@
     const textData = [];
     @foreach($highlights as $highlight)
         textData.push(`<span>{{ $highlight->title }}</span>
-             <img src="{{ Storage::url($highlight->emoji) }}"
-                  class="emoji"
+             <img src="{{ Storage::url($highlight->emoji) }}" class="emoji"
                   alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
     @endforeach
 </script>
