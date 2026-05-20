@@ -3,74 +3,116 @@
         <div class="row">
           <h5 class="fw-bold fw-xs-regular mt-3 mb-3 text-center">Join our community and stay updated with our latest designs.</h5>
         </div>
-        <div class="row g-2 padding-sm-2">
-          <div class="col-lg-4 col-md-6 col-sm-12">
-            <h5 class="fw-bold text-uppercase mt-1 mb-1">Design Dhaga</h5>
-            <ul class="list-unstyled">
-              <li class="mb-2">
-                <a href="{{ route('about-us') }}" class="text-decoration-none text-secondary link-dark">About Us</a>
-              </li>
-              <li class="mb-2">
-                <a href="{{ route('privacy-policy') }}" class="text-decoration-none text-secondary link-dark">Privacy Policy</a>
-              </li>
-              <li class="mb-2">
-                <a href="{{ route('terms-and-condition') }}" class="text-decoration-none text-secondary link-dark">Terms & Condition</a>
-              </li>
-              <li class="mb-2">
-                <a href="{{ route('blogs') }}" class="text-decoration-none text-secondary link-dark">Blogs</a>
-              </li>
-            </ul>
-          </div>
+        @php
+            $footerWidgets = \App\Models\FooterWidget::with('items')
+              ->orderBy('sort_order')
+              ->get();
+          @endphp
 
-          <div class="col-lg-4 col-md-6 col-sm-12">
-            <h5 class="fw-bold text-uppercase mt-1 mb-1">Help & Support</h5>
-            <ul class="list-unstyled">
-              <li class="mb-2">
-                <a href="{{ route('shipping-policy') }}" class="text-decoration-none text-secondary link-dark">Order & Shipping</a>
-              </li>
-              <li class="mb-2">
-                <a href="{{ route('return-policy') }}" class="text-decoration-none text-secondary link-dark">Return, Exchange & Cancellation</a>
-              </li>
-              <li class="mb-2">
-                <a href="{{ route('contact-us') }}" class="text-decoration-none text-secondary link-dark">Contact Us</a>
-              </li>
-            </ul>
-          </div>
+          <div class="row g-2 padding-sm-2">
 
-          <div class="col-lg-4 col-md-12 col-sm-12">
-            <h5 class="fw-bold text-uppercase mt-1 mb-1">Connect With Us</h5>
-            <ul class="list-unstyled mb-1">
-              <li><a href="{{ route('collaborations') }}" class="text-decoration-none text-secondary link-dark">Collaboration</a></li>
-            </ul>
-            <p class="text-muted small mb-1">Follow us for daily inspiration:</p>
-            <div class="d-flex mt-2 social-media-icons">
-              @if($settings->facebook != null)
-              <a href="{{ $settings->facebook }}" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
-                <i class="fa-brands fa-facebook" style="font-size:20px"></i>
-              </a>
-              @endif
-              @if($settings->instagram != null)
-              <a href="{{ $settings->instagram }}" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
-                <i class="fa-brands fa-instagram" style="font-size:20px"></i>
-              </a>
-              @endif
-              @if($settings->youtube != null)
-              <a href="https://youtube.com/@designdhaga?si=A5rYdj_bpGZB_D1b" target="_blank" class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
-                <i class="fa-brands fa-youtube" style="font-size:20px"></i>
-              </a>
-              @endif
-              @if($settings->linkedin != null)
-              <a href="{{ $settings->linkedin }}" target="_blank" class="p-2 d-flex align-items-center justify-content-center"
-                style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
-                <i class="fa-brands fa-pinterest" style="font-size:20px"></i>
-              </a>
-              @endif
-            </div>
+          {{-- Dynamic Footer Widgets --}}
+          @foreach($footerWidgets as $widget)
+
+              <div class="col-lg-4 col-md-6 col-sm-12">
+
+                  <h5 class="fw-bold text-uppercase mt-1 mb-1">
+                      {{ $widget->title }}
+                  </h5>
+
+                  <ul class="list-unstyled">
+
+                      @foreach($widget->items as $item)
+
+                          <li class="mb-2">
+
+                              <a href="{{ $item->link }}"
+                                  class="text-decoration-none text-secondary link-dark">
+
+                                  {{ $item->text }}
+
+                              </a>
+
+                          </li>
+
+                      @endforeach
+
+                  </ul>
+
+                  {{-- Social Icons Widget --}}
+                  @if(strtolower($widget->title) == 'connect with us')
+
+                      <p class="text-muted small mb-1">
+                          Follow us for daily inspiration:
+                      </p>
+
+                      <div class="d-flex mt-2 social-media-icons">
+
+                          @if($settings->facebook != null)
+
+                              <a href="{{ $settings->facebook }}"
+                                  target="_blank"
+                                  class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                  style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+
+                                  <i class="fa-brands fa-facebook"
+                                      style="font-size:20px"></i>
+
+                              </a>
+
+                          @endif
+
+                          @if($settings->instagram != null)
+
+                              <a href="{{ $settings->instagram }}"
+                                  target="_blank"
+                                  class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                  style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+
+                                  <i class="fa-brands fa-instagram"
+                                      style="font-size:20px"></i>
+
+                              </a>
+
+                          @endif
+
+                          @if($settings->youtube != null)
+
+                              <a href="{{ $settings->youtube }}"
+                                  target="_blank"
+                                  class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                  style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+
+                                  <i class="fa-brands fa-youtube"
+                                      style="font-size:20px"></i>
+
+                              </a>
+
+                          @endif
+
+                          @if($settings->linkedin != null)
+
+                              <a href="{{ $settings->linkedin }}"
+                                  target="_blank"
+                                  class="p-2 d-flex align-items-center justify-content-center"
+                                  style="width: 38px; height: 38px; border-color: #cfcdcd; text-decoration:none">
+
+                                  <i class="fa-brands fa-pinterest"
+                                      style="font-size:20px"></i>
+
+                              </a>
+
+                          @endif
+
+                      </div>
+
+                  @endif
+
+              </div>
+
+          @endforeach
+
           </div>
-        </div>
 
         <hr class="opacity-10" />
         <div class="row align-items-center">
