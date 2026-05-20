@@ -202,7 +202,7 @@
                 <div class="py-md-3 px-3">
                     <h1>{{ $ideaBrush->title }}</h1>
                     <p class="text-justify">{!! $ideaBrush->body !!}</p>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ $ideaBrush->button_url }} ">{{ $ideaBrush->button_text }}</a>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark" href="{{ $ideaBrush->button_url }} ">{{ $ideaBrush->button_text }}</a>
                 </div>
             </div>
         </div>
@@ -230,7 +230,7 @@
                 <div class="py-md-3 px-3">
                     <h1>{{ $graphicsDesign->title }}</h1>
                     <p class="text-justify">{!! $graphicsDesign->body !!}</p>
-                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark text-white" href="{{ $graphicsDesign->button_url }}">{{ $graphicsDesign->button_text }}</a>
+                    <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark" href="{{ $graphicsDesign->button_url }}">{{ $graphicsDesign->button_text }}</a>
                 </div>
             </div>
             <div class="col text-md-right text-small-center">

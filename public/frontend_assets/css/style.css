@@ -587,7 +587,7 @@ h5 {
   font-size: small;
   display: inline-block;
   padding: 10px 50px;
-  color: #000;
+  color: #fff;
   border: 1px solid #1F1F1D;
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast);
@@ -597,7 +597,7 @@ h5 {
 .view-all-btn:hover,
 .view-all-btn:active,
 .view-all-btn:focus {
-  color: var(--brand-color);
+  color: #000;
   background: none !important;
   border-color: var(--brand-color);
   transform: scale(1.045) rotateZ(-0.7deg);
