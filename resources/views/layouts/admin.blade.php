@@ -222,6 +222,13 @@
                                 </li>
 
                                 <li class="menu-item">
+                                    <a href="{{ route('footer.widgets') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Footer Menu</div>
+                                    </a>
+                                </li>
+
+                                <li class="menu-item">
                                     <a href="{{ route('admin.stories') }}" class="">
                                         <div class="icon"><i class="icon-grid"></i></div>
                                         <div class="text">Story</div>

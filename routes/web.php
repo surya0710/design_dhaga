@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\HomepageHighlightController;
+use App\Http\Controllers\Admin\FooterWidgetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -299,10 +300,15 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::delete('/admin/pages/delete/{id}', [PageController::class, 'destroy'])->name('admin.pages.delete');
 
-    Route::get('/homepage-highlights', [HomepageHighlightController::class, 'index'])->name('admin.homepage-highlights.index');
-    Route::post('/homepage-highlights/store', [HomepageHighlightController::class, 'store'])->name('admin.highlights.store');
-    Route::post('/homepage-highlights/update/{id}', [HomepageHighlightController::class, 'update'])->name('admin.highlights.edit');
-    Route::delete('/homepage-highlights/delete/{id}', [HomepageHighlightController::class, 'destroy'])->name('admin.highlights.destroy');
+    Route::get('/admin/homepage-highlights', [HomepageHighlightController::class, 'index'])->name('admin.homepage-highlights.index');
+    Route::post('/admin/homepage-highlights/store', [HomepageHighlightController::class, 'store'])->name('admin.highlights.store');
+    Route::post('/admin/homepage-highlights/update/{id}', [HomepageHighlightController::class, 'update'])->name('admin.highlights.edit');
+    Route::delete('/admin/homepage-highlights/delete/{id}', [HomepageHighlightController::class, 'destroy'])->name('admin.highlights.destroy');
+
+    Route::get('/admin/footer-widgets', [FooterWidgetController::class, 'index'])->name('footer.widgets');
+    Route::post('/admin/footer-widgets/store', [FooterWidgetController::class, 'store'])->name('footer.widgets.store');
+    Route::post('/admin/footer-widgets/update/{id}', [FooterWidgetController::class, 'update'])->name('footer.widgets.update');
+    Route::delete('/admin/footer-widgets/delete/{id}',[FooterWidgetController::class, 'delete']) ->name('footer.widgets.delete');
 
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
     Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');

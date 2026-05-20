@@ -23,7 +23,6 @@ class HomeController extends Controller
 {
     protected $categories;
     protected $menu;
-    protected $highlights;
 
     public function __construct()
     {
@@ -36,8 +35,6 @@ class HomeController extends Controller
             ->get();
 
         $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
-
-        $this->highlights = HomepageHighlight::where('status', 1)->get();
     }
 
     public function index()

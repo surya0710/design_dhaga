@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\Tag;
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Menu;
+use App\Models\HomepageHighlight;
 
 class BlogController extends Controller
 {
@@ -31,7 +30,8 @@ class BlogController extends Controller
         $categories         = $this->categories;
         $blogs              = Blog::orderBy('id','desc')->paginate(15);
         $menu               = $this->menu;
-        return view('frontend.blogs',compact('blogs', 'categories', 'menu'));
+        $highlights         = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.blogs',compact('blogs', 'categories', 'menu', 'highlights'));
     }
 
     public function blogdetail($slug) {
@@ -39,6 +39,7 @@ class BlogController extends Controller
         $blog               = Blog::where('slug', $slug)->firstOrFail();
         $featuredProducts   = Product::where('status', 1)->where('featured', 1)->with(['category.parent'])->inRandomOrder()->limit(8)->get();
         $menu               = $this->menu;
-        return view('frontend.blog-details',compact('blog', 'categories', 'featuredProducts', 'menu'));
+        $highlights         = HomepageHighlight::where('status', 1)->get();
+        return view('frontend.blog-details',compact('blog', 'categories', 'featuredProducts', 'menu', 'highlights'));
     }
 }
