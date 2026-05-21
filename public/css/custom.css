@@ -91,6 +91,9 @@ body {
     border-radius: 10px;
     overflow: hidden;
 }
+.table-striped td{
+    text-wrap: wrap!important;
+}
 
 .wg-table table,
 .table-all-user table,
