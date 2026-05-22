@@ -56,14 +56,12 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th width="5%">#</th>
                             <th>Name</th>
                             <th>Price</th>
                             <th>SalePrice</th>
-                            <th>SKU</th>
                             <th>Category</th>
                             <th>Featured</th>
-                            <th>Stock</th>
                             <th>Quantity</th>
                             <th>Action</th>
                         </tr>
@@ -72,14 +70,12 @@
                         @forelse ($product as $products)
                             
                             <tr>
-                                <td>{{ $product->firstItem() + $loop->index }}</td>
+                                <td width="5%">{{ $product->firstItem() + $loop->index }}</td>
                                 <td>{{ $products->name }}</td>
                                 <td>{{$products->regular_price}}</td>
                                 <td>{{$products->sale_price}}</td>
-                                <td>{{$products->sku}}</td>
                                 <td>{{ $products->category->name ?? '' }}</td>
                                 <td>{{$products->featured == 0 ? "No" : "Yes"}}</td>
-                                <td>{{$products->stock_status}}</td>
                                 <td>{{$products->quantity}}</td>
                                 <td>
                                     <div class="list-icon-function">

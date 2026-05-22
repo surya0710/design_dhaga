@@ -154,4 +154,40 @@ class ShopController extends Controller
             'highlights' => $highlights
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $categories = $this->categories;
+        $menu = $this->menu;
+        $highlights = $this->highlights;
+
+        $query = trim($request->get('q'));
+
+        $category = (object) [
+            'name' => $query ? 'Search results for: ' . $query : 'Search Products',
+            'slug' => 'search',
+            'meta_title' => 'Search Products',
+        ];
+
+        $products = Product::where('status', 1)
+            ->when($query, function ($q) use ($query) {
+                $q->where(function ($subQuery) use ($query) {
+                    $subQuery->where('name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('slug', 'LIKE', '%' . $query . '%')
+                        ->orWhere('description', 'LIKE', '%' . $query . '%')
+                        ->orWhere('short_description', 'LIKE', '%' . $query . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('frontend.shop', compact(
+            'products',
+            'categories',
+            'category',
+            'menu',
+            'highlights'
+        ));
+    }
 }

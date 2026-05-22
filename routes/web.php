@@ -95,6 +95,7 @@ Route::post('/pincode/serviceable', [ShiprocketController::class, 'checkPincode'
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
+
 /*
 |--------------------------------------------------------------------------
 | User Routes
@@ -319,7 +320,6 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
 
 Route::get('/shop/{category}', [ShopController::class, 'category_products'])->name('shop.index');
-
 Route::get('/shop/{category}/{subcategory}', [ShopController::class, 'category_products'])->name('shop.subcategory');
-
 Route::get('/shop/{category}/{subcategory}/{product}', [ShopController::class, 'product_details'])->name('shop.product');
+Route::get('/search', [ShopController::class, 'search'])->name('shop.search');

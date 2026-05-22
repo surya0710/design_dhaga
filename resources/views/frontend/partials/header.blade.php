@@ -21,7 +21,7 @@
                         <line x1="3" y1="19" x2="23" y2="19" />
                     </svg>
                 </button>
-                <button class="btn p-0 bg-transparent border-0">
+                <button class="btn p-0 bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#searchModal">
                     <svg width="24" height="24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -187,3 +187,24 @@
         </div>
     </div>
 </aside>
+
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Search Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body pt-0">
+                <form action="{{ route('shop.search') }}" method="GET">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="q" class="form-control rounded-0" placeholder="What are you looking for?" autocomplete="off" autofocus>
+
+                        <button class="btn btn-dark rounded-0" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

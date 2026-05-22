@@ -184,7 +184,7 @@ class HomePageController extends Controller
 
             'status' => 'nullable|boolean',
 
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:5120',
         ]);
     }
 

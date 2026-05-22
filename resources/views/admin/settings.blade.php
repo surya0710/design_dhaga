@@ -59,11 +59,11 @@
 
                         @if(!empty($settings->logo))
                         <div class="item" id="logoPreview">
-                            <img src="{{ asset('uploads/settings/'.$settings->logo) }}" class="effect8" width="120">
+                            <img src="{{ asset('uploads/settings/'.$settings->logo) }}" class="effect8">
                         </div>
                         @else
                         <div class="item" id="logoPreview" style="display:none">
-                            <img src="" class="effect8" width="120">
+                            <img src="" class="effect8">
                         </div>
                         @endif
 
@@ -91,11 +91,11 @@
 
                         @if(!empty($settings->dark_logo))
                         <div class="item bg-dark" id="darkLogoPreview">
-                            <img src="{{ asset('uploads/settings/'.$settings->dark_logo) }}" class="effect8" width="120">
+                            <img src="{{ asset('uploads/settings/'.$settings->dark_logo) }}" class="effect8">
                         </div>
                         @else
                         <div class="item" id="darkLogoPreview" style="display:none">
-                            <img src="" class="effect8" width="120">
+                            <img src="" class="effect8">
                         </div>
                         @endif
 
