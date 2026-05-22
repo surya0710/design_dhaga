@@ -29,7 +29,6 @@
                             <th>Title</th>
                             <th>Category</th>
                             <th>Subcategory</th>
-                            <th>Order</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -44,7 +43,6 @@
                                 <td>{{ $gallery->title ?: '-' }}</td>
                                 <td>{{ $gallery->category->name ?? '-' }}</td>
                                 <td>{{ $gallery->subcategory->name ?? '-' }}</td>
-                                <td>{{ $gallery->sort_order }}</td>
                                 <td>
                                     @if($gallery->status)
                                         <span class="badge bg-success">Active</span>
