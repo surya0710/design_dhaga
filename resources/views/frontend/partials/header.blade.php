@@ -190,7 +190,7 @@
     </div>
 </aside>
 
-<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+<!-- <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 rounded-0">
             <div class="modal-header border-0">
@@ -209,4 +209,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
