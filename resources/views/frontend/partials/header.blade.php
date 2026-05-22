@@ -160,11 +160,13 @@
                 @endforeach
             </div>
         @endforeach
-       @foreach($menu as $item)
+        @foreach($menu as $item)
             <div class="menu-title">
                 @php
-                    $url = $item->slug == '/' ? route('home') : $item->slug;
+                    $slug = trim($item->slug, '/');
+                    $url = $item->slug == '/' ? route('home') : url($slug);
                 @endphp
+
                 <a href="{{ $url }}" class="submenu-item">{{ $item->name }}</a>
             </div>
         @endforeach
