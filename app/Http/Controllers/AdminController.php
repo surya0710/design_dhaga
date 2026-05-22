@@ -1119,6 +1119,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'title'            => 'required|string|max:255',
+            'slug'             => 'required|string|max:255',
             'content'          => 'nullable|string',
             'tags'             => 'nullable|string',
             'image'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -1142,7 +1143,7 @@ class AdminController extends Controller
 
         $blog->update([
             'title'            => $request->title,
-            'slug'             => $blog->slug,
+            'slug'             => $request->slug,
             'content'          => $request->content,
             'image'            => $imageName,
             'meta_title'       => $request->meta_title,
