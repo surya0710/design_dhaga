@@ -154,6 +154,14 @@ class HomeController extends Controller
         return view('frontend.collaborations', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
+    public function notfound(){
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', 'collaborations')->first();
+        $highlights     = HomepageHighlight::where('status', 1)->get();
+        return view('404', compact('categories', 'menu', 'pageContent', 'highlights'));
+    }
+
     public function sendmail(Request $request)
     {
         $validated = $request->validate([

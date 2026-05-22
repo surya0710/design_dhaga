@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 
 // ✅ Your tracking sync job
 Schedule::job(new SyncShipmentTracking)->everyThirtyMinutes();
+Schedule::command('generate:sitemap')->daily();

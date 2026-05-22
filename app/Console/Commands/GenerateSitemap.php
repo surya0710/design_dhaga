@@ -19,15 +19,22 @@ class GenerateSitemap extends Command
     {
         $sitemap = Sitemap::create();
 
-        // Static GET routes except admin/auth/account/cart/checkout etc.
+        /*
+        |--------------------------------------------------------------------------
+        | Static Routes
+        |--------------------------------------------------------------------------
+        */
         foreach (Route::getRoutes() as $route) {
+
             $uri = $route->uri();
             $methods = $route->methods();
 
+            // Only GET routes
             if (!in_array('GET', $methods)) {
                 continue;
             }
 
+            // Skip dynamic/admin/auth/system routes
             if (
                 str_starts_with($uri, 'admin') ||
                 str_contains($uri, '{') ||
@@ -43,7 +50,8 @@ class GenerateSitemap extends Command
                 str_starts_with($uri, 'password') ||
                 str_starts_with($uri, 'forgot-password') ||
                 str_starts_with($uri, 'reset-password') ||
-                $uri === 'sanctum/csrf-cookie'
+                $uri === 'sanctum/csrf-cookie' ||
+                $uri === 'up'
             ) {
                 continue;
             }
@@ -52,36 +60,72 @@ class GenerateSitemap extends Command
                 Url::create(url($uri === '/' ? '/' : '/' . $uri))
                     ->setPriority($uri === '/' ? 1.0 : 0.8)
                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                    ->setLastModificationDate(now())
             );
         }
 
-        // Blogs
-        Blog::where('status', 1)->get()->each(function ($blog) use ($sitemap) {
-            $sitemap->add(
-                Url::create(url('/blogs/' . $blog->slug))
-                    ->setPriority(0.7)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-            );
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | Blogs
+        |--------------------------------------------------------------------------
+        */
+        Blog::where('status', 1)
+            ->chunk(500, function ($blogs) use ($sitemap) {
 
-        // Categories
-        Category::where('status', 1)->get()->each(function ($category) use ($sitemap) {
-            $sitemap->add(
-                Url::create(url('/category/' . $category->slug))
-                    ->setPriority(0.8)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-            );
-        });
+                foreach ($blogs as $blog) {
 
-        // Products
-        Product::where('status', 1)->get()->each(function ($product) use ($sitemap) {
-            $sitemap->add(
-                Url::create(url('/product/' . $product->slug))
-                    ->setPriority(0.9)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-            );
-        });
+                    $sitemap->add(
+                        Url::create(url('/blogs/' . $blog->slug))
+                            ->setPriority(0.7)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                            ->setLastModificationDate($blog->updated_at ?? now())
+                    );
+                }
+            });
 
+        /*
+        |--------------------------------------------------------------------------
+        | Categories
+        |--------------------------------------------------------------------------
+        */
+        Category::where('status', 1)
+            ->chunk(500, function ($categories) use ($sitemap) {
+
+                foreach ($categories as $category) {
+
+                    $sitemap->add(
+                        Url::create(url('/category/' . $category->slug))
+                            ->setPriority(0.8)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                            ->setLastModificationDate($category->updated_at ?? now())
+                    );
+                }
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Products
+        |--------------------------------------------------------------------------
+        */
+        Product::where('status', 1)
+            ->chunk(500, function ($products) use ($sitemap) {
+
+                foreach ($products as $product) {
+
+                    $sitemap->add(
+                        Url::create(url('/product/' . $product->slug))
+                            ->setPriority(0.9)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+                            ->setLastModificationDate($product->updated_at ?? now())
+                    );
+                }
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Write Sitemap
+        |--------------------------------------------------------------------------
+        */
         $sitemap->writeToFile(public_path('sitemap.xml'));
 
         $this->info('Sitemap generated successfully.');
