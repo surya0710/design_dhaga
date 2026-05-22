@@ -41,9 +41,10 @@
             ->where('product_id', $product->id)
             ->exists()
             : false;
-            @endphp
 
-            <a class="product-item" href="{{ route('shop.product' , [$category->slug, $product->category->slug, $product->slug]) }}">
+            $productUrl = getProductUrl($product);
+            @endphp
+            <a class="product-item" href="{{ $productUrl }}">
 
                 <div class="position-relative d-inline-block w-100">
 
