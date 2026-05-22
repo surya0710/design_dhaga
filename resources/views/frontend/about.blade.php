@@ -137,7 +137,7 @@ and premium branding services. Our products are handcrafted in India and loved b
 <section class="container py-4">
   <div class="owners-box">
     <div class="col-md-6 owner-image">
-      <img src="{{ asset($about->image) }}" class="img-fluid" alt="Design Dhaga Owners" />
+      <img src="{{ asset($about->image) }}" class="img-fluid" alt="{{ $about->heading }}" loading="lazy" />
     </div>
     <div class="col-md-6 content">
       <h1 class="text-center">{{ $about->heading }}</h1>
@@ -153,7 +153,7 @@ and premium branding services. Our products are handcrafted in India and loved b
   <div class="container">
     <div class="box-container">
       <div class="box">
-        <img alt="Timeless" src="frontend_assets/images/icons/TimeLess icon.svg" />
+        <img alt="Timeless" src="frontend_assets/images/icons/TimeLess icon.svg" loading="lazy" />
         <h4>सदाबहार | TIMELESS</h4>
         <p class="px-3 text-justify">
           Design Dhaga creates designs that never fade with time — whether
@@ -165,7 +165,7 @@ and premium branding services. Our products are handcrafted in India and loved b
         </p>
       </div>
       <div class="box">
-        <img alt="Honest" src="frontend_assets/images/icons/Honest icon.svg" />
+        <img alt="Honest" src="frontend_assets/images/icons/Honest icon.svg" loading="lazy" />
         <h4>सच | HONEST</h4>
         <p class="px-3 text-justify">
           Honesty is woven into everything we create. From the
@@ -176,7 +176,7 @@ and premium branding services. Our products are handcrafted in India and loved b
         </p>
       </div>
       <div class="box">
-        <img alt="Easy" src="frontend_assets/images/icons/Easy Icon.svg" />
+        <img alt="Easy" src="frontend_assets/images/icons/Easy Icon.svg" loading="lazy" />
         <h4>सरल | EASY</h4>
         <p class="px-3 text-justify">
           At Design Dhaga, simplicity is our strength. We make the process
@@ -224,7 +224,7 @@ and premium branding services. Our products are handcrafted in India and loved b
                         {{-- Image Left --}}
                         <div class="row align-items-center">
                             <div class="col-md-6 mb-3 mb-md-0">
-                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" />
+                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" loading="lazy" />
                             </div>
                             <div class="col-md-6">
                                 <div class="px-xl-4">
@@ -251,7 +251,7 @@ and premium branding services. Our products are handcrafted in India and loved b
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" />
+                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" loading="lazy" />
                             </div>
                         </div>
                     @endif
@@ -264,9 +264,7 @@ and premium branding services. Our products are handcrafted in India and loved b
     const textData = [];
     @foreach($highlights as $highlight)
         textData.push(`<span>{{ $highlight->title }}</span>
-             <img src="{{ Storage::url($highlight->emoji) }}"
-                  class="emoji"
-                  alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
+             <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" loading="lazy" alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
     @endforeach
 </script>
 @endsection

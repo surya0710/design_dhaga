@@ -33,7 +33,7 @@
             @if($category->show_on_home == 1)
             <div class="text-center">
                 <a href="{{ route('shop.index', [$category->slug]) }}" class="text-decoration-none">
-                    <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }}') }}" class="img-fluid">
+                    <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }}') }}" class="img-fluid" loading="lazy">
                     <h4>{{ $category->name }}</h4>
                 </a>
             </div>
@@ -83,7 +83,7 @@
         <div class="row feature-items">
             @foreach($mobileFeatures->items as $item)
                 <div class="feature-item col p-0">
-                    <img src="{{ asset($item->image) }}" class="mobile-icons" />
+                    <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" />
                     <h4>{{ $item->title }}</h4>
                 </div>
             @endforeach
@@ -127,7 +127,7 @@
                     @endphp
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
-                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}">
+                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
@@ -165,7 +165,7 @@
                     @endphp
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
-                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}">
+                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
@@ -196,7 +196,7 @@
     <div class="container">
         <div class="d-flex align-items-center">
             <div class="col text-small-center">
-                <img src="{{ asset($ideaBrush->image) }}" alt="Custmize Now" class="w-80" />
+                <img src="{{ asset($ideaBrush->image) }}" alt="Custmize Now" class="w-80" loading="lazy" />
             </div>
             <div class="col">
                 <div class="py-md-3 px-3">
@@ -217,7 +217,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                     <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1 l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
                 </svg> {{ $highlight->title }}
-                <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" alt="{{ $highlight->alt_text }}">
+                <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" alt="{{ $highlight->alt_text }}" loading="lazy">
             </div>
             @endforeach
         </div>
@@ -234,7 +234,7 @@
                 </div>
             </div>
             <div class="col text-md-right text-small-center">
-                <img src="{{ asset($graphicsDesign->image) }}" alt="Custmize Now" class="customize-image" />
+                <img src="{{ asset($graphicsDesign->image) }}" alt="Custmize Now" class="customize-image" loading="lazy" />
             </div>
         </div>
     </div>
@@ -250,7 +250,7 @@
             <div class="owl-carousel owl-theme">
                 @foreach($whoWeAre->items as $item)
                 <div class="item">
-                    <img src="{{ asset($item->image) }}" class="w-100 border rounded" alt="Our Story">
+                    <img src="{{ asset($item->image) }}" class="w-100 border rounded" alt="{{ $item->title }}" loading="lazy">
                     <a href="{{ $item->link_url }}">
                         <div class="item-box ">
                             <span>{{ $item->title }}</span>
@@ -271,7 +271,7 @@
         <div class="row">
             @foreach($inspiredArt->items as $item)
             <div class="col text-center">
-                <img alt="Timeless" src="{{ asset($item->image) }}" />
+                <img alt="Timeless" src="{{ asset($item->image) }}" loading="lazy" />
                 <h4>{{ $item->title }}</h4>
             </div>
             @endforeach
@@ -332,8 +332,7 @@
     const textData = [];
     @foreach($highlights as $highlight)
         textData.push(`<span>{{ $highlight->title }}</span>
-             <img src="{{ Storage::url($highlight->emoji) }}" class="emoji"
-                  alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
+             <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" loading="lazy" alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
     @endforeach
 </script>
 @endsection
