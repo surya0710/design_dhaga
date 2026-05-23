@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\HomepageHighlightController;
 use App\Http\Controllers\Admin\FooterWidgetController;
+use App\Http\Controllers\Admin\FaqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,13 +155,6 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::get('/admin', [AdminController::class,'index'])->name('admin.index');
 
-    Route::get('/admin/brands', [AdminController::class,'brands'])->name('admin.brands');
-    Route::get('/admin/brand/add', [AdminController::class,'add_brand'])->name('admin.brand.add');
-    Route::post('/admin/brand/store', [AdminController::class,'brand_store'])->name('admin.brand.store');
-    Route::get('/admin/brand/edit/{id}', [AdminController::class,'brand_edit'])->name('admin.brand.edit');
-    Route::put('/admin/brand/update', [AdminController::class,'brand_update'])->name('admin.brand.update');
-    Route::delete('/admin/brand/{id}/delete', [AdminController::class,'brand_delete'])->name('admin.brand.delete');
-
     Route::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('/admin/categories/add', [AdminController::class, 'category_add'])->name('admin.category.add');
     Route::post('/admin/categories/store', [AdminController::class, 'category_store'])->name('admin.category.store');
@@ -191,8 +185,6 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/order/track', [AdminController::class, 'orders_track'])->name('admin.order.track');
     Route::post('/admin/order/{id}/status', [AdminController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::patch('/admin/orders/{id}/reset-shiprocket', [AdminController::class, 'resetShiprocket'])->name('orders.resetShiprocket');
-
-
 
     Route::get('admin/blogs', [AdminController::class, 'blogs'])->name('admin.blogs');
     Route::get('admin/blogs/add', [AdminController::class, 'blog_add'])->name('admin.blog.add');
@@ -310,8 +302,15 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/subscribers', [AdminController::class, 'subscribers'])->name('admin.subscribers.view');
     Route::get('/admin/settings', [SettingController::class, 'settings'])->name('admin.settings');
     Route::post('/admin/settings/update', [SettingController::class, 'settings_update'])->name('admin.settings.update');
-    Route::post('/admin/logout', [AdminController::class,'logout'])->name('logout');
     
+    Route::get('/admin/faqs', [FaqController::class, 'index'])->name('admin.faqs');
+    Route::get('/admin/faqs/create', [FaqController::class, 'create'])->name('admin.faqs.create');
+    Route::post('/admin/faqs/store', [FaqController::class, 'store'])->name('admin.faqs.store');
+    Route::get('/admin/faqs/edit/{id}', [FaqController::class, 'edit'])->name('admin.faqs.edit');
+    Route::post('/admin/faqs/update/{id}', [FaqController::class, 'update'])->name('admin.faqs.update');
+    Route::delete('/admin/faqs/delete/{id}', [FaqController::class, 'delete'])->name('admin.faqs.delete');
+    
+    Route::post('/admin/logout', [AdminController::class,'logout'])->name('logout');
 });
 
 

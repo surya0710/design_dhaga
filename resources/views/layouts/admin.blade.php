@@ -80,24 +80,6 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <!-- <li class="menu-item has-children">
-                                    <a href="javascript:void(0);" class="menu-item-button">
-                                        <div class="icon"><i class="icon-layers"></i></div>
-                                        <div class="text">Brand</div>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <a href="{{route('admin.brand.add')}}" class="">
-                                                <div class="text">New Brand</div>
-                                            </a>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <a href="{{route('admin.brands')}}" class="">
-                                                <div class="text">Brands</div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li> -->
                                 <li class="menu-item has-children">
                                     <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-layers"></i></div>
@@ -287,6 +269,12 @@
                                     </a>
                                 </li>
                                 
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.faqs') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">FAQs</div>
+                                    </a>
+                                </li>
 
                                 <li class="menu-item">
                                     <a href="{{route('admin.users')}}" class="">
