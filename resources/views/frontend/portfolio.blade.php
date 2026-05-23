@@ -276,31 +276,30 @@ and premium branding services.')
 <section class="my-4">
 
     {{-- CATEGORY SECTION --}}
-    <div class="portfolio-category-wrapper">
+    <div class="d-flex justify-content-center portfolio-category">
 
-        <div class="portfolio-category-scroll">
+        <ul class="nav nav-tabs custom-tabs border-0 gap-2" id="myTab" role="tablist">
 
-            @foreach ($portfolio as $category)
+            @foreach($portfolio as $category)
 
-            <a href="{{ route('portfolio', $category->slug) }}"
-                class="portfolio-category-card {{ $activeCategory->id == $category->id ? 'active' : '' }}">
+            <li class="nav-item" role="presentation">
 
-                <div class="portfolio-category-image">
+                <a class="nav-link {{ $activeCategory->id == $category->id ? 'active' : '' }}"
+                    href="{{ route('portfolio', $category->slug) }}">
 
                     <img src="{{ asset($category->image) }}"
+                        class="img-fluid"
                         alt="{{ $category->name }}">
 
-                </div>
+                    <span>{{ $category->name }}</span>
 
-                <span>
-                    {{ $category->name }}
-                </span>
+                </a>
 
-            </a>
+            </li>
 
             @endforeach
 
-        </div>
+        </ul>
 
     </div>
 
@@ -326,7 +325,7 @@ and premium branding services.')
     </div>
 
     {{-- GALLERY --}}
-    <div class="container-fluid px-md-4 px-2 mb-4">
+    <div class="container px-md-4 px-2 mb-4">
 
         <div class="gallery-grid">
 
