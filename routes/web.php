@@ -78,7 +78,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact-us');
 Route::post('/contact-us', [HomeController::class, 'sendmail'])->name('sendmail');
-Route::get('/portfolio', [HomeController::class, 'portfolio'])->name('portfolio');
+Route::get('/portfolio/{slug?}', [HomeController::class, 'portfolio'])->name('portfolio');
 Route::get('/terms-and-condition', [HomeController::class, 'terms'])->name('terms-and-condition');
 Route::get('/return-policy', [HomeController::class, 'returnPolicy'])->name('return-policy');
 Route::get('/order-shipping-policy', [HomeController::class, 'orderShipping'])->name('shipping-policy');

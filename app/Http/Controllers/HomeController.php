@@ -90,15 +90,56 @@ class HomeController extends Controller
         return view('frontend.contact', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
-    public function portfolio()
+    public function portfolio($slug = null)
     {
         $categories     = $this->categories;
         $menu           = $this->menu;
-        $pageContent    = Pages::where('slug', 'portfolio')->first();
-        $portfolio      = PortfolioCategory::where('status', 1)->orderBy('sort_order', 'ASC')->get();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
 
-        return view('frontend.portfolio', compact('categories', 'menu', 'portfolio', 'pageContent', 'highlights'));
+        $pageContent = Pages::where('slug', 'portfolio')->first();
+
+        $highlights = HomepageHighlight::where('status', 1)->get();
+
+        // ONLY categories for top navigation
+        $portfolio = PortfolioCategory::select(
+                'id',
+                'name',
+                'slug',
+                'image'
+            )
+            ->where('status', 1)
+            ->get();
+
+        // Active category only
+        $activeCategory = PortfolioCategory::with([
+            'subcategories' => function ($query) {
+                $query->select(
+                    'id',
+                    'portfolio_category_id',
+                    'name',
+                    'slug'
+                );
+            },
+
+            'subcategories.galleries' => function ($query) {
+                $query->select(
+                    'id',
+                    'portfolio_subcategory_id',
+                    'image'
+                );
+            }
+
+        ])
+        ->where('slug', $slug ?? $portfolio->first()?->slug)
+        ->firstOrFail();
+
+        return view('frontend.portfolio', compact(
+            'categories',
+            'menu',
+            'pageContent',
+            'highlights',
+            'portfolio',
+            'activeCategory'
+        ));
     }
 
     public function terms()
