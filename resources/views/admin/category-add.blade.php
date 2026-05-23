@@ -102,6 +102,11 @@
                 @error('meta_description')
                     <span class="invalid-feedback">{{$message}}</span>
                 @enderror
+
+                <fieldset>
+                    <div class="body-title">Content</div>
+                    <textarea name="content" id="description-editor" required>{{ old('content') }}</textarea>
+                </fieldset>
                 
                 <fieldset>
                     <div class="body-title">Upload images </div>
@@ -136,7 +141,30 @@
 @endsection
 
 @push('scripts')
+
+@push('scripts')
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script>
+
+        CKEDITOR.replace('description-editor', {
+            width: '100%',
+            height: 250,
+            allowedContent: true,
+            extraAllowedContent: 'p(*) div(*) span(*) strong em;',
+            toolbar: [
+                ['Bold', 'Italic', 'Underline'],
+                ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                ['NumberedList', 'BulletedList'],
+                ['Link'],
+                ['Undo', 'Redo'],
+                ['RemoveFormat'],
+                ['Source']
+            ],
+
+            removeButtons: 'Image,Table,HorizontalRule,SpecialChar,Styles,Format,Font,FontSize'
+
+        });
+
         $(function(){
             $("#myFile").on('change',function(e){
                 const photoinp = $("#myFile");

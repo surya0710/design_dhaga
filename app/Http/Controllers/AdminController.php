@@ -336,6 +336,7 @@ class AdminController extends Controller
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
             'show_on_home'     => 'nullable',
+            'content'          => 'required',
         ]);
 
         $category                    = new Category();
@@ -346,6 +347,7 @@ class AdminController extends Controller
         $category->meta_keywords     = $request->meta_keywords;
         $category->meta_description  = $request->meta_description;
         $category->show_on_home      = $request->show_on_home;
+        $category->content           = $request->content;
         $category->image             = '';
 
         if ($request->hasFile('image')) {
@@ -384,16 +386,18 @@ class AdminController extends Controller
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
             'show_on_home'     => 'nullable',
+            'content'          => 'required',
         ]);
 
         $category = Category::findOrFail($request->id);
 
-        $category->name = $request->name;
-        $category->slug = Str::slug($request->slug ?? $request->name);
-        $category->meta_title = $request->meta_title;
-        $category->meta_keywords = $request->meta_keywords;
+        $category->name             = $request->name;
+        $category->slug             = Str::slug($request->slug ?? $request->name);
+        $category->meta_title       = $request->meta_title;
+        $category->meta_keywords    = $request->meta_keywords;
         $category->meta_description = $request->meta_description;
-        $category->show_on_home = $request->show_on_home ?? 1;
+        $category->show_on_home     = $request->show_on_home ?? 1;
+        $category->content          = $request->content;
 
         if ($request->hasFile('image')) {
 
