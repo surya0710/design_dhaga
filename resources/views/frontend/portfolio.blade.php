@@ -83,7 +83,6 @@ and premium branding services.')
         text-align: center;
         line-height: 1.4;
     }
-
     .portfolio-category-card.active span {
         color: #c96b4b;
         font-weight: 700;
@@ -92,15 +91,9 @@ and premium branding services.')
     .portfolio-category-card.active .portfolio-category-image {
         border: 3px solid #c96b4b;
     }
-
     .portfolio-category-card:hover {
         transform: translateY(-4px);
     }
-
-    /* =========================
-        FILTER
-    ========================== */
-
     .gallery-filter {
         display: flex;
         justify-content: center;

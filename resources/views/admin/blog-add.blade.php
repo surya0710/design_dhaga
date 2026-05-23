@@ -472,8 +472,15 @@ tinymce.init({
 $(function () {
     $('#myFile').on('change', function () {
         const file = this.files[0];
+
         if (file) {
-            $('#imgpreview img').attr('src', URL.createObjectURL(file)).show();
+            $('#imgpreview').show(); // show preview container
+
+            $('#imgpreview img')
+                .attr('src', URL.createObjectURL(file))
+                .show();
+
+            $('#upload-file').hide(); // optional: hide upload box
         }
     });
 
