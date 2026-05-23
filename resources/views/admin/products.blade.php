@@ -60,7 +60,7 @@
                             <th>Name</th>
                             <th>Price</th>
                             <th>SalePrice</th>
-                            <th>Category</th>
+                            <th width="10%">Category</th>
                             <th width="10%">Featured</th>
                             <th width="5%">Qty</th>
                             <th>Action</th>
@@ -74,7 +74,7 @@
                                 <td>{{ $products->name }}</td>
                                 <td>{{$products->regular_price}}</td>
                                 <td>{{$products->sale_price}}</td>
-                                <td>{{ $products->category->name ?? '' }}</td>
+                                <td width="10%">{{ $products->category->name ?? '' }}</td>
                                 <td width="10%">{{$products->featured == 0 ? "No" : "Yes"}}</td>
                                 <td width="5%">{{$products->quantity}}</td>
                                 <td>
