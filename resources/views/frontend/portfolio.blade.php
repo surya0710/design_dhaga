@@ -80,12 +80,9 @@ and premium branding services. Our products are handcrafted in India and loved b
 
             <li class="nav-item">
 
-                <a href="{{ route('portfolio', $category->slug) }}"
-                    class="nav-link {{ $activeCategory->id == $category->id ? 'active' : '' }}">
+                <a href="{{ route('portfolio', $category->slug) }}" class="nav-link {{ $activeCategory->id == $category->id ? 'active' : '' }}">
 
-                    <img src="{{ asset($category->image) }}"
-                        class="img-fluid"
-                        alt="{{ $category->name }}">
+                    <img src="{{ asset($category->image) }}" class="img-fluid" alt="{{ $category->name }}">
 
                     <span>{{ $category->name }}</span>
 
