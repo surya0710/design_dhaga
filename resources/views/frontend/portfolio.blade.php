@@ -3,22 +3,158 @@
 @section('title', $pageContent->meta_title ?? 'Portfolio')
 
 @section('meta_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
-and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
+and premium branding services.')
 
-@section('meta_keywords', $pageContent->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade
-clothing, made in India')
+@section('meta_keywords', $pageContent->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding')
 
-@section('og_title', $pageContent->meta_title ?? 'Design Dhaga - Hand-Painted Fashion')
-@section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs,
-and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
+@section('og_title', $pageContent->meta_title ?? 'Design Dhaga - Portfolio')
+
+@section('og_description', $pageContent->meta_description ?? 'Design Dhaga portfolio gallery.')
 
 @section('og_image', asset('frontend_assets/images/og-home.jpg'))
 
 @push('extras')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
 <style>
+
+    /* =========================
+        CATEGORY SECTION
+    ========================== */
+
+    .portfolio-category-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 10px 0;
+        scrollbar-width: none;
+    }
+
+    .portfolio-category-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .portfolio-category-scroll {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 22px;
+        min-width: max-content;
+        padding: 0 15px;
+    }
+
+    .portfolio-category-card {
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 120px;
+        max-width: 140px;
+        transition: 0.3s ease;
+    }
+
+    .portfolio-category-image {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        transition: 0.3s ease;
+    }
+
+    .portfolio-category-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .portfolio-category-card span {
+        font-size: 17px;
+        font-weight: 500;
+        color: #222;
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    .portfolio-category-card.active span {
+        color: #c96b4b;
+        font-weight: 700;
+    }
+
+    .portfolio-category-card.active .portfolio-category-image {
+        border: 3px solid #c96b4b;
+    }
+
+    .portfolio-category-card:hover {
+        transform: translateY(-4px);
+    }
+
+    /* =========================
+        FILTER
+    ========================== */
+
+    .gallery-filter {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .gallery-filter span {
+        padding: 10px 18px;
+        border-radius: 30px;
+        background: #f4f4f4;
+        cursor: pointer;
+        transition: 0.3s ease;
+        font-size: 15px;
+    }
+
+    .gallery-filter span.active,
+    .gallery-filter span:hover {
+        background: #c96b4b;
+        color: #fff;
+    }
+
+    /* =========================
+        GALLERY
+    ========================== */
+
+    .gallery-grid {
+        column-count: 4;
+        column-gap: 18px;
+    }
+
+    .gallery-item {
+        break-inside: avoid;
+        margin-bottom: 18px;
+        overflow: hidden;
+        border-radius: 14px;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        display: block;
+        border-radius: 14px;
+        transition: 0.4s ease;
+    }
+
+    .gallery-item img:hover {
+        transform: scale(1.04);
+    }
+
+    /* =========================
+        MARQUEE
+    ========================== */
+
     .brands-marquee-wrapper {
         width: 100%;
         overflow: hidden;
@@ -27,11 +163,7 @@ and premium branding services. Our products are handcrafted in India and loved b
     .brands-scroll-track {
         display: flex;
         width: max-content;
-        animation: brands-scroll 40s linear infinite;
-    }
-
-    .brands-scroll-track:hover {
-        animation-play-state: paused;
+        animation: brands-scroll 35s linear infinite;
     }
 
     .brands-scroll-content {
@@ -41,21 +173,13 @@ and premium branding services. Our products are handcrafted in India and loved b
         padding: 0 20px;
     }
 
-    .brand-logo-item {
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     .brand-logo-item img {
-        width: 100%;
         max-width: 90px;
         object-fit: contain;
-        transition: filter 0.3s ease, opacity 0.3s ease;
     }
 
     @keyframes brands-scroll {
+
         0% {
             transform: translateX(0);
         }
@@ -63,40 +187,123 @@ and premium branding services. Our products are handcrafted in India and loved b
         100% {
             transform: translateX(-50%);
         }
+
     }
+
+    /* =========================
+        MOBILE
+    ========================== */
+
+    @media (max-width: 992px) {
+
+        .gallery-grid {
+            column-count: 3;
+        }
+
+    }
+
+    @media (max-width: 768px) {
+
+        .portfolio-category-scroll {
+            justify-content: flex-start;
+            gap: 14px;
+        }
+
+        .portfolio-category-card {
+            min-width: 90px;
+            max-width: 100px;
+        }
+
+        .portfolio-category-image {
+            width: 75px;
+            height: 75px;
+        }
+
+        .portfolio-category-card span {
+            font-size: 14px;
+        }
+
+        .gallery-grid {
+            column-count: 2;
+            column-gap: 12px;
+        }
+
+        .gallery-item {
+            margin-bottom: 12px;
+        }
+
+        .gallery-filter {
+            justify-content: flex-start;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 5px;
+        }
+
+        .gallery-filter::-webkit-scrollbar {
+            display: none;
+        }
+
+    }
+
+    @media (max-width: 480px) {
+
+        .gallery-grid {
+            column-count: 2;
+        }
+
+        .portfolio-category-image {
+            width: 65px;
+            height: 65px;
+        }
+
+        .portfolio-category-card span {
+            font-size: 13px;
+        }
+
+        .gallery-filter span {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+
+    }
+
 </style>
+
 @endpush
 
 @section('content')
 
 <section class="my-4">
 
-    {{-- CATEGORY NAVIGATION --}}
-    <div class="d-flex justify-content-center portfolio-category mb-4">
+    {{-- CATEGORY SECTION --}}
+    <div class="portfolio-category-wrapper">
 
-        <ul class="nav nav-tabs custom-tabs border-0 gap-2">
+        <div class="portfolio-category-scroll">
 
             @foreach ($portfolio as $category)
 
-            <li class="nav-item">
+            <a href="{{ route('portfolio', $category->slug) }}"
+                class="portfolio-category-card {{ $activeCategory->id == $category->id ? 'active' : '' }}">
 
-                <a href="{{ route('portfolio', $category->slug) }}" class="nav-link {{ $activeCategory->id == $category->id ? 'active' : '' }}">
+                <div class="portfolio-category-image">
 
-                    <img src="{{ asset($category->image) }}" class="img-fluid" alt="{{ $category->name }}">
+                    <img src="{{ asset($category->image) }}"
+                        alt="{{ $category->name }}">
 
-                    <span>{{ $category->name }}</span>
+                </div>
 
-                </a>
+                <span>
+                    {{ $category->name }}
+                </span>
 
-            </li>
+            </a>
 
             @endforeach
 
-        </ul>
+        </div>
 
     </div>
 
-    {{-- ACTIVE CATEGORY --}}
     @php
         $category = $activeCategory;
     @endphp
@@ -104,7 +311,9 @@ and premium branding services. Our products are handcrafted in India and loved b
     {{-- FILTER --}}
     <div class="gallery-filter">
 
-        <span class="active" data-filter="*">All</span>
+        <span class="active" data-filter="*">
+            All
+        </span>
 
         @foreach ($category->subcategories as $subcategory)
 
@@ -117,7 +326,7 @@ and premium branding services. Our products are handcrafted in India and loved b
     </div>
 
     {{-- GALLERY --}}
-    <div class="container mb-2 px-3">
+    <div class="container-fluid px-md-4 px-2 mb-4">
 
         <div class="gallery-grid">
 
@@ -131,7 +340,9 @@ and premium branding services. Our products are handcrafted in India and loved b
                         class="glightbox">
 
                         <img src="{{ asset($gallery->image) }}"
-                            alt="">
+                            loading="lazy"
+                            decoding="async"
+                            alt="Gallery Image">
 
                     </a>
 
@@ -144,104 +355,6 @@ and premium branding services. Our products are handcrafted in India and loved b
         </div>
 
     </div>
-
-    {{-- FABRIC PAINTING SECTION --}}
-    @if($category->name == "Fabric Painting")
-
-    <div class="sliding-text bg-dark py-3 px-2 w-100">
-
-        <div class="scroll-container">
-
-            <div class="scroll-content">
-
-                @foreach ($category->subcategories as $subcategory)
-
-                <div class="item">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        viewBox="26 -26 100 125">
-
-                        <path fill="#ffffff"
-                            d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                            l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-
-                    </svg>
-
-                    {{ $subcategory->name }}
-
-                </div>
-
-                @endforeach
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endif
-
-    {{-- GRAPHICS GALLERY --}}
-    @if($category->name == "Graphics Gallery")
-
-    <div class="brands-marquee-wrapper py-3">
-
-        <div class="brands-scroll-track">
-
-            {{-- ORIGINAL --}}
-            <div class="brands-scroll-content">
-
-                @php
-                    $logos = [
-                        'Aieraa-overseas.png',
-                        'bpr-office.png',
-                        'BTC.png',
-                        'cake-express.png',
-                        'herbnest.png',
-                        'marketinglu.png',
-                        'mishee.png',
-                        'Panfire.png',
-                        'puri-bakers.png',
-                        'student-traffic.png',
-                        'the-blish.png',
-                        'the-safe-trader.png'
-                    ];
-                @endphp
-
-                @foreach($logos as $logo)
-
-                <div class="brand-logo-item">
-
-                    <img src="{{ asset('frontend_assets/images/brands-logo/' . $logo) }}"
-                        alt="Brand Logo">
-
-                </div>
-
-                @endforeach
-
-            </div>
-
-            {{-- DUPLICATE --}}
-            <div class="brands-scroll-content" aria-hidden="true">
-
-                @foreach($logos as $logo)
-
-                <div class="brand-logo-item">
-
-                    <img src="{{ asset('frontend_assets/images/brands-logo/' . $logo) }}"
-                        alt="Brand Logo">
-
-                </div>
-
-                @endforeach
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endif
 
 </section>
 
@@ -269,12 +382,16 @@ and premium branding services. Our products are handcrafted in India and loved b
 
 <script>
 
-    /* Lightbox */
+    /* LIGHTBOX */
+
     GLightbox({
-        loop: true
+        loop: false,
+        touchNavigation: true,
+        preload: false
     });
 
-    /* Gallery Filter */
+    /* FILTER */
+
     const filterButtons = document.querySelectorAll('.gallery-filter span');
 
     const galleryItems = document.querySelectorAll('.gallery-item');
@@ -290,6 +407,7 @@ and premium branding services. Our products are handcrafted in India and loved b
             } else {
 
                 item.style.display = 'none';
+
             }
 
         });
