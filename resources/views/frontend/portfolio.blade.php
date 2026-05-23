@@ -106,7 +106,7 @@ and premium branding services.')
         justify-content: center;
         flex-wrap: wrap;
         gap: 12px;
-        margin: 25px 0;
+        margin: 0 0 20px;
     }
 
     .gallery-filter span {
@@ -277,30 +277,16 @@ and premium branding services.')
 
     {{-- CATEGORY SECTION --}}
     <div class="d-flex justify-content-center portfolio-category">
-
         <ul class="nav nav-tabs custom-tabs border-0 gap-2" id="myTab" role="tablist">
-
             @foreach($portfolio as $category)
-
             <li class="nav-item" role="presentation">
-
-                <a class="nav-link {{ $activeCategory->id == $category->id ? 'active' : '' }}"
-                    href="{{ route('portfolio', $category->slug) }}">
-
-                    <img src="{{ asset($category->image) }}"
-                        class="img-fluid"
-                        alt="{{ $category->name }}">
-
-                    <span>{{ $category->name }}</span>
-
+                <a class="nav-link text-center {{ $activeCategory->id == $category->id ? 'active' : '' }}" href="{{ route('portfolio', $category->slug) }}">
+                    <img src="{{ asset($category->image) }}" class="img-fluid" alt="{{ $category->name }}"> 
+                    <p class="mb-0 mt-1">{{ $category->name }}</p>
                 </a>
-
             </li>
-
             @endforeach
-
         </ul>
-
     </div>
 
     @php
@@ -309,68 +295,35 @@ and premium branding services.')
 
     {{-- FILTER --}}
     <div class="gallery-filter">
-
-        <span class="active" data-filter="*">
-            All
-        </span>
-
+        <span class="active" data-filter="*">All</span>
         @foreach ($category->subcategories as $subcategory)
-
-        <span data-filter="{{ $subcategory->slug }}">
-            {{ $subcategory->name }}
-        </span>
-
+        <span data-filter="{{ $subcategory->slug }}">{{ $subcategory->name }}</span>
         @endforeach
-
     </div>
 
     {{-- GALLERY --}}
     <div class="container px-md-4 px-2 mb-4">
-
         <div class="gallery-grid">
-
             @foreach ($category->subcategories as $subcategory)
-
                 @foreach ($subcategory->galleries as $gallery)
-
                 <div class="gallery-item {{ $subcategory->slug }}">
-
-                    <a href="{{ asset($gallery->image) }}"
-                        class="glightbox">
-
-                        <img src="{{ asset($gallery->image) }}"
-                            loading="lazy"
-                            decoding="async"
-                            alt="Gallery Image">
-
+                    <a href="{{ asset($gallery->image) }}" class="glightbox">
+                        <img src="{{ asset($gallery->image) }}" loading="lazy" decoding="async" alt="Gallery Image">
                     </a>
-
                 </div>
-
                 @endforeach
-
             @endforeach
-
         </div>
-
     </div>
-
 </section>
 
 <script>
-
     const textData = [];
-
     @foreach($highlights as $highlight)
 
     textData.push(`
         <span>{{ $highlight->title }}</span>
-
-        <img src="{{ Storage::url($highlight->emoji) }}"
-            class="emoji"
-            alt="{{ $highlight->alt_text ?? $highlight->title }}">
-    `);
-
+        <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
     @endforeach
 
 </script>
