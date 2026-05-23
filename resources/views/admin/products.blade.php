@@ -61,8 +61,8 @@
                             <th>Price</th>
                             <th>SalePrice</th>
                             <th>Category</th>
-                            <th>Featured</th>
-                            <th>Quantity</th>
+                            <th width="10%">Featured</th>
+                            <th width="5%">Qty</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -75,8 +75,8 @@
                                 <td>{{$products->regular_price}}</td>
                                 <td>{{$products->sale_price}}</td>
                                 <td>{{ $products->category->name ?? '' }}</td>
-                                <td>{{$products->featured == 0 ? "No" : "Yes"}}</td>
-                                <td>{{$products->quantity}}</td>
+                                <td width="10%">{{$products->featured == 0 ? "No" : "Yes"}}</td>
+                                <td width="5%">{{$products->quantity}}</td>
                                 <td>
                                     <div class="list-icon-function">
                                         <form action="{{ route('admin.product.toggleStatus', $products->id) }}" method="POST">
