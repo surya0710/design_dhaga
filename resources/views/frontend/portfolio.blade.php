@@ -106,7 +106,7 @@ and premium branding services.')
         justify-content: center;
         flex-wrap: wrap;
         gap: 12px;
-        margin: 0 0 20px;
+        margin: 10px 0 20px;
     }
 
     .gallery-filter span {
