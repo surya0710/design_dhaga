@@ -10,6 +10,7 @@ use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\HomepageHighlight;
+use App\Models\Faqs;
 
 class ShopController extends Controller
 {
@@ -56,9 +57,10 @@ class ShopController extends Controller
                 ->get();
         }
 
+        $faqs           = Faqs::where(['status' => 1, 'page_slug' => 'shop'])->get();
         $highlights     = HomepageHighlight::where('status', 1)->get();
 
-        return view('frontend.shop', compact('products', 'category', 'categories', 'menu', 'highlights'));
+        return view('frontend.shop', compact('products', 'category', 'categories', 'menu', 'highlights', 'faqs'));
     }
 
 

@@ -76,6 +76,55 @@
             <p>There are no products to display.</p>
             @endif
         </div>
+
+        {{-- FAQ SECTION --}}
+        @if(isset($faqs) && count($faqs) > 0 && Auth::check())
+
+        <section class="faq-section py-4">
+            <div class="container">
+                <div class="row text-center">
+                    <h4 class="mb-1">Frequently Asked Questions</h4>
+                </div>
+                <div class="faq-wrapper">
+
+                    @foreach($faqs as $key => $faq)
+
+                        <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
+
+                            <h4 class="faq-question">
+                                Que: {{ $faq->question }}
+                            </h4>
+
+                            <p class="faq-answer">
+                                <strong>Ans:</strong> {!! $faq->answer !!}
+                            </p>
+
+                        </div>
+
+                    @endforeach
+
+                    @if(count($faqs) > 1)
+
+                        <div class="text-center mt-4">
+
+                            <button type="button"
+                                    class="btn btn-link text-white text-decoration-none fw-bold"
+                                    id="showMoreFaqBtn">
+
+                                Show more
+
+                            </button>
+
+                        </div>
+
+                    @endif
+
+                </div>
+
+            </div>
+        </section>
+
+        @endif
     </div>
 </section>
 <script>
@@ -179,6 +228,14 @@
 
     $(".wishlist-btn").click(function() {
         toggleWishlist($(this));
+    });
+
+    $("#showMoreFaqBtn").click(function () {
+
+        $(".extra-faq").slideDown();
+
+        $(this).hide();
+
     });
 </script>
 @endpush
