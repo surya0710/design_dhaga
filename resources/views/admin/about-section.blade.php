@@ -86,6 +86,60 @@
 
                 </fieldset>
 
+                <div class="body-title" style="margin-top: 25px;">Values Section</div>
+
+                <div class="about-values-editor">
+                    @foreach($valueItems as $index => $item)
+                        <fieldset class="about-value-card" style="max-width: 100%;">
+                            <div class="body-title">Value {{ $index + 1 }}</div>
+
+                            <div class="value-icon-stack">
+                                <div class="item value-icon-preview" style="{{ !empty($item['icon']) ? 'display:flex' : 'display:none' }}">
+                                    <img src="{{ !empty($item['icon']) ? asset($item['icon']) : '' }}" class="effect8 value-preview-img" alt="{{ $item['alt'] ?? '' }}">
+                                </div>
+
+                                <div class="item up-load value-icon-upload">
+                                    <label class="uploadfile" for="valueIcon{{ $index }}">
+                                        <span class="icon">
+                                            <i class="icon-upload-cloud"></i>
+                                        </span>
+
+                                        <span class="body-text">
+                                            Drop icon or
+                                            <span class="tf-color">
+                                                click to browse
+                                            </span>
+                                        </span>
+
+                                        <input type="file"
+                                            id="valueIcon{{ $index }}"
+                                            name="value_icons[{{ $index }}]"
+                                            class="value-icon-input"
+                                            accept="image/*,.svg">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="existing_value_icons[{{ $index }}]" value="{{ $item['icon'] ?? '' }}">
+
+                            <div class="value-field">
+                                <div class="body-title">Title</div>
+                                <input type="text" name="value_titles[{{ $index }}]" value="{{ old('value_titles.'.$index, $item['title'] ?? '') }}" required>
+                            </div>
+
+                            <div class="value-field">
+                                <div class="body-title">Icon Alt Text</div>
+                                <input type="text" name="value_alts[{{ $index }}]" value="{{ old('value_alts.'.$index, $item['alt'] ?? '') }}">
+                            </div>
+
+                            <div class="value-field">
+                                <div class="body-title">Description</div>
+                                <textarea name="value_descriptions[{{ $index }}]" rows="7" required>{{ old('value_descriptions.'.$index, $item['description'] ?? '') }}</textarea>
+                            </div>
+                        </fieldset>
+                    @endforeach
+                </div>
+
                 <div class="bot">
 
                     <div></div>
@@ -107,6 +161,101 @@
 </div>
 
 @endsection
+
+@push('styles')
+<style>
+    .about-values-editor {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .about-value-card {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 20px;
+        min-width: 0;
+    }
+
+    .value-icon-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .value-icon-preview,
+    .value-icon-upload .uploadfile {
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 150px;
+    }
+
+    .value-icon-upload {
+        width: 100%;
+        border: 1px dashed var(--Main);
+        border-radius: 12px;
+        min-height: 130px;
+    }
+
+    .value-icon-upload .uploadfile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 100%;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .value-icon-upload .uploadfile .icon {
+        color: var(--Main);
+        font-size: 40px;
+        line-height: 1;
+    }
+
+    .value-icon-upload .uploadfile input {
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+    }
+
+    .value-icon-preview img {
+        width: auto;
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+    }
+
+    .value-field {
+        margin-bottom: 15px;
+    }
+
+    .value-field:last-child {
+        margin-bottom: 0;
+    }
+
+    .value-field textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    @media (max-width: 1199px) {
+        .about-values-editor {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 767px) {
+        .about-values-editor {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+@endpush
 
 
 @push('scripts')
@@ -147,6 +296,21 @@
                 );
 
                 $('#imgpreview').show();
+
+            }
+
+        });
+
+        $('.value-icon-input').on('change', function () {
+
+            const file = this.files[0];
+            const preview = $(this).closest('fieldset').find('.value-icon-preview');
+            const image = preview.find('.value-preview-img');
+
+            if (file) {
+
+                image.attr('src', URL.createObjectURL(file));
+                preview.show();
 
             }
 

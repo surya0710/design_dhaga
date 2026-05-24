@@ -1457,17 +1457,28 @@ class AdminController extends Controller
     public function about_section()
     {
         $section = AboutSection::first();
+        $valueItems = $section ? $section->display_value_items : AboutSection::defaultValueItems();
 
-        return view('admin.about-section', compact('section'));
+        return view('admin.about-section', compact('section', 'valueItems'));
     }
 
     public function about_section_update(Request $request)
     {
         $request->validate([
-            'heading'     => 'required',
-            'description' => 'required',
-            'signature'   => 'nullable',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'heading'                 => 'required',
+            'description'             => 'required',
+            'signature'               => 'nullable',
+            'image'                   => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'value_titles'            => 'required|array|min:1',
+            'value_titles.*'          => 'required|string|max:255',
+            'value_descriptions'      => 'required|array|min:1',
+            'value_descriptions.*'    => 'required|string',
+            'value_alts'              => 'nullable|array',
+            'value_alts.*'            => 'nullable|string|max:255',
+            'existing_value_icons'    => 'nullable|array',
+            'existing_value_icons.*'  => 'nullable|string|max:255',
+            'value_icons'             => 'nullable|array',
+            'value_icons.*'           => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:2048',
         ]);
 
         $section = AboutSection::first();
@@ -1506,12 +1517,53 @@ class AdminController extends Controller
         $section->description = $request->description;
         $section->signature = $request->signature;
         $section->image = $imagePath;
+        $section->value_items = $this->buildAboutValueItems($request);
 
         $section->save();
 
         return redirect()
             ->back()
             ->with('status', 'About section updated successfully');
+    }
+
+    private function buildAboutValueItems(Request $request): array
+    {
+        $items = [];
+        $titles = $request->input('value_titles', []);
+        $descriptions = $request->input('value_descriptions', []);
+        $alts = $request->input('value_alts', []);
+        $existingIcons = $request->input('existing_value_icons', []);
+
+        foreach ($titles as $index => $title) {
+            $iconPath = $existingIcons[$index] ?? '';
+
+            if ($request->hasFile("value_icons.$index")) {
+                $oldIcon = $iconPath;
+                $icon = $request->file("value_icons.$index");
+                $iconName = time().'_'.$index.'_'.uniqid().'.'.$icon->getClientOriginalExtension();
+                $destination = public_path('uploads/about-section-values');
+
+                if (!File::exists($destination)) {
+                    File::makeDirectory($destination, 0755, true);
+                }
+
+                $icon->move($destination, $iconName);
+                $iconPath = 'uploads/about-section-values/'.$iconName;
+
+                if ($oldIcon && Str::startsWith($oldIcon, 'uploads/about-section-values/') && File::exists(public_path($oldIcon))) {
+                    File::delete(public_path($oldIcon));
+                }
+            }
+
+            $items[] = [
+                'icon' => $iconPath,
+                'alt' => $alts[$index] ?? $title,
+                'title' => $title,
+                'description' => $descriptions[$index] ?? '',
+            ];
+        }
+
+        return $items;
     }
 
     // =========================================================================

@@ -134,6 +134,11 @@ and premium branding services. Our products are handcrafted in India and loved b
 </style>
 @endpush
 @section('content')
+@php
+  $aboutValueItems = $about ? $about->display_value_items : \App\Models\AboutSection::defaultValueItems();
+@endphp
+
+@if($about)
 <section class="container py-4">
   <div class="owners-box">
     <div class="col-md-6 owner-image">
@@ -148,44 +153,22 @@ and premium branding services. Our products are handcrafted in India and loved b
     </div>
   </div>
 </section>
+@endif
 
 <section class="py-5 bg-body-primary" id="about-us-icons-with-content">
   <div class="container">
     <div class="box-container">
-      <div class="box">
-        <img alt="Timeless" src="frontend_assets/images/icons/TimeLess icon.svg" loading="lazy" />
-        <h4>सदाबहार | TIMELESS</h4>
-        <p class="px-3 text-justify">
-          Design Dhaga creates designs that never fade with time — whether
-          it's a hand-painted saree, dupatta, kurta, or a digital logo
-          crafted for a brand. Our work is rooted in minimal, meaningful
-          aesthetics and exceptional quality, ensuring every piece —
-          fabric or graphic — stays relevant, elegant, and cherished
-          forever.
-        </p>
-      </div>
-      <div class="box">
-        <img alt="Honest" src="frontend_assets/images/icons/Honest icon.svg" loading="lazy" />
-        <h4>सच | HONEST</h4>
-        <p class="px-3 text-justify">
-          Honesty is woven into everything we create. From the
-          authenticity of hand-painted fabrics to transparent pricing and
-          clear communication in our graphic design services, we promise
-          no hidden surprises — only genuine creativity and fair value you
-          can trust.
-        </p>
-      </div>
-      <div class="box">
-        <img alt="Easy" src="frontend_assets/images/icons/Easy Icon.svg" loading="lazy" />
-        <h4>सरल | EASY</h4>
-        <p class="px-3 text-justify">
-          At Design Dhaga, simplicity is our strength. We make the process
-          easy — whether you're customizing a hand-painted outfit or
-          building your visual identity through graphic design. Smooth
-          workflow, clear guidance, and effortless experience — just like
-          the comfort of a warm cup of chai.
-        </p>
-      </div>
+      @foreach($aboutValueItems as $item)
+        <div class="box">
+          @if(!empty($item['icon']))
+            <img alt="{{ $item['alt'] ?? $item['title'] ?? 'About value' }}" src="{{ asset($item['icon']) }}" loading="lazy" />
+          @endif
+          <h4>{{ $item['title'] ?? '' }}</h4>
+          <p class="px-3 text-justify">
+            {!! nl2br(e($item['description'] ?? '')) !!}
+          </p>
+        </div>
+      @endforeach
     </div>
   </div>
 </section>
