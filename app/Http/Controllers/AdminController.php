@@ -538,6 +538,7 @@ class AdminController extends Controller
                 'meta_title'                => $request->meta_title,
                 'meta_keywords'             => $request->meta_keywords,
                 'meta_description'          => $request->meta_description,
+                'status'                    => $request->status ?? 1,
             ];
 
             $product = Product::create($data);
@@ -722,6 +723,7 @@ class AdminController extends Controller
                 'meta_title'                => $request->meta_title ?: null,
                 'meta_keywords'             => $request->meta_keywords ?: null,
                 'meta_description'          => $request->meta_description ?: null,
+                'status'                    => $request->status ?? 1,
             ]);
 
             // ── 2. Main image (media library path) ────────────────────────────

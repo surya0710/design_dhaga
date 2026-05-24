@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\HomepageHighlight;
 use App\Models\Faqs;
+use Illuminate\Support\Facades\Cache;
 
 class ShopController extends Controller
 {
@@ -20,17 +21,23 @@ class ShopController extends Controller
 
     public function __construct()
     {
-        $this->categories = Category::where('status', 1)
-            ->where(function ($query) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', 0);
-            })
-            ->with('children')
-            ->get();
+        $this->categories = Cache::remember('site.active_parent_categories', 60, function () {
+            return Category::where('status', 1)
+                ->where(function ($query) {
+                    $query->whereNull('parent_id')
+                        ->orWhere('parent_id', 0);
+                })
+                ->with('children')
+                ->get();
+        });
 
-        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        $this->menu = Cache::remember('site.active_menus', 60, function () {
+            return Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        });
 
-        $this->highlights = HomepageHighlight::where('status', 1)->get();
+        $this->highlights = Cache::remember('site.homepage_highlights', 60, function () {
+            return HomepageHighlight::where('status', 1)->get();
+        });
     }
 
 
@@ -58,7 +65,7 @@ class ShopController extends Controller
         }
 
         $faqs           = Faqs::where(['status' => 1, 'page_slug' => 'shop'])->get();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->highlights;
 
         return view('frontend.shop', compact('products', 'category', 'categories', 'menu', 'highlights', 'faqs'));
     }
@@ -75,7 +82,7 @@ class ShopController extends Controller
         $wishlistProductIds = Wishlist::where('user_id', auth()->user()->id)->pluck('product_id')->toArray();
         $products           = Product::whereIn('id', $wishlistProductIds)->get();
         $menu               = $this->menu;
-        $highlights         = HomepageHighlight::where('status', 1)->get();
+        $highlights         = $this->highlights;
         return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights'));
     }
 
@@ -83,7 +90,7 @@ class ShopController extends Controller
     {
         $categories     = $this->categories;
         $menu           = $this->menu;
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->highlights;
 
         $visitorId = $request->cookie('visitor_id');
 

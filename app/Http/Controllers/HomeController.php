@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Mail\ContactMail;
 use App\Models\Category;
@@ -26,15 +27,19 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->categories = Category::where('status', 1)
-            ->where(function ($query) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', 0);
-            })
-            ->with('children')
-            ->get();
+        $this->categories = Cache::remember('site.active_parent_categories', 60, function () {
+            return Category::where('status', 1)
+                ->where(function ($query) {
+                    $query->whereNull('parent_id')
+                        ->orWhere('parent_id', 0);
+                })
+                ->with('children')
+                ->get();
+        });
 
-        $this->menu = Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        $this->menu = Cache::remember('site.active_menus', 60, function () {
+            return Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        });
     }
 
     public function index()
@@ -56,7 +61,7 @@ class HomeController extends Controller
 
         $pageContent    = Pages::where('slug', '/')->first();
 
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
 
         $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
         $homeSections = HomeSection::where('status', 1)
@@ -77,7 +82,7 @@ class HomeController extends Controller
         $stories        = Story::where('status', 1)->orderBy('display_order', 'ASC')->get();
         $about          = AboutSection::where('status', 1)->first();
         $pageContent    = Pages::where('slug', 'about-us')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.about', compact('categories', 'menu', 'stories', 'about', 'pageContent', 'highlights'));
     }
 
@@ -86,7 +91,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'contact-us')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.contact', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -97,7 +102,7 @@ class HomeController extends Controller
 
         $pageContent = Pages::where('slug', 'portfolio')->first();
 
-        $highlights = HomepageHighlight::where('status', 1)->get();
+        $highlights = $this->activeHighlights();
 
         // ONLY categories for top navigation
         $portfolio = PortfolioCategory::select(
@@ -147,7 +152,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'terms-and-condition')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.terms', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -156,7 +161,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'return-policy')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.return-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -165,7 +170,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'order-shipping-policy')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.shipping-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -174,7 +179,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'privacy-policy')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.privacy-policy', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -182,7 +187,7 @@ class HomeController extends Controller
     {
         $categories = $this->categories;
         $menu       = $this->menu;
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.store', compact('categories', 'menu', 'highlights'));
     }
 
@@ -191,7 +196,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'collaborations')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('frontend.collaborations', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -199,7 +204,7 @@ class HomeController extends Controller
         $categories     = $this->categories;
         $menu           = $this->menu;
         $pageContent    = Pages::where('slug', 'collaborations')->first();
-        $highlights     = HomepageHighlight::where('status', 1)->get();
+        $highlights     = $this->activeHighlights();
         return view('404', compact('categories', 'menu', 'pageContent', 'highlights'));
     }
 
@@ -235,5 +240,12 @@ class HomeController extends Controller
         Mail::to('suryakantyadav16@gmail.com')->send(new ContactMail($contact));
 
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
+    }
+
+    private function activeHighlights()
+    {
+        return Cache::remember('site.homepage_highlights', 60, function () {
+            return HomepageHighlight::where('status', 1)->get();
+        });
     }
 }

@@ -414,6 +414,14 @@
                     </label>
                 </div>
             </div>
+            <div class="divider"></div>
+            <div class="field">
+                <label>Active</label>
+                <select name="status">
+                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
+                </select>
+            </div>
 
             <div class="divider"></div>
 

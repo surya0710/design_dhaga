@@ -14,7 +14,7 @@ class Product extends Model
         'hand_painted_details','care_instructions',
         'manufacturing_details','square_banner',
         'square_banner_title','square_banner_description',
-        'artisan_heading','meta_title','meta_keywords','meta_description',
+        'artisan_heading','meta_title','meta_keywords','meta_description', 'status'
     ];
 
     // ✅ Category

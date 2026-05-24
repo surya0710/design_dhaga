@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Visitor;
 
 class TrackUser
@@ -23,11 +24,20 @@ class TrackUser
             cookie()->queue(cookie('visitor_id', $visitorId, 60 * 24 * 365));
         }
 
-        // Fix localhost IP
-        $ip = $request->ip() === '127.0.0.1' ? '8.8.8.8' : $request->ip();
+        $ip = $request->ip();
+        $geo = [];
 
-        // Geo API
-        $geo = Http::get("http://ip-api.com/json/{$ip}")->json();
+        if (!$this->isLocalIp($ip) && !app()->environment('testing')) {
+            $geo = Cache::remember("geoip:{$ip}", now()->addDay(), function () use ($ip) {
+                try {
+                    $response = Http::timeout(1)->get("http://ip-api.com/json/{$ip}");
+
+                    return $response->successful() ? $response->json() : [];
+                } catch (\Throwable) {
+                    return [];
+                }
+            });
+        }
 
         // Save or update visitor
         Visitor::updateOrCreate(
@@ -51,5 +61,18 @@ class TrackUser
         );
 
         return $next($request);
+    }
+
+    private function isLocalIp(?string $ip): bool
+    {
+        if (!$ip) {
+            return true;
+        }
+
+        return filter_var(
+            $ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        ) === false;
     }
 }

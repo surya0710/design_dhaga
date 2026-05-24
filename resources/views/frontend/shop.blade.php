@@ -79,51 +79,37 @@
 
         {{-- FAQ SECTION --}}
         @if(isset($faqs) && count($faqs) > 0 && Auth::check())
-
         <section class="faq-section py-4">
             <div class="container">
                 <div class="row text-center">
                     <h4 class="mb-1">Frequently Asked Questions</h4>
                 </div>
+
                 <div class="faq-wrapper">
-
                     @foreach($faqs as $key => $faq)
-
-                        <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
-
-                            <h4 class="faq-question">
-                                Que: {{ $faq->question }}
-                            </h4>
-
-                            <p class="faq-answer">
+                    <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
+                        <h4 class="faq-question mb-1 text-blue">Que: {{ $faq->question }}</h4>
+                        <div class="faq-answer-wrapper">
+                            <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
                                 <strong>Ans:</strong> {!! $faq->answer !!}
                             </p>
-
+                            <button type="button" class="read-more-btn btn p-0 fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
+                                ....
+                            </button>
                         </div>
-
+                    </div>
                     @endforeach
 
                     @if(count($faqs) > 1)
-
-                        <div class="text-center mt-4">
-
-                            <button type="button"
-                                    class="btn btn-link text-white text-decoration-none fw-bold"
-                                    id="showMoreFaqBtn">
-
-                                Show more
-
-                            </button>
-
-                        </div>
-
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-outline-secondary see-more text-dark text-decoration-none fw-bold" id="showMoreFaqBtn">
+                            See more...
+                        </button>
+                    </div>
                     @endif
-
                 </div>
-
             </div>
         </section>
-
         @endif
     </div>
 </section>
@@ -230,12 +216,41 @@
         toggleWishlist($(this));
     });
 
-    $("#showMoreFaqBtn").click(function () {
+    // Show/hide individual answer
+    $(document).on("click", ".read-more-btn", function () {
+        const targetId = $(this).data("target");
+        const $answer = $("#" + targetId);
+        const isExpanded = $(this).data("expanded") === 1;
 
-        $(".extra-faq").slideDown();
-
-        $(this).hide();
-
+        if (isExpanded) {
+            $answer.removeClass("expanded");
+            $(this).text("....").data("expanded", 0);
+        } else {
+            $answer.addClass("expanded");
+            $(this).text("Show less").data("expanded", 1);
+        }
     });
+
+    // Check which answers actually overflow and show their button
+    function initFaqButtons() {
+        $(".faq-answer").each(function () {
+            const el = this;
+            // scrollHeight > clientHeight means text is clipped
+            if (el.scrollHeight > el.clientHeight + 2) {
+                $(this).siblings(".read-more-btn").removeClass("d-none");
+            }
+        });
+    }
+
+    // Show more FAQ items
+    $("#showMoreFaqBtn").click(function () {
+        $(".extra-faq").removeClass("d-none");
+        $(this).hide();
+        // Re-check overflow for newly revealed items
+        initFaqButtons();
+    });
+
+    // Run on load
+    initFaqButtons();
 </script>
 @endpush

@@ -3318,11 +3318,11 @@ ol.breadcrumb li {
   display: block;
 }
 
-.blogs-card{
+.blogs-card {
   padding: 10px;
 }
 
-.featured-product-name{
+.featured-product-name {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -3874,4 +3874,35 @@ ol.breadcrumb li {
   color: green !important;
   margin-right: 8px;
   font-weight: 800;
+}
+
+.faq-answer {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.faq-answer.expanded {
+  display: block;
+  overflow: visible;
+}
+
+.read-more-btn {
+  font-size: 13px;
+  color: #8b1e2d;
+}
+.text-blue {
+  color: #1877F2;
+}
+.see-more{
+  border-radius: 20px;
+}
+
+.see-more:hover,
+.see-more:active,
+.see-more:focus {
+  background-color: #fff!important;
+  color: #000;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
