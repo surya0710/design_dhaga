@@ -149,10 +149,6 @@ class ShopController extends Controller
                 ->exists()
             : false;
 
-        echo "<pre>";
-        print_r($product);
-        echo "</pre>";
-        die;
         return view('frontend.product', [
             'product' => $product,
             'categories' => $categories,

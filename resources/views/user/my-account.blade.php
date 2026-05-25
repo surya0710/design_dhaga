@@ -881,13 +881,13 @@ your orders.')
                                                             <i class="bi bi-receipt me-1"></i> Invoice
                                                         </a>
 
-                                                        @if($order->awb_code)
-                                                            <button
-                                                                class="btn btn-dark order-action-btn"
-                                                                onclick="openTracking('{{ $order->awb_code }}', '#{{ $order->id }}', '{{ $order->id }}')"
-                                                            >
+                                                        @if($order->order_status === 'delivered')
+                                                            
+                                                        @elseif($order->awb_code && $order->order_status === 'shipped')
+                                                            <button class="btn btn-dark order-action-btn" onclick="openTracking('{{ $order->awb_code }}', '#{{ $order->id }}', '{{ $order->id }}')">
                                                                 <i class="bi bi-geo-alt me-1"></i> Track
                                                             </button>
+
                                                         @else
                                                             <button class="btn btn-light order-action-btn" disabled>
                                                                 <i class="bi bi-hourglass-split me-1"></i> Awaiting AWB
