@@ -1,2 +1,51 @@
 User-agent: *
-Disallow:
+
+# Admin / Backend
+Disallow: /admin/
+
+# User Account / Login
+Disallow: /my-account/
+Disallow: /account/
+Disallow: /login/
+Disallow: /register/
+Disallow: /dashboard/
+
+# Cart & Checkout
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /wishlist/
+Disallow: /order-confirmation/
+Disallow: /thank-you/
+
+# Internal Search Pages
+Disallow: /search/
+Disallow: /*?s=
+Disallow: /*?search=
+
+# Filter & Sort URLs
+Disallow: /*?sort=
+Disallow: /*?orderby=
+Disallow: /*?filter=
+Disallow: /*?color=
+Disallow: /*?size=
+Disallow: /*?price=
+Disallow: /*?min_price=
+Disallow: /*?max_price=
+
+# Tracking URLs
+Disallow: /*?utm_
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+
+# API / System Files
+Disallow: /wp-json/
+Disallow: /api/
+
+# Temporary / Testing Folders
+Disallow: /staging/
+Disallow: /test/
+Disallow: /tmp/
+Disallow: /dev/
+
+# Sitemap
+Sitemap: https://www.designdhaga.com/sitemap.xml
