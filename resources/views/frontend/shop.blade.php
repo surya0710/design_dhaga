@@ -82,7 +82,7 @@
         <section class="faq-section py-4">
             <div class="container">
                 <div class="row justify-content-center">    
-                    <div class="col-lg-8 col-md-9">
+                    <div class="col-lg-10 col-md-8">
                         <div class="text-center mb-2">
                             <h4 class="mb-0">Frequently Asked Questions</h4>
                         </div>
