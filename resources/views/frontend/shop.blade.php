@@ -81,32 +81,35 @@
         @if(isset($faqs) && count($faqs) > 0 && Auth::check())
         <section class="faq-section py-4">
             <div class="container">
-                <div class="row text-center">
-                    <h4 class="mb-1">Frequently Asked Questions</h4>
-                </div>
+                <div class="row justify-content-center">    
+                    <div class="col-lg-8 col-md-9">
+                        <div class="text-center mb-2">
+                            <h4 class="mb-0">Frequently Asked Questions</h4>
+                        </div>
+                        <div class="faq-wrapper">
+                            @foreach($faqs as $key => $faq)
+                            <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
+                                <h4 class="faq-question mb-1 text-blue">Que: {{ $faq->question }}</h4>
+                                <div class="faq-answer-wrapper">
+                                    <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
+                                        <strong>Ans:</strong> {!! $faq->answer !!}
+                                    </p>
+                                    <button type="button" class="read-more-btn btn p-0 fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
+                                        ....
+                                    </button>
+                                </div>
+                            </div>
+                            @endforeach
 
-                <div class="faq-wrapper">
-                    @foreach($faqs as $key => $faq)
-                    <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
-                        <h4 class="faq-question mb-1 text-blue">Que: {{ $faq->question }}</h4>
-                        <div class="faq-answer-wrapper">
-                            <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
-                                <strong>Ans:</strong> {!! $faq->answer !!}
-                            </p>
-                            <button type="button" class="read-more-btn btn p-0 fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
-                                ....
-                            </button>
+                            @if(count($faqs) > 1)
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-outline-secondary see-more text-dark text-decoration-none fw-bold" id="showMoreFaqBtn">
+                                    See more...
+                                </button>
+                            </div>
+                            @endif
                         </div>
                     </div>
-                    @endforeach
-
-                    @if(count($faqs) > 1)
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn btn-outline-secondary see-more text-dark text-decoration-none fw-bold" id="showMoreFaqBtn">
-                            See more...
-                        </button>
-                    </div>
-                    @endif
                 </div>
             </div>
         </section>

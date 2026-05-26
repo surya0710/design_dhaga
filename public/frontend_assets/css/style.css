@@ -2089,9 +2089,6 @@ ul.specifications li h4 {
   margin-right: 170px;
 }
 
-/* ============================================
-   BREADCRUMB / BANNER
-   ============================================ */
 .banner-stley h1 {
   font-size: 65px;
   font-weight: bold;
@@ -2107,19 +2104,6 @@ ul.specifications li h4 {
   letter-spacing: 2px;
   padding-top: 10px;
   padding-bottom: 40px;
-}
-
-ol.breadcrumb {
-  background-color: #fff;
-  width: fit-content;
-  margin: auto;
-  border-radius: var(--border-radius-pill);
-  padding: 6px 110px;
-  text-transform: uppercase;
-}
-
-ol.breadcrumb li {
-  color: #000;
 }
 
 .sticky-md-top {
