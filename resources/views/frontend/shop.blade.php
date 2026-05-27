@@ -28,6 +28,13 @@
         <div class="row">
             <h3 class="text-center">{{ $category->name }}</h3>
         </div>
+        <div class="container">
+            <div class="row justify-content-center">    
+                <div class="col-lg-10 col-md-8 text-justify">
+                    {!! $category->content !!}
+                </div>
+            </div>
+        </div>
         @php
         use App\Models\Wishlist;
         @endphp
