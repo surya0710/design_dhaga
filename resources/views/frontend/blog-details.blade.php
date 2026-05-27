@@ -58,7 +58,7 @@
 
         <hr />
 
-        <div class="col-lg-12">
+        <div class="col-lg-12 mb-2">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
