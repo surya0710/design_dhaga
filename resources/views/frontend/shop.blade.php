@@ -108,6 +108,11 @@
                             </div>
                             @endforeach
 
+                            <div class="text-center extra-faq d-none">
+                                <h4 class="mb-2">Still have questions? We'd love to hear from you.</h4>
+                                <a type="button" class="btn btn-outline-secondary view-all-btn bg-dark" href="{{ route('contact-us') }}">Contact Us</a>
+                            </div>
+
                             @if(count($faqs) > 1)
                             <div class="text-center mt-4">
                                 <button type="button" class="btn btn-outline-secondary see-more text-dark text-decoration-none fw-bold" id="showMoreFaqBtn">

@@ -13,12 +13,12 @@
 
 <div class="container">
     <div class="row gx-lg-5 px-xs-2">
-        <div class="col-lg-9 mt-lg-3">
-            <div class="mb-4">
+        <div class="col-lg-12">
+            <div class="mb-4 blog-content text-center">
                 <h1 class="fw-bold">{{ $blog->title }}</h1>
             </div>
 
-            <div class="rounded overflow-hidden mb-4">
+            <div class="rounded overflow-hidden mb-4 text-center">
                 <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="img-fluid w-100" alt="{{ $blog->title }}" />
             </div>
 
@@ -27,12 +27,43 @@
             </div>
         </div>
 
-        <div class="col-lg-3 mt-lg-3">
+        <div class="col-lg-12">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <h2 class="h4 fw-bold mb-0">Recent Blogs</h2>
+            </div>
+
+            <div id="recentBlogsCarousel">
+                <div class="owl-carousel">
+                    @foreach($recentBlogs as $blog)
+                    <div>
+                        <a href="{{ route('blog.show', $blog->slug) }}" class="text-decoration-none text-dark">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="ratio ratio-4x3">
+                                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover" alt="{{ $blog->title }}" />
+                                </div>
+                                <div class="card-body blogs-card">
+                                    <h5 class="card-title mt-2">{{ $blog->title }}</h5>
+                                    <p class="text-muted small">
+                                        {!! Str::limit(strip_tags($blog->content), 200) !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="col-lg-12">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
-            <div id="recentBlogsCarousel" class="d-lg-none">
+            <div id="recentBlogsCarousel">
                 <div class="owl-carousel">
                     @foreach($featuredProducts as $product)
                     @php $productUrl = getProductUrl($product); @endphp
@@ -63,32 +94,6 @@
                 </div>
             </div>
 
-            <div class="d-none d-lg-flex flex-column gap-2">
-                @foreach($featuredProducts as $product)
-                @php $productUrl = getProductUrl($product); @endphp
-                <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
-                    <div class="card border-0 shadow-sm">
-                        <div class="ratio ratio-4x3">
-                            <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
-                        </div>
-                        <div class="card-body blogs-card">
-                            <p class="mt-0 text-left mb-0 featured-product-name">{{ $product->name }}</p>
-                            @if ($product->sale_price)
-                                <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
-                                <span class="text-decoration-line-through text-muted small text-light">
-                                    ₹{{ number_format($product->regular_price, 0) }}
-                                </span>
-                                <span class="text-maroon small">
-                                    Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
-                                </span>
-                            @else
-                                <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                </a>
-                @endforeach
-            </div>
         </div>
     </div>
 </div>
@@ -168,7 +173,10 @@
                     items: 2   // tablet
                 },
                 992: {
-                    items: 2   // up to lg breakpoint
+                    items: 3   // up to lg breakpoint
+                },
+                1200:{
+                    items: 3
                 }
             }
         });

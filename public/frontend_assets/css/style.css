@@ -3295,9 +3295,13 @@ ul.specifications li h4 {
     padding: 20px 0
   }
 }
-
+.blog-content{
+  width: 800px;
+  margin: 0 auto;
+}
 .blog-content img {
   max-width: 100%;
+  width: 100%;
   height: auto;
   display: block;
 }
@@ -3933,5 +3937,9 @@ ul.specifications li h4 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .blog-content{
+    width: 100%;
   }
 }

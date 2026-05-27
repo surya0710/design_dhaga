@@ -29,7 +29,7 @@
         <div class="col-md-4 d-flex">
             <div class="card rounded-4 border-1 card-hover">
                 <div class="card-image-container">
-                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover rounded-top-4" />
+                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover rounded-top-4" alt="{{ $blog->title }}" />
                 </div>
                 <div class="card-body d-flex flex-column p-3">
                     <small class="text-muted">{{ date('M d, Y', strtotime($blog->created_at)) }}</small>
