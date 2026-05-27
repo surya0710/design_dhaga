@@ -50,6 +50,11 @@
     .wishlist-btn .fa-regular{
         color:#000!important;
     }
+    @media (max-width: 768px) {
+        .breadcrumb {
+            justify-content: start!important;
+        }
+    }
 </style>
 @endpush
 

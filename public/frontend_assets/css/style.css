@@ -3890,3 +3890,48 @@ ul.specifications li h4 {
   color: #000;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
+
+.breadcrumb-section {
+  background: #f8f5f2;
+}
+
+.breadcrumb {
+  font-size: 15px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.breadcrumb::-webkit-scrollbar {
+  display: none;
+}
+
+.breadcrumb-item a {
+  color: #7a5c43;
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
+  color: #000;
+  font-weight: 500;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  content: "/";
+  color: #999;
+}
+
+@media (max-width: 768px) {
+
+  .breadcrumb {
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .breadcrumb-item.active {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

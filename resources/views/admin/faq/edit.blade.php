@@ -96,9 +96,7 @@
                         Answer <span class="tf-color-1">*</span>
                     </div>
 
-                    <textarea name="answer"
-                              rows="6"
-                              placeholder="Enter FAQ answer">{{ old('answer', $faq->answer) }}</textarea>
+                    <textarea name="answer" rows="6" class="editor" placeholder="Enter FAQ answer">{{ old('answer', $faq->answer) }}</textarea>
 
                     @error('answer')
                         <div class="text-danger mt-2">
@@ -117,10 +115,7 @@
                             Sort Order
                         </div>
 
-                        <input type="number"
-                               name="sort_order"
-                               placeholder="Enter sort order"
-                               value="{{ old('sort_order', $faq->sort_order) }}">
+                        <input type="number" name="sort_order" placeholder="Enter sort order" value="{{ old('sort_order', $faq->sort_order) }}">
 
                         @error('sort_order')
                             <div class="text-danger mt-2">
@@ -181,3 +176,38 @@
 </div>
 
 @endsection
+
+@push('scripts')
+{{-- TinyMCE --}}
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+
+<script>
+tinymce.init({
+
+    selector: '.editor',
+
+    height: 350,
+    width : "100%",
+
+    menubar: false,
+
+    plugins: 'lists link image code table',
+
+    toolbar:
+        'undo redo | ' +
+        'bold italic underline | ' +
+        'bullist numlist | ' +
+        'link image table | ' +
+        'code',
+
+    content_style: `
+        body {
+            font-family: sans-serif;
+            font-size: 14px;
+            padding: 10px;
+        }
+    `
+});
+</script>
+
+@endpush

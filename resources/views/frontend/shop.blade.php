@@ -89,7 +89,7 @@
                         <div class="faq-wrapper">
                             @foreach($faqs as $key => $faq)
                             <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
-                                <h4 class="faq-question mb-1 text-blue">Que: {{ $faq->question }}</h4>
+                                <h4 class="faq-question mb-1 mt-1 text-blue">Que: {{ $faq->question }}</h4>
                                 <div class="faq-answer-wrapper">
                                     <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
                                         <strong>Ans:</strong> {!! $faq->answer !!}

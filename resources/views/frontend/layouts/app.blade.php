@@ -42,6 +42,115 @@
 <body class="@if (request()->is('login') || request()->is('register')) bg-body @endif">
     @include('frontend.partials.header')
     <main>
+        {{-- Breadcrumb --}}
+        @if (Request::segment(1))
+        <section class="breadcrumb-section py-3 bg-light border-bottom">
+            <div class="container text-center">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center mb-0">
+
+                        {{-- Home --}}
+                        <li class="breadcrumb-item">
+                            <a href="{{ url('/') }}">Home</a>
+                        </li>
+
+                        @php
+                            $segments = Request::segments();
+
+                            // Remove only "shop" from display
+                            $displaySegments = collect($segments)
+                                ->filter(fn($segment) => $segment !== 'shop')
+                                ->values();
+
+                            $url = '';
+                            $displayCount = $displaySegments->count();
+                        @endphp
+
+                        @foreach ($segments as $segment)
+
+                            @php
+                                $url .= '/' . $segment;
+                            @endphp
+
+                            {{-- Hide shop from breadcrumb display only --}}
+                            @if($segment == 'shop')
+                                @continue
+                            @endif
+
+                            @php
+                                $name = ucwords(str_replace(['-', '_'], ' ', $segment));
+
+                                $displayIndex = $displaySegments->search($segment);
+
+                                $isLast = $displayIndex === ($displayCount - 1);
+                                $isSecondLast = $displayIndex === ($displayCount - 2);
+                                $isThirdLast = $displayIndex === ($displayCount - 3);
+
+                                // Mobile shortened title
+                                $words = explode(' ', $name);
+                                $mobileTitle = implode(' ', array_slice($words, 0, 1)) . '...';
+                            @endphp
+
+                            {{-- LAST ITEM --}}
+                            @if ($isLast)
+
+                                <li class="breadcrumb-item active" aria-current="page">
+
+                                    {{-- Desktop --}}
+                                    <span class="d-none d-md-inline">
+                                        {{ $name }}
+                                    </span>
+
+                                    {{-- Mobile --}}
+                                    <span class="d-inline d-md-none">
+                                        {{ $displayCount > 3 ? $mobileTitle : $name }}
+                                    </span>
+
+                                </li>
+
+                            @else
+
+                                {{-- Desktop --}}
+                                <li class="breadcrumb-item d-none d-md-inline-block">
+                                    <a href="{{ url($url) }}">
+                                        {{ $name }}
+                                    </a>
+                                </li>
+
+                                {{-- Mobile --}}
+                                @if($displayCount > 3)
+
+                                    {{-- Show only last 2 categories --}}
+                                    @if($isThirdLast || $isSecondLast)
+                                        <li class="breadcrumb-item d-inline-block d-md-none">
+                                            <a href="{{ url($url) }}">
+                                                {{ $name }}
+                                            </a>
+                                        </li>
+                                    @endif
+
+                                @else
+
+                                    {{-- Show all items if <= 3 --}}
+                                    <li class="breadcrumb-item d-inline-block d-md-none">
+                                        <a href="{{ url($url) }}">
+                                            {{ $name }}
+                                        </a>
+                                    </li>
+
+                                @endif
+
+                            @endif
+
+                        @endforeach
+
+                    </ol>
+                </nav>
+
+            </div>
+        </section>
+        @endif
         @yield('content')
     </main>
     @include('frontend.partials.footer')
