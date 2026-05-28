@@ -37,7 +37,7 @@
                     @foreach($recentBlogs as $blog)
                     <div>
                         <a href="{{ route('blog.show', $blog->slug) }}" class="text-decoration-none text-dark">
-                            <div class="card border-0 shadow-sm h-100">
+                            <div class="card border-0 h-100">
                                 <div class="ratio ratio-4x3">
                                     <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover" alt="{{ $blog->title }}" />
                                 </div>
@@ -69,7 +69,7 @@
                     @php $productUrl = getProductUrl($product); @endphp
                     <div>
                         <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
-                            <div class="card border-0 shadow-sm h-100">
+                            <div class="card border-0 h-100">
                                 <div class="ratio ratio-4x3">
                                     <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
                                 </div>
