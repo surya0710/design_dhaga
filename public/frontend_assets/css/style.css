@@ -1050,10 +1050,17 @@ a[href^="mailto:"] {
   text-decoration: none;
 }
 
+.contact-details h2, 
+.contact-details h3, 
 .contact-details h4 {
   line-height: 25px;
+  font-size: 20px;
 }
 
+.form-heading{
+  font-size: 28px;
+  font-weight: 500;
+}
 .contact-form form textarea,
 .contact-form form input,
 .contact-form form select {

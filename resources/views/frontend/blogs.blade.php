@@ -17,7 +17,7 @@
         <div class="row align-items-center">
             <!-- Left Content -->
             <div class="col-md-12">
-                <h1 class="fw-bold mb-0">Our Latest Blogs</h1>
+                <h1 class="fw-bold mb-0">Our Latest Blogs - Hand-Painted Fashion, Design & Indian Craft Insights</h1>
             </div>
         </div>
     </div>

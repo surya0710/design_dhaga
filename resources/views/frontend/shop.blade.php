@@ -53,7 +53,7 @@
         </div>
         <div class="container d-none d-md-block">
             <div class="row justify-content-center">    
-                <div class="col-lg-10 col-md-8 text-justify mb-0">
+                <div class="col-lg-10 col-md-8 text-center mb-0">
                     {!! $category->content ?? '' !!}
                 </div>
             </div>
