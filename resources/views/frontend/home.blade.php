@@ -26,6 +26,33 @@
     };
 @endphp
 
+@section('schema')
+<script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "Corporation",
+    "name": "Design Dhaga",
+    "alternateName": "Design Dhaga",
+    "url": "https://www.designdhaga.com/",
+    "logo": "https://www.designdhaga.com/frontend_assets/images/logo/logo.svg",
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "9671941303",
+        "contactType": "customer service",
+        "contactOption": "TollFree",
+        "areaServed": ["US","GB","CA","IN","AU","VN","NG","NP"],
+        "availableLanguage": ["en","Hindi"]
+    },
+    "sameAs": [
+        "https://www.facebook.com/design.dhaga",
+        "https://www.instagram.com/design.dhaga",
+        "https://www.youtube.com/@designdhaga",
+        "https://in.pinterest.com/design_dhaga"
+    ]
+    }
+</script>
+@endsection
+
 @section('content')
 <div class="container py-2 category-icons">
     <div class="d-flex justify-content-center gap-3">

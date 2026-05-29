@@ -57,13 +57,40 @@
     }
 </style>
 @endpush
-
-@section('content')
 @php
     $gallery    = $product->galleryImages;
     $mainImage  = $product->image;
     $productID  = $product->id;
 @endphp
+@section('schema')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": {!! json_encode($product->name) !!},
+        "image": "{{ asset('storage/' . $product->image) }}",
+        "description": {!! json_encode(strip_tags($product->short_description ?? $product->description)) !!},
+        "brand": {
+            "@type": "Brand",
+            "name": "Design Dhaga"
+        },
+        "sku": "{{ $product->sku ?? 'DD-' . $product->sku }}"
+
+        @if($product->reviews->count() > 0)
+        ,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ number_format($averageRating, 1) }}",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": "{{ $product->reviews->count() }}"
+        }
+        @endif
+    }
+</script>
+@endsection
+
+@section('content')
 <div class="container-fluid">
     <div class="px-2 px-md-5 mt-3">
         <div class="row g-4 align-items-stretch flex-column flex-lg-row">

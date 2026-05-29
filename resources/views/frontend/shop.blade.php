@@ -1,12 +1,12 @@
 @extends('frontend.layouts.app')
-@section('title', $category->meta_title)
+@section('title', $category->meta_title ?? 'Design Dhaga All Products')
 
-@section('meta_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
+@section('meta_description', $category->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 
-@section('meta_keywords', 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade clothing, made in India')
+@section('meta_keywords', $category->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade clothing, made in India')
 
-@section('og_title', 'Design Dhaga - Hand-Painted Fashion')
-@section('og_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
+@section('og_title', $category->meta_title ?? 'Design Dhaga All Products')
+@section('og_description', $category->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset('frontend_assets/images/og-home.jpg'))
 
 @push('extras')
@@ -22,16 +22,39 @@
 </style>
 @endpush
 
+@section('schema')
+@if(isset($faqs) && count($faqs) > 0)
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            @foreach($faqs as $faq)
+            {
+                "@type": "Question",
+                "name": {!! json_encode(strip_tags($faq->question)) !!},
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": {!! json_encode(strip_tags($faq->answer)) !!}
+                }
+            }@if(!$loop->last),@endif
+            @endforeach
+        ]
+    }
+</script>
+@endif
+@endsection
+
 @section('content')
 <section class="my-2">
     <div class="container-fluid mt-4">
         <div class="row">
-            <h3 class="text-center">{{ $category->name }}</h3>
+            <h3 class="text-center">{{ $category->name ?? 'All Products' }}</h3>
         </div>
         <div class="container d-none d-md-block">
             <div class="row justify-content-center">    
                 <div class="col-lg-10 col-md-8 text-justify mb-0">
-                    {!! $category->content !!}
+                    {!! $category->content ?? '' !!}
                 </div>
             </div>
         </div>

@@ -314,6 +314,7 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 });
 
 
+Route::get('/shop', [ShopController::class, 'category_products'])->name('shop.all');
 Route::get('/shop/{category}', [ShopController::class, 'category_products'])->name('shop.index');
 Route::get('/shop/{category}/{subcategory}', [ShopController::class, 'category_products'])->name('shop.subcategory');
 Route::get('/shop/{category}/{subcategory}/{product}', [ShopController::class, 'product_details'])->name('shop.product');

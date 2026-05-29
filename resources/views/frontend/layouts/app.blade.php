@@ -38,6 +38,50 @@
     src="https://www.facebook.com/tr?id=1228920345968692&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Meta Pixel Code -->
+     <!-- Dynamic Breadcrumb Schema -->
+    @if (Request::segment(1))
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "{{ url('/') }}"
+            }
+            @php
+                $segments = Request::segments();
+                $url = '';
+                $position = 2;
+            @endphp
+
+            @foreach($segments as $segment)
+                @php
+                    $url .= '/' . $segment;
+
+                    $name = ucwords(
+                        str_replace(
+                            ['-', '_'],
+                            ' ',
+                            urldecode($segment)
+                        )
+                    );
+                @endphp
+                ,
+                {
+                    "@type": "ListItem",
+                    "position": {{ $position++ }},
+                    "name": "{{ $name }}",
+                    "item": "{{ url($url) }}"
+                }
+            @endforeach
+        ]
+    }
+    </script>
+    @endif
+    @yield('schema')
 </head>
 <body class="@if (request()->is('login') || request()->is('register')) bg-body @endif">
     @include('frontend.partials.header')
@@ -57,97 +101,39 @@
 
                         @php
                             $segments = Request::segments();
-
-                            // Remove only "shop" from display
-                            $displaySegments = collect($segments)
-                                ->filter(fn($segment) => $segment !== 'shop')
-                                ->values();
-
                             $url = '';
-                            $displayCount = $displaySegments->count();
+                            $displayCount = count($segments);
                         @endphp
 
-                        @foreach ($segments as $segment)
+                        @foreach ($segments as $index => $segment)
 
                             @php
                                 $url .= '/' . $segment;
-                            @endphp
-
-                            {{-- Hide shop from breadcrumb display only --}}
-                            @if($segment == 'shop')
-                                @continue
-                            @endif
-
-                            @php
-                                $name = ucwords(str_replace(['-', '_'], ' ', $segment));
-
-                                $displayIndex = $displaySegments->search($segment);
-
-                                $isLast = $displayIndex === ($displayCount - 1);
-                                $isSecondLast = $displayIndex === ($displayCount - 2);
-                                $isThirdLast = $displayIndex === ($displayCount - 3);
-
-                                // Mobile shortened title
+                                $name = ucwords(str_replace(['-', '_'], ' ', urldecode($segment)));
+                                $isLast = $index === ($displayCount - 1);
                                 $words = explode(' ', $name);
                                 $mobileTitle = implode(' ', array_slice($words, 0, 1)) . '...';
                             @endphp
 
-                            {{-- LAST ITEM --}}
                             @if ($isLast)
-
                                 <li class="breadcrumb-item active" aria-current="page">
-
-                                    {{-- Desktop --}}
                                     <span class="d-none d-md-inline">
                                         {{ $name }}
                                     </span>
-
-                                    {{-- Mobile --}}
                                     <span class="d-inline d-md-none">
                                         {{ $displayCount > 3 ? $mobileTitle : $name }}
                                     </span>
-
                                 </li>
-
                             @else
-
-                                {{-- Desktop --}}
-                                <li class="breadcrumb-item d-none d-md-inline-block">
+                                <li class="breadcrumb-item">
                                     <a href="{{ url($url) }}">
                                         {{ $name }}
                                     </a>
                                 </li>
-
-                                {{-- Mobile --}}
-                                @if($displayCount > 3)
-
-                                    {{-- Show only last 2 categories --}}
-                                    @if($isThirdLast || $isSecondLast)
-                                        <li class="breadcrumb-item d-inline-block d-md-none">
-                                            <a href="{{ url($url) }}">
-                                                {{ $name }}
-                                            </a>
-                                        </li>
-                                    @endif
-
-                                @else
-
-                                    {{-- Show all items if <= 3 --}}
-                                    <li class="breadcrumb-item d-inline-block d-md-none">
-                                        <a href="{{ url($url) }}">
-                                            {{ $name }}
-                                        </a>
-                                    </li>
-
-                                @endif
-
                             @endif
-
                         @endforeach
-
                     </ol>
                 </nav>
-
             </div>
         </section>
         @endif
