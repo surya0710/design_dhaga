@@ -103,6 +103,31 @@
         color: #2275fc;
         font-weight: 500;
     }
+    /* Fix TinyMCE font size dropdown position */
+    .tox .tox-collection--list .tox-collection__group {
+        padding: 0;
+    }
+
+    .tox-tinymce-aux {
+        z-index: 9999 !important;
+    }
+
+    .tox .tox-pop {
+        z-index: 9999 !important;
+    }
+
+    /* Force dropdown to appear at top of its trigger */
+    .tox .tox-toolbar-overlord,
+    .tox .tox-toolbar__primary {
+        position: relative !important;
+    }
+    .wg-box {
+        overflow: visible !important;
+    }
+
+    .main-content-wrap {
+        overflow: visible !important;
+    }
 </style>
 @endpush
 
@@ -394,40 +419,96 @@ tinymce.init({
     menubar: false,
     branding: false,
     promotion: false,
+
     plugins: [
         'advlist', 'autolink', 'lists', 'link', 'image',
         'searchreplace', 'visualblocks', 'code', 'fullscreen',
-        'table', 'wordcount'
+        'table', 'wordcount', 'paste'
     ],
+
     toolbar:
-        'undo redo | blocks | ' +
+        'undo redo | blocks fontsize | ' +
         'bold italic underline | forecolor | ' +
-        'alignleft aligncenter alignright | ' +
-        'bullist numlist | blockquote | ' +
+        'alignleft aligncenter alignright justify | ' +
+        'bullist numlist | outdent indent | ' +
+        'lineheight | blockquote | ' +
         'link image table | ' +
         'columns | code | fullscreen',
+
     block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6',
+
+    fontsize_formats:
+        '8pt 10pt 12pt 14pt 16pt 18pt 20pt 24pt 28pt 32pt 36pt 48pt',
+
+    line_height_formats:
+        '1 1.15 1.5 1.75 2 2.5 3',
+
+    // ── Paste / Word settings ──────────────────────────────────
+    paste_as_text: false,
+    paste_retain_style_properties: 'all',
+    paste_merge_formats: false,
+    paste_remove_styles_if_webkit: false,
+    paste_webkit_styles: 'all',
+
+    paste_preprocess: function (plugin, args) {
+        args.content = args.content;
+    },
+
+    paste_postprocess: function (plugin, args) {
+        const node = args.node;
+        node.querySelectorAll('[style]').forEach(el => {
+            let style = el.getAttribute('style');
+            style = style
+                .split(';')
+                .filter(rule => {
+                    const r = rule.trim().toLowerCase();
+                    return r &&
+                        !r.startsWith('mso-') &&
+                        !r.startsWith('tab-stops') &&
+                        !r.includes('mso-');
+                })
+                .join(';');
+            if (style) {
+                el.setAttribute('style', style);
+            } else {
+                el.removeAttribute('style');
+            }
+        });
+
+        node.querySelectorAll('span[style=""]').forEach(el => {
+            el.replaceWith(...el.childNodes);
+        });
+    },
+
+    // ── Allow all styles and elements ─────────────────────────
     extended_valid_elements: '*[*]',
     valid_children: '+body[style],+div[p|div|img|h1|h2|h3|h4|h5|h6|ul|ol|li|blockquote|table|tr|td|th|thead|tbody]',
     verify_html: false,
+
     automatic_uploads: false,
     file_picker_types: 'image',
+
     file_picker_callback: function (cb) {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
+
         input.addEventListener('change', function () {
             const file = this.files[0];
             const reader = new FileReader();
+
             reader.onload = function () {
                 cb(reader.result, { title: file.name });
             };
+
             reader.readAsDataURL(file);
         });
+
         input.click();
     },
+
     setup: function (editor) {
-        // ── Custom Columns toolbar button ───────────────────────
+
         editor.ui.registry.addButton('columns', {
             text: '⊞ Columns',
             tooltip: 'Insert column layout',
@@ -436,7 +517,6 @@ tinymce.init({
             }
         });
 
-        // ── Double-click placeholder → file picker ──────────────
         editor.on('dblclick', function (e) {
             const img = e.target.closest('img[alt="column-image"]');
             if (!img) return;
@@ -444,29 +524,35 @@ tinymce.init({
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
-            fileInput.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0;';
+
             document.body.appendChild(fileInput);
 
             fileInput.addEventListener('change', function () {
                 const file = fileInput.files[0];
                 document.body.removeChild(fileInput);
+
                 if (!file) return;
+
                 const reader = new FileReader();
+
                 reader.onload = function (ev) {
                     editor.dom.setAttrib(img, 'src', ev.target.result);
                     editor.dom.setAttrib(img, 'alt', file.name);
                     editor.dom.setStyle(img, 'cursor', '');
                     editor.dom.setStyle(img, 'outline', '');
                 };
+
                 reader.readAsDataURL(file);
             });
 
             fileInput.click();
         });
     },
+
     content_css: [
         'https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css'
     ],
+
     content_style: `
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -476,8 +562,17 @@ tinymce.init({
             padding: 16px;
             margin: 0;
         }
-        img { max-width: 100%; height: auto; }
-        p { margin-top: 0; margin-bottom: 1rem; }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         img[alt="column-image"] {
             outline: 2px dashed #2275fc;
             cursor: pointer;
