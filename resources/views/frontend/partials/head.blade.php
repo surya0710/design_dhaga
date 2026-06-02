@@ -21,4 +21,4 @@
 <meta property="og:type" content="website">
 
 <!-- CANONICAL URL -->
-<link rel="canonical" href="{{ url()->current() }}">
+<link rel="canonical" href="{{ $pageContent->canonical_url ?? url()->current() }}">
