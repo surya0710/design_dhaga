@@ -38,6 +38,56 @@ class Product extends Model
             ->select('id','product_id','key','value');
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class)
+            ->orderBy('size')
+            ->orderBy('fabric_type');
+    }
+
+    public function activeVariants()
+    {
+        return $this->hasMany(ProductVariant::class)
+            ->where('is_active', true)
+            ->where('quantity', '>', 0)
+            ->orderBy('price');
+    }
+
+    public function getMinVariantPriceAttribute(): ?float
+    {
+        if ($this->relationLoaded('activeVariants')) {
+            return $this->activeVariants->min('price') !== null
+                ? (float) $this->activeVariants->min('price')
+                : null;
+        }
+
+        if ($this->relationLoaded('variants')) {
+            $price = $this->variants->where('is_active', true)->min('price');
+            return $price !== null ? (float) $price : null;
+        }
+
+        $price = $this->activeVariants()->min('price');
+        return $price !== null ? (float) $price : null;
+    }
+
+    public function getDisplayPriceAttribute(): float
+    {
+        return $this->min_variant_price ?? (float) ($this->sale_price ?: $this->regular_price);
+    }
+
+    public function getHasActiveVariantsAttribute(): bool
+    {
+        if ($this->relationLoaded('activeVariants')) {
+            return $this->activeVariants->isNotEmpty();
+        }
+
+        if ($this->relationLoaded('variants')) {
+            return $this->variants->where('is_active', true)->isNotEmpty();
+        }
+
+        return $this->activeVariants()->exists();
+    }
+
     // ✅ Gallery
     public function galleryImages()
     {

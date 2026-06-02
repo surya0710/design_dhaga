@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Story;
 use App\Models\Sliders;
 use App\Models\ProductIcon;
+use App\Models\ProductVariant;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -440,7 +441,7 @@ class AdminController extends Controller
     {
         $search = trim((string) $request->get('search', ''));
 
-        $product = Product::with('category')
+        $product = Product::with(['category', 'activeVariants:id,product_id,price'])
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -486,6 +487,13 @@ class AdminController extends Controller
             'artisan_gallery.*.description' => 'nullable|string',
             'attributes.key.*'              => 'nullable|string|max:255',
             'attributes.value.*'            => 'nullable|string|max:255',
+            'variants'                      => 'nullable|array',
+            'variants.*.size'               => 'nullable|string|max:100',
+            'variants.*.fabric_type'        => 'nullable|string|max:150',
+            'variants.*.sku'                => 'nullable|string|max:255',
+            'variants.*.price'              => 'nullable|numeric|min:0',
+            'variants.*.quantity'           => 'nullable|integer|min:0',
+            'variants.*.is_active'          => 'nullable|boolean',
             'weight'                        => 'nullable|string|max:100',
             'dimension'                     => 'nullable|string|max:100',
             'color'                         => 'nullable|string|max:100',
@@ -608,6 +616,8 @@ class AdminController extends Controller
             }
 
             // ── Product Icons ─────────────────────────────
+            $this->syncProductVariants($product, $request->input('variants', []));
+
             $iconsData = [];
 
             foreach ($request->product_icons as $position => $icon) {
@@ -647,7 +657,7 @@ class AdminController extends Controller
     // -------------------------------------------------------------------------
     public function product_edit($id)
     {
-        $product = Product::with(['galleryImages', 'artisanImages', 'productAttributes','icons'])->findOrFail($id);
+        $product = Product::with(['galleryImages', 'artisanImages', 'productAttributes', 'variants', 'icons'])->findOrFail($id);
 
         $categories = Category::where('status', 1)->select('id', 'name')->orderBy('name')->limit(20)->get();
 
@@ -679,6 +689,13 @@ class AdminController extends Controller
             'artisan_gallery.*.id'          => 'nullable|integer|exists:product_images,id',
             'attributes.key.*'              => 'nullable|string|max:255',
             'attributes.value.*'            => 'nullable|string|max:255',
+            'variants'                      => 'nullable|array',
+            'variants.*.size'               => 'nullable|string|max:100',
+            'variants.*.fabric_type'        => 'nullable|string|max:150',
+            'variants.*.sku'                => 'nullable|string|max:255',
+            'variants.*.price'              => 'nullable|numeric|min:0',
+            'variants.*.quantity'           => 'nullable|integer|min:0',
+            'variants.*.is_active'          => 'nullable|boolean',
             'square_banner'                 => 'nullable|string',
             'square_banner_title'           => 'nullable|string|max:255',
             'square_banner_description'     => 'nullable|string',
@@ -800,6 +817,8 @@ class AdminController extends Controller
             }
 
             // ── 6. Product Icons ───────────────────────────
+            $this->syncProductVariants($product, $request->input('variants', []));
+
             $product->icons()->delete();
 
             $iconsData = [];
@@ -1564,6 +1583,69 @@ class AdminController extends Controller
         }
 
         return $items;
+    }
+
+    private function syncProductVariants(Product $product, array $variants): void
+    {
+        $rows = [];
+        $seenSkus = [];
+
+        foreach ($variants as $variant) {
+            if (!is_array($variant)) {
+                continue;
+            }
+
+            $size = trim((string) ($variant['size'] ?? ''));
+            $fabricType = trim((string) ($variant['fabric_type'] ?? ''));
+            $sku = trim((string) ($variant['sku'] ?? ''));
+            $price = $variant['price'] ?? null;
+
+            if ($size === '' && $fabricType === '' && $sku === '' && ($price === null || $price === '')) {
+                continue;
+            }
+
+            if ($sku === '' || $price === null || $price === '') {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'variants' => 'Every variant row must have a SKU and price.',
+                ]);
+            }
+
+            if (isset($seenSkus[strtolower($sku)])) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'variants' => "Duplicate variant SKU found: {$sku}.",
+                ]);
+            }
+
+            $seenSkus[strtolower($sku)] = true;
+
+            $skuExists = ProductVariant::where('sku', $sku)
+                ->where('product_id', '!=', $product->id)
+                ->exists();
+
+            if ($skuExists) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'variants' => "Variant SKU {$sku} is already used by another product.",
+                ]);
+            }
+
+            $rows[] = [
+                'product_id' => $product->id,
+                'size' => $size ?: null,
+                'fabric_type' => $fabricType ?: null,
+                'sku' => $sku,
+                'price' => $price,
+                'quantity' => (int) ($variant['quantity'] ?? 0),
+                'is_active' => (bool) ($variant['is_active'] ?? true),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        $product->variants()->delete();
+
+        if (!empty($rows)) {
+            ProductVariant::insert($rows);
+        }
     }
 
     // =========================================================================

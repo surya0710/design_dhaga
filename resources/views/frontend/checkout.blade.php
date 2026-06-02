@@ -747,6 +747,13 @@
                                 <img src="{{ asset('storage/'. $item->product->image ) }}" class="co-summary-img" alt="{{ $item->product->name }}">
                                 <div class="co-summary-item-info">
                                     <div class="co-summary-item-name">{{ $item->product->name }}</div>
+                                    @if($item->size || $item->fabric_type || $item->sku)
+                                        <div class="co-summary-item-qty">
+                                            @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                            @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                            @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                        </div>
+                                    @endif
                                     <div class="co-summary-item-qty">Qty: {{ $item['quantity'] }}</div>
                                 </div>
                                 <div class="co-summary-item-price">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</div>

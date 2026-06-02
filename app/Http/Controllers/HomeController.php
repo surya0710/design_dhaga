@@ -48,13 +48,13 @@ class HomeController extends Controller
         $menu           = $this->menu;
         $reviews        = Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
         $newArrivals    = Product::where('status', 1)
-            ->with(['category.parent'])
+            ->with(['category.parent', 'activeVariants:id,product_id,price'])
             ->latest()
             ->limit(9)
             ->get();
 
         $bestSellers    = Product::where('status', 1)->where('featured', 2)
-            ->with(['category.parent'])
+            ->with(['category.parent', 'activeVariants:id,product_id,price'])
             ->latest()
             ->limit(9)
             ->get();

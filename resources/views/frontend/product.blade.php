@@ -61,33 +61,150 @@
     $gallery    = $product->galleryImages;
     $mainImage  = $product->image;
     $productID  = $product->id;
+    $activeVariants = $product->activeVariants->values();
+    $hasVariants = $activeVariants->isNotEmpty();
+    $initialVariant = $activeVariants->sortBy('price')->first();
+    $displayPrice = $initialVariant?->price ?? ($product->sale_price ?? $product->regular_price);
+    $variantSizes = $activeVariants->pluck('size')->filter()->unique()->values();
+    $variantFabrics = $activeVariants->pluck('fabric_type')->filter()->unique()->values();
+    $variantOptions = $activeVariants->map(function ($variant) {
+        return [
+            'id' => $variant->id,
+            'size' => $variant->size,
+            'fabric_type' => $variant->fabric_type,
+            'sku' => $variant->sku,
+            'price' => (float) $variant->price,
+            'quantity' => (int) $variant->quantity,
+        ];
+    })->values();
 @endphp
 @section('schema')
-<script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": {!! json_encode($product->name) !!},
-        "image": "{{ asset('storage/' . $product->image) }}",
-        "description": {!! json_encode(strip_tags($product->short_description ?? $product->description)) !!},
-        "brand": {
-            "@type": "Brand",
-            "name": "Design Dhaga"
-        },
-        "sku": "{{ $product->sku ?? 'DD-' . $product->sku }}"
 
-        @if($product->reviews->count() > 0)
-        ,
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ number_format($averageRating, 1) }}",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "{{ $product->reviews->count() }}"
-        }
-        @endif
+@php
+    $schemaPrice = $hasVariants
+        ? ($initialVariant?->price ?? 0)
+        : ($product->sale_price ?: $product->regular_price);
+
+    $schemaSku = $hasVariants
+        ? ($initialVariant?->sku ?? $product->sku)
+        : $product->sku;
+
+    $schemaAvailability = ($product->quantity > 0)
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock';
+
+    $categoryName = $product->category->name ?? '';
+@endphp
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org/",
+    "@type": "Product",
+
+    "name": {!! json_encode($product->name) !!},
+
+    "description": {!! json_encode(strip_tags($product->short_description ?? $product->description)) !!},
+
+    "image": [
+        "{{ asset('storage/'.$product->image) }}"
+    ],
+
+    "brand": {
+        "@type": "Brand",
+        "name": "{{ $product->brand ?? 'Design Dhaga' }}"
+    },
+
+    "sku": "{{ $schemaSku }}",
+
+    @if(!empty($product->gtin))
+    "gtin": "{{ $product->gtin }}",
+    @endif
+
+    @if(!empty($product->mpn))
+    "mpn": "{{ $product->mpn }}",
+    @endif
+
+    @if(!empty($categoryName))
+    "category": "{{ $categoryName }}",
+    @endif
+
+    @if(!empty($product->color))
+    "color": "{{ $product->color }}",
+    @endif
+
+    @if(!empty($product->fabric_type))
+    "material": "{{ $product->fabric_type }}",
+    @endif
+
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ url()->current() }}",
+        "priceCurrency": "INR",
+        "price": "{{ $schemaPrice }}",
+        "availability": "{{ $schemaAvailability }}",
+        "itemCondition": "https://schema.org/NewCondition"
     }
+
+    @if($product->reviews->count() > 0)
+    ,
+
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ number_format($averageRating,1) }}",
+        "bestRating": "5",
+        "worstRating": "1",
+        "reviewCount": "{{ $product->reviews->count() }}"
+    },
+
+    "review": [
+        @foreach($product->reviews->take(5) as $review)
+        {
+            "@type": "Review",
+            "author": {
+                "@type": "Person",
+                "name": "{{ $review->user->name ?? 'Customer' }}"
+            },
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "{{ $review->rating }}",
+                "bestRating": "5"
+            },
+            "reviewBody": {!! json_encode($review->review ?? '') !!}
+        }@if(!$loop->last),@endif
+        @endforeach
+    ]
+    @endif
+
+    @if($hasVariants && $activeVariants->count())
+    ,
+    "hasVariant": [
+        @foreach($activeVariants as $variant)
+        {
+            "@type": "Product",
+            "name": {!! json_encode($product->name) !!},
+            "sku": "{{ $variant->sku }}",
+
+            @if($variant->size)
+            "size": "{{ $variant->size }}",
+            @endif
+
+            @if($variant->fabric_type)
+            "material": "{{ $variant->fabric_type }}",
+            @endif
+
+            "offers": {
+                "@type": "Offer",
+                "priceCurrency": "INR",
+                "price": "{{ $variant->price }}",
+                "availability": "{{ $variant->quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}"
+            }
+        }@if(!$loop->last),@endif
+        @endforeach
+    ]
+    @endif
+}
 </script>
+
 @endsection
 
 @section('content')
@@ -152,7 +269,9 @@
                         <p class="text-black mb-0 small">{{ $product->short_description }}</p>
 
                         <div class="h6 mb-0 price">
-                            @if ($product->sale_price)
+                            @if ($hasVariants)
+                                <span class="fw-bold text-black">₹ <span class="variant-price-current">{{ number_format($displayPrice, 0) }}</span></span>
+                            @elseif ($product->sale_price)
                                 <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                                 <span class="text-decoration-line-through text-muted small ms-2">
                                     ₹ {{ number_format($product->regular_price, 0) }}
@@ -229,7 +348,9 @@
                     </p>
 
                     <div class="h4 mb-2 d-none d-lg-block price">
-                        @if ($product->sale_price)
+                        @if ($hasVariants)
+                            <span class="fw-bold text-black">₹ <span class="variant-price-current">{{ number_format($displayPrice, 0) }}</span></span>
+                        @elseif ($product->sale_price)
                             <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                             <span class="text-decoration-line-through text-muted small ms-2">
                                 ₹ {{ number_format($product->regular_price, 0) }}
@@ -242,10 +363,36 @@
                         @endif
                     </div>
 
+                    @if ($hasVariants)
+                        <div class="variant-picker mb-3" data-has-variants="1">
+                            @if ($variantFabrics->isNotEmpty())
+                                <div class="mb-2">
+                                    <div class="fw-bold small text-uppercase text-muted mb-1">Fabric Type</div>
+                                    <div class="d-flex flex-wrap gap-2" id="fabricOptions">
+                                        @foreach($variantFabrics as $fabric)
+                                            <button type="button" class="btn btn-sm btn-outline-dark variant-option" data-option-type="fabric" data-value="{{ $fabric }}">{{ $fabric }}</button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($variantSizes->isNotEmpty())
+                                <div class="mb-2">
+                                    <div class="fw-bold small text-uppercase text-muted mb-1">Size</div>
+                                    <div class="d-flex flex-wrap gap-2" id="sizeOptions">
+                                        @foreach($variantSizes as $size)
+                                            <button type="button" class="btn btn-sm btn-outline-dark variant-option" data-option-type="size" data-value="{{ $size }}">{{ $size }}</button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
                     @if ($product->type == 1 && $country == "India")
                         <button id="addToCartBtn" class="btn bg-maroon text-white w-100 py-3 fw-bold btn-add-to-cart" onclick="handleAddToCart({{ $product->id }})">
                             <span class="btn-text">
-                                Add To Cart &nbsp;|&nbsp; ₹ <span id="total">{{ $product->sale_price ?? $product->regular_price }}</span>
+                                Add To Cart &nbsp;|&nbsp; ₹ <span id="total">{{ number_format($displayPrice, 0, '.', '') }}</span>
                             </span>
                             <span class="btn-spinner d-none">
                                 <span class="spinner-ring"></span>
@@ -635,17 +782,7 @@
                             </div>
                             <div class="card-body">
                                 <p class="mt-2 mb-0 text-left">{{ $product->name }}</p>
-                                @if ($product->sale_price)
-                                    <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
-                                    <span class="text-decoration-line-through text-muted small text-light">
-                                        ₹{{ number_format($product->regular_price, 0) }}
-                                    </span>
-                                    <span class="text-maroon small">
-                                        Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
-                                    </span>
-                                @else
-                                    <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
-                                @endif
+                                @include('frontend.partials.product-price', ['product' => $product])
                             </div>
                         </div>
                     </a>
@@ -902,8 +1039,171 @@
         csrfToken: "{{ csrf_token() }}"
     };
 
+    const productVariants = @json($variantOptions);
+    const hasFabricOptions = productVariants.some(function (variant) {
+        return !!variant.fabric_type;
+    });
+    const hasSizeOptions = productVariants.some(function (variant) {
+        return !!variant.size;
+    });
+    let selectedSize = productVariants[0]?.size || '';
+    let selectedFabric = productVariants[0]?.fabric_type || '';
+    let selectedVariant = productVariants[0] || null;
+
+    function formatPrice(value) {
+        return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Number(value || 0));
+    }
+
+    function variantMatches(variant, size, fabric) {
+        const sizeMatches = !variant.size || variant.size === size;
+        const fabricMatches = !variant.fabric_type || variant.fabric_type === fabric;
+        return sizeMatches && fabricMatches;
+    }
+
+    function findSelectedVariant() {
+        return productVariants.find(function (variant) {
+            return variantMatches(variant, selectedSize, selectedFabric);
+        }) || null;
+    }
+
+    function firstVariantForFabric(fabric) {
+        return productVariants.find(function (variant) {
+            return !variant.fabric_type || variant.fabric_type === fabric;
+        });
+    }
+
+    function isOptionAvailable(type, value) {
+        if (type === 'fabric') {
+            return productVariants.some(function (variant) {
+                return variant.fabric_type === value;
+            });
+        }
+
+        return productVariants.some(function (variant) {
+            if (variant.size !== value) {
+                return false;
+            }
+
+            return !hasFabricOptions || !variant.fabric_type || variant.fabric_type === selectedFabric;
+        });
+    }
+
+    function selectFirstAvailableSizeForFabric() {
+        const fallback = firstVariantForFabric(selectedFabric) || productVariants[0] || null;
+
+        if (fallback) {
+            selectedFabric = fallback.fabric_type || '';
+            selectedSize = fallback.size || '';
+            selectedVariant = fallback;
+        }
+    }
+
+    function normalizeVariantSelection(changedType) {
+        if (!productVariants.length) {
+            selectedVariant = null;
+            return;
+        }
+
+        if (changedType === 'fabric') {
+            selectFirstAvailableSizeForFabric();
+            return;
+        }
+
+        selectedVariant = findSelectedVariant();
+
+        if (selectedVariant) {
+            return;
+        }
+
+        if (changedType === 'size') {
+            const fallback = productVariants.find(function (variant) {
+                const sizeMatches = !variant.size || variant.size === selectedSize;
+                const fabricMatches = !hasFabricOptions || !variant.fabric_type || variant.fabric_type === selectedFabric;
+                return sizeMatches && fabricMatches;
+            });
+
+            if (fallback) {
+                selectedFabric = fallback.fabric_type || '';
+                selectedSize = fallback.size || '';
+                selectedVariant = fallback;
+                return;
+            }
+        }
+
+        selectFirstAvailableSizeForFabric();
+    }
+
+    function renderVariantState(changedType = null) {
+        normalizeVariantSelection(changedType);
+
+        document.querySelectorAll('.variant-option').forEach(function (button) {
+            const type = button.dataset.optionType;
+            const value = button.dataset.value;
+            const isSelected = (type === 'size' && value === selectedSize)
+                || (type === 'fabric' && value === selectedFabric);
+            const isAvailable = isOptionAvailable(type, value);
+
+            button.disabled = !isAvailable;
+            button.classList.toggle('disabled', !isAvailable);
+            button.classList.toggle('active', isSelected);
+            button.classList.toggle('btn-dark', isSelected);
+            button.classList.toggle('btn-outline-dark', !isSelected);
+        });
+
+        if (!selectedVariant && productVariants.length) {
+            const total = document.getElementById('total');
+            if (total) total.textContent = 'Select option';
+            document.getElementById('addToCartBtn')?.setAttribute('disabled', 'disabled');
+            return;
+        }
+
+        if (selectedVariant) {
+            document.querySelectorAll('.variant-price-current').forEach(function (el) {
+                el.textContent = formatPrice(selectedVariant.price);
+            });
+
+            const total = document.getElementById('total');
+            if (total) total.textContent = formatPrice(selectedVariant.price);
+
+            //const skuText = document.getElementById('variantSkuText');
+            // if (skuText) skuText.textContent = 'SKU: ' + selectedVariant.sku;
+
+            const addButton = document.getElementById('addToCartBtn');
+            if (addButton) addButton.removeAttribute('disabled');
+        }
+    }
+
+    document.querySelectorAll('.variant-option').forEach(function (button) {
+        button.addEventListener('click', function () {
+            if (this.disabled) {
+                return;
+            }
+
+            if (this.dataset.optionType === 'size') {
+                selectedSize = this.dataset.value;
+            } else {
+                selectedFabric = this.dataset.value;
+            }
+
+            renderVariantState(this.dataset.optionType);
+        });
+    });
+
+    renderVariantState();
+
     function handleAddToCart(productId) {
         const btn = document.getElementById('addToCartBtn');
+
+        if (productVariants.length && !selectedVariant) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Choose Options',
+                text: 'Please select a valid fabric type and size.',
+                confirmButtonColor: '#8b1e2d',
+            });
+            return;
+        }
+
         btn.classList.add('loading');
 
         $.ajax({
@@ -912,6 +1212,7 @@
             data: {
                 _token: @json(csrf_token()),
                 product_id: productId,
+                product_variant_id: selectedVariant ? selectedVariant.id : null,
                 quantity: 1,
             },
             success: function (response) {

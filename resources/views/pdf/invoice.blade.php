@@ -59,7 +59,16 @@
             <tbody>
                 @foreach($order->items as $item)
                     <tr>
-                        <td>{{ $item->product_name }}</td>
+                        <td>
+                            {{ $item->product_name }}
+                            @if($item->size || $item->fabric_type || $item->sku)
+                                <br><small>
+                                    @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                    @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                    @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                </small>
+                            @endif
+                        </td>
                         <td class="text-center">{{ $item->quantity }}</td>
                         <td class="text-right">{{ number_format($item->price, 2) }}</td>
                         <td class="text-right">{{ number_format($item->total, 2) }}</td>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cartItems      = Cart::with('product')
+        $cartItems      = Cart::with(['product', 'productVariant'])
             ->where('user_id', Auth::id())
             ->get();
 
@@ -69,15 +70,32 @@ class CartController extends Controller
 
         $request->validate([
             'product_id' => 'required|exists:products,id',
+            'product_variant_id' => 'nullable|exists:product_variants,id',
             'quantity'   => 'required|integer|min:1|max:99',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
+        $product = Product::with('variants')->findOrFail($request->product_id);
+        $hasVariants = $product->variants()->where('is_active', true)->exists();
+        $variant = null;
 
-        $price = $product->sale_price ?? $product->regular_price;
+        if ($hasVariants) {
+            $variant = ProductVariant::where('product_id', $product->id)
+                ->where('is_active', true)
+                ->find($request->product_variant_id);
+
+            if (!$variant) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please select a valid size and fabric option.',
+                ], 422);
+            }
+        }
+
+        $price = $variant ? $variant->price : ($product->sale_price ?? $product->regular_price);
 
         $cartItem = Cart::where('user_id', Auth::id())
             ->where('product_id', $product->id)
+            ->where('product_variant_id', $variant?->id)
             ->first();
 
         if ($cartItem) {
@@ -87,8 +105,12 @@ class CartController extends Controller
             Cart::create([
                 'user_id'   => Auth::id(),
                 'product_id'=> $product->id,
+                'product_variant_id'=> $variant?->id,
                 'quantity'  => $request->quantity,
                 'price'     => $price,
+                'size'      => $variant?->size,
+                'fabric_type' => $variant?->fabric_type,
+                'sku'       => $variant?->sku ?? $product->sku,
             ]);
         }
 
@@ -107,12 +129,15 @@ class CartController extends Controller
     public function remove(Request $request)
     {
         $request->validate([
-            'product_id' => 'required',
+            'cart_id' => 'nullable|exists:carts,id',
+            'product_id' => 'required_without:cart_id',
         ]);
 
-        Cart::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->delete();
+        $query = Cart::where('user_id', Auth::id());
+        $request->filled('cart_id')
+            ? $query->where('id', $request->cart_id)
+            : $query->where('product_id', $request->product_id);
+        $query->delete();
 
         return redirect()->back()->with('success', 'Item removed');
     }
@@ -123,12 +148,17 @@ class CartController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'product_id' => 'required',
+            'cart_id' => 'nullable|exists:carts,id',
+            'product_id' => 'required_without:cart_id',
             'quantity'   => 'required|integer|min:1|max:99',
         ]);
 
-        Cart::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
+        $query = Cart::where('user_id', Auth::id());
+        $request->filled('cart_id')
+            ? $query->where('id', $request->cart_id)
+            : $query->where('product_id', $request->product_id);
+
+        $query
             ->update([
                 'quantity' => $request->quantity
             ]);

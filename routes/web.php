@@ -61,7 +61,13 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 |--------------------------------------------------------------------------
 */
 
-Auth::routes(['login' => false, 'reset' => false]);
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
+Auth::routes([
+    'login' => false,
+    'reset' => false,
+    'register' => false,
+]);
 
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 

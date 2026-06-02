@@ -19,5 +19,6 @@ class Pages extends Model
         'canonical_url',
         'meta_image',
         'status',
+        'heading',
     ];
 }

@@ -1,13 +1,13 @@
 @extends('frontend.layouts.app')
-@section('title', $pageContent->meta_title ?? 'Design Dhaga - Hand-Painted Fashion')
+@section('title', $pageContent->meta_title ?? '')
 
 @section('meta_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 
 @section('meta_keywords', $pageContent->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade clothing, made in India')
 
-@section('og_title', $pageContent->meta_title ?? 'Design Dhaga - Hand-Painted Fashion')
+@section('og_title', $pageContent->meta_title ?? '')
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
-@section('og_image', asset('frontend_assets/images/og-home.jpg'))
+@section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
 @php
     $desktopInfo    = $homeSections->get('desktop_info');
@@ -68,6 +68,15 @@
         @endforeach
     </div>
 </div>
+@if(!empty($pageContent?->heading))
+<div class="container">
+    <div class="row text-center">
+        <div class="col-12">
+            <h1 class="home-heading">{{ $pageContent->heading }}</h1>
+        </div>
+    </div>
+</div>
+@endif
 <!-- ================= Banner Slider ================= -->
 <div id="homeSlider" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
@@ -162,17 +171,7 @@
                         </button>
                         </div>
                         <p class="mb-1">{{ $product->name }}</p>
-                        @if ($product->sale_price)
-                            <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
-                            <span class="text-decoration-line-through text-muted small text-light">
-                                ₹{{ number_format($product->regular_price, 0) }}
-                            </span>
-                            <span class="text-maroon small">
-                                Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
-                            </span>
-                        @else
-                            <span class="text-black">₹{{ number_format($product->regular_price, 0) }}</span>
-                        @endif
+                        @include('frontend.partials.product-price', ['product' => $product])
                     </a>
                     @endforeach
                 </div>
@@ -200,17 +199,7 @@
                         </button>
                         </div>
                         <p class="mb-1">{{ $product->name }}</p>
-                        @if ($product->sale_price)
-                            <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
-                            <span class="text-decoration-line-through text-muted small text-light">
-                                ₹{{ number_format($product->regular_price, 0) }}
-                            </span>
-                            <span class="text-maroon small">
-                                Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
-                            </span>
-                        @else
-                            <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
-                        @endif
+                        @include('frontend.partials.product-price', ['product' => $product])
                     </a>
                     @endforeach
                 </div>

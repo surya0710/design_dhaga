@@ -51,12 +51,18 @@
           <tbody>
             @foreach($order->items as $item)
             <tr>
-              <td style="padding: 10px; border: 1px solid #ddd;">{{ $item->product->name }}<br>
+              <td style="padding: 10px; border: 1px solid #ddd;">{{ $item->product_name }}<br>
+                @if($item->size || $item->fabric_type)
+                <span>
+                    @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                    @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                </span><br>
+                @endif
                 @if($item->certificate_name)
                 <span>{{ $item->certificate_name .','. format_currency($item->certificate_price, session('currency','INR')) }}</span>
                 @endif
               </td>
-              <td style="padding: 10px; border: 1px solid #ddd;">{{ $item->product->sku }}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">{{ $item->sku }}</td>
               <td style="padding: 10px; border: 1px solid #ddd;">{{ $item->quantity }}</td>
               <td style="padding: 10px; border: 1px solid #ddd;" align="right">₹{{ number_format($item->price, 2) }}</td>
             </tr>

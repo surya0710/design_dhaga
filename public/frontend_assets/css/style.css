@@ -3931,6 +3931,11 @@ ul.specifications li h4 {
   content: "/";
   color: #999;
 }
+.home-heading{
+  margin: 10px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
 
 @media (max-width: 768px) {
 
@@ -3948,5 +3953,8 @@ ul.specifications li h4 {
 
   .blog-content{
     width: 100%;
+  }
+  .home-heading{
+    font-size: 18px;
   }
 }

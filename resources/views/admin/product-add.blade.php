@@ -244,6 +244,38 @@
             </button>
         </div>
 
+        {{-- PRODUCT VARIANTS --}}
+        <div class="card">
+            <div class="card-title">Product Variants</div>
+
+            <div class="field">
+                <label>Size + Fabric options</label>
+                <small style="color:var(--muted)">Create one row for each sellable combination. Example: S + 100% Pure, S + Semi.</small>
+            </div>
+
+            <div id="variant-wrapper" class="variant-wrapper">
+                <div class="variant-row">
+                    <input type="text" name="variants[0][size]" placeholder="Size e.g. S / 0-1 yr.">
+                    <input type="text" name="variants[0][fabric_type]" placeholder="Fabric e.g. 100% Pure">
+                    <input type="text" name="variants[0][sku]" placeholder="SKU">
+                    <input type="number" name="variants[0][price]" step="0.01" min="0" placeholder="Price">
+                    <input type="number" name="variants[0][quantity]" min="0" placeholder="Qty">
+                    <select name="variants[0][is_active]">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                    <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <button type="button" id="add-variant" class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                Add Variant
+            </button>
+        </div>
+
         {{--  Meta Details --}}
         <div class="card">
             <div class="card-title">Meta Details</div>
@@ -493,6 +525,9 @@
                 <div class="mm-grid" id="mmGrid">
                     {{-- populated by JS --}}
                 </div>
+                <div class="mm-load-more-wrap">
+                    <button type="button" class="mm-load-more" id="mmLoadMoreBtn" onclick="loadMoreMedia()" style="display:none;">Load More</button>
+                </div>
 
             </div>
 
@@ -536,6 +571,11 @@ let mmSelected     = [];   // paths chosen in current session
 let mmAllMedia     = [];
 let mmCurrentSort  = 'newest';
 let mmCurrentFilter= 'all';
+let mmCurrentPage  = 1;
+let mmPerPage      = 24;
+let mmHasMore      = false;
+let mmIsLoading    = false;
+let mmSearchTimer  = null;
 
 $("#productName").on("change", function () {
     const slug = this.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -555,6 +595,31 @@ document.getElementById("add-attribute").addEventListener("click", function () {
 document.addEventListener("click", function (e) {
     if (e.target.classList.contains("remove-attribute")) {
         e.target.closest(".attr-row").remove();
+    }
+});
+
+let variantIndex = 1;
+document.getElementById("add-variant").addEventListener("click", function () {
+    document.getElementById("variant-wrapper").insertAdjacentHTML("beforeend", `
+        <div class="variant-row">
+            <input type="text" name="variants[${variantIndex}][size]" placeholder="Size e.g. S / 0-1 yr.">
+            <input type="text" name="variants[${variantIndex}][fabric_type]" placeholder="Fabric e.g. 100% Pure">
+            <input type="text" name="variants[${variantIndex}][sku]" placeholder="SKU">
+            <input type="number" name="variants[${variantIndex}][price]" step="0.01" min="0" placeholder="Price">
+            <input type="number" name="variants[${variantIndex}][quantity]" min="0" placeholder="Qty">
+            <select name="variants[${variantIndex}][is_active]">
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+            <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
+        </div>
+    `);
+    variantIndex++;
+});
+
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-variant")) {
+        e.target.closest(".variant-row").remove();
     }
 });
 
@@ -591,29 +656,57 @@ function loadMedia() {
     const grid = document.getElementById("mmGrid");
     grid.innerHTML = `<div class="mm-uploading"><div class="mm-spinner"></div> Loading media…</div>`;
 
-    fetch('/admin/media')
+    mmCurrentPage = 1;
+    mmAllMedia = [];
+    fetchMediaPage(true);
+}
+
+function loadMoreMedia() {
+    if (!mmHasMore || mmIsLoading) return;
+    mmCurrentPage++;
+    fetchMediaPage(false);
+}
+
+function fetchMediaPage(reset) {
+    const grid = document.getElementById("mmGrid");
+    const loadMoreBtn = document.getElementById("mmLoadMoreBtn");
+    const params = new URLSearchParams({
+        page: mmCurrentPage,
+        per_page: mmPerPage,
+        sort: mmCurrentSort,
+        search: document.getElementById("mmSearch").value.trim(),
+    });
+
+    mmIsLoading = true;
+    if (loadMoreBtn) {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading...';
+    }
+
+    fetch('/admin/media?' + params.toString())
         .then(r => r.json())
         .then(data => {
-            mmAllMedia = data;
-            renderGrid(data);
+            const items = Array.isArray(data) ? data : (data.data || []);
+            const total = Array.isArray(data) ? items.length : (data.total || 0);
+            mmHasMore = Array.isArray(data) ? false : !!data.has_more;
+            mmAllMedia = reset ? items : [...mmAllMedia, ...items.filter(item => !mmAllMedia.some(existing => existing.id === item.id))];
+            renderGrid(mmAllMedia, total);
         })
         .catch(() => {
             grid.innerHTML = `<div class="mm-empty"><p>Could not load media.</p></div>`;
+        })
+        .finally(() => {
+            mmIsLoading = false;
+            updateLoadMoreButton();
         });
 }
 
-function renderGrid(data) {
+function renderGrid(data, total = null) {
     const grid = document.getElementById("mmGrid");
     let items  = [...data];
 
-    // sort
-    if (mmCurrentSort === 'oldest') items.reverse();
-
-    // filter
-    const q = document.getElementById("mmSearch").value.toLowerCase();
-    if (q) items = items.filter(i => i.file_path.toLowerCase().includes(q));
-
-    document.getElementById("mmCount").textContent = `${items.length} item${items.length!==1?'s':''}`;
+    const totalLabel = total !== null ? ` of ${total}` : '';
+    document.getElementById("mmCount").textContent = `${items.length}${totalLabel} item${(total ?? items.length)!==1?'s':''}`;
 
     if (!items.length) {
         grid.innerHTML = `
@@ -638,6 +731,16 @@ function renderGrid(data) {
             </div>
         `;
     }).join('');
+
+    updateLoadMoreButton();
+}
+
+function updateLoadMoreButton() {
+    const btn = document.getElementById("mmLoadMoreBtn");
+    if (!btn) return;
+    btn.style.display = mmHasMore ? 'inline-flex' : 'none';
+    btn.disabled = mmIsLoading;
+    btn.textContent = mmIsLoading ? 'Loading...' : 'Load More';
 }
 
 function toggleItem(el, path) {
@@ -739,18 +842,21 @@ function clearImage(inputId, previewId, pickerId) {
     document.getElementById(pickerId).classList.remove("has-image");
 }
 
-function filterMedia(q) { renderGrid(mmAllMedia); }
+function filterMedia(q) {
+    clearTimeout(mmSearchTimer);
+    mmSearchTimer = setTimeout(loadMedia, 250);
+}
 
 function setFilter(type, el) {
     mmCurrentFilter = type;
     document.querySelectorAll(".mm-sidebar .mm-nav-item").forEach(i => i.classList.remove("active"));
     el.classList.add("active");
-    renderGrid(mmAllMedia);
+    loadMedia();
 }
 
 function setSort(order, el) {
     mmCurrentSort = order;
-    renderGrid(mmAllMedia);
+    loadMedia();
 }
 
 document.getElementById("mmUploadInput").addEventListener("change", function () {

@@ -19,7 +19,7 @@ class CompareController extends Controller
     {
         $compare = session()->get('compare', []);
         // dd($compare);
-        $products = Product::whereIn('id', $compare)->get();
+        $products = Product::whereIn('id', $compare)->with('activeVariants:id,product_id,price')->get();
         if ($products->count() < 2) {
             return redirect()->back()->with('error', 'You need at least 2 products to compare.');
         }
@@ -27,7 +27,9 @@ class CompareController extends Controller
             $products = $products->take(3); // Limit to 4 products
         }
         $products->each(function ($product) {
-            if ($product->sale_price > 0) {
+            if ($product->has_active_variants) {
+                $product->price = 'From ' . format_currency($product->display_price, session('currency', 'INR'));
+            } elseif ($product->sale_price > 0) {
                 $product->price = format_currency($product->sale_price, session('currency', 'INR'));
             } else {
                 $product->price = format_currency($product->regular_price, session('currency', 'INR'));

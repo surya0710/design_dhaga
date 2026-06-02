@@ -1,254 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-    <loc>https://www.designdhaga.com/register</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/register</loc>
-    <lastmod>2026-05-22T16:20:19+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    </url>
-    <url>
-    <loc>https://www.designdhaga.com/about-us</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/about-us</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/contact-us</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/contact-us</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/portfolio</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/terms-and-condition</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/terms-and-condition</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/return-policy</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/return-policy</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/privacy-policy</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/privacy-policy</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/store</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/store</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/blogs</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/blogs</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/collaborations</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/collaborations</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop</loc>
+    <lastmod>2026-06-02T03:19:44+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/search</loc>
-    <lastmod>2026-05-22T16:46:31+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/blogs/merging-art-and-fashion-the-beauty-of-handpainted-designs-and-ikat-patterns</loc>
+    <loc>http://localhost/design_dhaga/public/blogs/merging-art-and-fashion-the-beauty-of-handpainted-designs-and-ikat-patterns</loc>
     <lastmod>2026-03-22T13:54:05+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/blogs/top-10-musthave-summer-fashion-trends-for-women-in-2026</loc>
-    <lastmod>2026-05-22T16:39:01+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/blogs/isha-ambanis-bandage-dress-reimagined-with-26-indian-borders-a-celebration-of-indian-craftsmanship</loc>
-    <lastmod>2026-05-22T16:38:28+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/blogs/cannes-2026-alia-bhatts-wearable-canvas-and-the-magic-of-indian-handpainting</loc>
-    <lastmod>2026-05-22T16:37:49+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/category/women</loc>
-    <lastmod>2026-05-19T05:07:19+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women</loc>
+    <lastmod>2026-03-24T10:42:11+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/men</loc>
-    <lastmod>2026-05-19T05:05:24+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/men</loc>
+    <lastmod>2026-03-24T10:42:50+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/kids</loc>
-    <lastmod>2026-05-19T05:03:16+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/kids</loc>
+    <lastmod>2026-03-24T10:43:25+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/dupatta</loc>
-    <lastmod>2026-05-19T05:01:00+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/dupatta</loc>
+    <lastmod>2026-05-27T13:44:33+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/saree</loc>
-    <lastmod>2026-05-19T04:59:39+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/saree</loc>
+    <lastmod>2026-03-08T14:09:23+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/blouse</loc>
-    <lastmod>2026-05-19T04:57:24+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/blouse</loc>
+    <lastmod>2026-03-08T14:09:43+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/lehnga-choli</loc>
-    <lastmod>2026-05-19T04:55:13+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/lehnga-choli</loc>
+    <lastmod>2026-03-08T14:10:18+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/kurta-pajama</loc>
-    <lastmod>2026-05-19T04:53:22+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/kurta-pajama</loc>
+    <lastmod>2026-03-08T14:11:07+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/shirts</loc>
-    <lastmod>2026-05-19T04:51:35+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/shirts</loc>
+    <lastmod>2026-03-08T14:11:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/t-shirts</loc>
-    <lastmod>2026-05-19T04:48:12+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/t-shirts</loc>
+    <lastmod>2026-03-08T14:12:17+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/celebs</loc>
-    <lastmod>2026-05-19T04:46:18+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/celebs</loc>
+    <lastmod>2026-03-25T20:05:29+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/acessories</loc>
-    <lastmod>2026-05-19T04:44:21+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/acessories</loc>
+    <lastmod>2026-05-23T13:06:28+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/category/hair-acessories</loc>
-    <lastmod>2026-05-19T04:41:25+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/category/boys-collection</loc>
-    <lastmod>2026-05-22T09:41:06+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/category/girls-collection</loc>
-    <lastmod>2026-05-22T09:43:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/category/male-celebrities</loc>
-    <lastmod>2026-05-22T09:51:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/category/female-celebrities</loc>
-    <lastmod>2026-05-22T09:55:12+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/product/madhubani-hand-painted-salmon-tussar-silk-dupatta</loc>
-    <lastmod>2026-04-07T12:42:47+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/madhubani-hand-painted-salmon-tussar-silk-dupatta</loc>
+    <lastmod>2026-04-07T18:12:47+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/embellished-hand-painted-pure-organza-dupatta</loc>
-    <lastmod>2026-04-06T03:42:17+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/embellished-hand-painted-pure-organza-dupatta</loc>
+    <lastmod>2026-04-06T09:12:17+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/handpainted-floral-organza-dupatta-with-dabka-and-original-naqashi-embroidery</loc>
-    <lastmod>2026-05-06T03:11:51+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/handpainted-floral-organza-dupatta-with-dabka-and-original-naqashi-embroidery</loc>
+    <lastmod>2026-05-06T08:41:51+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/hand-painted-silk-chiffon-scarf-lavender-floral-pattern</loc>
-    <lastmod>2026-05-05T08:12:06+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-silk-chiffon-scarf-lavender-floral-pattern</loc>
+    <lastmod>2026-05-05T13:42:06+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/beautifull-lavender-base-floral-hand-painted-organza-dupatta</loc>
-    <lastmod>2026-05-05T08:10:15+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/beautifull-lavender-base-floral-hand-painted-organza-dupatta</loc>
+    <lastmod>2026-05-05T13:40:15+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/custom-name-hand-painted-grey-saree-with-elegant-floral-art</loc>
-    <lastmod>2026-05-05T08:11:12+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/custom-name-hand-painted-grey-saree-with-elegant-floral-art</loc>
+    <lastmod>2026-05-05T13:41:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>
     <url>
-    <loc>https://www.designdhaga.com/product/yellow-chanderi-silk-handpainted-pichwai-art-dupatta</loc>
-    <lastmod>2026-05-05T08:09:17+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>https://www.designdhaga.com/product/handmade-crochet-rose-hair-pins-pack-of-12</loc>
-    <lastmod>2026-05-21T11:05:49+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/yellow-chanderi-silk-handpainted-pichwai-art-dupatta</loc>
+    <lastmod>2026-05-24T06:58:34+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
             </url>

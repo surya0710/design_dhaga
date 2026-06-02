@@ -72,8 +72,20 @@
                             <tr>
                                 <td width="5%">{{ $product->firstItem() + $loop->index }}</td>
                                 <td>{{ $products->name }}</td>
-                                <td>{{$products->regular_price}}</td>
-                                <td>{{$products->sale_price}}</td>
+                                <td>
+                                    @if($products->has_active_variants)
+                                        From {{ number_format($products->display_price, 2) }}
+                                    @else
+                                        {{ $products->regular_price }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($products->has_active_variants)
+                                        Variant pricing
+                                    @else
+                                        {{ $products->sale_price }}
+                                    @endif
+                                </td>
                                 <td width="10%">{{ $products->category->name ?? '' }}</td>
                                 <td width="10%">{{$products->featured == 0 ? "No" : "Yes"}}</td>
                                 <td width="5%">{{$products->quantity}}</td>

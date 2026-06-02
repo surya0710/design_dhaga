@@ -7,7 +7,7 @@
 
 @section('og_title', $pageContent->meta_title ?? 'Design Dhaga - Hand-Painted Fashion')
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
-@section('og_image', asset('frontend_assets/images/og-home.jpg'))
+@section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
 @section('content')
 <section class="policy-page py-5">

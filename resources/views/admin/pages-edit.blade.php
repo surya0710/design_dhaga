@@ -130,6 +130,21 @@
 
                 </fieldset>
 
+                <fieldset class="field-group">
+
+                    <div class="body-title mb-10">
+                        Page Heading
+                        <span class="tf-color-1">*</span>
+                    </div>
+
+                    <input type="text" name="heading" placeholder="Enter page heading (h1)" value="{{ old('heading', $page->heading) }}" >
+
+                    @error('heading')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                </fieldset>
+
                 {{-- Content --}}
                 <fieldset class="field-group">
 

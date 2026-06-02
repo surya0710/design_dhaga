@@ -261,6 +261,13 @@
                     <tr>
                         <td>
                             <div class="product-name">{{ $item->product_name }}</div>
+                            @if($item->size || $item->fabric_type || $item->sku)
+                                <div class="product-meta">
+                                    @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                    @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                    @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                </div>
+                            @endif
                             <div class="product-meta">HSN: {{ $item->hsn ?? 'N/A' }} | {{ $gstLabel }}</div>
                         </td>
                         <td>{{ $item->quantity }}</td>

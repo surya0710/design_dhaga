@@ -52,15 +52,17 @@ class PageController extends Controller
             'meta_description'  => 'nullable',
             'meta_keywords'     => 'nullable',
             'canonical_url'     => 'nullable|max:255',
-            'meta_image'        => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'meta_image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,svg',
             'status'            => 'required',
-            'url'               => 'required'
+            'url'               => 'required',
+            'heading'           => 'nullable'
         ]);
 
         $page = new Pages();
 
         $page->title = $request->title;
         $page->slug = $request->url;
+        $page->heading = $request->heading;
         $page->content = $request->content;
 
         $page->meta_title = $request->meta_title;
@@ -111,15 +113,17 @@ class PageController extends Controller
             'meta_description'  => 'nullable',
             'meta_keywords'     => 'nullable',
             'canonical_url'     => 'nullable|max:255',
-            'meta_image'        => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'meta_image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,svg',
             'status'            => 'required',
-            'url'               => 'required'
+            'url'               => 'required',
+            'heading'           => 'nullable'
         ]);
 
         $page = Pages::findOrFail($id);
 
         $page->title = $request->title;
         $page->slug = $request->url;
+        $page->heading = $request->heading;
         $page->content = $request->content;
 
         $page->meta_title = $request->meta_title;

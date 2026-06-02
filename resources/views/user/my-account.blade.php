@@ -837,6 +837,13 @@ your orders.')
                                                 {{-- Product Info --}}
                                                 <div class="col-md-5 col-8">
                                                     <h5 class="order-product-title">{{ $item->product_name }}</h5>
+                                                    @if($item->size || $item->fabric_type || $item->sku)
+                                                        <div class="text-muted small">
+                                                            @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                                            @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                                            @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                                        </div>
+                                                    @endif
                                                     <div class="text-muted small">Qty: {{ $item->quantity }} | Item total ₹{{ number_format($item->total, 2) }}</div>
 
                                                     @if($order->awb_code)

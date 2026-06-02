@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\Registered;
 use App\Models\Category;
+use App\Models\Menu;
+use App\Models\Pages;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
 
     protected $categories;
+    protected $menu;
 
     public function __construct()
     {
@@ -22,6 +26,10 @@ class UserController extends Controller
             ->whereNull('parent_id')
             ->with('children')
             ->get();
+
+        $this->menu = Cache::remember('site.active_menus', 60, function () {
+            return Menu::where('is_active', 1)->orderBy('created_at', 'asc')->get();
+        });
     }
 
     public function loginPost(Request $request)
@@ -50,8 +58,10 @@ class UserController extends Controller
 
     public function register()
     {
-        $categories = $this->categories;
-        return view('user.register', compact('categories'));
+        $categories     = $this->categories;
+        $menu           = $this->menu;
+        $pageContent    = Pages::where('slug', '/')->first();
+        return view('user.register', compact('categories', 'menu', 'pageContent'));
     }
 
     public function registerPost(Request $request)

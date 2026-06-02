@@ -7,7 +7,7 @@
 
 @section('og_title', $category->meta_title ?? 'Design Dhaga All Products')
 @section('og_description', $category->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
-@section('og_image', asset('frontend_assets/images/og-home.jpg'))
+@section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
 @push('extras')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
@@ -89,17 +89,7 @@
                 </div>
 
                 <p class="mt-0 text-left">{{ $product->name }}</p>
-                @if ($product->sale_price)
-                <span class="text-black text-bold">₹{{ number_format($product->sale_price, 0) }}</span>
-                <span class="text-decoration-line-through text-muted small text-light">
-                    ₹ {{ number_format($product->regular_price, 0) }}
-                </span>
-                <span class="text-maroon small">
-                    Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
-                </span>
-                @else
-                <span class="text-black">₹ {{ number_format($product->regular_price, 0) }}</span>
-                @endif
+                @include('frontend.partials.product-price', ['product' => $product])
             </a>
             @endforeach
             @else

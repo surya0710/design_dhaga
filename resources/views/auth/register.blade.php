@@ -11,7 +11,7 @@
                         <h3 class="heading text-center">Create An Account</h3>
                         <ul class="breadcrumbs d-flex align-items-center justify-content-center">
                             <li>
-                                <a class="link" href="{{route('home.index')}}">Homepage</a>
+                                <a class="link" href="{{ route('home') }}">Homepage</a>
                             </li>
                             <li>
                                 <i class="icon-arrRight"></i>

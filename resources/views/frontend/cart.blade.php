@@ -49,10 +49,19 @@
                                     ₹{{ number_format($item->price, 2) }}
                                 </div>
 
+                                @if($item->size || $item->fabric_type || $item->sku)
+                                    <div class="small text-muted">
+                                        @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                        @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                        @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                    </div>
+                                @endif
+
                                 <form method="POST" class="d-none d-sm-block"
                                     action="{{ route('cart.remove') }}"
-                                    id="remove-product-{{ $item->product_id }}">
+                                    id="remove-cart-{{ $item->id }}">
                                     @csrf
+                                    <input type="hidden" name="cart_id" value="{{ $item->id }}">
                                     <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                     <button class="remove-btn remove-item-cart">Remove</button>
                                 </form>
@@ -63,6 +72,7 @@
                         <div class="d-flex justify-content-space-between">
                             <form method="POST" action="{{ route('cart.update') }}">
                                 @csrf
+                                <input type="hidden" name="cart_id" value="{{ $item->id }}">
                                 <input type="hidden" name="product_id" value="{{ $item->product_id }}">
 
                                 <div class="qty-box mt-0">
@@ -80,8 +90,9 @@
 
                             <form method="POST" class="d-sm-block d-md-none"
                                 action="{{ route('cart.remove') }}"
-                                id="remove-product-{{ $item->product_id }}">
+                                id="remove-cart-{{ $item->id }}">
                                 @csrf
+                                <input type="hidden" name="cart_id" value="{{ $item->id }}">
                                 <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                 <button class="remove-btn remove-item-cart">
                                     <i class="fa fa-trash"></i>&nbsp; Remove
@@ -176,16 +187,16 @@
         let current = parseInt(input.value);
         let newQty = current + change;
 
-        let productId = updateForm.querySelector('input[name="product_id"]').value;
+        let cartId = updateForm.querySelector('input[name="cart_id"]').value;
 
         // 👉 If quantity becomes 0 → remove item
         if (newQty <= 0) {
-            let removeForm = document.getElementById('remove-product-' + productId);
+            let removeForm = document.getElementById('remove-cart-' + cartId);
 
             if (removeForm) {
                 removeForm.submit();
             } else {
-                console.error('Remove form not found for product:', productId);
+                console.error('Remove form not found for cart item:', cartId);
             }
             return;
         }

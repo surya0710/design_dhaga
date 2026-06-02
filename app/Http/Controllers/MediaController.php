@@ -9,10 +9,32 @@ use Illuminate\Support\Facades\Storage;
 class MediaController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $media = Media::latest()->get();
-        return response()->json($media);
+        $perPage = (int) $request->integer('per_page', 24);
+        $perPage = max(1, min($perPage, 60));
+        $search = trim((string) $request->get('search', ''));
+        $sort = $request->get('sort') === 'oldest' ? 'asc' : 'desc';
+
+        $media = Media::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('file_name', 'like', '%' . $search . '%')
+                        ->orWhere('file_path', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('created_at', $sort)
+            ->orderBy('id', $sort)
+            ->paginate($perPage);
+
+        return response()->json([
+            'data' => $media->items(),
+            'current_page' => $media->currentPage(),
+            'last_page' => $media->lastPage(),
+            'per_page' => $media->perPage(),
+            'total' => $media->total(),
+            'has_more' => $media->hasMorePages(),
+        ]);
     }
 
     public function upload(Request $request)

@@ -9,13 +9,22 @@ class Cart extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'product_variant_id',
         'quantity',
-        'price'
+        'price',
+        'size',
+        'fabric_type',
+        'sku'
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function productVariant()
+    {
+        return $this->belongsTo(ProductVariant::class);
     }
 
     public function user()

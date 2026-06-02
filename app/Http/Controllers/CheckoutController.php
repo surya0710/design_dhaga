@@ -46,7 +46,7 @@ class CheckoutController extends Controller
 
     public function checkout()
     {
-        $cartItems = Cart::with('product')
+        $cartItems = Cart::with(['product', 'productVariant'])
             ->where('user_id', Auth::id())
             ->get();
 
@@ -110,7 +110,7 @@ class CheckoutController extends Controller
             'address' => 'required|string',
         ]);
 
-        $cartItems = collect(Cart::with('product')
+        $cartItems = collect(Cart::with(['product', 'productVariant'])
             ->where('user_id', Auth::id())
             ->get());
 
@@ -202,7 +202,7 @@ class CheckoutController extends Controller
 
     public function createRazorpayOrder(Request $request)
     {
-        $cartItems = Cart::with('product')
+        $cartItems = Cart::with(['product', 'productVariant'])
             ->where('user_id', Auth::id())
             ->get();
 
@@ -357,8 +357,12 @@ class CheckoutController extends Controller
             foreach ($cartItems as $item) {
                 $order->items()->create([
                     'product_id' => $item->product->id ?? null,
+                    'product_variant_id' => $item->product_variant_id,
                     'product_name' => $item->product->name,
                     'product_image' => $item->product->image ?? null,
+                    'sku' => $item->sku,
+                    'size' => $item->size,
+                    'fabric_type' => $item->fabric_type,
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],
                     'total' => $item['price'] * $item['quantity'],

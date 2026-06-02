@@ -38,7 +38,7 @@ class BlogController extends Controller
         $categories = $this->categories;
         $blog               = Blog::where('slug', $slug)->firstOrFail();
         $recentBlogs        = Blog::orderBy('id','desc')->limit(6)->get();
-        $featuredProducts   = Product::where('status', 1)->where('featured', 1)->with(['category.parent'])->inRandomOrder()->limit(8)->get();
+        $featuredProducts   = Product::where('status', 1)->where('featured', 1)->with(['category.parent', 'activeVariants:id,product_id,price'])->inRandomOrder()->limit(8)->get();
         $menu               = $this->menu;
         $highlights         = HomepageHighlight::where('status', 1)->get();
         return view('frontend.blog-details',compact('blog', 'recentBlogs', 'categories', 'featuredProducts', 'menu', 'highlights'));

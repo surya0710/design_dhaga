@@ -52,6 +52,7 @@ class ShopController extends Controller
             $category = null;
 
             $products = Product::where('status', 1)
+                ->with('activeVariants:id,product_id,price')
                 ->orderBy('id', 'desc')
                 ->get();
 
@@ -64,6 +65,7 @@ class ShopController extends Controller
                 ->firstOrFail();
 
             $products = Product::where('status', 1)
+                ->with('activeVariants:id,product_id,price')
                 ->where('category_id', $category->id)
                 ->orderBy('id', 'desc')
                 ->get();
@@ -82,6 +84,7 @@ class ShopController extends Controller
                 ->toArray();
 
             $products = Product::where('status', 1)
+                ->with('activeVariants:id,product_id,price')
                 ->where(function ($q) use ($category, $subcategoryIds) {
 
                     $q->where('category_id', $category->id)
@@ -119,7 +122,9 @@ class ShopController extends Controller
         ];
         $categories = $this->categories;
         $wishlistProductIds = Wishlist::where('user_id', auth()->user()->id)->pluck('product_id')->toArray();
-        $products           = Product::whereIn('id', $wishlistProductIds)->get();
+        $products           = Product::whereIn('id', $wishlistProductIds)
+            ->with('activeVariants:id,product_id,price')
+            ->get();
         $menu               = $this->menu;
         $highlights         = $this->highlights;
         return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights'));
@@ -147,6 +152,8 @@ class ShopController extends Controller
                 'galleryImages:id,product_id,image',
                 'artisanImages:id,product_id,image,title,description',
                 'productAttributes:id,product_id,key,value',
+                'variants:id,product_id,size,fabric_type,sku,price,quantity,is_active',
+                'activeVariants:id,product_id,size,fabric_type,sku,price,quantity,is_active',
                 'category:id,name,slug,parent_id',
                 'icons:id,product_id,image,text',
 
@@ -173,6 +180,7 @@ class ShopController extends Controller
 
         // ✅ Related products
         $relatedProducts = Product::select('id','name','slug','image','category_id', 'sale_price','regular_price')
+            ->with('activeVariants:id,product_id,price')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->with(['category.parent'])
@@ -218,6 +226,7 @@ class ShopController extends Controller
         ];
 
         $products = Product::where('status', 1)
+            ->with('activeVariants:id,product_id,price')
             ->when($query, function ($q) use ($query) {
                 $q->where(function ($subQuery) use ($query) {
                     $subQuery->where('name', 'LIKE', '%' . $query . '%')

@@ -11,7 +11,7 @@ and premium branding services.')
 
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga portfolio gallery.')
 
-@section('og_image', asset('frontend_assets/images/og-home.jpg'))
+@section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
 @push('extras')
 
@@ -265,9 +265,17 @@ and premium branding services.')
 @endpush
 
 @section('content')
+@if(!empty($pageContent?->heading))
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-12">
+                <h1 class="home-heading">{{ $pageContent->heading }}</h1>
+            </div>
+        </div>
+    </div>
+@endif
 
-<section class="my-4">
-
+<section class="my-1">
     {{-- CATEGORY SECTION --}}
     <div class="d-flex justify-content-center portfolio-category">
         <ul class="nav nav-tabs custom-tabs border-0 gap-2" id="myTab" role="tablist">

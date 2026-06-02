@@ -308,6 +308,55 @@
             </button>
         </div>
 
+        {{-- PRODUCT VARIANTS --}}
+        <div class="card">
+            <div class="card-title">Product Variants</div>
+
+            <div class="field">
+                <label>Size + Fabric options</label>
+                <small style="color:var(--muted)">Create one row for each sellable combination. Example: S + 100% Pure, S + Semi.</small>
+            </div>
+
+            <div id="variant-wrapper" class="variant-wrapper">
+                @forelse($product->variants as $index => $variant)
+                <div class="variant-row">
+                    <input type="text" name="variants[{{ $index }}][size]" placeholder="Size e.g. S / 0-1 yr." value="{{ old('variants.'.$index.'.size', $variant->size) }}">
+                    <input type="text" name="variants[{{ $index }}][fabric_type]" placeholder="Fabric e.g. 100% Pure" value="{{ old('variants.'.$index.'.fabric_type', $variant->fabric_type) }}">
+                    <input type="text" name="variants[{{ $index }}][sku]" placeholder="SKU" value="{{ old('variants.'.$index.'.sku', $variant->sku) }}">
+                    <input type="number" name="variants[{{ $index }}][price]" step="0.01" min="0" placeholder="Price" value="{{ old('variants.'.$index.'.price', $variant->price) }}">
+                    <input type="number" name="variants[{{ $index }}][quantity]" min="0" placeholder="Qty" value="{{ old('variants.'.$index.'.quantity', $variant->quantity) }}">
+                    <select name="variants[{{ $index }}][is_active]">
+                        <option value="1" {{ old('variants.'.$index.'.is_active', $variant->is_active) ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ !old('variants.'.$index.'.is_active', $variant->is_active) ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                    <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
+                </div>
+                @empty
+                <div class="variant-row">
+                    <input type="text" name="variants[0][size]" placeholder="Size e.g. S / 0-1 yr.">
+                    <input type="text" name="variants[0][fabric_type]" placeholder="Fabric e.g. 100% Pure">
+                    <input type="text" name="variants[0][sku]" placeholder="SKU">
+                    <input type="number" name="variants[0][price]" step="0.01" min="0" placeholder="Price">
+                    <input type="number" name="variants[0][quantity]" min="0" placeholder="Qty">
+                    <select name="variants[0][is_active]">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                    <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
+                </div>
+                @endforelse
+            </div>
+
+            <div class="divider"></div>
+
+            <button type="button" id="add-variant" class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Add Variant
+            </button>
+        </div>
+
         {{--  Meta Details --}}
         <div class="card">
             <div class="card-title">Meta Details</div>
@@ -576,6 +625,9 @@
                     </label>
                 </div>
                 <div class="mm-grid" id="mmGrid"></div>
+                <div class="mm-load-more-wrap">
+                    <button type="button" class="mm-load-more" id="mmLoadMoreBtn" onclick="loadMoreMedia()" style="display:none;">Load More</button>
+                </div>
             </div>
 
         </div>
@@ -620,6 +672,11 @@ let mmSelected     = [];
 let mmAllMedia     = [];
 let mmCurrentSort  = 'newest';
 let mmCurrentFilter= 'all';
+let mmCurrentPage  = 1;
+let mmPerPage      = 24;
+let mmHasMore      = false;
+let mmIsLoading    = false;
+let mmSearchTimer  = null;
 
 /* ─────────────────────────────────────────────────────────────
    AUTO SLUG
@@ -651,6 +708,31 @@ document.addEventListener("click", function (e) {
 /* ─────────────────────────────────────────────────────────────
    OPEN MEDIA MODAL
 ───────────────────────────────────────────────────────────── */
+let variantIndex = {{ max($product->variants->count(), 1) }};
+document.getElementById("add-variant").addEventListener("click", function () {
+    document.getElementById("variant-wrapper").insertAdjacentHTML("beforeend", `
+        <div class="variant-row">
+            <input type="text" name="variants[${variantIndex}][size]" placeholder="Size e.g. S / 0-1 yr.">
+            <input type="text" name="variants[${variantIndex}][fabric_type]" placeholder="Fabric e.g. 100% Pure">
+            <input type="text" name="variants[${variantIndex}][sku]" placeholder="SKU">
+            <input type="number" name="variants[${variantIndex}][price]" step="0.01" min="0" placeholder="Price">
+            <input type="number" name="variants[${variantIndex}][quantity]" min="0" placeholder="Qty">
+            <select name="variants[${variantIndex}][is_active]">
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+            <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
+        </div>
+    `);
+    variantIndex++;
+});
+
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-variant")) {
+        e.target.closest(".variant-row").remove();
+    }
+});
+
 function openMediaUploader(inputId, previewId, pickerId) {
     mmInputId   = inputId;
     mmPreviewId = previewId;
@@ -689,23 +771,56 @@ function loadMedia() {
     document.getElementById("mmGrid").innerHTML =
         `<div class="mm-uploading"><div class="mm-spinner"></div> Loading media…</div>`;
 
-    fetch('/admin/media')
+    mmCurrentPage = 1;
+    mmAllMedia = [];
+    fetchMediaPage(true);
+}
+
+function loadMoreMedia() {
+    if (!mmHasMore || mmIsLoading) return;
+    mmCurrentPage++;
+    fetchMediaPage(false);
+}
+
+function fetchMediaPage(reset) {
+    const params = new URLSearchParams({
+        page: mmCurrentPage,
+        per_page: mmPerPage,
+        sort: mmCurrentSort,
+        search: document.getElementById("mmSearch").value.trim(),
+    });
+    const loadMoreBtn = document.getElementById("mmLoadMoreBtn");
+
+    mmIsLoading = true;
+    if (loadMoreBtn) {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading...';
+    }
+
+    fetch('/admin/media?' + params.toString())
         .then(r => r.json())
-        .then(data => { mmAllMedia = data; renderGrid(data); })
+        .then(data => {
+            const items = Array.isArray(data) ? data : (data.data || []);
+            const total = Array.isArray(data) ? items.length : (data.total || 0);
+            mmHasMore = Array.isArray(data) ? false : !!data.has_more;
+            mmAllMedia = reset ? items : [...mmAllMedia, ...items.filter(item => !mmAllMedia.some(existing => existing.id === item.id))];
+            renderGrid(mmAllMedia, total);
+        })
         .catch(() => {
             document.getElementById("mmGrid").innerHTML =
                 `<div class="mm-empty"><p>Could not load media.</p></div>`;
+        })
+        .finally(() => {
+            mmIsLoading = false;
+            updateLoadMoreButton();
         });
 }
 
-function renderGrid(data) {
+function renderGrid(data, total = null) {
     let items = [...data];
-    if (mmCurrentSort === 'oldest') items.reverse();
-    const q = document.getElementById("mmSearch").value.toLowerCase();
-    if (q) items = items.filter(i => i.file_path.toLowerCase().includes(q));
 
     document.getElementById("mmCount").textContent =
-        `${items.length} item${items.length !== 1 ? 's' : ''}`;
+        `${items.length}${total !== null ? ` of ${total}` : ''} item${(total ?? items.length) !== 1 ? 's' : ''}`;
 
     if (!items.length) {
         document.getElementById("mmGrid").innerHTML = `
@@ -730,6 +845,16 @@ function renderGrid(data) {
                 <div class="mm-item-name">${name}</div>
             </div>`;
     }).join('');
+
+    updateLoadMoreButton();
+}
+
+function updateLoadMoreButton() {
+    const btn = document.getElementById("mmLoadMoreBtn");
+    if (!btn) return;
+    btn.style.display = mmHasMore ? 'inline-flex' : 'none';
+    btn.disabled = mmIsLoading;
+    btn.textContent = mmIsLoading ? 'Loading...' : 'Load More';
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -825,20 +950,23 @@ function clearImage(inputId, previewId, pickerId) {
 /* ─────────────────────────────────────────────────────────────
    FILTER / SORT
 ───────────────────────────────────────────────────────────── */
-function filterMedia(q) { renderGrid(mmAllMedia); }
+function filterMedia(q) {
+    clearTimeout(mmSearchTimer);
+    mmSearchTimer = setTimeout(loadMedia, 250);
+}
 
 function setFilter(type, el) {
     mmCurrentFilter = type;
     document.querySelectorAll(".mm-sidebar .mm-nav-item").forEach(i => i.classList.remove("active"));
     el.classList.add("active");
-    renderGrid(mmAllMedia);
+    loadMedia();
 }
 
 function setSort(order, el) {
     mmCurrentSort = order;
     document.querySelectorAll(".mm-sidebar .mm-nav-item").forEach(i => i.classList.remove("active"));
     el.classList.add("active");
-    renderGrid(mmAllMedia);
+    loadMedia();
 }
 
 /* ─────────────────────────────────────────────────────────────

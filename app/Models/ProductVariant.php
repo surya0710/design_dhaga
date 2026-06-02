@@ -4,29 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model
+class ProductVariant extends Model
 {
     protected $fillable = [
-        'order_id',
         'product_id',
-        'product_variant_id',
-        'product_name',
-        'product_image',
-        'sku',
         'size',
         'fabric_type',
+        'sku',
         'price',
         'quantity',
-        'total',
+        'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'total' => 'decimal:2',
+        'quantity' => 'integer',
+        'is_active' => 'boolean',
     ];
 
-    public function order()
+    public function product()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Product::class);
     }
 }

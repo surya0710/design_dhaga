@@ -114,6 +114,13 @@
                                             >
                                             <div class="pname-text">
                                                 {{ $item->product_name }}
+                                                @if($item->size || $item->fabric_type || $item->sku)
+                                                    <div style="font-size:12px;color:#777;font-weight:400;">
+                                                        @if($item->fabric_type) Fabric: {{ $item->fabric_type }} @endif
+                                                        @if($item->size) {{ $item->fabric_type ? ' | ' : '' }}Size: {{ $item->size }} @endif
+                                                        @if($item->sku) {{ ($item->fabric_type || $item->size) ? ' | ' : '' }}SKU: {{ $item->sku }} @endif
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
