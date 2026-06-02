@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Menu;
 use App\Models\HomepageHighlight;
+use App\Models\Pages;
 
 class BlogController extends Controller
 {
@@ -31,7 +32,8 @@ class BlogController extends Controller
         $blogs              = Blog::orderBy('id','desc')->paginate(15);
         $menu               = $this->menu;
         $highlights         = HomepageHighlight::where('status', 1)->get();
-        return view('frontend.blogs',compact('blogs', 'categories', 'menu', 'highlights'));
+        $pageContent        = Pages::where('slug', 'blogs')->first();
+        return view('frontend.blogs',compact('blogs', 'categories', 'menu', 'highlights', 'pageContent'));
     }
 
     public function blogdetail($slug) {
