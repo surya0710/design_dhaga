@@ -13,14 +13,16 @@
 
 <div class="px-3 px-md-5 py-lg-3">
     <!-- Header -->
+    @if(!empty($pageContent?->heading))
     <div class="mb-5 pb-4 border-bottom">
         <div class="row align-items-center">
             <!-- Left Content -->
             <div class="col-md-12">
-                <h1 class="fw-bold mb-0">Our Latest Blogs - Hand-Painted Fashion, Design & Indian Craft Insights</h1>
+                <h1 class="fw-bold mb-0">{{ $pageContent->heading }}</h1>
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Blog Cards -->
     <div class="row g-4">
