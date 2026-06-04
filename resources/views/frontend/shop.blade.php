@@ -51,11 +51,9 @@
         <div class="row">
             <h3 class="text-center">{{ $category->name ?? 'All Products' }}</h3>
         </div>
-        <div class="container d-none d-md-block">
-            <div class="row justify-content-center">    
-                <div class="col-lg-10 col-md-8 text-center mb-0">
-                    {!! $category->content ?? '' !!}
-                </div>
+        <div class="container-fluid d-none d-md-block">
+            <div class="row text-center px-3">    
+                {!! $category->content ?? '' !!}
             </div>
         </div>
         @php
