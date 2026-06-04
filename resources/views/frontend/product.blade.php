@@ -272,6 +272,12 @@
                         <div class="h6 mb-0 price">
                             @if ($hasVariants)
                                 <span class="fw-bold text-black">₹ <span class="variant-price-current">{{ number_format($displayPrice, 0) }}</span></span>
+                                <span class="text-decoration-line-through text-muted small ms-2">
+                                    ₹ {{ number_format($product->regular_price, 0) }}
+                                </span>
+                                <span class="text-maroon ms-2 fw-semibold">
+                                    Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
+                                </span>
                             @elseif ($product->sale_price)
                                 <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                                 <span class="text-decoration-line-through text-muted small ms-2">
