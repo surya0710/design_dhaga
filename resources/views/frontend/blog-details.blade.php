@@ -23,6 +23,10 @@
             </div>
 
             <div class="blog-content text-justify">
+                @if(!empty($blog->author))
+                <p class="fw-bold mb-1">by {{ $blog->author }}</p>
+                @endif
+                <p class="mb-0">{{ date('j-F-Y', strtotime($blog->created_at)) }}</p>
                 {!! $blog->content !!}
             </div>
         </div>

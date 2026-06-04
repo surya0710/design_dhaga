@@ -169,6 +169,13 @@
 
             <div class="wg-box">
 
+                <fieldset class="name">
+                    <div class="body-title mb-10">Author Name <span class="tf-color-1">*</span></div>
+                    <input class="mb-10" type="text" placeholder="Enter author name" name="author" tabindex="0" value="{{ old('author', $blog->author ?? '') }}" aria-required="true"
+                    required >
+                    <div class="text-danger">{{ $errors->first('author') }}</div>
+                </fieldset>
+
                 {{-- Title --}}
                 <fieldset class="name">
                     <div class="body-title mb-10">Blog title <span class="tf-color-1">*</span></div>

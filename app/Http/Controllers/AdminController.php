@@ -1106,11 +1106,14 @@ class AdminController extends Controller
             'meta_title'       => 'nullable|max:255',
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
+            'author'           => 'required|string|max:255',
         ]);
 
-        $image     = $request->file('image');
-        $file_name = Carbon::now()->timestamp . '.' . $image->getClientOriginalExtension();
-        $this->GenerateBlogThumbnailsImage($image, $file_name);
+        $image = $request->file('image');
+        $file_name = time() . '.' . $image->getClientOriginalExtension();
+
+        // Upload original image as-is
+        $image->move(public_path('uploads/blogs'), $file_name);
 
         $blog = Blog::create([
             'title'            => $request->title,
@@ -1120,14 +1123,17 @@ class AdminController extends Controller
             'meta_title'       => $request->meta_title,
             'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
+            'author'           => $request->author,
         ]);
 
-        $tagIds = collect(explode(',', $request->tags ?? ''))->filter()->map(function ($tagName) {
-            return Tag::firstOrCreate(
-                ['slug' => Str::slug($tagName)],
-                ['name' => trim($tagName)]
-            )->id;
-        });
+        $tagIds = collect(explode(',', $request->tags ?? ''))
+            ->filter()
+            ->map(function ($tagName) {
+                return Tag::firstOrCreate(
+                    ['slug' => Str::slug(trim($tagName))],
+                    ['name' => trim($tagName)]
+                )->id;
+            });
 
         $blog->tags()->sync($tagIds);
 
@@ -1151,19 +1157,24 @@ class AdminController extends Controller
             'meta_title'       => 'nullable|max:255',
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
+            'author'           => 'required|string|max:255',
         ]);
 
         $imageName = $blog->image;
 
         if ($request->hasFile('image')) {
-            $fullPath  = public_path('uploads/blogs/' . $blog->image);
-            $thumbPath = public_path('uploads/blogs/thumbnails/' . $blog->image);
-            if (File::exists($fullPath))  File::delete($fullPath);
-            if (File::exists($thumbPath)) File::delete($thumbPath);
 
-            $image     = $request->file('image');
-            $imageName = Carbon::now()->timestamp . '.' . $image->getClientOriginalExtension();
-            $this->GenerateBlogThumbnailsImage($image, $imageName);
+            $oldImage = public_path('uploads/blogs/' . $blog->image);
+
+            if (File::exists($oldImage)) {
+                File::delete($oldImage);
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            // Upload original image as-is
+            $image->move(public_path('uploads/blogs'), $imageName);
         }
 
         $blog->update([
@@ -1174,14 +1185,17 @@ class AdminController extends Controller
             'meta_title'       => $request->meta_title,
             'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
+            'author'           => $request->author,
         ]);
 
-        $tagIds = collect(explode(',', $request->tags ?? ''))->filter()->map(function ($tagName) {
-            return Tag::firstOrCreate(
-                ['slug' => Str::slug($tagName)],
-                ['name' => trim($tagName)]
-            )->id;
-        });
+        $tagIds = collect(explode(',', $request->tags ?? ''))
+            ->filter()
+            ->map(function ($tagName) {
+                return Tag::firstOrCreate(
+                    ['slug' => Str::slug(trim($tagName))],
+                    ['name' => trim($tagName)]
+                )->id;
+            });
 
         $blog->tags()->sync($tagIds);
 
