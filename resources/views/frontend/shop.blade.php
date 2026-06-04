@@ -49,7 +49,7 @@
 <section class="my-2">
     <div class="container-fluid mt-4">
         <div class="row">
-            <h3 class="text-center">{{ $category->name ?? 'All Products' }}</h3>
+            <h1 class="text-center">{{ $category->name ?? 'All Products' }}</h1>
         </div>
         <div class="container-fluid d-none d-md-block">
             <div class="row text-center px-3">    
@@ -102,7 +102,7 @@
                 <div class="row justify-content-center">    
                     <div class="col-lg-10 col-md-8">
                         <div class="text-center mb-2">
-                            <h4 class="mb-0">Frequently Asked Questions</h4>
+                            <h2 class="mb-0">Frequently Asked Questions</h2>
                         </div>
                         <div class="faq-wrapper">
                             @foreach($faqs as $key => $faq)
