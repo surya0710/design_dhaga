@@ -114,9 +114,9 @@
                                     <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
                                         <strong>Ans:</strong> {!! $faq->answer !!}
                                     </p>
-                                    <button type="button" class="read-more-btn btn p-0 fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
-                                        ....
-                                    </button>
+                                    <p type="button" class="read-more-btn btn fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
+                                        <span>...</span>
+                                    </p>
                                 </div>
                             </div>
                             @endforeach
@@ -245,17 +245,22 @@
     });
 
     // Show/hide individual answer
-    $(document).on("click", ".read-more-btn", function () {
+   $(document).on("click", ".read-more-btn", function () {
         const targetId = $(this).data("target");
         const $answer = $("#" + targetId);
         const isExpanded = $(this).data("expanded") === 1;
+        const $span = $(this).find("span");
 
         if (isExpanded) {
             $answer.removeClass("expanded");
-            $(this).text("....").data("expanded", 0);
+            $(this).data("expanded", 0);
+            $span.text("...");
+            $span.css({ "font-size": "1.5rem", "letter-spacing": "2px", "padding": "5px 10px 15px" });
         } else {
             $answer.addClass("expanded");
-            $(this).text("Show less").data("expanded", 1);
+            $(this).data("expanded", 1);
+            $span.text("Show less");
+            $span.css({ "font-size": "1rem", "letter-spacing": "normal", "padding": "5px 10px" });
         }
     });
 

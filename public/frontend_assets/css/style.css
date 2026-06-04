@@ -3884,8 +3884,33 @@ ul.specifications li h4 {
 }
 
 .read-more-btn {
-  font-size: 13px;
-  color: #8b1e2d;
+  padding: 0 !important;
+  width: fit-content;
+  background: none !important;
+  border: none !important;
+}
+
+.read-more-btn span {
+  background-color: #bbb3b3;
+  height: 30px;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  padding: 5px 10px 15px;
+}
+
+/* Override for "Show less" state */
+.read-more-btn span.show-less-text {
+  width: auto;
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  letter-spacing: normal;
+  line-height: normal;
+  padding-bottom: 5px;
 }
 .text-blue {
   color: #1877F2;
