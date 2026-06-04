@@ -14,19 +14,18 @@
 <div class="container">
     <div class="row gx-lg-5 px-xs-2">
         <div class="col-lg-12">
-            <div class="mb-4 blog-content text-center">
-                <h1 class="fw-bold">{{ $blog->title }}</h1>
-            </div>
-
-            <div class="rounded overflow-hidden mb-4 text-center">
-                <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="img-fluid w-100" alt="{{ $blog->title }}" />
-            </div>
-
             <div class="blog-content text-justify">
-                @if(!empty($blog->author))
-                <p class="fw-bold mb-1">by {{ $blog->author }}</p>
-                @endif
-                <p class="mb-1">{{ date('j-F-Y', strtotime($blog->created_at)) }}</p>
+                <div class="mb-4 blog-content text-center">
+                    <h1 class="fw-bold">{{ $blog->title }}</h1>
+                    @if(!empty($blog->author))
+                    <p class="fw-bold mb-1">by {{ $blog->author }}</p>
+                    @endif
+                    <p class="mb-1">{{ date('j-F-Y', strtotime($blog->created_at)) }}</p>
+                </div>
+
+                <div class="rounded overflow-hidden mb-4 text-center">
+                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="img-fluid w-100" alt="{{ $blog->title }}" />
+                </div>
                 {!! $blog->content !!}
             </div>
         </div>
