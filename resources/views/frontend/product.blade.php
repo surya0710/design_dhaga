@@ -74,6 +74,7 @@
             'fabric_type' => $variant->fabric_type,
             'sku' => $variant->sku,
             'price' => (float) $variant->price,
+            'regular_price' => (float) $variant->regular_price,
             'quantity' => (int) $variant->quantity,
         ];
     })->values();
@@ -350,6 +351,12 @@
                     <div class="h4 mb-2 d-none d-lg-block price">
                         @if ($hasVariants)
                             <span class="fw-bold text-black">₹ <span class="variant-price-current">{{ number_format($displayPrice, 0) }}</span></span>
+                            <span class="text-decoration-line-through text-muted small ms-2">
+                                ₹ {{ number_format($product->regular_price, 0) }}
+                            </span>
+                            <span class="text-maroon ms-2 fw-semibold">
+                                Save {{ number_format((1 - ($product->sale_price / $product->regular_price)) * 100, 0) }}%
+                            </span>
                         @elseif ($product->sale_price)
                             <span class="fw-bold text-black">₹ {{ number_format($product->sale_price, 0) }}</span>
                             <span class="text-decoration-line-through text-muted small ms-2">
