@@ -60,7 +60,7 @@
             @if($category->show_on_home == 1)
             <div class="text-center">
                 <a href="{{ route('shop.index', [$category->slug]) }}" class="text-decoration-none">
-                    <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }}" class="img-fluid" loading="lazy">
+                    <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }} Category Icon" class="img-fluid" loading="lazy">
                     <h4>{{ $category->name }}</h4>
                 </a>
             </div>
