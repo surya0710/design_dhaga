@@ -119,7 +119,7 @@
         <div class="row feature-items">
             @foreach($mobileFeatures->items as $item)
                 <div class="feature-item col p-0">
-                    <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" />
+                    <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" alt="{{ $item->title }}" />
                     <h4>{{ $item->title }}</h4>
                 </div>
             @endforeach

@@ -103,7 +103,7 @@
     <div class="menu-section">
         <div class="d-flex align-items-center justify-content-between border-1 px-3 py-2">
             <a class="sidebar-logo" href="{{ route('home') }}">
-                <img src="{{ asset('frontend_assets/images/logo/logo.svg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend_assets/images/logo/logo.svg') }}"  class="img-fluid" alt="{{ $settings->site_name }} logo">
             </a>
 
             <div class="d-flex justify-content-space-between gap-3">
@@ -154,7 +154,7 @@
             <div class="submenu" id="{{ $item->slug }}" style="{{ $loop->index == 0 ? 'display:block;' : 'display:none;' }}">
                 @foreach($item->children as $subCategory)
                     <a href="{{ route('shop.subcategory', [$item->slug, $subCategory->slug]) }}" class="submenu-item">
-                        <img src="{{ asset('uploads/categories/'.$subCategory->image) }}" />
+                        <img src="{{ asset('uploads/categories/'.$subCategory->image) }}" alt="{{ $subCategory->name }}" />
                         {{ $subCategory->name }}
                     </a>
                 @endforeach

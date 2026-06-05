@@ -139,7 +139,7 @@
             <!-- LEFT SIDE -->
             <div class="col-md-6 bg-dark d-flex align-items-center justify-content-center">
               <div class="text-center p-4">
-                <img src="{{ asset('uploads/settings/' . $settings->dark_logo) }}" class="img-fluid mb-2">
+                <img src="{{ asset('uploads/settings/' . $settings->dark_logo) }}" alt="{{ $settings->site_name }} White Logo" class="img-fluid mb-2">
                 <p class="text-white small mb-0 opacity-75">Welcome to Design Dhaga</p>
               </div>
             </div>
@@ -161,7 +161,7 @@
                 <div class="text-center my-3 text-muted small">or</div>
                 <a href="{{ route('google.login') }}"
                   class="btn btn-outline-secondary w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 py-2">
-                  <img src="https://developers.google.com/identity/images/g-logo.png" width="18">
+                  <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" width="18">
                   Continue with Google
                 </a>
               </div>
