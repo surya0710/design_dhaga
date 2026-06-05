@@ -17,8 +17,8 @@
     <div class="mb-5 pb-4 border-bottom">
         <div class="row align-items-center">
             <!-- Left Content -->
-            <div class="col-md-12">
-                <h1 class="fw-bold mb-0">{{ $pageContent->heading }}</h1>
+            <div class="col-md-12 text-center">
+                <h1 class="fw-bold my-0">{{ $pageContent->heading }}</h1>
             </div>
         </div>
     </div>

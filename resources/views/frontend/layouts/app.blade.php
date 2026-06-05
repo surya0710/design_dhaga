@@ -88,7 +88,7 @@
     <main>
         {{-- Breadcrumb --}}
         @if (Request::segment(1))
-        <section class="breadcrumb-section py-3 bg-light border-bottom">
+        <section class="breadcrumb-section py-2 bg-light border-bottom">
             <div class="container text-center">
 
                 <nav aria-label="breadcrumb">
