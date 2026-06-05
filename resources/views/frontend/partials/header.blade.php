@@ -103,7 +103,7 @@
     <div class="menu-section">
         <div class="d-flex align-items-center justify-content-between border-1 px-3 py-2">
             <a class="sidebar-logo" href="{{ route('home') }}">
-                <img src="{{ asset('frontend_assets/images/logo/logo.svg') }}"  class="img-fluid" alt="{{ $settings->site_name }} logo">
+                <img src="{{ asset('frontend_assets/images/logo/logo.svg') }}"  class="img-fluid" alt="{{ $settings->store_name }} logo">
             </a>
 
             <div class="d-flex justify-content-space-between gap-3">

@@ -139,7 +139,7 @@
             <!-- LEFT SIDE -->
             <div class="col-md-6 bg-dark d-flex align-items-center justify-content-center">
               <div class="text-center p-4">
-                <img src="{{ asset('uploads/settings/' . $settings->dark_logo) }}" alt="{{ $settings->site_name }} White Logo" class="img-fluid mb-2">
+                <img src="{{ asset('uploads/settings/' . $settings->dark_logo) }}" alt="{{ $settings->store_name }} White Logo" class="img-fluid mb-2">
                 <p class="text-white small mb-0 opacity-75">Welcome to Design Dhaga</p>
               </div>
             </div>
