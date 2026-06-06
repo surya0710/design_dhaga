@@ -3908,19 +3908,17 @@ ul.specifications li h4 {
 }
 
 .read-more-btn {
-  padding: 0 !important;
+  padding: 5px 15px !important;
   margin: 0 !important;
   width: fit-content;
   background: none !important;
   border: none !important;
   background-color: #ebebeb!important;
   text-align: center;
-  height: 30px;
-  min-width: 52px;
-  border-radius: 15px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
 }
 .read-more-span{
   letter-spacing: 0.1rem;
@@ -3928,16 +3926,7 @@ ul.specifications li h4 {
 
 /* Override for "Show less" state */
 .read-more-btn span.show-less-text {
-  min-width: auto;
-  width: auto;
-  padding: 0 16px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: normal;
-  color: #212529;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  letter-spacing: 0rem;
 }
 .text-blue {
   color: #1877F2;
