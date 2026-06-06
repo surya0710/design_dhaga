@@ -337,6 +337,7 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="{{ asset('js/admin/tinymce-word-paste.js') }}"></script>
 
 <script>
 // ── Column picker ──────────────────────────────────────────────
@@ -408,47 +409,10 @@ tinymce.init({
     line_height_formats:
         '1 1.15 1.5 1.75 2 2.5 3',
 
-    // ── Paste / Word settings ──────────────────────────────────
-    paste_as_text: false,
-    paste_retain_style_properties: 'all',
-    paste_merge_formats: false,
-    paste_remove_styles_if_webkit: false,
-    paste_webkit_styles: 'all',
-
-    paste_preprocess: function (plugin, args) {
-        args.content = args.content;
-    },
-
-    paste_postprocess: function (plugin, args) {
-        const node = args.node;
-        node.querySelectorAll('[style]').forEach(el => {
-            let style = el.getAttribute('style');
-            style = style
-                .split(';')
-                .filter(rule => {
-                    const r = rule.trim().toLowerCase();
-                    return r &&
-                        !r.startsWith('mso-') &&
-                        !r.startsWith('tab-stops') &&
-                        !r.includes('mso-');
-                })
-                .join(';');
-            if (style) {
-                el.setAttribute('style', style);
-            } else {
-                el.removeAttribute('style');
-            }
-        });
-
-        node.querySelectorAll('span[style=""]').forEach(el => {
-            el.replaceWith(...el.childNodes);
-        });
-    },
-
-    // ── Allow all styles and elements ─────────────────────────
-    extended_valid_elements: '*[*]',
-    valid_children: '+body[style],+div[p|div|img|h1|h2|h3|h4|h5|h6|ul|ol|li|blockquote|table|tr|td|th|thead|tbody]',
-    verify_html: false,
+    ...TinyMceWordPaste.pasteOptions,
+    ...TinyMceWordPaste.htmlOptions,
+    paste_preprocess: TinyMceWordPaste.paste_preprocess,
+    paste_postprocess: TinyMceWordPaste.paste_postprocess,
 
     automatic_uploads: false,
     file_picker_types: 'image',
@@ -518,31 +482,7 @@ tinymce.init({
         'https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css'
     ],
 
-    content_style: `
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 14px;
-            line-height: 1.7;
-            color: #212529;
-            padding: 16px;
-            margin: 0;
-        }
-
-        p {
-            margin-top: 0;
-            margin-bottom: 1rem;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        img[alt="column-image"] {
-            outline: 2px dashed #2275fc;
-            cursor: pointer;
-        }
-    `
+    content_style: TinyMceWordPaste.contentStyle
 });
 
 // ── Misc ───────────────────────────────────────────────────────

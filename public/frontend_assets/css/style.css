@@ -3305,12 +3305,33 @@ ul.specifications li h4 {
 .blog-content{
   width: 800px;
   margin: 0 auto;
+  font-family: Calibri, "Segoe UI", Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.15;
+  color: #000000;
 }
 .blog-content img {
   max-width: 100%;
-  width: 100%;
   height: auto;
   display: block;
+}
+.blog-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 8pt;
+}
+.blog-content table td,
+.blog-content table th {
+  vertical-align: top;
+}
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.5em;
+  margin-bottom: 8pt;
+}
+.blog-content p {
+  margin-top: 0;
+  margin-bottom: 8pt;
 }
 
 .blogs-card {
