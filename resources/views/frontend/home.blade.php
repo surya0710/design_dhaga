@@ -106,7 +106,7 @@
     <div class="row">
         @foreach($desktopInfo->items as $item)
             <div class="col-md-4 {{ $loop->first ? 'info-box px-5' : ($loop->last ? 'text-right info-box px-5' : 'text-center info-box') }}">
-                <h1 class="my-0">{{ $item->title }}</h1>
+                <h2 class="my-0">{{ $item->title }}</h2>
                 <p>{{ $item->subtitle }}</p>
             </div>
         @endforeach
@@ -216,7 +216,7 @@
             </div>
             <div class="col">
                 <div class="py-md-3 px-3">
-                    <h1>{{ $ideaBrush->title }}</h1>
+                    <h3 class="fs-28">{{ $ideaBrush->title }}</h3>
                     <p class="text-justify">{!! $ideaBrush->body !!}</p>
                     <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark" href="{{ $ideaBrush->button_url }} ">{{ $ideaBrush->button_text }}</a>
                 </div>
@@ -244,7 +244,7 @@
         <div class="d-flex align-items-center reverse-sm">
             <div class="col">
                 <div class="py-md-3 px-3">
-                    <h1>{{ $graphicsDesign->title }}</h1>
+                    <h3 class="fs-28">{{ $graphicsDesign->title }}</h3>
                     <p class="text-justify">{!! $graphicsDesign->body !!}</p>
                     <a class="btn btn-outline-secondary view-all-btn mt-2 bg-dark" href="{{ $graphicsDesign->button_url }}">{{ $graphicsDesign->button_text }}</a>
                 </div>

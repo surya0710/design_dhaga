@@ -3064,6 +3064,9 @@ ul.specifications li h4 {
     margin-right: 0 !important;
   }
 }
+.fs-28{
+  font-size: 28px !important;
+}
 
 @media (max-width: 600px) {
   .product-details div {
