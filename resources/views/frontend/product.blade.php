@@ -775,6 +775,46 @@
         </section>
     @endif
 
+    <section class="faq-section py-4">
+        <div class="container">
+            <div class="row justify-content-center">    
+                <div class="col-lg-10 col-md-8">
+                    <div class="text-center mb-2">
+                        <h2 class="mb-0">Frequently Asked Questions</h2>
+                    </div>
+                    <div class="faq-wrapper">
+                        @foreach($faqs as $key => $faq)
+                        <div class="faq-item {{ $key >= 1 ? 'extra-faq d-none' : '' }}">
+                            <h4 class="faq-question mb-1 mt-1 text-blue">Que: {{ $faq->question }}</h4>
+                            <div class="faq-answer-wrapper">
+                                <p class="faq-answer mb-0 text-justify" id="faqAnswer{{ $key }}">
+                                    <strong>Ans:</strong> {!! $faq->answer !!}
+                                </p>
+                                <p type="button" class="read-more-btn fw-bold d-none" data-target="faqAnswer{{ $key }}" data-expanded="0">
+                                    <span class="read-more-span">•••</span>
+                                </p>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        <div class="text-center extra-faq d-none">
+                            <h4 class="mb-2">Still have questions? We'd love to hear from you.</h4>
+                            <a type="button" class="btn btn-outline-secondary view-all-btn bg-dark" href="{{ route('contact-us') }}">Contact Us</a>
+                        </div>
+
+                        @if(count($faqs) > 1)
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-outline-secondary see-more text-dark text-decoration-none fw-bold" id="showMoreFaqBtn">
+                                See more...
+                            </button>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="pt-2 bg-white pb-4">
         <div class="container-fluid px-0 overflow-hidden">
             <div class="row position-relative px-3 m-0 align-items-center justify-content-center text-center">
@@ -1663,5 +1703,53 @@
     function closeAllReviewsModal() {
         document.getElementById('allReviewsModal').style.display = 'none';
     }
+
+    // Show/hide individual answer
+    $(document).on("click", ".read-more-btn", function () {
+        const targetId = $(this).data("target");
+        const $answer = $("#" + targetId);
+        const isExpanded = $(this).data("expanded") === 1;
+        const $span = $(this).find("span");
+
+        if (isExpanded) {
+            $answer.removeClass("expanded");
+            $(this).data("expanded", 0);
+
+            $(this).removeClass("align-content-center");
+
+            $span.text("•••");
+            $span.removeClass("show-less-text");
+        } else {
+            $answer.addClass("expanded");
+            $(this).data("expanded", 1);
+
+            $(this).addClass("align-content-center");
+
+            $span.text("Show less");
+            $span.addClass("show-less-text");
+        }
+    });
+
+    // Check which answers actually overflow and show their button
+    function initFaqButtons() {
+        $(".faq-answer").each(function () {
+            const el = this;
+            // scrollHeight > clientHeight means text is clipped
+            if (el.scrollHeight > el.clientHeight + 2) {
+                $(this).siblings(".read-more-btn").removeClass("d-none");
+            }
+        });
+    }
+
+    // Show more FAQ items
+    $("#showMoreFaqBtn").click(function () {
+        $(".extra-faq").removeClass("d-none");
+        $(this).hide();
+        // Re-check overflow for newly revealed items
+        initFaqButtons();
+    });
+
+    // Run on load
+    initFaqButtons();
 </script>
 @endpush

@@ -196,6 +196,11 @@ class ShopController extends Controller
                 ->exists()
             : false;
 
+        $faqs = Faqs::where([
+            'status'    => 1,
+            'page_slug' => 'shop'
+        ])->get();
+
         return view('frontend.product', [
             'product' => $product,
             'categories' => $categories,
@@ -207,7 +212,8 @@ class ShopController extends Controller
             'isInWishlist' => $isInWishlist,
             'country' => $country,
             'menu' => $menu,
-            'highlights' => $highlights
+            'highlights' => $highlights,
+            'faqs' => $faqs
         ]);
     }
 
