@@ -3913,7 +3913,7 @@ ul.specifications li h4 {
   width: fit-content;
   background: none !important;
   border: none !important;
-  background-color: #e1e1e1!important;
+  background-color: #ebebeb!important;
   text-align: center;
   height: 30px;
   min-width: 52px;
@@ -3923,7 +3923,7 @@ ul.specifications li h4 {
   align-items: center;
 }
 .read-more-span{
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.1rem;
 }
 
 /* Override for "Show less" state */
