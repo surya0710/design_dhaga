@@ -585,6 +585,7 @@
             <input type="hidden" name="delivery_type" id="delivery_type">
             <input type="hidden" name="shipping_charge" id="shipping_charge" value="{{ $shipping ?? 0 }}">
             <input type="hidden" name="shiprocket_courier_id" id="shiprocket_courier_id">
+            <input type="hidden" name="address_id" id="address_id" value="{{ $defaultAddress->id ?? '' }}">
 
             <div class="row g-3">
 
@@ -626,7 +627,7 @@
                                     <div class="co-field">
                                         <label class="co-label">Phone Number <span class="req">*</span></label>
                                         <input type="text" name="phone" id="phone" class="co-input"
-                                            value="{{ old('phone', $defaultAddress->phone ?? (auth()->check() ? (auth()->user()->phone ?? '') : '')) }}"
+                                            value="{{ old('phone', $defaultAddress->phone ?? (auth()->check() ? (auth()->user()->mobile ?? '') : '')) }}"
                                             placeholder="10-digit mobile number">
                                         <span class="co-error" data-error="phone"></span>
                                     </div>

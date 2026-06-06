@@ -119,6 +119,14 @@ your orders.')
         color: #fff;
     }
 
+    .account-tabs .tab-pane {
+        display: none;
+    }
+
+    .account-tabs .tab-pane.show.active {
+        display: block;
+    }
+
     /* ── Tracking Modal ── */
     .tracking-modal .modal-content {
         border-radius: 20px;
@@ -643,7 +651,7 @@ your orders.')
         </div>
 
         <div class="col-lg-9">
-            <div class="tab-content">
+            <div class="tab-content account-tabs">
 
                 {{-- Dashboard Tab --}}
                 <div class="tab-pane fade show active" id="dashboard">
@@ -737,21 +745,52 @@ your orders.')
                 {{-- Addresses Tab --}}
                 <div class="tab-pane fade" id="addresses">
                     <div id="addressList">
+                        @if(session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger">
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h4 class="fw-bold mb-1">My Addresses</h4>
+                                <p class="text-muted mb-0">Manage the addresses used for checkout and delivery.</p>
+                            </div>
+                            <button type="button" class="btn btn-dark" onclick="showForm()">
+                                <i class="bi bi-plus-lg me-1"></i> Add Address
+                            </button>
+                        </div>
+
                         <div class="row g-4">
-                            @foreach($addresses as $address)
+                            @forelse($addresses as $address)
                             <div class="col-md-6">
                                 <div class="card p-4 h-100">
                                     <div class="d-flex justify-content-between">
                                         @if($address->is_default == 1)
                                         <span class="badge bg-dark">Default</span>
+                                        @else
+                                        <form method="POST" action="{{ route('account.addresses.default', $address) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-sm btn-outline-dark">Make Default</button>
+                                        </form>
                                         @endif
                                         <div class="dropdown">
                                             <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots-vertical"></i>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                <li><button class="dropdown-item" type="button" onclick="toggleAddressEdit({{ $address->id }})">Edit</button></li>
+                                                <li>
+                                                    <form method="POST" action="{{ route('account.addresses.delete', $address) }}" onsubmit="return confirm('Delete this address?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="dropdown-item text-danger" type="submit">Delete</button>
+                                                    </form>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -764,11 +803,62 @@ your orders.')
                                         {{ $address->landmark }}, {{ $address->city }}, {{ $address->state }},
                                         {{ $address->country }}, {{ $address->pincode }}
                                     </p>
+                                    <p class="text-muted small mt-2 mb-0">
+                                        <i class="bi bi-telephone me-1"></i>{{ $address->phone }}
+                                    </p>
+
+                                    <form id="addressEdit{{ $address->id }}" class="mt-3 d-none" method="POST" action="{{ route('account.addresses.update', $address) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        @include('user.partials.address-form-fields', ['address' => $address])
+                                        <div class="d-flex gap-2 mt-3">
+                                            <button type="submit" class="btn btn-dark btn-sm">Save</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="toggleAddressEdit({{ $address->id }})">Cancel</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            @endforeach
+                            @empty
+                            <div class="col-12">
+                                <div class="card p-5 text-center">
+                                    <div class="mb-3 text-muted"><i class="bi bi-geo-alt fs-1"></i></div>
+                                    <h4>No Addresses Yet</h4>
+                                    <p class="text-muted">Add your first address to speed up checkout.</p>
+                                </div>
+                            </div>
+                            @endforelse
                         </div>
+
+                        @if($addresses->isEmpty())
+                            <div class="card p-4 mt-4" id="emptyAddressForm">
+                                <h4 class="fw-bold mb-3">Add Address</h4>
+                                <form method="POST" action="{{ route('account.addresses.store') }}">
+                                    @csrf
+                                    @include('user.partials.address-form-fields', ['address' => null])
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="submit" class="btn btn-dark">Save Address</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
                     </div>
+
+                    @if($addresses->isNotEmpty())
+                        <div id="addressForm" class="card p-4 d-none">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="fw-bold mb-0">Add Address</h4>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="hideForm()">Back</button>
+                            </div>
+                            <form method="POST" action="{{ route('account.addresses.store') }}">
+                                @csrf
+                                @include('user.partials.address-form-fields', ['address' => null])
+                                <div class="d-flex gap-2 mt-3">
+                                    <button type="submit" class="btn btn-dark">Save Address</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="hideForm()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Orders Tab --}}
@@ -1255,18 +1345,42 @@ your orders.')
         document.getElementById('trackingTimeline').innerHTML = timelineHtml;
     }
 
-    // Navigation persistence
+    // Navigation persistence and page-local tab fallback
     document.addEventListener('DOMContentLoaded', function () {
-        const lastTab = localStorage.getItem('dashboard-active-tab');
-        if (lastTab) {
-            const trigger = document.querySelector(`[data-bs-target='${lastTab}']`);
-            if (trigger) trigger.click();
+        const tabButtons = document.querySelectorAll('.nav-pills .nav-link[data-bs-target]');
+        const tabPanes = document.querySelectorAll('.account-tabs .tab-pane');
+
+        function setActiveAccountTab(target) {
+            const pane = document.querySelector(target);
+            const trigger = document.querySelector(`.nav-pills .nav-link[data-bs-target='${target}']`);
+
+            if (!pane || !trigger) return;
+
+            tabButtons.forEach(function (btn) {
+                btn.classList.toggle('active', btn === trigger);
+                btn.setAttribute('aria-selected', btn === trigger ? 'true' : 'false');
+            });
+
+            tabPanes.forEach(function (tabPane) {
+                const isActive = tabPane === pane;
+                tabPane.classList.toggle('show', isActive);
+                tabPane.classList.toggle('active', isActive);
+            });
+
+            localStorage.setItem('dashboard-active-tab', target);
         }
 
-        document.querySelectorAll('.nav-pills .nav-link').forEach(function (btn) {
-            btn.addEventListener('click', function () {
+        const savedTab = localStorage.getItem('dashboard-active-tab');
+        const initialTab = savedTab && document.querySelector(savedTab) ? savedTab : '#dashboard';
+        setActiveAccountTab(initialTab);
+
+        tabButtons.forEach(function (btn) {
+            btn.addEventListener('click', function (event) {
                 const target = btn.getAttribute('data-bs-target');
-                if (target) localStorage.setItem('dashboard-active-tab', target);
+                if (target) {
+                    event.preventDefault();
+                    setActiveAccountTab(target);
+                }
             });
         });
     });
@@ -1301,13 +1415,29 @@ your orders.')
 
     // Address form
     function showForm() {
+        const form = document.getElementById("addressForm");
+        const emptyForm = document.getElementById("emptyAddressForm");
+
+        if (!form && emptyForm) {
+            emptyForm.scrollIntoView({ behavior: "smooth", block: "start" });
+            const firstInput = emptyForm.querySelector("input, textarea, select");
+            if (firstInput) firstInput.focus();
+            return;
+        }
+
         document.getElementById("addressList").classList.add("d-none");
-        document.getElementById("addressForm").classList.remove("d-none");
+        if (form) form.classList.remove("d-none");
     }
 
     function hideForm() {
-        document.getElementById("addressForm").classList.add("d-none");
+        const form = document.getElementById("addressForm");
+        if (form) form.classList.add("d-none");
         document.getElementById("addressList").classList.remove("d-none");
+    }
+
+    function toggleAddressEdit(id) {
+        const form = document.getElementById("addressEdit" + id);
+        if (form) form.classList.toggle("d-none");
     }
 
     const style = document.createElement('style');

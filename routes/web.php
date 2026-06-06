@@ -108,6 +108,10 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::get('/account', [AccountController::class,'index'])->name('account.index');
+    Route::post('/account/addresses', [AccountController::class, 'storeAddress'])->name('account.addresses.store');
+    Route::put('/account/addresses/{address}', [AccountController::class, 'updateAddress'])->name('account.addresses.update');
+    Route::patch('/account/addresses/{address}/default', [AccountController::class, 'setDefaultAddress'])->name('account.addresses.default');
+    Route::delete('/account/addresses/{address}', [AccountController::class, 'deleteAddress'])->name('account.addresses.delete');
     
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add',    [CartController::class, 'add'])->name('cart.add');

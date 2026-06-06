@@ -7,6 +7,7 @@ use App\Models\OrderItemReturn;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
 use App\Models\Address;
@@ -37,7 +38,10 @@ class AccountController extends Controller
     {
         $categories = $this->categories;
 
-        $addresses = Address::where('user_id', auth()->id())->get();
+        $addresses = Address::where('user_id', auth()->id())
+            ->orderByDesc('is_default')
+            ->latest()
+            ->get();
 
         // Fetch only paid orders with items
         $orders = auth()->user()->orders()->with(['items' => function ($q) {   // ✅ $q (NOT q)
@@ -88,6 +92,83 @@ class AccountController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('home');
+    }
+
+    public function storeAddress(Request $request)
+    {
+        $validated = $this->validateAddress($request);
+
+        DB::transaction(function () use ($validated) {
+            $makeDefault = (bool) ($validated['is_default'] ?? false)
+                || ! Address::where('user_id', auth()->id())->exists();
+
+            if ($makeDefault) {
+                Address::where('user_id', auth()->id())->update(['is_default' => false]);
+            }
+
+            Address::create(array_merge($validated, [
+                'user_id' => auth()->id(),
+                'country' => $validated['country'] ?? 'India',
+                'is_default' => $makeDefault,
+            ]));
+        });
+
+        return back()->with('success', 'Address added successfully.');
+    }
+
+    public function updateAddress(Request $request, Address $address)
+    {
+        $this->authorizeAddress($address);
+
+        $validated = $this->validateAddress($request);
+
+        DB::transaction(function () use ($address, $validated) {
+            $makeDefault = (bool) ($validated['is_default'] ?? false);
+
+            if ($makeDefault) {
+                Address::where('user_id', auth()->id())
+                    ->whereKeyNot($address->id)
+                    ->update(['is_default' => false]);
+            }
+
+            $address->update(array_merge($validated, [
+                'country' => $validated['country'] ?? 'India',
+                'is_default' => $makeDefault || $address->is_default,
+            ]));
+        });
+
+        return back()->with('success', 'Address updated successfully.');
+    }
+
+    public function setDefaultAddress(Address $address)
+    {
+        $this->authorizeAddress($address);
+
+        DB::transaction(function () use ($address) {
+            Address::where('user_id', auth()->id())->update(['is_default' => false]);
+            $address->update(['is_default' => true]);
+        });
+
+        return back()->with('success', 'Default address updated.');
+    }
+
+    public function deleteAddress(Address $address)
+    {
+        $this->authorizeAddress($address);
+
+        DB::transaction(function () use ($address) {
+            $wasDefault = $address->is_default;
+            $address->delete();
+
+            if ($wasDefault) {
+                $nextAddress = Address::where('user_id', auth()->id())->latest()->first();
+                if ($nextAddress) {
+                    $nextAddress->update(['is_default' => true]);
+                }
+            }
+        });
+
+        return back()->with('success', 'Address deleted successfully.');
     }
     
     public function updateInfo(Request $request) {
@@ -204,5 +285,27 @@ class AccountController extends Controller
 
     public function invoice(Order $order) {
         return view('invoice', compact('order'));
+    }
+
+    private function validateAddress(Request $request): array
+    {
+        return $request->validate([
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'state' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'pincode' => 'required|string|max:20',
+            'address_line_1' => 'required|string',
+            'address_line_2' => 'nullable|string',
+            'landmark' => 'nullable|string|max:255',
+            'address_type' => 'required|in:home,work,other',
+            'is_default' => 'nullable|boolean',
+        ]);
+    }
+
+    private function authorizeAddress(Address $address): void
+    {
+        abort_unless((int) $address->user_id === (int) auth()->id(), 403);
     }
 }

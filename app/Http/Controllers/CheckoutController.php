@@ -222,7 +222,10 @@ class CheckoutController extends Controller
             'address' => 'required|string',
             'delivery_type' => 'required|in:regular,express',
             'shiprocket_courier_id' => 'required',
+            'address_id' => 'nullable|integer',
         ]);
+
+        $checkoutAddress = $this->resolveCheckoutAddress($validated);
 
         $subtotal = $cartItems->sum(fn($item) => $item['price'] * $item['quantity']);
         $coupon = session()->get('coupon');
@@ -315,11 +318,15 @@ class CheckoutController extends Controller
                 'phone' => $validated['phone'],
 
                 // address
+                'address_id' => $checkoutAddress['address_id'],
                 'country' => 'India',
-                'state' => $validated['state'],
-                'city' => $validated['city'],
-                'pincode' => $validated['pincode'],
-                'address_line_1' => $validated['address'],
+                'state' => $checkoutAddress['state'],
+                'city' => $checkoutAddress['city'],
+                'pincode' => $checkoutAddress['pincode'],
+                'address_line_1' => $checkoutAddress['address_line_1'],
+                'address_line_2' => $checkoutAddress['address_line_2'],
+                'landmark' => $checkoutAddress['landmark'],
+                'address_type' => $checkoutAddress['address_type'],
 
                 // pricing
                 'subtotal' => $subtotal,
@@ -370,8 +377,8 @@ class CheckoutController extends Controller
             }
 
             $api = new \Razorpay\Api\Api(
-                config('services.razorpay.key'),
-                config('services.razorpay.secret')
+                config('services.razorpay.test_key'),
+                config('services.razorpay.test_secret')
             );
 
             $razorpayOrder = $api->order->create([
@@ -387,7 +394,7 @@ class CheckoutController extends Controller
             DB::commit();
 
             return response()->json([
-                'key' => config('services.razorpay.key'),
+                'key' => config('services.razorpay.test_key'),
                 'amount' => $razorpayOrder['amount'],
                 'currency' => $razorpayOrder['currency'],
                 'razorpay_order_id' => $razorpayOrder['id'],
@@ -419,8 +426,8 @@ class CheckoutController extends Controller
 
         try {
             $api = new Api(
-                config('services.razorpay.key'),
-                config('services.razorpay.secret')
+                config('services.razorpay.test_key'),
+                config('services.razorpay.test_secret')
             );
 
             $api->utility->verifyPaymentSignature([
@@ -438,6 +445,8 @@ class CheckoutController extends Controller
                 'order_status' => 'confirmed',
                 'paid_at' => now(),
             ]);
+
+            $this->syncOrderAddressToAddressBook($order);
 
             $pdf = Pdf::loadView('user.invoice', [
                 'order' => $order,
@@ -602,6 +611,112 @@ class CheckoutController extends Controller
             'label' => $courier['courier_name'] ?? ucfirst($type) . ' Delivery',
             'etd' => $courier['estimated_delivery_days'] ?? null,
         ];
+    }
+
+    private function resolveCheckoutAddress(array $validated): array
+    {
+        $fallback = [
+            'address_id' => null,
+            'state' => $validated['state'],
+            'city' => $validated['city'],
+            'pincode' => $validated['pincode'],
+            'address_line_1' => $validated['address'],
+            'address_line_2' => null,
+            'landmark' => null,
+            'address_type' => 'home',
+        ];
+
+        if (empty($validated['address_id'])) {
+            return $fallback;
+        }
+
+        $address = Address::where('user_id', auth()->id())
+            ->whereKey($validated['address_id'])
+            ->first();
+
+        if (! $address) {
+            return $fallback;
+        }
+
+        $matchesSavedAddress =
+            $this->sameValue($validated['name'], $address->full_name)
+            && $this->sameValue($validated['phone'], $address->phone)
+            && $this->sameValue($validated['city'], $address->city)
+            && $this->sameValue($validated['state'], $address->state)
+            && $this->sameValue($validated['pincode'], $address->pincode)
+            && (
+                $this->sameValue($validated['address'], $address->address_line_1)
+                || $this->sameValue($validated['address'], $address->full_address)
+            );
+
+        if (! $matchesSavedAddress) {
+            return $fallback;
+        }
+
+        return [
+            'address_id' => $address->id,
+            'state' => $address->state,
+            'city' => $address->city,
+            'pincode' => $address->pincode,
+            'address_line_1' => $address->address_line_1,
+            'address_line_2' => $address->address_line_2,
+            'landmark' => $address->landmark,
+            'address_type' => $address->address_type,
+        ];
+    }
+
+    private function sameValue(?string $first, ?string $second): bool
+    {
+        return mb_strtolower(trim((string) $first)) === mb_strtolower(trim((string) $second));
+    }
+
+    private function syncOrderAddressToAddressBook(Order $order): void
+    {
+        if (empty($order->user_id)) {
+            return;
+        }
+
+        DB::transaction(function () use ($order) {
+            $address = null;
+
+            if (! empty($order->address_id)) {
+                $address = Address::where('user_id', $order->user_id)
+                    ->whereKey($order->address_id)
+                    ->first();
+            }
+
+            if (! $address) {
+                $address = Address::where('user_id', $order->user_id)
+                    ->where('pincode', $order->pincode)
+                    ->where('address_line_1', $order->address_line_1)
+                    ->first();
+            }
+
+            Address::where('user_id', $order->user_id)->update(['is_default' => false]);
+
+            $payload = [
+                'user_id' => $order->user_id,
+                'full_name' => $order->name,
+                'phone' => $order->phone,
+                'country' => $order->country ?: 'India',
+                'state' => $order->state,
+                'city' => $order->city,
+                'pincode' => $order->pincode,
+                'address_line_1' => $order->address_line_1,
+                'address_line_2' => $order->address_line_2,
+                'landmark' => $order->landmark,
+                'address_type' => $order->address_type ?: 'home',
+                'is_default' => true,
+            ];
+
+            if ($address) {
+                $address->update($payload);
+            } else {
+                $address = Address::create($payload);
+            }
+
+            $order->update(['address_id' => $address->id]);
+        });
     }
 
     public function invoice($id, $type = 'view')
