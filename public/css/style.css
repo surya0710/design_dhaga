@@ -6327,3 +6327,6 @@ select.h40 {
   display: none;
 }
 /*# sourceMappingURL=style.css.map */
+.field-error{
+  border-color: red !important;
+}

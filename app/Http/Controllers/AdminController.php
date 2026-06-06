@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use App\Services\ShiprocketService;
 use App\Models\AboutSection;
 
@@ -470,45 +472,7 @@ class AdminController extends Controller
 
     public function product_store(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'name'                          => 'required|string|max:255',
-            'slug'                          => 'required|string|max:255',
-            'short_description'             => 'nullable|string|max:255',
-            'description'                   => 'required|string',
-            'regular_price'                 => 'required|numeric',
-            'sale_price'                    => 'nullable|numeric',
-            'sku'                           => 'nullable|string|max:255',
-            'quantity'                      => 'nullable|integer|min:0',
-            'category_id'                   => 'nullable|integer',
-            'image'                         => 'nullable|string',
-            'gallery'                       => 'nullable|string',
-            'artisan_gallery.*.image'       => 'nullable|string',
-            'artisan_gallery.*.title'       => 'nullable|string|max:255',
-            'artisan_gallery.*.description' => 'nullable|string|max:100',
-            'attributes.key.*'              => 'nullable|string|max:255',
-            'attributes.value.*'            => 'nullable|string|max:255',
-            'variants'                      => 'nullable|array',
-            'variants.*.size'               => 'nullable|string|max:100',
-            'variants.*.fabric_type'        => 'nullable|string|max:150',
-            'variants.*.sku'                => 'nullable|string|max:255',
-            'variants.*.price'              => 'nullable|numeric|min:0',
-            'variants.*.quantity'           => 'nullable|integer|min:0',
-            'variants.*.is_active'          => 'nullable|boolean',
-            'weight'                        => 'nullable|string|max:100',
-            'dimension'                     => 'nullable|string|max:100',
-            'color'                         => 'nullable|string|max:100',
-            'tags'                          => 'nullable|string|max:500',
-            'hand_painted_details'          => 'nullable|string',
-            'care_instructions'             => 'nullable|string',
-            'manufacturing_details'         => 'nullable|string',
-            'artisan_heading'               => 'nullable|string|max:255',
-            'meta_title'                    => 'nullable|string|max:255',
-            'meta_keywords'                 => 'nullable|string',
-            'meta_description'              => 'nullable|string',
-            'product_icons'                 => 'required|array|size:6',
-            'product_icons.*.image'         => 'required|string',
-            'product_icons.*.text'          => 'required|string|max:255',
-        ]);
+        $validate = $this->makeProductValidator($request);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
@@ -636,6 +600,9 @@ class AdminController extends Controller
 
             return redirect()->route('admin.products')
                 ->with('success', 'Product added successfully.');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw $e;
         } catch (\Throwable $e) {
 
             DB::rollBack();
@@ -671,42 +638,11 @@ class AdminController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $request->validate([
-            'name'                          => 'required|string|max:255',
-            'slug'                          => 'required|string|max:255',
-            'short_description'             => 'nullable|string',
-            'description'                   => 'required|string',
-            'regular_price'                 => 'required|numeric',
-            'sale_price'                    => 'nullable|numeric',
-            'sku'                           => 'nullable|string|max:255',
-            'quantity'                      => 'nullable|integer|min:0',
-            'category_id'                   => 'nullable|integer',
-            'image'                         => 'nullable|string',
-            'gallery'                       => 'nullable|string',
-            'artisan_gallery.*.image'       => 'nullable|string',
-            'artisan_gallery.*.title'       => 'nullable|string|max:255',
-            'artisan_gallery.*.description' => 'nullable|string',
-            'artisan_gallery.*.id'          => 'nullable|integer|exists:product_images,id',
-            'attributes.key.*'              => 'nullable|string|max:255',
-            'attributes.value.*'            => 'nullable|string|max:255',
-            'variants'                      => 'nullable|array',
-            'variants.*.size'               => 'nullable|string|max:100',
-            'variants.*.fabric_type'        => 'nullable|string|max:150',
-            'variants.*.sku'                => 'nullable|string|max:255',
-            'variants.*.price'              => 'nullable|numeric|min:0',
-            'variants.*.quantity'           => 'nullable|integer|min:0',
-            'variants.*.is_active'          => 'nullable|boolean',
-            'square_banner'                 => 'nullable|string',
-            'square_banner_title'           => 'nullable|string|max:255',
-            'square_banner_description'     => 'nullable|string',
-            'artisan_heading'               => 'nullable|string|max:255',
-            'meta_title'                    => 'nullable|string|max:255',
-            'meta_keywords'                 => 'nullable|string|max:255',
-            'meta_description'              => 'nullable|string',
-            'product_icons'                 => 'required|array|size:6',
-            'product_icons.*.image'         => 'required|string',
-            'product_icons.*.text'          => 'required|string|max:255',
-        ]);
+        $validate = $this->makeProductValidator($request, (int) $id);
+
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate)->withInput();
+        }
 
         DB::beginTransaction();
 
@@ -838,6 +774,9 @@ class AdminController extends Controller
             DB::commit();
 
             return redirect()->route('admin.products')->with('status', 'Product updated successfully.');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw $e;
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -1597,6 +1536,142 @@ class AdminController extends Controller
         }
 
         return $items;
+    }
+
+    private function productValidationRules(?int $productId = null): array
+    {
+        return [
+            'name'                          => 'required|string|max:255',
+            'slug'                          => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'slug')->ignore($productId),
+            ],
+            'short_description'             => 'required|string|max:255',
+            'description'                   => 'required|string',
+            'regular_price'                 => 'required|numeric|min:0',
+            'sale_price'                    => 'nullable|numeric|min:0|lte:regular_price',
+            'sku'                           => 'required|string|max:255',
+            'quantity'                      => 'required|integer|min:0',
+            'category_id'                   => 'required|integer|exists:categories,id',
+            'purchase_type'                 => 'required|in:1,2',
+            'image'                         => 'required|string|max:500',
+            'gallery'                       => 'required|string',
+            'artisan_gallery'               => 'required|array',
+            'artisan_gallery.*.image'       => 'required|string|max:500',
+            'artisan_gallery.*.title'       => 'required|string|max:255',
+            'artisan_gallery.*.description' => 'required|string|max:1000',
+            'artisan_gallery.*.id'          => 'required|integer|exists:product_images,id',
+            'attributes'                    => 'required|array',
+            'attributes.key'                => 'required|array',
+            'attributes.key.*'              => 'required|string|max:255',
+            'attributes.value.*'            => 'nullable|string|max:255',
+            'variants'                      => 'nullable|array',
+            'variants.*.size'               => 'nullable|string|max:100',
+            'variants.*.fabric_type'        => 'nullable|string|max:150',
+            'variants.*.sku'                => 'nullable|string|max:255',
+            'variants.*.price'              => 'nullable|numeric|min:0',
+            'variants.*.quantity'           => 'nullable|integer|min:0',
+            'variants.*.is_active'          => 'nullable|in:0,1',
+            'weight'                        => 'nullable|string|max:100',
+            'dimension'                     => 'nullable|string|max:100',
+            'color'                         => 'nullable|string|max:100',
+            'tags'                          => 'nullable|string|max:500',
+            'hand_painted_details'          => 'nullable|string',
+            'care_instructions'             => 'nullable|string',
+            'manufacturing_details'         => 'nullable|string',
+            'square_banner'                 => 'nullable|string|max:500',
+            'square_banner_title'           => 'nullable|string|max:255',
+            'square_banner_description'     => 'nullable|string|max:1000',
+            'artisan_heading'               => 'nullable|string|max:255',
+            'meta_title'                    => 'nullable|string|max:255',
+            'meta_keywords'                 => 'nullable|string',
+            'meta_description'              => 'nullable|string',
+            'product_icons'                 => 'required|array|min:6|max:6',
+            'product_icons.*.image'         => 'required|string|max:500',
+            'product_icons.*.text'          => 'required|string|max:255',
+            'stock_status'                  => 'nullable|in:0,1',
+            'status'                        => 'nullable|in:0,1',
+            'featured'                      => 'nullable|in:0,1,2',
+        ];
+    }
+
+    private function productValidationMessages(): array
+    {
+        return [
+            'name.required'              => 'Product name is required.',
+            'slug.required'              => 'Slug is required.',
+            'slug.unique'                => 'This slug is already used by another product.',
+            'short_description.required' => 'Sub title is required.',
+            'description.required'       => 'Description is required.',
+            'regular_price.required'     => 'Regular price is required.',
+            'regular_price.min'          => 'Regular price cannot be negative.',
+            'sale_price.lte'             => 'Sale price must be less than or equal to regular price.',
+            'category_id.required'       => 'Please select a category.',
+            'category_id.exists'         => 'Selected category is invalid.',
+            'product_icons.required'     => 'All 6 product icons are required.',
+            'product_icons.min'          => 'All 6 product icons are required.',
+            'product_icons.*.image.required' => 'Each product icon must have an image.',
+            'product_icons.*.text.required'  => 'Each product icon must have text.',
+        ];
+    }
+
+    private function makeProductValidator(Request $request, ?int $productId = null)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->productValidationRules($productId),
+            $this->productValidationMessages()
+        );
+
+        $validator->after(function ($validator) use ($request, $productId) {
+            $variants = $request->input('variants', []);
+            $seenSkus = [];
+
+            foreach ($variants as $variant) {
+                if (!is_array($variant)) {
+                    continue;
+                }
+
+                $size = trim((string) ($variant['size'] ?? ''));
+                $fabricType = trim((string) ($variant['fabric_type'] ?? ''));
+                $sku = trim((string) ($variant['sku'] ?? ''));
+                $price = $variant['price'] ?? null;
+
+                $hasContent = $size !== ''
+                    || $fabricType !== ''
+                    || $sku !== ''
+                    || ($price !== null && $price !== '');
+
+                if (!$hasContent) {
+                    continue;
+                }
+
+                if ($sku === '' || $price === null || $price === '') {
+                    $validator->errors()->add('variants', 'Every variant row must have a SKU and price.');
+                    return;
+                }
+
+                $skuKey = strtolower($sku);
+                if (isset($seenSkus[$skuKey])) {
+                    $validator->errors()->add('variants', "Duplicate variant SKU found: {$sku}.");
+                    return;
+                }
+                $seenSkus[$skuKey] = true;
+
+                $query = ProductVariant::where('sku', $sku);
+                if ($productId) {
+                    $query->where('product_id', '!=', $productId);
+                }
+
+                if ($query->exists()) {
+                    $validator->errors()->add('variants', "Variant SKU {$sku} is already used by another product.");
+                }
+            }
+        });
+
+        return $validator;
     }
 
     private function syncProductVariants(Product $product, array $variants): void

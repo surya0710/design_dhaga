@@ -3906,32 +3906,35 @@ ul.specifications li h4 {
 
 .read-more-btn {
   padding: 0 !important;
+  margin: 0 !important;
   width: fit-content;
   background: none !important;
   border: none !important;
-}
-
-.read-more-btn span {
-  background-color: #bbb3b3;
+  background-color: #e1e1e1!important;
+  text-align: center;
   height: 30px;
+  min-width: 52px;
   border-radius: 15px;
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-  display: flex;
-  align-items: center;
+  display: inline-flex;
   justify-content: center;
-  line-height: 0;
-  padding: 5px 10px 15px;
+  align-items: center;
+}
+.read-more-span{
+  letter-spacing: 0.2rem;
 }
 
 /* Override for "Show less" state */
 .read-more-btn span.show-less-text {
+  min-width: auto;
   width: auto;
-  padding: 5px 12px;
+  padding: 0 16px;
   font-size: 0.9rem;
+  font-weight: 700;
   letter-spacing: normal;
-  line-height: normal;
-  padding-bottom: 5px;
+  color: #212529;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .text-blue {
   color: #1877F2;

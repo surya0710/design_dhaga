@@ -18323,3 +18323,6 @@ ul.list-text.type-number {
     font-size: 35px;
   }
 }
+.field-error{
+  color: red;
+}

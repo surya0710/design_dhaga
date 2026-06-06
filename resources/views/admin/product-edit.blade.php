@@ -35,6 +35,11 @@
 
 
 {{-- VALIDATION ERRORS --}}
+@if(session('error'))
+<div class="alert-error">
+    <div>· {{ session('error') }}</div>
+</div>
+@endif
 @if($errors->any())
 <div class="alert-error">
     @foreach($errors->all() as $err)
@@ -63,7 +68,7 @@
 
             <div class="field">
                 <label>Product Name <span class="req">*</span></label>
-                <input type="text" name="name" value="{{ old('name', $product->name) }}" placeholder="e.g. Hand-Painted Ceramic Vase" required>
+                <input type="text" name="name" id="productName" value="{{ old('name', $product->name) }}" placeholder="e.g. Hand-Painted Ceramic Vase" required>
                 @error('name')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
@@ -151,12 +156,13 @@
             {{-- MAIN IMAGE --}}
             <div class="field">
                 <label>Main Image</label>
-                <input type="hidden" name="image" id="product_image" value="{{ old('image', $product->image) }}">
-
                 @php
-                    $hasMain = !empty($product->image);
-                    $mainSrc = $hasMain ? asset('storage/' . $product->image) : '';
+                    $mainImagePath = old('image', $product->image);
+                    $hasMain = !empty($mainImagePath);
+                    $mainSrc = $hasMain ? asset('storage/' . $mainImagePath) : '';
                 @endphp
+
+                <input type="hidden" name="image" id="product_image" value="{{ $mainImagePath }}">
 
                 <div class="media-picker {{ $hasMain ? 'has-image' : '' }}"
                      id="picker_product_image"
@@ -177,14 +183,15 @@
             {{-- GALLERY --}}
             <div class="field">
                 <label>Gallery Images</label>
-                <input type="hidden" name="gallery" id="gallery_images" value="{{ old('gallery', $product->galleryImages->pluck('image')->implode(',')) }}">
+                @php
+                    $galleryValue = old('gallery', $product->galleryImages->pluck('image')->implode(','));
+                    $galleryList = array_values(array_filter(array_map('trim', explode(',', $galleryValue))));
+                @endphp
+                <input type="hidden" name="gallery" id="gallery_images" value="{{ $galleryValue }}">
 
                 <div id="gallery_preview" class="gallery-grid">
-                    @foreach($product->galleryImages as $img)
-                        @php
-                            $gPath = $img->image;
-                            $gSrc  = asset('storage/' . $gPath);
-                        @endphp
+                    @foreach($galleryList as $gPath)
+                        @php $gSrc = asset('storage/' . $gPath); @endphp
                         <div class="gallery-thumb">
                             <img src="{{ $gSrc }}" alt="">
                             <button type="button" class="remove-thumb" onclick="removeGalleryThumb(this,'{{ $gPath }}')">✕</button>
@@ -211,20 +218,18 @@
                 @for($i = 1; $i <= 3; $i++)
                 @php
                     $artisan = $product->artisanImages->values()->get($i - 1);
-                    $aHasImg = $artisan && !empty($artisan->image);
-                    $aSrc    = '';
-                    if ($aHasImg) {
-                        $aSrc = asset('storage/' . $artisan->image);
-                    }
+                    $artisanImage = old('artisan_gallery.'.$i.'.image', $artisan->image ?? '');
+                    $aHasImg = !empty($artisanImage);
+                    $aSrc = $aHasImg ? asset('storage/' . $artisanImage) : '';
                 @endphp
 
                 <div class="artisan-slot">
                     <div class="slot-num">Slot {{ $i }}</div>
 
-                    <input type="hidden" name="artisan_gallery[{{ $i }}][image]" id="artisan_image_{{ $i }}" value="{{ old('artisan_gallery.'.$i.'.image', $artisan->image ?? '') }}">
+                    <input type="hidden" name="artisan_gallery[{{ $i }}][image]" id="artisan_image_{{ $i }}" value="{{ $artisanImage }}">
 
                     @if($artisan)
-                    <input type="hidden" name="artisan_gallery[{{ $i }}][id]" value="{{ $artisan->id }}">
+                    <input type="hidden" name="artisan_gallery[{{ $i }}][id]" value="{{ old('artisan_gallery.'.$i.'.id', $artisan->id) }}">
                     @endif
 
                     <div class="media-picker {{ $aHasImg ? 'has-image' : '' }}" id="picker_artisan_image_{{ $i }}" style="min-height:100px" onclick="openMediaUploader('artisan_image_{{ $i }}','preview_artisan_image_{{ $i }}','picker_artisan_image_{{ $i }}')">
@@ -251,11 +256,12 @@
             <div class="artisan-slot">
 
                 @php
-                    $hasBanner = !empty($product->square_banner);
-                    $bannerSrc = $hasBanner ? asset('storage/' . $product->square_banner) : '';
+                    $bannerPath = old('square_banner', $product->square_banner);
+                    $hasBanner = !empty($bannerPath);
+                    $bannerSrc = $hasBanner ? asset('storage/' . $bannerPath) : '';
                 @endphp
 
-                <input type="hidden" name="square_banner" id="square_banner" value="{{ old('square_banner', $product->square_banner) }}">
+                <input type="hidden" name="square_banner" id="square_banner" value="{{ $bannerPath }}">
 
                 <div class="media-picker {{ $hasBanner ? 'has-image' : '' }}" id="picker_square_banner" style="min-height:100px"
                     onclick="openMediaUploader('square_banner','preview_square_banner','picker_square_banner')">
@@ -281,21 +287,29 @@
             <div class="card-title">Attributes</div>
 
             <div id="attribute-wrapper" style="display:flex;flex-direction:column;gap:10px">
-                @forelse($product->productAttributes as $attr)
+                @php
+                    if (old('attributes') !== null) {
+                        $attrKeys = old('attributes.key', []);
+                        $attrValues = old('attributes.value', []);
+                    } else {
+                        $attrKeys = $product->productAttributes->pluck('key')->all();
+                        $attrValues = $product->productAttributes->pluck('value')->all();
+                    }
+                    $attrRowCount = max(count($attrKeys), 1);
+                    if ($attrRowCount === 1 && empty($attrKeys[0] ?? null) && empty($attrValues[0] ?? null) && old('attributes') === null && $product->productAttributes->isEmpty()) {
+                        $attrKeys = [''];
+                        $attrValues = [''];
+                    }
+                @endphp
+                @for($ai = 0; $ai < $attrRowCount; $ai++)
                 <div class="attr-row">
                     <input type="text" name="attributes[key][]"
-                           placeholder="e.g. Material" value="{{ $attr->key }}">
+                           placeholder="e.g. Material" value="{{ $attrKeys[$ai] ?? '' }}">
                     <input type="text" name="attributes[value][]"
-                           placeholder="e.g. Ceramic" value="{{ $attr->value }}">
+                           placeholder="e.g. Ceramic" value="{{ $attrValues[$ai] ?? '' }}">
                     <button type="button" class="attr-remove remove-attribute" title="Remove">✕</button>
                 </div>
-                @empty
-                <div class="attr-row">
-                    <input type="text" name="attributes[key][]" placeholder="e.g. Material">
-                    <input type="text" name="attributes[value][]" placeholder="e.g. Ceramic">
-                    <button type="button" class="attr-remove remove-attribute" title="Remove">✕</button>
-                </div>
-                @endforelse
+                @endfor
             </div>
 
             <div class="divider"></div>
@@ -318,33 +332,45 @@
             </div>
 
             <div id="variant-wrapper" class="variant-wrapper">
-                @forelse($product->variants as $index => $variant)
+                @php
+                    if (old('variants') !== null) {
+                        $variantRows = old('variants');
+                    } elseif ($product->variants->isNotEmpty()) {
+                        $variantRows = $product->variants->map(function ($variant) {
+                            return [
+                                'size' => $variant->size,
+                                'fabric_type' => $variant->fabric_type,
+                                'sku' => $variant->sku,
+                                'price' => $variant->price,
+                                'quantity' => $variant->quantity,
+                                'is_active' => $variant->is_active ? '1' : '0',
+                            ];
+                        })->values()->all();
+                    } else {
+                        $variantRows = [[
+                            'size' => '',
+                            'fabric_type' => '',
+                            'sku' => '',
+                            'price' => '',
+                            'quantity' => '',
+                            'is_active' => '1',
+                        ]];
+                    }
+                @endphp
+                @foreach($variantRows as $index => $variant)
                 <div class="variant-row">
-                    <input type="text" name="variants[{{ $index }}][size]" placeholder="Size e.g. S / 0-1 yr." value="{{ old('variants.'.$index.'.size', $variant->size) }}">
-                    <input type="text" name="variants[{{ $index }}][fabric_type]" placeholder="Fabric e.g. 100% Pure" value="{{ old('variants.'.$index.'.fabric_type', $variant->fabric_type) }}">
-                    <input type="text" name="variants[{{ $index }}][sku]" placeholder="SKU" value="{{ old('variants.'.$index.'.sku', $variant->sku) }}">
-                    <input type="number" name="variants[{{ $index }}][price]" step="0.01" min="0" placeholder="Price" value="{{ old('variants.'.$index.'.price', $variant->price) }}">
-                    <input type="number" name="variants[{{ $index }}][quantity]" min="0" placeholder="Qty" value="{{ old('variants.'.$index.'.quantity', $variant->quantity) }}">
+                    <input type="text" name="variants[{{ $index }}][size]" placeholder="Size e.g. S / 0-1 yr." value="{{ $variant['size'] ?? '' }}">
+                    <input type="text" name="variants[{{ $index }}][fabric_type]" placeholder="Fabric e.g. 100% Pure" value="{{ $variant['fabric_type'] ?? '' }}">
+                    <input type="text" name="variants[{{ $index }}][sku]" placeholder="SKU" value="{{ $variant['sku'] ?? '' }}">
+                    <input type="number" name="variants[{{ $index }}][price]" step="0.01" min="0" placeholder="Price" value="{{ $variant['price'] ?? '' }}">
+                    <input type="number" name="variants[{{ $index }}][quantity]" min="0" placeholder="Qty" value="{{ $variant['quantity'] ?? '' }}">
                     <select name="variants[{{ $index }}][is_active]">
-                        <option value="1" {{ old('variants.'.$index.'.is_active', $variant->is_active) ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ !old('variants.'.$index.'.is_active', $variant->is_active) ? 'selected' : '' }}>Inactive</option>
+                        <option value="1" {{ ($variant['is_active'] ?? '1') == '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ ($variant['is_active'] ?? '1') == '0' ? 'selected' : '' }}>Inactive</option>
                     </select>
                     <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
                 </div>
-                @empty
-                <div class="variant-row">
-                    <input type="text" name="variants[0][size]" placeholder="Size e.g. S / 0-1 yr.">
-                    <input type="text" name="variants[0][fabric_type]" placeholder="Fabric e.g. 100% Pure">
-                    <input type="text" name="variants[0][sku]" placeholder="SKU">
-                    <input type="number" name="variants[0][price]" step="0.01" min="0" placeholder="Price">
-                    <input type="number" name="variants[0][quantity]" min="0" placeholder="Qty">
-                    <select name="variants[0][is_active]">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
-                    <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
-                </div>
-                @endforelse
+                @endforeach
             </div>
 
             <div class="divider"></div>
@@ -355,6 +381,7 @@
                 </svg>
                 Add Variant
             </button>
+            @error('variants')<div class="field-error">{{ $message }}</div>@enderror
         </div>
 
         {{--  Meta Details --}}
@@ -384,18 +411,20 @@
             <div class="artisan-grid">
                 @for($i = 1; $i <= 6; $i++)
                 @php
-                    $icon           = $product->icons->firstWhere('position', $i);
+                    $icon           = $product->icons->values()->get($i - 1);
                     $defaultIcon    = ["uploads/media/1776047104_1.svg", "uploads/media/1776047104_2.svg", "uploads/media/1776047104_3.svg", "uploads/media/1776047104_4.svg", 
                     "uploads/media/1776047104_5.svg", "uploads/media/1776047104_6.svg"];
                     $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"];
-                    $src            = $icon ? asset('storage/'.$icon->image) : asset('/storage/'.$defaultIcon[$i-1]);
+                    $iconPath       = old('product_icons.'.$i.'.image', $icon->image ?? $defaultIcon[$i-1]);
+                    $iconText       = old('product_icons.'.$i.'.text', $icon->text ?? $defaultText[$i-1]);
+                    $src            = asset('storage/' . ltrim($iconPath, '/'));
                 @endphp
                 <div class="row">
-                    <div class="image-picker {{ isset($icon) && $icon->image ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
+                    <div class="image-picker {{ !empty($iconPath) ? 'has-image' : '' }}" id="picker_productIcons_{{ $i }}"
                         onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
 
                         {{-- Hidden image --}}
-                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $icon->image ?? $defaultIcon[$i-1] }}">
+                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $iconPath }}">
 
                         <div class="pick-icon">🖼</div>
                         <span class="pick-btn">Select</span>
@@ -414,7 +443,7 @@
                     </div>
 
                     {{-- Text --}}
-                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ $icon->text ?? $defaultText[$i-1] }}">
+                    <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ $iconText }}">
                 </div>
                 @endfor
             </div>
@@ -708,7 +737,7 @@ document.addEventListener("click", function (e) {
 /* ─────────────────────────────────────────────────────────────
    OPEN MEDIA MODAL
 ───────────────────────────────────────────────────────────── */
-let variantIndex = {{ max($product->variants->count(), 1) }};
+let variantIndex = {{ count($variantRows ?? []) }};
 document.getElementById("add-variant").addEventListener("click", function () {
     document.getElementById("variant-wrapper").insertAdjacentHTML("beforeend", `
         <div class="variant-row">
@@ -1004,4 +1033,5 @@ document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeMediaModal();
 });
 </script>
+<script src="{{ asset('js/admin/product-form-media.js') }}"></script>
 @endpush

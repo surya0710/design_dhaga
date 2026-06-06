@@ -26,6 +26,11 @@
 
 
 {{-- VALIDATION ERRORS --}}
+@if(session('error'))
+<div class="alert-error">
+    <div>· {{ session('error') }}</div>
+</div>
+@endif
 @if($errors->any())
 <div class="alert-error">
     @foreach($errors->all() as $err)
@@ -82,6 +87,7 @@
                             </option>
                         @endforeach
                     </select>
+                    @error('category_id')<div class="field-error">{{ $message }}</div>@enderror
                 </div>
             </div>
             
@@ -90,6 +96,7 @@
             <div class="field">
                 <label>Sub Title <span class="req">*</span></label>
                 <input type="text" name="short_description" id="" value="{{ old('short_description') }}" placeholder="Discover exquisite Kantha hand painted dupattas on our store with tassles." required>
+                @error('short_description')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="divider"></div>
@@ -97,6 +104,7 @@
             <div class="field">
                 <label>Description <span class="req">*</span></label>
                 <textarea name="description" class="editor" placeholder="Describe the product…">{{ old('description') }}</textarea>
+                @error('description')<div class="field-error">{{ $message }}</div>@enderror
             </div>
         </div>
 
@@ -177,7 +185,7 @@
                 <div class="artisan-slot">
                     <div class="slot-num">Slot {{ $i }}</div>
 
-                    <input type="hidden" name="artisan_gallery[{{ $i }}][image]" id="artisan_image_{{ $i }}">
+                    <input type="hidden" name="artisan_gallery[{{ $i }}][image]" id="artisan_image_{{ $i }}" value="{{ old('artisan_gallery.'.$i.'.image') }}">
 
                     <div class="media-picker" id="picker_artisan_image_{{ $i }}" style="min-height:100px" onclick="openMediaUploader('artisan_image_{{ $i }}','preview_artisan_image_{{ $i }}')">
                         <div class="pick-icon" style="font-size:20px">🖼</div>
@@ -203,7 +211,7 @@
 
             <div class="artisan-slot">
 
-                <input type="hidden" name="square_banner" id="square_banner">
+                <input type="hidden" name="square_banner" id="square_banner" value="{{ old('square_banner') }}">
 
                 <div class="media-picker" id="picker_square_banner" style="min-height:100px" onclick="openMediaUploader('square_banner', 'preview_square_banner')">
                     <div class="pick-icon" style="font-size:20px">🖼</div>
@@ -215,9 +223,9 @@
                     </div>
                 </div>
 
-                <input type="text" name="square_banner_title" placeholder="Title / Heading" value="{{ old('square_banner.'.$i.'.title') }}">
+                <input type="text" name="square_banner_title" placeholder="Title / Heading" value="{{ old('square_banner_title') }}">
 
-                <textarea name="square_banner_description" placeholder="Short description…">{{ old('square_banner.'.$i.'.description') }}</textarea>
+                <textarea name="square_banner_description" placeholder="Short description…">{{ old('square_banner_description') }}</textarea>
             </div>
         </div>
 
@@ -227,13 +235,18 @@
             <div class="card-title">Attributes</div>
 
             <div id="attribute-wrapper" style="display:flex;flex-direction:column;gap:10px">
-
+                @php
+                    $oldAttrKeys = old('attributes.key', ['']);
+                    $oldAttrValues = old('attributes.value', ['']);
+                    $attrRowCount = max(count($oldAttrKeys), 1);
+                @endphp
+                @for($ai = 0; $ai < $attrRowCount; $ai++)
                 <div class="attr-row">
-                    <input type="text" name="attributes[key][]" placeholder="e.g. Material">
-                    <input type="text" name="attributes[value][]" placeholder="e.g. Ceramic">
+                    <input type="text" name="attributes[key][]" placeholder="e.g. Material" value="{{ $oldAttrKeys[$ai] ?? '' }}">
+                    <input type="text" name="attributes[value][]" placeholder="e.g. Ceramic" value="{{ $oldAttrValues[$ai] ?? '' }}">
                     <button type="button" class="attr-remove remove-attribute" title="Remove">✕</button>
                 </div>
-
+                @endfor
             </div>
 
             <div class="divider"></div>
@@ -254,18 +267,33 @@
             </div>
 
             <div id="variant-wrapper" class="variant-wrapper">
+                @php
+                    $oldVariants = old('variants');
+                    if (!is_array($oldVariants) || empty($oldVariants)) {
+                        $oldVariants = [[
+                            'size' => '',
+                            'fabric_type' => '',
+                            'sku' => '',
+                            'price' => '',
+                            'quantity' => '',
+                            'is_active' => '1',
+                        ]];
+                    }
+                @endphp
+                @foreach($oldVariants as $vi => $variant)
                 <div class="variant-row">
-                    <input type="text" name="variants[0][size]" placeholder="Size e.g. S / 0-1 yr.">
-                    <input type="text" name="variants[0][fabric_type]" placeholder="Fabric e.g. 100% Pure">
-                    <input type="text" name="variants[0][sku]" placeholder="SKU">
-                    <input type="number" name="variants[0][price]" step="0.01" min="0" placeholder="Price">
-                    <input type="number" name="variants[0][quantity]" min="0" placeholder="Qty">
-                    <select name="variants[0][is_active]">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
+                    <input type="text" name="variants[{{ $vi }}][size]" placeholder="Size e.g. S / 0-1 yr." value="{{ $variant['size'] ?? '' }}">
+                    <input type="text" name="variants[{{ $vi }}][fabric_type]" placeholder="Fabric e.g. 100% Pure" value="{{ $variant['fabric_type'] ?? '' }}">
+                    <input type="text" name="variants[{{ $vi }}][sku]" placeholder="SKU" value="{{ $variant['sku'] ?? '' }}">
+                    <input type="number" name="variants[{{ $vi }}][price]" step="0.01" min="0" placeholder="Price" value="{{ $variant['price'] ?? '' }}">
+                    <input type="number" name="variants[{{ $vi }}][quantity]" min="0" placeholder="Qty" value="{{ $variant['quantity'] ?? '' }}">
+                    <select name="variants[{{ $vi }}][is_active]">
+                        <option value="1" {{ ($variant['is_active'] ?? '1') == '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ ($variant['is_active'] ?? '1') == '0' ? 'selected' : '' }}>Inactive</option>
                     </select>
                     <button type="button" class="attr-remove remove-variant" title="Remove">×</button>
                 </div>
+                @endforeach
             </div>
 
             <div class="divider"></div>
@@ -274,6 +302,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
                 Add Variant
             </button>
+            @error('variants')<div class="field-error">{{ $message }}</div>@enderror
         </div>
 
         {{--  Meta Details --}}
@@ -306,18 +335,19 @@
                     $defaultIcon    = ["uploads/media/1776047104_1.svg", "uploads/media/1776047104_2.svg", "uploads/media/1776047104_3.svg", "uploads/media/1776047104_4.svg", 
                     "uploads/media/1776047104_5.svg", "uploads/media/1776047104_6.svg"];
                     $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"];
+                    $iconPath       = old('product_icons.'.$i.'.image', $defaultIcon[$i-1]);
                 @endphp
                 <div class="image-picker"
                     id="picker_productIcons_{{ $i }}"
                     onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
 
                     {{-- Hidden image --}}
-                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $defaultIcon[$i-1] }}">
+                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $iconPath }}">
 
                     <div class="pick-icon">🖼</div>
                     <span class="pick-btn">Select</span>
 
-                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $defaultIcon[$i-1]) }}" style="width:100px;">
+                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $iconPath) }}" style="width:100px;">
 
                     <div class="overlay">
                         <button type="button"
@@ -374,8 +404,17 @@
             <div class="field">
                 <label>Active</label>
                 <select name="status">
-                    <option value="0" {{ old('status') == 0  ? 'selected' : '' }}>Inactive</option>
-                    <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                    <option value="0" {{ old('status', '1') == '0' ? 'selected' : '' }}>Inactive</option>
+                    <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}>Active</option>
+                </select>
+            </div>
+            <div class="divider"></div>
+            <div class="field">
+                <label>Featured/Best Seller</label>
+                <select name="featured">
+                    <option value="0" {{ old('featured', '0') == '0' ? 'selected' : '' }}>No</option>
+                    <option value="1" {{ old('featured', '0') == '1' ? 'selected' : '' }}>Featured</option>
+                    <option value="2" {{ old('featured', '0') == '2' ? 'selected' : '' }}>Best Seller</option>
                 </select>
             </div>
         </div>
@@ -413,6 +452,7 @@
             <div class="field">
                 <label>SKU</label>
                 <input type="text" name="sku" value="{{ old('sku') }}" placeholder="e.g. ART-001">
+                @error('sku')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="divider"></div>
@@ -598,7 +638,7 @@ document.addEventListener("click", function (e) {
     }
 });
 
-let variantIndex = 1;
+let variantIndex = {{ count($oldVariants ?? []) }};
 document.getElementById("add-variant").addEventListener("click", function () {
     document.getElementById("variant-wrapper").insertAdjacentHTML("beforeend", `
         <div class="variant-row">
@@ -888,4 +928,5 @@ document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeMediaModal();
 });
 </script>
+<script src="{{ asset('js/admin/product-form-media.js') }}"></script>
 @endpush

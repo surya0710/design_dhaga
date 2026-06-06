@@ -1105,3 +1105,6 @@ body {
         display: none;
     }
 }
+.field-error {
+    color: red;
+}
