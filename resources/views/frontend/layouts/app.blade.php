@@ -7,15 +7,13 @@
     <!-- PERFORMANCE OPTIMIZATION -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="preload" href="{{ asset('frontend_assets/css/style.css') }}" as="style">
-    <link rel="preload" href="{{ asset('frontend_assets/js/script.js') }}" as="script">
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="{{ asset('frontend_assets/images/logo/favicon.jpg') }}">
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('frontend_assets/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend_assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend_assets/css/style-v2.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">

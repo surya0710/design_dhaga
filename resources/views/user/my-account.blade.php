@@ -1440,6 +1440,15 @@ your orders.')
         if (form) form.classList.toggle("d-none");
     }
 
+    // Keep user on Addresses tab after any address action submit
+    document.querySelectorAll(
+        '#addresses form[action*="/account/addresses"], #addressForm form[action*="/account/addresses"], #emptyAddressForm form[action*="/account/addresses"]'
+    ).forEach((form) => {
+        form.addEventListener('submit', function () {
+            localStorage.setItem('dashboard-active-tab', '#addresses');
+        });
+    });
+
     const style = document.createElement('style');
     style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
     document.head.appendChild(style);

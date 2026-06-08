@@ -123,6 +123,7 @@ class AccountController extends Controller
         $validated = $this->validateAddress($request);
 
         DB::transaction(function () use ($address, $validated) {
+            $wasDefault = (bool) $address->is_default;
             $makeDefault = (bool) ($validated['is_default'] ?? false);
 
             if ($makeDefault) {
@@ -133,8 +134,25 @@ class AccountController extends Controller
 
             $address->update(array_merge($validated, [
                 'country' => $validated['country'] ?? 'India',
-                'is_default' => $makeDefault || $address->is_default,
+                'is_default' => $makeDefault,
             ]));
+
+            // Keep exactly one default address for the user.
+            // If user unsets the current default and doesn't choose another here,
+            // promote the most recently updated remaining address.
+            if ($wasDefault && ! $makeDefault) {
+                $fallbackDefault = Address::where('user_id', auth()->id())
+                    ->whereKeyNot($address->id)
+                    ->latest()
+                    ->first();
+
+                if ($fallbackDefault) {
+                    $fallbackDefault->update(['is_default' => true]);
+                } else {
+                    // If this is the only address, keep it as default.
+                    $address->update(['is_default' => true]);
+                }
+            }
         });
 
         return back()->with('success', 'Address updated successfully.');
