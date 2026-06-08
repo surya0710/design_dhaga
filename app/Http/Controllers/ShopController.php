@@ -12,9 +12,12 @@ use App\Models\Menu;
 use App\Models\HomepageHighlight;
 use App\Models\Faqs;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
+    private const PRODUCTS_PER_PAGE = 20;
+
     protected $categories;
     protected $menu;
     protected $highlights;
@@ -46,54 +49,27 @@ class ShopController extends Controller
         $categories = $this->categories;
         $menu       = $this->menu;
 
-        // SHOW ALL PRODUCTS
         if (!$categorySlug) {
-
             $category = null;
-
-            $products = Product::where('status', 1)
-                ->with('activeVariants:id,product_id,price')
-                ->orderBy('id', 'desc')
-                ->get();
-
-        }
-
-        // SUBCATEGORY PRODUCTS
-        elseif ($subcategorySlug) {
-
-            $category = Category::where('slug', $subcategorySlug)
-                ->firstOrFail();
-
-            $products = Product::where('status', 1)
-                ->with('activeVariants:id,product_id,price')
-                ->where('category_id', $category->id)
-                ->orderBy('id', 'desc')
-                ->get();
-
-        }
-
-        // CATEGORY + CHILD CATEGORY PRODUCTS
-        else {
-
+        } elseif ($subcategorySlug) {
+            $category = Category::where('slug', $subcategorySlug)->with('parent')->firstOrFail();
+        } else {
             $category = Category::where('slug', $categorySlug)
                 ->with('children')
                 ->firstOrFail();
-
-            $subcategoryIds = $category->children
-                ->pluck('id')
-                ->toArray();
-
-            $products = Product::where('status', 1)
-                ->with('activeVariants:id,product_id,price')
-                ->where(function ($q) use ($category, $subcategoryIds) {
-
-                    $q->where('category_id', $category->id)
-                    ->orWhereIn('category_id', $subcategoryIds);
-
-                })
-                ->orderBy('id', 'desc')
-                ->get();
         }
+
+        $sort = $request->get('sort', 'newest');
+        $query = $this->buildProductsQuery($categorySlug, $subcategorySlug);
+        $totalProducts = (clone $query)->count('products.id');
+
+        $products = $this->applyProductSort($query, $sort)
+            ->limit(self::PRODUCTS_PER_PAGE)
+            ->get();
+
+        $priceBounds = $this->getPriceBounds();
+        $hasMoreProducts = $totalProducts > self::PRODUCTS_PER_PAGE;
+        $showFilters = true;
 
         $faqs = Faqs::where([
             'status'    => 1,
@@ -108,8 +84,160 @@ class ShopController extends Controller
             'categories',
             'menu',
             'highlights',
-            'faqs'
+            'faqs',
+            'priceBounds',
+            'hasMoreProducts',
+            'totalProducts',
+            'showFilters'
         ));
+    }
+
+    public function loadProducts(Request $request)
+    {
+        $page = max(1, (int) $request->get('page', 1));
+        $categorySlug = $request->get('url_category');
+        $subcategorySlug = $request->get('url_subcategory');
+
+        $minPrice = $request->filled('min_price') ? (float) $request->get('min_price') : null;
+        $maxPrice = $request->filled('max_price') ? (float) $request->get('max_price') : null;
+        $sort = $request->get('sort', 'newest');
+
+        $query = $this->buildProductsQuery($categorySlug, $subcategorySlug, $minPrice, $maxPrice);
+        $total = (clone $query)->count('products.id');
+
+        $products = $this->applyProductSort($query, $sort)
+            ->skip(($page - 1) * self::PRODUCTS_PER_PAGE)
+            ->take(self::PRODUCTS_PER_PAGE)
+            ->get();
+
+        $html = view('frontend.partials.shop-products-grid', ['products' => $products])->render();
+
+        return response()->json([
+            'html' => $html,
+            'has_more' => ($page * self::PRODUCTS_PER_PAGE) < $total,
+            'total' => $total,
+            'page' => $page,
+        ]);
+    }
+
+    private function buildProductsQuery(
+        ?string $categorySlug = null,
+        ?string $subcategorySlug = null,
+        ?float $minPrice = null,
+        ?float $maxPrice = null
+    ) {
+        $query = Product::query()
+            ->where('products.status', 1)
+            ->select('products.*')
+            ->with([
+                'activeVariants:id,product_id,price',
+                'category:id,name,slug,parent_id',
+                'category.parent:id,name,slug',
+            ]);
+
+        if ($subcategorySlug) {
+            $category = Category::where('slug', $subcategorySlug)->firstOrFail();
+            $query->where('products.category_id', $category->id);
+        } elseif ($categorySlug) {
+            $category = Category::where('slug', $categorySlug)
+                ->with('children')
+                ->firstOrFail();
+
+            $subcategoryIds = $category->children->pluck('id')->toArray();
+
+            $query->where(function ($q) use ($category, $subcategoryIds) {
+                $q->where('products.category_id', $category->id)
+                    ->orWhereIn('products.category_id', $subcategoryIds);
+            });
+        }
+
+        if ($minPrice !== null && $maxPrice !== null) {
+            $query->where(function ($q) use ($minPrice, $maxPrice) {
+                $q->where(function ($sub) use ($minPrice, $maxPrice) {
+                    $sub->whereHas('activeVariants')
+                        ->whereRaw(
+                            '(SELECT MIN(price) FROM product_variants WHERE product_id = products.id AND is_active = 1 AND quantity > 0) BETWEEN ? AND ?',
+                            [$minPrice, $maxPrice]
+                        );
+                })->orWhere(function ($sub) use ($minPrice, $maxPrice) {
+                    $sub->whereDoesntHave('activeVariants', function ($vq) {
+                        $vq->where('is_active', true)->where('quantity', '>', 0);
+                    })->whereRaw(
+                        'COALESCE(NULLIF(products.sale_price, 0), products.regular_price) BETWEEN ? AND ?',
+                        [$minPrice, $maxPrice]
+                    );
+                });
+            });
+        }
+
+        return $query;
+    }
+
+    private function applyProductSort($query, ?string $sort = 'newest')
+    {
+        return match ($sort) {
+            'price_low' => $query->orderByRaw('COALESCE(NULLIF(products.sale_price, 0), products.regular_price) ASC'),
+            'price_high' => $query->orderByRaw('COALESCE(NULLIF(products.sale_price, 0), products.regular_price) DESC'),
+            'name_asc' => $query->orderBy('products.name', 'asc'),
+            'name_desc' => $query->orderBy('products.name', 'desc'),
+            default => $query->orderBy('products.id', 'desc'),
+        };
+    }
+
+    private function getPriceBounds(): array
+    {
+        return Cache::remember('shop.price_bounds', 300, function () {
+            $variantMin = DB::table('product_variants')
+                ->where('is_active', 1)
+                ->where('quantity', '>', 0)
+                ->min('price');
+
+            $variantMax = DB::table('product_variants')
+                ->where('is_active', 1)
+                ->where('quantity', '>', 0)
+                ->max('price');
+
+            $productMin = DB::table('products')
+                ->where('status', 1)
+                ->whereNotExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('product_variants')
+                        ->whereColumn('product_variants.product_id', 'products.id')
+                        ->where('is_active', 1)
+                        ->where('quantity', '>', 0);
+                })
+                ->min(DB::raw('COALESCE(NULLIF(sale_price, 0), regular_price)'));
+
+            $productMax = DB::table('products')
+                ->where('status', 1)
+                ->whereNotExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('product_variants')
+                        ->whereColumn('product_variants.product_id', 'products.id')
+                        ->where('is_active', 1)
+                        ->where('quantity', '>', 0);
+                })
+                ->max(DB::raw('COALESCE(NULLIF(sale_price, 0), regular_price)'));
+
+            $min = (int) floor(min(
+                $variantMin ?? PHP_INT_MAX,
+                $productMin ?? PHP_INT_MAX
+            ));
+            $max = (int) ceil(max(
+                $variantMax ?? 0,
+                $productMax ?? 0
+            ));
+
+            if ($min === PHP_INT_MAX) {
+                $min = 0;
+            }
+
+            if ($max <= $min) {
+                $max = $min + 10000;
+            }
+
+            return ['min' => $min, 'max' => $max];
+        });
     }
 
 
@@ -127,7 +255,9 @@ class ShopController extends Controller
             ->get();
         $menu               = $this->menu;
         $highlights         = $this->highlights;
-        return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights'));
+        $showFilters = false;
+
+        return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights', 'showFilters'));
     }
 
     public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
@@ -245,12 +375,15 @@ class ShopController extends Controller
             ->paginate(12)
             ->withQueryString();
 
+        $showFilters = false;
+
         return view('frontend.shop', compact(
             'products',
             'categories',
             'category',
             'menu',
-            'highlights'
+            'highlights',
+            'showFilters'
         ));
     }
 }

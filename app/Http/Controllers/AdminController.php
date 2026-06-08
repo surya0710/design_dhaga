@@ -317,7 +317,7 @@ class AdminController extends Controller
                 });
             })
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate(30)
             ->withQueryString();
 
         return view('admin.category', compact('categories'));

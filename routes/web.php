@@ -145,6 +145,8 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
     Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
 
     Route::post('/review/store', [ReviewController::class, 'store'])->name('review.store');
+    Route::put('/review/{id}', [ReviewController::class, 'update'])->name('review.update');
+    Route::delete('/review/{id}', [ReviewController::class, 'destroy'])->name('review.destroy');
 
     // Changed to POST for security (same route name)
     Route::post('/logout', [AccountController::class,'logout'])->name('account.logout');
@@ -214,6 +216,9 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/testimonials/edit/{id}', [AdminController::class, 'testimonial_edit'])->name('admin.testimonial.edit');
     Route::put('/admin/testimonials/{id}/update', [AdminController::class, 'testimonial_update'])->name('admin.testimonial.update');
     Route::delete('/admin/testimonials/delete/{id}', [AdminController::class, 'testimonial_delete'])->name('admin.testimonial.delete');
+
+    Route::get('/admin/reviews', [ReviewController::class, 'adminIndex'])->name('admin.reviews');
+    Route::delete('/admin/reviews/delete/{id}', [ReviewController::class, 'adminDestroy'])->name('admin.review.delete');
 
     Route::get('/admin/stories', [AdminController::class, 'stories'])->name('admin.stories');
     Route::get('/admin/story/add', [AdminController::class, 'story_add'])->name('admin.story.add');
@@ -324,6 +329,7 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 });
 
 
+Route::get('/shop/load', [ShopController::class, 'loadProducts'])->name('shop.load');
 Route::get('/shop', [ShopController::class, 'category_products'])->name('shop.all');
 Route::get('/shop/{category}', [ShopController::class, 'category_products'])->name('shop.index');
 Route::get('/shop/{category}/{subcategory}', [ShopController::class, 'category_products'])->name('shop.subcategory');

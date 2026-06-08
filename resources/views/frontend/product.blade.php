@@ -884,11 +884,12 @@
         
         <button onclick="closeReviewModal()" style="position:absolute; top:10px; right:15px; border:none; background:none; font-size:22px;">&times;</button>
 
-        <h4 class="mb-3">Add Review</h4>
+        <h4 class="mb-3" id="reviewModalTitle">Add Review</h4>
 
         <form id="reviewForm">
             @csrf
 
+            <input type="hidden" name="review_id" id="review_id" value="">
             <input type="hidden" name="product_id" value="{{ $productID }}">
             <input type="hidden" name="rating" id="selectedRating">
 
@@ -909,11 +910,18 @@
             </div>
 
             <!-- Image -->
+            <div class="mb-3" id="currentReviewImageWrap" style="display:none;">
+                <img id="currentReviewImage" src="" alt="Current review image" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #e5e7eb;">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" name="remove_image" id="remove_image" value="1">
+                    <label class="form-check-label small" for="remove_image">Remove current image</label>
+                </div>
+            </div>
             <div class="mb-3">
-                <input type="file" name="image" class="form-control">
+                <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp,image/jpg">
             </div>
 
-            <button type="submit" class="btn bg-maroon text-white w-100">Submit Review</button>
+            <button type="submit" class="btn bg-maroon text-white w-100" id="reviewSubmitBtn">Submit Review</button>
         </form>
     </div>
 </div>
@@ -986,6 +994,24 @@
 
                                 @if($review->image)
                                     <img src="{{ asset('storage/'.$review->image) }}" style="width:150px; height:150px; border-radius:8px; object-fit:cover; border:1px solid #e5e7eb;">
+                                @endif
+
+                                @if(auth()->check() && auth()->id() === $review->user_id)
+                                    <div style="display:flex; gap:8px; margin-top:10px;">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary edit-review-btn"
+                                            data-review-id="{{ $review->id }}"
+                                            data-rating="{{ $review->rating }}"
+                                            data-review="{{ htmlspecialchars($review->review, ENT_QUOTES) }}"
+                                            data-image="{{ $review->image ? asset('storage/'.$review->image) : '' }}">
+                                            Edit
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-danger delete-review-btn"
+                                            data-review-id="{{ $review->id }}">
+                                            Delete
+                                        </button>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -1608,54 +1634,163 @@
         alert("🔗 Link copied!");
     }
 
+    const reviewStoreUrl = "{{ route('review.store') }}";
+    const reviewUpdateUrlTemplate = "{{ route('review.update', ['id' => '__ID__']) }}";
+    const reviewDeleteUrlTemplate = "{{ route('review.destroy', ['id' => '__ID__']) }}";
+
+    function setReviewStarRating(value) {
+        document.getElementById('selectedRating').value = value;
+
+        document.querySelectorAll('.star-input').forEach(s => {
+            s.classList.remove('fa-solid');
+            s.classList.add('fa-regular');
+        });
+
+        for (let i = 0; i < value; i++) {
+            document.querySelectorAll('.star-input')[i].classList.remove('fa-regular');
+            document.querySelectorAll('.star-input')[i].classList.add('fa-solid');
+        }
+    }
+
+    function resetReviewForm() {
+        document.getElementById('review_id').value = '';
+        document.getElementById('selectedRating').value = '';
+        document.querySelector('#reviewForm textarea[name="review"]').value = '';
+        document.querySelector('#reviewForm input[name="image"]').value = '';
+        document.getElementById('remove_image').checked = false;
+        document.getElementById('currentReviewImageWrap').style.display = 'none';
+        document.getElementById('currentReviewImage').src = '';
+        document.getElementById('reviewModalTitle').textContent = 'Add Review';
+        document.getElementById('reviewSubmitBtn').textContent = 'Submit Review';
+
+        document.querySelectorAll('.star-input').forEach(s => {
+            s.classList.remove('fa-solid');
+            s.classList.add('fa-regular');
+        });
+    }
+
+    function closeAllReviewsModal() {
+        document.getElementById('allReviewsModal').style.display = 'none';
+    }
+
+    function showReviewAlert(options) {
+        const reviewAlertIcons = {
+            success: '<i class="fa-regular fa-circle-check fa-2x" style="color:#198754;"></i>',
+            error: '<i class="fa-regular fa-circle-xmark fa-2x" style="color:#dc3545;"></i>',
+            warning: '<i class="fa-solid fa-triangle-exclamation fa-2x" style="color:#ffc107;"></i>',
+        };
+
+        const { icon, customClass, didOpen, ...rest } = options;
+        const alertOptions = {
+            ...rest,
+            customClass: {
+                popup: 'rounded-3 shadow',
+                title: 'fs-5 fw-bold',
+                icon: 'swal-fa-icon',
+                ...(customClass || {}),
+            },
+            didOpen: (popup) => {
+                const container = document.querySelector('.swal2-container');
+                if (container) {
+                    container.style.zIndex = '100001';
+                }
+                if (typeof didOpen === 'function') {
+                    didOpen(popup);
+                }
+            },
+        };
+
+        if (icon && reviewAlertIcons[icon]) {
+            alertOptions.iconHtml = reviewAlertIcons[icon];
+        }
+
+        return Swal.fire(alertOptions);
+    }
+
+    function openAddReviewModal() {
+        resetReviewForm();
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+
+    function openEditReviewModal(button) {
+        resetReviewForm();
+        const reviewId = button.dataset.reviewId;
+        const rating = button.dataset.rating;
+        const reviewText = button.dataset.review;
+        const imageUrl = button.dataset.image;
+
+        document.getElementById('review_id').value = reviewId;
+        document.querySelector('#reviewForm textarea[name="review"]').value = reviewText;
+        setReviewStarRating(parseInt(rating, 10));
+        document.getElementById('reviewModalTitle').textContent = 'Edit Review';
+        document.getElementById('reviewSubmitBtn').textContent = 'Update Review';
+
+        if (imageUrl) {
+            document.getElementById('currentReviewImage').src = imageUrl;
+            document.getElementById('currentReviewImageWrap').style.display = 'block';
+        }
+
+        closeAllReviewsModal();
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+
     // Open modal on star click
     document.querySelectorAll('.review-trigger').forEach(el => {
         el.addEventListener('click', function () {
 
             @if(!auth()->check())
-                Swal.fire({
+                showReviewAlert({
                     icon: 'warning',
                     title: 'Login Required',
-                    text: 'Please login to add review'
+                    text: 'Please login to add review',
+                    confirmButtonColor: '#8b1e2d',
                 });
                 return;
             @endif
 
-            document.getElementById('reviewModal').style.display = 'flex';
+            openAddReviewModal();
         });
     });
 
     // Close modal
     function closeReviewModal() {
         document.getElementById('reviewModal').style.display = 'none';
+        resetReviewForm();
     }
 
     // Star selection
     document.querySelectorAll('.star-input').forEach(star => {
         star.addEventListener('click', function () {
-            let value = this.dataset.value;
-
-            document.getElementById('selectedRating').value = value;
-
-            document.querySelectorAll('.star-input').forEach(s => {
-                s.classList.remove('fa-solid');
-                s.classList.add('fa-regular');
-            });
-
-            for (let i = 0; i < value; i++) {
-                document.querySelectorAll('.star-input')[i].classList.remove('fa-regular');
-                document.querySelectorAll('.star-input')[i].classList.add('fa-solid');
-            }
+            setReviewStarRating(parseInt(this.dataset.value, 10));
         });
     });
 
     document.getElementById('reviewForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        let formData = new FormData(this);
+        const reviewId = document.getElementById('review_id').value;
+        const formData = new FormData(this);
+        const isEdit = Boolean(reviewId);
+        const url = isEdit
+            ? reviewUpdateUrlTemplate.replace('__ID__', reviewId)
+            : reviewStoreUrl;
 
-        fetch("{{ route('review.store') }}", {
-            method: "POST",
+        if (isEdit) {
+            formData.append('_method', 'PUT');
+        }
+
+        if (!formData.get('rating')) {
+            showReviewAlert({
+                icon: 'warning',
+                title: 'Rating required',
+                text: 'Please select a star rating.',
+                confirmButtonColor: '#8b1e2d',
+            });
+            return;
+        }
+
+        fetch(url, {
+            method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
@@ -1664,25 +1799,19 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-
-                Swal.fire({
-                    iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
-                    title: 'Review Added!',
-                    text: 'Your review has been submitted successfully.',
+                showReviewAlert({
+                    icon: 'success',
+                    title: isEdit ? 'Review Updated!' : 'Review Added!',
+                    text: isEdit ? 'Your review has been updated successfully.' : 'Your review has been submitted successfully.',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#8b1e2d',
-                    customClass: {
-                        popup: 'rounded-3 shadow',
-                        title: 'fs-5 fw-bold',
-                    }
                 }).then(() => {
-                    location.reload(); // ✅ refresh after success
+                    location.reload();
                 });
 
                 closeReviewModal();
-
             } else {
-                Swal.fire({
+                showReviewAlert({
                     icon: 'error',
                     title: 'Error',
                     text: data.message || 'Something went wrong',
@@ -1692,17 +1821,84 @@
         });
     });
 
+    $(document).on('click', '.edit-review-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openEditReviewModal(this);
+    });
+
+    $(document).on('click', '.delete-review-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const reviewId = this.dataset.reviewId;
+        closeAllReviewsModal();
+
+        showReviewAlert({
+            icon: 'warning',
+            title: 'Delete review?',
+            text: 'This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#8b1e2d',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            fetch(reviewDeleteUrlTemplate.replace('__ID__', reviewId), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'same-origin',
+            })
+            .then(async (res) => {
+                let data = {};
+                try {
+                    data = await res.json();
+                } catch (error) {
+                    data = {};
+                }
+
+                if (!res.ok) {
+                    throw new Error(data.message || 'Could not delete review. Please try again.');
+                }
+
+                return data;
+            })
+            .then((data) => {
+                if (data.success) {
+                    showReviewAlert({
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'Your review has been deleted.',
+                        confirmButtonColor: '#8b1e2d',
+                    }).then(() => location.reload());
+                } else {
+                    throw new Error(data.message || 'Could not delete review.');
+                }
+            })
+            .catch((error) => {
+                showReviewAlert({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Could not delete review.',
+                    confirmButtonColor: '#8b1e2d',
+                });
+            });
+        });
+    });
+
     // Open all reviews modal
     document.querySelectorAll('.review-count').forEach(el => {
         el.addEventListener('click', function () {
             document.getElementById('allReviewsModal').style.display = 'flex';
         });
     });
-
-    // Close modal
-    function closeAllReviewsModal() {
-        document.getElementById('allReviewsModal').style.display = 'none';
-    }
 
     // Show/hide individual answer
     $(document).on("click", ".read-more-btn", function () {

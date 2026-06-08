@@ -166,6 +166,12 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.reviews') }}" class="">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Reviews</div>
+                                    </a>
+                                </li>
                                 <li class="menu-item has-children">
                                     <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-grid"></i></div>
