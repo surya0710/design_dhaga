@@ -66,7 +66,7 @@
                 <h2 class="h4 fw-bold mb-0">Featured Products</h2>
             </div>
 
-            <div id="recentBlogsCarousel">
+            <div id="featuredProductsCarousel">
                 <div class="owl-carousel">
                     @foreach($featuredProducts as $product)
                     @php $productUrl = getProductUrl($product); @endphp
@@ -149,26 +149,95 @@
 @endsection
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<style>
+    #recentBlogsCarousel .owl-nav button,
+    #featuredProductsCarousel .owl-nav button {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        top: 42%;
+        z-index: 5;
+    }
+
+    #recentBlogsCarousel .owl-nav,
+    #featuredProductsCarousel .owl-nav,
+    #recentBlogsCarousel .owl-nav.disabled,
+    #featuredProductsCarousel .owl-nav.disabled {
+        display: block !important;
+    }
+
+    #recentBlogsCarousel .owl-nav .owl-prev,
+    #featuredProductsCarousel .owl-nav .owl-prev {
+        left: 8px;
+    }
+
+    #recentBlogsCarousel .owl-nav .owl-next,
+    #featuredProductsCarousel .owl-nav .owl-next {
+        right: 8px;
+    }
+</style>
 <script>
     $(document).ready(function() {
-        $("#recentBlogsCarousel .owl-carousel").owlCarousel({
+        const $recentBlogsCarousel = $("#recentBlogsCarousel .owl-carousel");
+        const recentBlogCount = $recentBlogsCarousel.children().length;
+
+        // Keep 3 cards visible on desktop, but ensure navigation can still slide
+        // when the recent blog count is too low (e.g., exactly 3).
+        if (recentBlogCount > 0 && recentBlogCount <= 3) {
+            $recentBlogsCarousel.children().clone(true).appendTo($recentBlogsCarousel);
+        }
+
+        $recentBlogsCarousel.owlCarousel({
             loop: true,
             margin: 12,
             nav: true,
+            navText: [
+                '<i class="fa-solid fa-chevron-left"></i>',
+                '<i class="fa-solid fa-chevron-right"></i>'
+            ],
+            dots: false,
+            autoplay: false,
+            smartSpeed: 800,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 2
+                },
+                992: {
+                    items: 3
+                },
+                1200: {
+                    items: 3
+                }
+            }
+        });
+
+        $("#featuredProductsCarousel .owl-carousel").owlCarousel({
+            loop: true,
+            margin: 12,
+            nav: true,
+            navText: [
+                '<i class="fa-solid fa-chevron-left"></i>',
+                '<i class="fa-solid fa-chevron-right"></i>'
+            ],
             dots: false,
             autoplay: true,
+            autoplayTimeout: 3000,
+            autoplayHoverPause: true,
             smartSpeed: 2000,
             responsive: {
                 0: {
-                    items: 1   // mobile
+                    items: 1
                 },
                 576: {
-                    items: 2   // tablet
+                    items: 2
                 },
                 992: {
-                    items: 3   // up to lg breakpoint
+                    items: 3
                 },
-                1200:{
+                1200: {
                     items: 3
                 }
             }
