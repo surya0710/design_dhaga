@@ -106,7 +106,7 @@
     <div class="row">
         @foreach($desktopInfo->items as $item)
             <div class="col-md-4 {{ $loop->first ? 'info-box px-5' : ($loop->last ? 'text-right info-box px-5' : 'text-center info-box') }}">
-                <h2 class="my-0">{{ $item->title }}</h2>
+                <h3 class="my-0">{{ $item->title }}</h3>
                 <p>{{ $item->subtitle }}</p>
             </div>
         @endforeach
@@ -120,7 +120,7 @@
             @foreach($mobileFeatures->items as $item)
                 <div class="feature-item col p-0">
                     <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" alt="{{ $item->title }}" />
-                    <h4>{{ $item->title }}</h4>
+                    <h3>{{ $item->title }}</h3>
                 </div>
             @endforeach
         </div>
