@@ -90,7 +90,6 @@
                         {{ getCartItemsCount() }}
                     </span>
                 </div>
-
             </div>
         </div>
     </nav>
@@ -107,7 +106,7 @@
             </a>
 
             <div class="d-flex justify-content-space-between gap-3">
-                @if (Auth::check() && Auth::user()->utype === 'USR')
+                @if (Auth::check())
                     <a href="{{ route('account.index') }}" class="btn btn-outline-secondary border-rounded text-white bg-dark px-3 py-1 font-normal d-flex align-items-center gap-2">
                         @if (Auth::user()->avatar)
                             <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" width="22" height="22" class="rounded-circle object-fit-cover"
@@ -170,7 +169,7 @@
                 <a href="{{ $url }}" class="submenu-item">{{ $item->name }}</a>
             </div>
         @endforeach
-        @if(Auth::check() && Auth::user()->utype === 'USR')
+        @if(Auth::check())
         <form method="post" action="{{ route('account.logout') }}" id="logoutForm">
         @csrf
         <div class="menu-title"><a onclick="document.getElementById('logoutForm').submit()" class="submenu-item">LOGOUT</a></div>

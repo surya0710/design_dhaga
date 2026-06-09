@@ -12,13 +12,13 @@
         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 rounded">
 
         <button type="button"
-            class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
+            class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
             style="width: 30px; height: 30px; z-index: 2;"
             data-product-id="{{ $product->id }}"
             data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
             aria-label="Toggle wishlist"
             onclick="event.preventDefault(); event.stopPropagation();">
-            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+            <i class="fa-solid fa-heart"></i>
         </button>
     </div>
 

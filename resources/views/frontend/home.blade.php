@@ -164,10 +164,10 @@
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
                         <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy">
-                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
+                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
-                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
                         </button>
                         </div>
                         <p class="mb-1">{{ $product->name }}</p>
@@ -192,10 +192,10 @@
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
                         <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy">
-                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active bg-dark-grey' : 'bg-white' }}"
+                        <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
-                            <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
                         </button>
                         </div>
                         <p class="mb-1">{{ $product->name }}</p>
@@ -439,13 +439,8 @@
         $button.toggleClass('active', inWishlist);
         $button.attr('data-in-wishlist', inWishlist ? '1' : '0');
 
-        // Toggle background classes
-        $button.toggleClass('bg-dark-grey', inWishlist);
-        $button.toggleClass('bg-white', !inWishlist);
-
         const icon = $button.find('i');
-        icon.removeClass('fa-regular fa-solid');
-        icon.addClass(inWishlist ? 'fa-solid' : 'fa-regular');
+        icon.removeClass('fa-regular').addClass('fa-solid');
     }
 
     function toggleWishlist($button) {

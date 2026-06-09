@@ -241,12 +241,10 @@ function showWishlistAuthPopup() {
 
 function setWishlistButtonState($btn, inWishlist) {
     $btn.toggleClass('active', inWishlist)
-        .attr('data-in-wishlist', inWishlist ? '1' : '0')
-        .toggleClass('bg-dark-grey', inWishlist)
-        .toggleClass('bg-white', !inWishlist);
+        .attr('data-in-wishlist', inWishlist ? '1' : '0');
     $btn.find('i')
-        .removeClass('fa-regular fa-solid')
-        .addClass(inWishlist ? 'fa-solid' : 'fa-regular');
+        .removeClass('fa-regular')
+        .addClass('fa-solid');
 }
 
 function toggleWishlist($btn) {

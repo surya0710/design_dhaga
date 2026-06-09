@@ -247,9 +247,9 @@
                     <div class="mb-2">
                         <div class="d-flex align-items-start justify-content-between">
                             <h2 class="mb-1 mt-0">{{ $product->name }}</h2>
-                            <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                            <button type="button" class="btn rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2"
                                 data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
-                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
+                                <i class="fa-solid fa-heart fa-lg"></i>
                             </button>
                         </div>
 
@@ -344,9 +344,9 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn {{ $isInWishlist ? 'bg-dark-grey' : '' }} rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2" style="border:1px solid #000;"
+                        <button type="button" class="btn rounded-circle d-flex align-items-center justify-content-center wishlist-btn {{ $isInWishlist ? 'active' : '' }} mt-2"
                                 data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}" aria-label="Toggle wishlist">
-                                <i class="{{ $isInWishlist ? 'fa-solid' : 'fa-regular' }} fa-heart fa-lg"></i>
+                                <i class="fa-solid fa-heart fa-lg"></i>
                         </button>
                     </div>
 
