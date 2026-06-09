@@ -1675,9 +1675,9 @@
 
     function showReviewAlert(options) {
         const reviewAlertIcons = {
-            success: '<i class="fa-regular fa-circle-check fa-2x" style="color:#198754;"></i>',
-            error: '<i class="fa-regular fa-circle-xmark fa-2x" style="color:#dc3545;"></i>',
-            warning: '<i class="fa-solid fa-triangle-exclamation fa-2x" style="color:#ffc107;"></i>',
+            success: '<i class="fa-regular fa-circle-check fa-xl" style="color:#198754;"></i>',
+            error: '<i class="fa-regular fa-circle-xmark fa-xl" style="color:#dc3545;"></i>',
+            warning: '<i class="fa-solid fa-triangle-exclamation fa-xl" style="color:#ffc107;"></i>',
         };
 
         const { icon, customClass, didOpen, ...rest } = options;
@@ -1694,6 +1694,20 @@
                 if (container) {
                     container.style.zIndex = '100001';
                 }
+
+                // Keep review alert icon aligned with title/text spacing.
+                const iconEl = popup.querySelector('.swal2-icon.swal-fa-icon');
+                if (iconEl) {
+                    iconEl.style.width = '3.25em';
+                    iconEl.style.height = '3.25em';
+                    iconEl.style.margin = '1em auto 0.9em';
+                }
+
+                const iconContentEl = popup.querySelector('.swal2-icon.swal-fa-icon .swal2-icon-content');
+                if (iconContentEl) {
+                    iconContentEl.style.fontSize = '2.1em';
+                }
+
                 if (typeof didOpen === 'function') {
                     didOpen(popup);
                 }
@@ -1701,6 +1715,7 @@
         };
 
         if (icon && reviewAlertIcons[icon]) {
+            alertOptions.icon = icon;
             alertOptions.iconHtml = reviewAlertIcons[icon];
         }
 
