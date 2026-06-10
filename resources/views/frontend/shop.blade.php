@@ -226,6 +226,7 @@ const wishlistConfig = {
     removeUrl: "{{ route('wishlist.remove') }}",
     csrfToken: "{{ csrf_token() }}"
 };
+const isWishlistPage = {{ (isset($category) && ($category->slug ?? '') === 'wishlist') ? 'true' : 'false' }};
 
 function showWishlistAuthPopup() {
     Swal.fire({
@@ -265,6 +266,18 @@ function toggleWishlist($btn) {
                 timer: 1800,
                 showConfirmButton: false,
             });
+
+            // On the wishlist page, drop the card from the grid once it's removed.
+            if (isWishlistPage && !res.in_wishlist) {
+                const $card = $btn.closest('.product-item');
+                $card.fadeOut(250, function () {
+                    $(this).remove();
+                    const $container = $('.products-conatiner');
+                    if ($container.find('.product-item').length === 0) {
+                        $container.html('<p class="shop-no-products text-center">There are no products to display.</p>');
+                    }
+                });
+            }
         },
         error(xhr) {
             if (xhr.status === 401) { showWishlistAuthPopup(); return; }

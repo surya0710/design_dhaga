@@ -826,12 +826,30 @@
         <div id="recentBlogsCarousel">
             <div class="owl-carousel">
                 @foreach($relatedProducts as $product)
-                @php $productUrl = getProductUrl($product); @endphp
+                @php
+                    $productUrl = getProductUrl($product);
+                    $isInWishlist = auth()->check()
+                        ? \App\Models\Wishlist::where('user_id', auth()->id())
+                            ->where('product_id', $product->id)
+                            ->exists()
+                        : false;
+                @endphp
                 <div>
                     <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
                         <div class="card border-0 h-100">
-                            <div class="ratio ratio-4x3">
-                                <img src="{{ Storage::url($product->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                            <div class="position-relative">
+                                <div class="ratio ratio-4x3">
+                                    <img src="{{ Storage::url($product->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                                </div>
+                                <button type="button"
+                                    class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
+                                    style="width: 30px; height: 30px; z-index: 2;"
+                                    data-product-id="{{ $product->id }}"
+                                    data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
+                                    aria-label="Toggle wishlist"
+                                    onclick="event.preventDefault();">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p class="mt-2 mb-0 text-left">{{ $product->name }}</p>

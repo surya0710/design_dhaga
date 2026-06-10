@@ -17,7 +17,7 @@
             data-product-id="{{ $product->id }}"
             data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
             aria-label="Toggle wishlist"
-            onclick="event.preventDefault(); event.stopPropagation();">
+            onclick="event.preventDefault();">
             <i class="fa-solid fa-heart"></i>
         </button>
     </div>

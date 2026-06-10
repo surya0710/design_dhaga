@@ -69,12 +69,30 @@
             <div id="featuredProductsCarousel">
                 <div class="owl-carousel">
                     @foreach($featuredProducts as $product)
-                    @php $productUrl = getProductUrl($product); @endphp
+                    @php
+                        $productUrl = getProductUrl($product);
+                        $isInWishlist = auth()->check()
+                            ? \App\Models\Wishlist::where('user_id', auth()->id())
+                                ->where('product_id', $product->id)
+                                ->exists()
+                            : false;
+                    @endphp
                     <div>
                         <a href="{{ $productUrl }}" class="text-decoration-none text-dark">
                             <div class="card border-0 h-100">
-                                <div class="ratio ratio-4x3">
-                                    <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                                <div class="position-relative">
+                                    <div class="ratio ratio-4x3">
+                                        <img src="{{ Storage::url($product->image) }}" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                                    </div>
+                                    <button type="button"
+                                        class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
+                                        style="width: 30px; height: 30px; z-index: 2;"
+                                        data-product-id="{{ $product->id }}"
+                                        data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
+                                        aria-label="Toggle wishlist"
+                                        onclick="event.preventDefault();">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </button>
                                 </div>
                                 <div class="card-body blogs-card">
                                     <p class="mt-0 text-left mb-0 featured-product-name">{{ $product->name }}</p>
@@ -268,5 +286,66 @@
         navigator.clipboard.writeText(window.location.href);
         alert("🔗 Link copied!");
     }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+/* ─── Wishlist ─────────────────────────────────────────────────── */
+const wishlistConfig = {
+    addUrl:    "{{ route('wishlist.add') }}",
+    removeUrl: "{{ route('wishlist.remove') }}",
+    csrfToken: "{{ csrf_token() }}"
+};
+
+function showWishlistAuthPopup() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Please Login',
+        text: 'You need to be logged in to manage your wishlist.',
+        confirmButtonText: 'Login',
+        confirmButtonColor: '#8b1e2d',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+    }).then(r => { if (r.isConfirmed) $("#loginModal").modal('toggle'); });
+}
+
+function setWishlistButtonState($btn, inWishlist) {
+    $btn.toggleClass('active', inWishlist)
+        .attr('data-in-wishlist', inWishlist ? '1' : '0');
+    $btn.find('i').removeClass('fa-regular').addClass('fa-solid');
+}
+
+function toggleWishlist($btn) {
+    const productId  = $btn.attr('data-product-id');
+    const inWishlist = String($btn.attr('data-in-wishlist')) === '1';
+    const url        = inWishlist ? wishlistConfig.removeUrl : wishlistConfig.addUrl;
+    $btn.prop('disabled', true);
+    $.ajax({
+        url, method: 'POST',
+        data: { _token: wishlistConfig.csrfToken, product_id: productId },
+        success(res) {
+            setWishlistButtonState($btn, res.in_wishlist);
+            Swal.fire({
+                iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
+                title: res.in_wishlist ? 'Added to Wishlist' : 'Removed from Wishlist',
+                text: res.message,
+                confirmButtonColor: '#8b1e2d',
+                timer: 1800,
+                showConfirmButton: false,
+            });
+        },
+        error(xhr) {
+            if (xhr.status === 401) { showWishlistAuthPopup(); return; }
+            Swal.fire({
+                icon: 'error', title: 'Oops!',
+                text: xhr.responseJSON?.message ?? 'Something went wrong.',
+                confirmButtonColor: '#8b1e2d',
+            });
+        },
+        complete() { $btn.prop('disabled', false); },
+    });
+}
+
+$(document).on('click', '.wishlist-btn', function () { toggleWishlist($(this)); });
 </script>
 @endpush
