@@ -470,7 +470,7 @@ class CheckoutController extends Controller
 
             try {
                 $adminEmail = optional(Setting::query()->select('support_email')->first())->support_email
-                    ?: 'artinfo@designdhaga.com ';
+                    ?: 'artinfo@designdhaga.com';
                 $adminEmail = trim((string) $adminEmail);
 
                 if (!empty($adminEmail) && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
