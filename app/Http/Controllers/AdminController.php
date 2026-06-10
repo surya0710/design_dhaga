@@ -1540,6 +1540,17 @@ class AdminController extends Controller
 
     private function productValidationRules(?int $productId = null): array
     {
+        $artisanIdRules = $productId
+            ? [
+                'nullable',
+                'integer',
+                Rule::exists('product_images', 'id')->where(function ($query) use ($productId) {
+                    $query->where('product_id', $productId)
+                        ->where('type', 'artisan');
+                }),
+            ]
+            : ['prohibited'];
+
         return [
             'name'                          => 'required|string|max:255',
             'slug'                          => [
@@ -1558,11 +1569,12 @@ class AdminController extends Controller
             'purchase_type'                 => 'required|in:1,2',
             'image'                         => 'required|string|max:500',
             'gallery'                       => 'required|string',
-            'artisan_gallery'               => 'required|array',
-            'artisan_gallery.*.image'       => 'required|string|max:500',
-            'artisan_gallery.*.title'       => 'required|string|max:255',
-            'artisan_gallery.*.description' => 'required|string|max:1000',
-            'artisan_gallery.*.id'          => 'required|integer|exists:product_images,id',
+            'artisan_gallery'               => 'nullable|array',
+            'artisan_gallery.*'             => 'nullable|array',
+            'artisan_gallery.*.image'       => 'nullable|string|max:500',
+            'artisan_gallery.*.title'       => 'nullable|string|max:255',
+            'artisan_gallery.*.description' => 'nullable|string|max:1000',
+            'artisan_gallery.*.id'          => $artisanIdRules,
             'attributes'                    => 'required|array',
             'attributes.key'                => 'required|array',
             'attributes.key.*'              => 'required|string|max:255',
@@ -1614,6 +1626,8 @@ class AdminController extends Controller
             'product_icons.min'          => 'All 6 product icons are required.',
             'product_icons.*.image.required' => 'Each product icon must have an image.',
             'product_icons.*.text.required'  => 'Each product icon must have text.',
+            'artisan_gallery.*.id.prohibited' => 'Artisan gallery IDs are only allowed while editing a product.',
+            'artisan_gallery.*.id.exists'     => 'Selected artisan gallery image is invalid for this product.',
         ];
     }
 
@@ -1626,6 +1640,8 @@ class AdminController extends Controller
         );
 
         $validator->after(function ($validator) use ($request, $productId) {
+            $this->validateArtisanGallerySlots($validator, $request);
+
             $variants = $request->input('variants', []);
             $seenSkus = [];
 
@@ -1672,6 +1688,50 @@ class AdminController extends Controller
         });
 
         return $validator;
+    }
+
+    private function validateArtisanGallerySlots($validator, Request $request): void
+    {
+        $artisanGallery = $request->input('artisan_gallery', []);
+
+        if (!is_array($artisanGallery)) {
+            return;
+        }
+
+        foreach ($artisanGallery as $index => $slot) {
+            if (!is_array($slot)) {
+                continue;
+            }
+
+            $image = trim((string) ($slot['image'] ?? ''));
+            $title = trim((string) ($slot['title'] ?? ''));
+            $description = trim((string) ($slot['description'] ?? ''));
+
+            if ($image === '' && $title === '' && $description === '') {
+                continue;
+            }
+
+            if ($image === '') {
+                $validator->errors()->add(
+                    "artisan_gallery.{$index}.image",
+                    "Artisan gallery slot {$index} image is required when the slot has content."
+                );
+            }
+
+            if ($title === '') {
+                $validator->errors()->add(
+                    "artisan_gallery.{$index}.title",
+                    "Artisan gallery slot {$index} title is required when the slot has content."
+                );
+            }
+
+            if ($description === '') {
+                $validator->errors()->add(
+                    "artisan_gallery.{$index}.description",
+                    "Artisan gallery slot {$index} description is required when the slot has content."
+                );
+            }
+        }
     }
 
     private function syncProductVariants(Product $product, array $variants): void
