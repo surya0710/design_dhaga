@@ -1228,14 +1228,28 @@
                             local_order_id: d.local_order_id
                         })
                     })
-                    .then(function(r) { return r.json(); })
+                    .then(function(r) {
+                        return r.text().then(function(text) {
+                            let data;
+                            try {
+                                data = JSON.parse(text);
+                            } catch (e) {
+                                throw new Error('Invalid verify response: ' + text.substring(0, 200));
+                            }
+                            return { ok: r.ok, data: data };
+                        });
+                    })
                     .then(function(result) {
-                        if (result.status) {
-                            window.location.href = result.redirect_url;
+                        if (result.ok && result.data.status) {
+                            window.location.href = result.data.redirect_url;
                         } else {
                             resetButtons();
-                            alert(result.message || 'Payment verification failed.');
+                            alert(result.data.message || 'Payment verification failed.');
                         }
+                    })
+                    .catch(function(err) {
+                        resetButtons();
+                        alert(err.message || 'Payment verification failed.');
                     });
                 },
                 prefill: { name: d.customer.name, email: d.customer.email, contact: d.customer.phone },

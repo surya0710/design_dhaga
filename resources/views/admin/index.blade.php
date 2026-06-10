@@ -224,15 +224,15 @@
                                             <td class="text-center">{{ $loop->index + 1 }}</td>
                                             <td class="text-center">{{ $recentOrder->name }}</td>
                                             <td class="text-center">{{ $recentOrder->phone }}</td>
-                                            <td class="text-center">{{ $recentOrder->total }}</td>
+                                            <td class="text-center">{{ $recentOrder->subtotal }}</td>
                                             <td class="text-center">{{ $recentOrder->total }}</td>
 
                                             <td class="text-center">{{ $recentOrder->order_status }}</td>
-                                            <td class="text-center">{{ $recentOrder->created_at }}</td>
+                                            <td class="text-center">{{ $recentOrder->created_at->toDayDateTimeString() }}</td>
                                             <td class="text-center">{{ $recentOrder->items()->count() }}</td>
                                             <td class="text-center">
                                                 @if ($recentOrder->delivered_at)
-                                                    {{ $recentOrder->delivered_at }}
+                                                    {{ \Carbon\Carbon::parse($recentOrder->delivered_at)->toDayDateTimeString() }}
                                                 @else
                                                     -
                                                 @endif

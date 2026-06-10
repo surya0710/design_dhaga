@@ -69,9 +69,9 @@
                             <tr>
                                 <td class="text-center">{{$i++}}</td>
                                 <td class="text-center">{{$order->name}}</td>
-                                <td class="text-center">{{$order->mobile}}</td>
+                                <td class="text-center">{{$order->phone}}</td>
                                 <td class="text-center">{{$order->total}}</td>
-                                <td class="text-center">{{$order->status}}</td>
+                                <td class="text-center">{{$order->order_status}}</td>
                                 <td class="text-center">{{$order->created_at->toDayDateTimeString()}}</td>
                                 <td class="text-center">{{$order->items()->count()}}</td>
 

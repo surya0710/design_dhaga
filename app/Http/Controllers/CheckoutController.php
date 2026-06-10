@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Address;
+use App\Models\Setting;
 use App\Models\Cart;
 use App\Models\HaryanaPincode;
 use Razorpay\Api\Api;
@@ -377,8 +379,8 @@ class CheckoutController extends Controller
             }
 
             $api = new \Razorpay\Api\Api(
-                config('services.razorpay.test_key'),
-                config('services.razorpay.test_secret')
+                config('services.razorpay.key'),
+                config('services.razorpay.secret')
             );
 
             $razorpayOrder = $api->order->create([
@@ -394,7 +396,7 @@ class CheckoutController extends Controller
             DB::commit();
 
             return response()->json([
-                'key' => config('services.razorpay.test_key'),
+                'key' => config('services.razorpay.key'),
                 'amount' => $razorpayOrder['amount'],
                 'currency' => $razorpayOrder['currency'],
                 'razorpay_order_id' => $razorpayOrder['id'],
@@ -426,8 +428,8 @@ class CheckoutController extends Controller
 
         try {
             $api = new Api(
-                config('services.razorpay.test_key'),
-                config('services.razorpay.test_secret')
+                config('services.razorpay.key'),
+                config('services.razorpay.secret')
             );
 
             $api->utility->verifyPaymentSignature([
@@ -448,23 +450,66 @@ class CheckoutController extends Controller
 
             $this->syncOrderAddressToAddressBook($order);
 
-            $pdf = Pdf::loadView('user.invoice', [
-                'order' => $order,
-            ])->setPaper('A4', 'portrait');
+            // Non-critical post-payment actions should not fail payment verification.
+            try {
+                $pdf = Pdf::loadView('user.invoice', [
+                    'order' => $order,
+                ])->setPaper('A4', 'portrait');
 
-            if (!empty($order->email)) {
-                Mail::to($order->email)->send(
-                    new OrderCompletedMail($order, $pdf->output(), $this->companyState)
-                );
+                if (!empty($order->email)) {
+                    Mail::to($order->email)->send(
+                        new OrderCompletedMail($order, $pdf->output(), $this->companyState)
+                    );
+                }
+            } catch (\Throwable $mailError) {
+                Log::error('Customer order email failed', [
+                    'order_id' => $order->id,
+                    'message' => $mailError->getMessage(),
+                ]);
             }
 
-            Cart::where('user_id', $order->user_id)->delete();
+            try {
+                $adminEmail = optional(Setting::query()->select('support_email')->first())->support_email
+                    ?: 'artinfo@designdhaga.com';
+                $adminEmail = trim((string) $adminEmail);
+
+                if (!empty($adminEmail) && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                    Mail::send('emails.admin_order_placed', [
+                        'order' => $order,
+                        'companyState' => $this->companyState,
+                    ], function ($message) use ($adminEmail, $order) {
+                        $message->to($adminEmail)
+                            ->subject('New Order Received #' . $order->id);
+                    });
+                }
+            } catch (\Throwable $adminMailError) {
+                Log::error('Admin order alert email failed', [
+                    'order_id' => $order->id,
+                    'admin_email' => $adminEmail ?? null,
+                    'message' => $adminMailError->getMessage(),
+                ]);
+            }
+
+            try {
+                Cart::where('user_id', $order->user_id)->delete();
+            } catch (\Throwable $cartError) {
+                Log::error('Cart clear failed after payment', [
+                    'order_id' => $order->id,
+                    'user_id' => $order->user_id,
+                    'message' => $cartError->getMessage(),
+                ]);
+            }
 
             return response()->json([
                 'status' => true,
                 'redirect_url' => route('home')
             ]);
         } catch (\Throwable $e) {
+            Log::error('Payment verification failed', [
+                'local_order_id' => $request->local_order_id ?? null,
+                'razorpay_order_id' => $request->razorpay_order_id ?? null,
+                'message' => $e->getMessage(),
+            ]);
             return response()->json([
                 'status' => false,
                 'message' => 'Payment verification failed.',
