@@ -109,7 +109,7 @@
 
             <div class="col-8 offset-2">
                 <div class="shop-category-content text-center px-3 d-none d-md-block">
-                    {!! $category->content ?? '' !!}
+                    {!! $category->content ?? $pageContent->content ?? '' !!}
                 </div>
             </div>
 
