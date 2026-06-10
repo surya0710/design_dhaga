@@ -1,11 +1,11 @@
 @extends('frontend.layouts.app')
 
-@section('title', $category->meta_title ?? 'Design Dhaga All Products')
-@section('meta_description', $category->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
-@section('meta_keywords', $category->meta_keywords ?? 'hand-painted clothes, custom fashion, premium branding, design dhaga, fashion brand, handmade clothing, made in India')
-@section('og_title', $category->meta_title ?? 'Design Dhaga All Products')
-@section('og_description', $category->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
-@section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
+@section('title', $category->meta_title ?? $pageContent->meta_title)
+@section('meta_description', $category->meta_description ?? $pageContent->meta_description)
+@section('meta_keywords', $category->meta_keywords ?? $pageContent->meta_keywords)
+@section('og_title', $category->meta_title ?? $pageContent->meta_title)
+@section('og_description', $category->meta_description ?? $pageContent->meta_description)
+@section('og_image', asset($category->meta_image ?? $pageContent->meta_image ?? 'og-home.jpg'))
 
 @push('extras')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
@@ -99,9 +99,13 @@
 
         {{-- ── Main content ────────────────────────────────────────────── --}}
         <div class="shop-main">
-
-            {{-- Page header (title + description) --}}
-            <h1 class="text-center mb-3">{{ $pageTitle }}</h1>
+            @if(!empty($category->page_heading))
+                <h1 class="text-center mb-3">{{ $category->page_heading }}</h1>
+            @elseif(!empty($pageContent->heading))
+                <h1 class="text-center mb-3">{{ $pageContent->heading }}</h1>
+            @else
+                <h1 class="text-center mb-3">{{ $pageTitle }}</h1>
+            @endif
 
             <div class="col-8 offset-2">
                 <div class="shop-category-content text-center px-3 d-none d-md-block">

@@ -17,7 +17,8 @@ class Category extends Model
         'meta_title',
         'meta_keywords',
         'meta_description',
-        'show_on_home'
+        'show_on_home',
+        'page_heading'
     ];
     
     public function parent()

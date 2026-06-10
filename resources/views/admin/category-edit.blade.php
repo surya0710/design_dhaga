@@ -65,6 +65,16 @@
                 @error('slug')
                     <p class="invalid-feedback">{{$message}}</p>
                 @enderror
+
+                <fieldset class="name">
+                    <div class="body-title">Page Heading <span class="tf-color-1">*</span>
+                    </div>
+                    <input class="flex-grow" type="text" placeholder="Page heading" name="page_heading" tabindex="0" value="{{$category->page_heading}}" aria-required="true">
+                </fieldset>
+                @error('page_heading')
+                    <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+
                 <fieldset class="name">
                     <div class="body-title">Meta Title <span class="tf-color-1">*</span>
                     </div>

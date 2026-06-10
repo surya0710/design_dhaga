@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\HomepageHighlight;
 use App\Models\Faqs;
+use App\Models\Pages;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -78,6 +79,9 @@ class ShopController extends Controller
 
         $highlights = $this->highlights;
 
+        $slug           = $category ?? 'shop';
+        $pageContent    = Pages::where('slug', $slug)->first() ?? [];
+
         return view('frontend.shop', compact(
             'products',
             'category',
@@ -88,7 +92,8 @@ class ShopController extends Controller
             'priceBounds',
             'hasMoreProducts',
             'totalProducts',
-            'showFilters'
+            'showFilters',
+            'pageContent'
         ));
     }
 
