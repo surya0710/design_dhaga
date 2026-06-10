@@ -175,34 +175,6 @@
         @endforeach
     ]
     @endif
-
-    @if($hasVariants && $activeVariants->count())
-    ,
-    "hasVariant": [
-        @foreach($activeVariants as $variant)
-        {
-            "@type": "Product",
-            "name": {!! json_encode($product->name) !!},
-            "sku": "{{ $variant->sku }}",
-
-            @if($variant->size)
-            "size": "{{ $variant->size }}",
-            @endif
-
-            @if($variant->fabric_type)
-            "material": "{{ $variant->fabric_type }}",
-            @endif
-
-            "offers": {
-                "@type": "Offer",
-                "priceCurrency": "INR",
-                "price": "{{ $variant->price }}",
-                "availability": "{{ $variant->quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}"
-            }
-        }@if(!$loop->last),@endif
-        @endforeach
-    ]
-    @endif
 }
 </script>
 
