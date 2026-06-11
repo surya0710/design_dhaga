@@ -109,6 +109,13 @@
                                 $url .= '/' . $segment;
                                 $name = ucwords(str_replace(['-', '_'], ' ', urldecode($segment)));
                                 $isLast = $index === ($displayCount - 1);
+                                $isProductPageTitle = $isLast && request()->routeIs('shop.product') && isset($product);
+                                $desktopName = $isProductPageTitle
+                                    ? \Illuminate\Support\Str::words($product->name, 2, '...')
+                                    : $name;
+                                $mobileName = $isProductPageTitle
+                                    ? \Illuminate\Support\Str::words($product->name, 1, '...')
+                                    : $name;
                                 $words = explode(' ', $name);
                                 $mobileTitle = implode(' ', array_slice($words, 0, 1)) . '...';
                             @endphp
@@ -116,10 +123,10 @@
                             @if ($isLast)
                                 <li class="breadcrumb-item active" aria-current="page">
                                     <span class="d-none d-md-inline">
-                                        {{ $name }}
+                                        {{ $desktopName }}
                                     </span>
                                     <span class="d-inline d-md-none">
-                                        {{ $displayCount > 3 ? $mobileTitle : $name }}
+                                        {{ $isProductPageTitle ? $mobileName : ($displayCount > 3 ? $mobileTitle : $name) }}
                                     </span>
                                 </li>
                             @else
