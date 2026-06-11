@@ -309,7 +309,7 @@ and premium branding services.')
                 @foreach ($subcategory->galleries as $gallery)
                 <div class="gallery-item {{ $subcategory->slug }}">
                     <a href="{{ asset($gallery->image) }}" class="glightbox">
-                        <img src="{{ asset($gallery->image) }}" loading="lazy" decoding="async" alt="Gallery Image">
+                        <img src="{{ asset($gallery->image) }}" loading="lazy" decoding="async" alt="{{ $gallery->title ?? '' }} }}">
                     </a>
                 </div>
                 @endforeach
