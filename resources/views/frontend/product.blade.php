@@ -61,6 +61,7 @@
     $gallery    = $product->galleryImages;
     $mainImage  = $product->image;
     $productID  = $product->id;
+    $productBreadcrumbName = $product->name;
     $activeVariants = $product->activeVariants->values();
     $hasVariants = $activeVariants->isNotEmpty();
     $initialVariant = $activeVariants->sortBy('price')->first();
@@ -797,12 +798,12 @@
         </div>
         <div id="recentBlogsCarousel">
             <div class="owl-carousel">
-                @foreach($relatedProducts as $product)
+                @foreach($relatedProducts as $relatedProduct)
                 @php
-                    $productUrl = getProductUrl($product);
+                    $productUrl = getProductUrl($relatedProduct);
                     $isInWishlist = auth()->check()
                         ? \App\Models\Wishlist::where('user_id', auth()->id())
-                            ->where('product_id', $product->id)
+                            ->where('product_id', $relatedProduct->id)
                             ->exists()
                         : false;
                 @endphp
@@ -811,12 +812,12 @@
                         <div class="card border-0 h-100">
                             <div class="position-relative">
                                 <div class="ratio ratio-4x3">
-                                    <img src="{{ Storage::url($product->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $product->name }}" />
+                                    <img src="{{ Storage::url($relatedProduct->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $relatedProduct->name }}" />
                                 </div>
                                 <button type="button"
                                     class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                                     style="width: 30px; height: 30px; z-index: 2;"
-                                    data-product-id="{{ $product->id }}"
+                                    data-product-id="{{ $relatedProduct->id }}"
                                     data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                                     aria-label="Toggle wishlist"
                                     onclick="event.preventDefault();">
@@ -824,8 +825,8 @@
                                 </button>
                             </div>
                             <div class="card-body">
-                                <p class="mt-2 mb-0 text-left">{{ $product->name }}</p>
-                                @include('frontend.partials.product-price', ['product' => $product])
+                                <p class="mt-2 mb-0 text-left">{{ $relatedProduct->name }}</p>
+                                @include('frontend.partials.product-price', ['product' => $relatedProduct])
                             </div>
                         </div>
                     </a>

@@ -53,6 +53,7 @@
                 $segments = Request::segments();
                 $url = '';
                 $position = 2;
+                $isProductBreadcrumb = isset($productBreadcrumbName) && Request::segment(1) === 'shop' && count($segments) >= 4;
             @endphp
 
             @foreach($segments as $segment)
@@ -66,12 +67,13 @@
                             urldecode($segment)
                         )
                     );
+                    $schemaName = $isProductBreadcrumb && $loop->last ? $productBreadcrumbName : $name;
                 @endphp
                 ,
                 {
                     "@type": "ListItem",
                     "position": {{ $position++ }},
-                    "name": "{{ $name }}",
+                    "name": {!! json_encode($schemaName) !!},
                     "item": "{{ url($url) }}"
                 }
             @endforeach
@@ -101,6 +103,7 @@
                             $segments = Request::segments();
                             $url = '';
                             $displayCount = count($segments);
+                            $isProductBreadcrumb = isset($productBreadcrumbName) && Request::segment(1) === 'shop' && $displayCount >= 4;
                         @endphp
 
                         @foreach ($segments as $index => $segment)
@@ -109,12 +112,12 @@
                                 $url .= '/' . $segment;
                                 $name = ucwords(str_replace(['-', '_'], ' ', urldecode($segment)));
                                 $isLast = $index === ($displayCount - 1);
-                                $isProductPageTitle = $isLast && request()->routeIs('shop.product') && isset($product);
+                                $isProductPageTitle = $isLast && $isProductBreadcrumb;
                                 $desktopName = $isProductPageTitle
-                                    ? \Illuminate\Support\Str::words($product->name, 2, '...')
+                                    ? \Illuminate\Support\Str::words($productBreadcrumbName, 2, '...')
                                     : $name;
                                 $mobileName = $isProductPageTitle
-                                    ? \Illuminate\Support\Str::words($product->name, 1, '...')
+                                    ? \Illuminate\Support\Str::words($productBreadcrumbName, 1, '...')
                                     : $name;
                                 $words = explode(' ', $name);
                                 $mobileTitle = implode(' ', array_slice($words, 0, 1)) . '...';
