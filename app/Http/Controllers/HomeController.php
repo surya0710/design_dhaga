@@ -105,32 +105,16 @@ class HomeController extends Controller
         $highlights = $this->activeHighlights();
 
         // ONLY categories for top navigation
-        $portfolio = PortfolioCategory::select(
-                'id',
-                'name',
-                'slug',
-                'image'
-            )
-            ->where('status', 1)
-            ->get();
+        $portfolio = PortfolioCategory::select('id', 'name', 'slug', 'image')->where('status', 1)->get();
 
         // Active category only
-        $activeCategory = PortfolioCategory::with([
+        $activeCategory = PortfolioCategory::with([ 
             'subcategories' => function ($query) {
-                $query->select(
-                    'id',
-                    'portfolio_category_id',
-                    'name',
-                    'slug'
-                );
+                $query->select('id', 'portfolio_category_id', 'name', 'slug');
             },
 
             'subcategories.galleries' => function ($query) {
-                $query->select(
-                    'id',
-                    'portfolio_subcategory_id',
-                    'image'
-                );
+                $query->select('id', 'portfolio_subcategory_id', 'image', 'title');
             }
 
         ])
