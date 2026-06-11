@@ -20,6 +20,20 @@
                 <p class="alert alert-success">{{ Session::get('status') }}</p>
             @endif
 
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" method="GET" action="{{ route('admin.portfolio.gallery.index') }}">
+                        <fieldset class="name">
+                            <input type="text" placeholder="Search gallery by title, category..." name="search"
+                                value="{{ request('search') }}">
+                        </fieldset>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="wg-table table-all-user">
                 <table class="table table-striped table-bordered">
                     <thead>

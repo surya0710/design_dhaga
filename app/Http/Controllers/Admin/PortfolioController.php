@@ -125,12 +125,27 @@ class PortfolioController extends Controller
         return back()->with('status', 'Portfolio subcategory deleted successfully.');
     }
 
-    public function gallery()
+    public function gallery(Request $request)
     {
+        $search = trim((string) $request->get('search', ''));
+
         $galleries = PortfolioGallery::with(['category', 'subcategory'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('alt_text', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('subcategory', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
             ->orderBy('sort_order')
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.portfolio.gallery', compact('galleries'));
     }

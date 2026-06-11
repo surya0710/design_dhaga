@@ -29,7 +29,7 @@ class FaqController extends Controller
             });
         }
 
-        $list = $query->latest()->paginate(10);
+        $list = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.faq.index', compact('list'));
     }

@@ -9,9 +9,21 @@ use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $menus = Menu::withCount('allItems')->latest()->paginate(15);
+        $search = trim((string) $request->get('search', ''));
+
+        $menus = Menu::withCount('allItems')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
         return view('admin.menus.index', compact('menus'));
     }
 

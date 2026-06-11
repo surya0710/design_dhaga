@@ -34,10 +34,10 @@
         <div class="wg-box">
             <div class="flex items-center justify-between gap10 flex-wrap">
                 <div class="wg-filter flex-grow">
-                    <form class="form-search">
+                    <form class="form-search" method="GET" action="{{ route('admin.orders') }}">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search here..." class="" name="name"
-                                tabindex="2" value="" aria-required="true" required="">
+                            <input type="text" placeholder="Search orders by name, phone, status..." class="" name="search"
+                                tabindex="2" value="{{ request('search') }}">
                         </fieldset>
                         <div class="button-submit">
                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -100,7 +100,7 @@
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-
+                {{ $orders->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

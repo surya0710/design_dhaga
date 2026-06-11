@@ -100,11 +100,27 @@ class ReviewController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
+        $search = trim((string) $request->get('search', ''));
+
         $reviews = Review::with(['user:id,name,email', 'product:id,name'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('rating', 'like', '%' . $search . '%')
+                        ->orWhere('review', 'like', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('product', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
             ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.reviews', compact('reviews'));
     }

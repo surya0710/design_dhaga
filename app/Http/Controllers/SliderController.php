@@ -8,8 +8,23 @@ use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
-    public function sliders(){
-        $sliders = Sliders::orderBy('id', 'desc')->paginate(10);
+    public function sliders(Request $request){
+        $search = trim((string) $request->get('search', ''));
+
+        $sliders = Sliders::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('heading', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('image_alt', 'like', '%' . $search . '%')
+                        ->orWhere('button_text', 'like', '%' . $search . '%')
+                        ->orWhere('button_link', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.sliders', compact('sliders'));
     }
 

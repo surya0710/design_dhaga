@@ -218,9 +218,21 @@ class AdminController extends Controller
     // BRANDS  (Intervention is fine here — single image, small size)
     // =========================================================================
 
-    public function brands()
+    public function brands(Request $request)
     {
-        $brands = Brand::orderBy('id', 'DESC')->paginate();
+        $search = trim((string) $request->get('search', ''));
+
+        $brands = Brand::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'DESC')
+            ->paginate()
+            ->withQueryString();
+
         return view('admin.brands', compact('brands'));
     }
 
@@ -845,9 +857,29 @@ class AdminController extends Controller
     // ORDERS
     // =========================================================================
 
-    public function orders()
+    public function orders(Request $request)
     {
-        $orders = Order::orderBy('id', 'desc')->where('payment_status', 'paid')->paginate(20);
+        $search = trim((string) $request->get('search', ''));
+
+        $orders = Order::query()
+            ->where('payment_status', 'paid')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('id', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('phone', 'like', '%' . $search . '%')
+                        ->orWhere('total', 'like', '%' . $search . '%')
+                        ->orWhere('order_status', 'like', '%' . $search . '%')
+                        ->orWhere('payment_status', 'like', '%' . $search . '%')
+                        ->orWhere('razorpay_order_id', 'like', '%' . $search . '%')
+                        ->orWhere('razorpay_payment_id', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(20)
+            ->withQueryString();
+
         return view('admin.orders', compact('orders'));
     }
 
@@ -1193,9 +1225,22 @@ class AdminController extends Controller
     // TESTIMONIALS
     // =========================================================================
 
-    public function testimonials()
+    public function testimonials(Request $request)
     {
-        $testimonials = Testimonial::orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $testimonials = Testimonial::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('testimonial', 'like', '%' . $search . '%')
+                        ->orWhere('stars', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.testimonials', compact('testimonials'));
     }
 
@@ -1805,15 +1850,44 @@ class AdminController extends Controller
     // MISC
     // =========================================================================
 
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::where('utype', '!=', 'ADM')->orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $users = User::query()
+            ->where('utype', '!=', 'ADM')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('mobile', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.users', compact('users'));
     }
 
-    public function contactquery()
+    public function contactquery(Request $request)
     {
-        $contactQueries = Contact::orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $contactQueries = Contact::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('mobile', 'like', '%' . $search . '%')
+                        ->orWhere('subject', 'like', '%' . $search . '%')
+                        ->orWhere('message', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.contact-queries', compact('contactQueries'));
     }
 
@@ -1823,9 +1897,28 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Contact query deleted successfully');
     }
 
-    public function askquestions()
+    public function askquestions(Request $request)
     {
-        $askedQuestions = AskQuestion::with(['product', 'user'])->orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $askedQuestions = AskQuestion::with(['product', 'user'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('mobile', 'like', '%' . $search . '%')
+                        ->orWhere('product_name', 'like', '%' . $search . '%')
+                        ->orWhere('message', 'like', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                        });
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.asked-questions', compact('askedQuestions'));
     }
 
@@ -1835,9 +1928,24 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Ask question deleted successfully');
     }
 
-    public function subscribers()
+    public function subscribers(Request $request)
     {
-        $subscribers = Subscribe::with('user')->orderBy('id', 'desc')->paginate(10);
+        $search = trim((string) $request->get('search', ''));
+
+        $subscribers = Subscribe::with('user')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('email', 'like', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                        });
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.subscribers', compact('subscribers'));
     }
 

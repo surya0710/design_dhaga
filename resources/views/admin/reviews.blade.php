@@ -20,6 +20,20 @@
         </div>
 
         <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" method="GET" action="{{ route('admin.reviews') }}">
+                        <fieldset class="name">
+                            <input type="text" placeholder="Search reviews by customer, product, rating..." name="search"
+                                value="{{ request('search') }}">
+                        </fieldset>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             @if(Session::has('status'))
                 <p class="alert alert-success">{{ Session::get('status') }}</p>
             @endif

@@ -225,3 +225,61 @@ body {
 .bootstrap-tagsinput .tag {
     color: black !important;
 }
+
+.main-content,
+.main-content-inner,
+.main-content-wrap,
+.wg-box {
+    min-width: 0;
+}
+
+.wg-table,
+.table-all-user,
+.table-responsive,
+.table-scroll,
+.admin-table-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    scrollbar-width: auto;
+    scrollbar-color: #9ca3af #f1f5f9;
+}
+
+.wg-table table,
+.table-all-user table,
+.table-responsive table,
+.table-scroll table,
+.admin-table-scroll table {
+    width: max-content;
+    min-width: 100%;
+}
+
+.admin-table-scroll::-webkit-scrollbar,
+.table-responsive::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.admin-table-scroll::-webkit-scrollbar-track,
+.table-responsive::-webkit-scrollbar-track,
+.table-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 999px;
+}
+
+.admin-table-scroll::-webkit-scrollbar-thumb,
+.table-responsive::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 999px;
+}
+
+.admin-table-scroll::-webkit-scrollbar-thumb:hover,
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.table-scroll::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

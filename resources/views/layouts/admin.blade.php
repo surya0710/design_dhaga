@@ -503,17 +503,50 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <script>
         $(function () {
-            $('.wg-table table, .table-all-user table').each(function (index) {
-                const table = $(this);
-                const tableShell = table.closest('.wg-table, .table-all-user');
-                const box = table.closest('.wg-box');
-                const tableId = table.attr('id') || 'admin-filter-table-' + index;
-                const columnCount = table.find('thead th').length || table.find('tr:first-child td').length || 1;
-                let searchInput = box.find('.form-search input[type="text"], .form-search input[type="search"]').first();
-                let countLabel = box.find('.admin-table-filter-count').first();
+            const currentParams = new URLSearchParams(window.location.search);
 
-                table.attr('id', tableId);
+            function prepareServerSearch(form) {
+                const searchInput = form.find('input[type="text"], input[type="search"]').first();
+
+                form.attr('method', 'GET');
+
+                if (!form.attr('action')) {
+                    form.attr('action', window.location.pathname);
+                }
+
+                if (searchInput.length) {
+                    searchInput.attr('name', 'search');
+                    searchInput.prop('required', false).removeAttr('aria-required');
+
+                    if (currentParams.has('search')) {
+                        searchInput.val(currentParams.get('search'));
+                    }
+                }
+
+                form.on('submit', function () {
+                    if (searchInput.length && !String(searchInput.val() || '').trim()) {
+                        searchInput.prop('disabled', true);
+                    }
+                });
+            }
+
+            $('.wg-table table, .table-all-user table, .table-responsive table, .table-scroll table').each(function (index) {
+                const table = $(this);
+                const box = table.closest('.wg-box');
+                const tableShell = table.closest('.wg-table, .table-all-user, .table-responsive, .table-scroll');
+                const hasPagination = box.find('.wgp-pagination').length > 0
+                    && (box.find('.form-search').length > 0 || box.find('.wgp-pagination a, .pagination a').length > 0);
+                let searchInput = box.find('.form-search input[type="text"], .form-search input[type="search"]').first();
+
+                table.attr('id', table.attr('id') || 'admin-table-' + index);
                 tableShell.addClass('admin-table-scroll');
+
+                if (hasPagination) {
+                    box.find('.form-search').each(function () {
+                        prepareServerSearch($(this));
+                    });
+                    return;
+                }
 
                 if (!searchInput.length) {
                     const filter = $(`
@@ -532,16 +565,9 @@
 
                     tableShell.before(filter);
                     searchInput = filter.find('input');
-                    countLabel = filter.find('.admin-table-filter-count');
-                } else {
-                    searchInput.attr('placeholder', searchInput.attr('placeholder') || 'Search list...');
-
-                    if (!countLabel.length) {
-                        countLabel = $('<div class="admin-table-filter-count"></div>');
-                        searchInput.closest('.form-search').after(countLabel);
-                    }
                 }
 
+                const countLabel = searchInput.closest('.wg-box').find('.admin-table-filter-count').first();
                 const rows = table.find('tbody tr').filter(function () {
                     return !$(this).find('td[colspan]').length;
                 });
@@ -551,7 +577,9 @@
                     return;
                 }
 
+                const columnCount = table.find('thead th').length || table.find('tr:first-child td').length || 1;
                 const emptyRow = $('<tr class="admin-table-empty-row" style="display:none;"><td colspan="' + columnCount + '">No matching records found.</td></tr>');
+
                 table.find('tbody').append(emptyRow);
 
                 function filterRows() {

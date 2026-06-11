@@ -120,7 +120,7 @@
             @foreach($mobileFeatures->items as $item)
                 <div class="feature-item col p-0">
                     <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" alt="{{ $item->title }}" />
-                    <h3>{{ $item->title }}</h3>
+                    <h3 class="fs-12">{{ $item->title }}</h3>
                 </div>
             @endforeach
         </div>
