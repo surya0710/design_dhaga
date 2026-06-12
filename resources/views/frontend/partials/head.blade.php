@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 <!-- PRIMARY SEO -->
-<title>{{ trim($__env->yieldContent('title')) ?: 'Nothing' }}</title>
+<title>{!! $__env->yieldContent('title') !!}</title>
 
 
 <meta name="description" content="@yield('meta_description')">

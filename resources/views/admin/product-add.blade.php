@@ -285,8 +285,8 @@
                     <input type="text" name="variants[{{ $vi }}][size]" placeholder="Size e.g. S / 0-1 yr." value="{{ $variant['size'] ?? '' }}">
                     <input type="text" name="variants[{{ $vi }}][fabric_type]" placeholder="Fabric e.g. 100% Pure" value="{{ $variant['fabric_type'] ?? '' }}">
                     <input type="text" name="variants[{{ $vi }}][sku]" placeholder="SKU" value="{{ $variant['sku'] ?? '' }}">
-                    <input type="number" name="variants[{{ $vi }}][price]" step="0.01" min="0" placeholder="Price" value="{{ $variant['price'] ?? '' }}">
-                    <input type="number" name="variants[{{ $vi }}][quantity]" min="0" placeholder="Qty" value="{{ $variant['quantity'] ?? '' }}">
+                    <input type="number" name="variants[{{ $vi }}][price]" step="0.01" min="0" max="99999999.99" placeholder="Price" value="{{ $variant['price'] ?? '' }}">
+                    <input type="number" name="variants[{{ $vi }}][quantity]" min="0" max="2147483647" step="1" placeholder="Qty" value="{{ $variant['quantity'] ?? '' }}">
                     <select name="variants[{{ $vi }}][is_active]">
                         <option value="1" {{ ($variant['is_active'] ?? '1') == '1' ? 'selected' : '' }}>Active</option>
                         <option value="0" {{ ($variant['is_active'] ?? '1') == '0' ? 'selected' : '' }}>Inactive</option>
@@ -428,7 +428,7 @@
                 <label>Regular Price <span class="req">*</span></label>
                 <div class="price-prefix">
                     <span>₹</span>
-                    <input type="number" name="regular_price" step="1" value="{{ old('regular_price') }}" placeholder="0.00" required>
+                    <input type="number" name="regular_price" step="0.01" min="0" max="99999999.99" value="{{ old('regular_price') }}" placeholder="0.00" required>
                 </div>
                 @error('regular_price')<div class="field-error">{{ $message }}</div>@enderror
             </div>
@@ -439,7 +439,7 @@
                 <label>Sale Price</label>
                 <div class="price-prefix">
                     <span>₹</span>
-                    <input type="number" name="sale_price" step="1" value="{{ old('sale_price') }}" placeholder="0.00">
+                    <input type="number" name="sale_price" step="0.01" min="0" max="99999999.99" value="{{ old('sale_price') }}" placeholder="0.00">
                 </div>
             </div>
         </div>
@@ -459,7 +459,7 @@
 
             <div class="field">
                 <label>Quantity</label>
-                <input type="number" name="quantity" min="0" value="{{ old('quantity') }}" placeholder="0">
+                <input type="number" name="quantity" min="0" max="2147483647" step="1" value="{{ old('quantity') }}" placeholder="0">
             </div>
         </div>
 
@@ -469,8 +469,9 @@
             <div class="card-title">Shipping</div>
 
             <div class="field">
-                <label>Weight</label>
-                <input type="text" name="weight" value="{{ old('weight') }}" placeholder="e.g. 500g">
+                <label>Weight (kg)</label>
+                <input type="number" name="weight" min="0" max="99999.999" step="0.001" value="{{ old('weight') }}" placeholder="e.g. 0.500">
+                @error('weight')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="divider"></div>
@@ -645,8 +646,8 @@ document.getElementById("add-variant").addEventListener("click", function () {
             <input type="text" name="variants[${variantIndex}][size]" placeholder="Size e.g. S / 0-1 yr.">
             <input type="text" name="variants[${variantIndex}][fabric_type]" placeholder="Fabric e.g. 100% Pure">
             <input type="text" name="variants[${variantIndex}][sku]" placeholder="SKU">
-            <input type="number" name="variants[${variantIndex}][price]" step="0.01" min="0" placeholder="Price">
-            <input type="number" name="variants[${variantIndex}][quantity]" min="0" placeholder="Qty">
+            <input type="number" name="variants[${variantIndex}][price]" step="0.01" min="0" max="99999999.99" placeholder="Price">
+            <input type="number" name="variants[${variantIndex}][quantity]" min="0" max="2147483647" step="1" placeholder="Qty">
             <select name="variants[${variantIndex}][is_active]">
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>

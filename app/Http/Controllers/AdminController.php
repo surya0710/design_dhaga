@@ -504,7 +504,7 @@ class AdminController extends Controller
                 'short_description'         => $request->short_description,
                 'description'               => $request->description,
                 'regular_price'             => $request->regular_price,
-                'sale_price'                => $request->sale_price ?: null,
+                'sale_price'                => $request->input('sale_price'),
                 'sku'                       => $request->sku,
                 'quantity'                  => $request->quantity ?? 0,
                 'stock_status'              => $request->stock_status ?? 1,
@@ -631,7 +631,7 @@ class AdminController extends Controller
 
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Something went wrong: ' . $e->getMessage());
+                ->with('error', 'Something went wrong. Please check the highlighted fields and try again.');
         }
     }
 
@@ -671,7 +671,7 @@ class AdminController extends Controller
                 'short_description'         => $request->short_description,
                 'description'               => $request->description,
                 'regular_price'             => $request->regular_price,
-                'sale_price'                => $request->sale_price ?: null,
+                'sale_price'                => $request->input('sale_price'),
                 'sku'                       => $request->sku,
                 'quantity'                  => $request->quantity ?? 0,
                 'stock_status'              => $request->stock_status ?? 1,
@@ -804,7 +804,7 @@ class AdminController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'Something went wrong: ' . $e->getMessage());
+                ->with('error', 'Something went wrong. Please check the highlighted fields and try again.');
         }
     }
 
@@ -1610,10 +1610,15 @@ class AdminController extends Controller
             ],
             'short_description'             => 'required|string|max:255',
             'description'                   => 'required|string',
-            'regular_price'                 => 'required|numeric|min:0',
-            'sale_price'                    => 'nullable|numeric|min:0|lte:regular_price',
-            'sku'                           => 'required|string|max:255',
-            'quantity'                      => 'required|integer|min:0',
+            'regular_price'                 => ['required', 'numeric', 'min:0', 'max:99999999.99', 'regex:/^(?:0|[1-9]\d{0,7})(?:\.\d{1,2})?$/'],
+            'sale_price'                    => ['nullable', 'numeric', 'min:0', 'max:99999999.99', 'lte:regular_price', 'regex:/^(?:0|[1-9]\d{0,7})(?:\.\d{1,2})?$/'],
+            'sku'                           => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'sku')->ignore($productId),
+            ],
+            'quantity'                      => 'required|integer|min:0|max:2147483647',
             'category_id'                   => 'required|integer|exists:categories,id',
             'purchase_type'                 => 'required|in:1,2',
             'image'                         => 'required|string|max:500',
@@ -1632,11 +1637,11 @@ class AdminController extends Controller
             'variants.*.size'               => 'nullable|string|max:100',
             'variants.*.fabric_type'        => 'nullable|string|max:150',
             'variants.*.sku'                => 'nullable|string|max:255',
-            'variants.*.price'              => 'nullable|numeric|min:0',
-            'variants.*.quantity'           => 'nullable|integer|min:0',
+            'variants.*.price'              => ['nullable', 'numeric', 'min:0', 'max:99999999.99', 'regex:/^(?:0|[1-9]\d{0,7})(?:\.\d{1,2})?$/'],
+            'variants.*.quantity'           => 'nullable|integer|min:0|max:2147483647',
             'variants.*.is_active'          => 'nullable|in:0,1',
-            'weight'                        => 'nullable|string|max:100',
-            'dimension'                     => 'nullable|string|max:100',
+            'weight'                        => ['nullable', 'numeric', 'min:0', 'max:99999.999', 'regex:/^(?:0|[1-9]\d{0,4})(?:\.\d{1,3})?$/'],
+            'dimension'                     => 'nullable|string|max:255',
             'color'                         => 'nullable|string|max:100',
             'tags'                          => 'nullable|string|max:500',
             'hand_painted_details'          => 'nullable|string',
@@ -1668,7 +1673,21 @@ class AdminController extends Controller
             'description.required'       => 'Description is required.',
             'regular_price.required'     => 'Regular price is required.',
             'regular_price.min'          => 'Regular price cannot be negative.',
+            'regular_price.max'          => 'Regular price cannot exceed 99,999,999.99.',
+            'regular_price.regex'        => 'Regular price must have no more than 2 decimal places.',
+            'sale_price.max'             => 'Sale price cannot exceed 99,999,999.99.',
+            'sale_price.regex'           => 'Sale price must have no more than 2 decimal places.',
             'sale_price.lte'             => 'Sale price must be less than or equal to regular price.',
+            'sku.unique'                 => 'This SKU is already used by another product.',
+            'quantity.integer'           => 'Quantity must be a whole number.',
+            'quantity.max'               => 'Quantity is too large.',
+            'weight.numeric'             => 'Weight must be a number only. Use kilograms, for example 0.500 instead of 500g.',
+            'weight.max'                 => 'Weight cannot exceed 99,999.999 kg.',
+            'weight.regex'               => 'Weight must have no more than 3 decimal places.',
+            'variants.*.price.max'       => 'Variant price cannot exceed 99,999,999.99.',
+            'variants.*.price.regex'     => 'Variant price must have no more than 2 decimal places.',
+            'variants.*.quantity.integer'=> 'Variant quantity must be a whole number.',
+            'variants.*.quantity.max'    => 'Variant quantity is too large.',
             'category_id.required'       => 'Please select a category.',
             'category_id.exists'         => 'Selected category is invalid.',
             'product_icons.required'     => 'All 6 product icons are required.',
@@ -1682,6 +1701,8 @@ class AdminController extends Controller
 
     private function makeProductValidator(Request $request, ?int $productId = null)
     {
+        $request->merge($this->normalizeProductInput($request->all()));
+
         $validator = Validator::make(
             $request->all(),
             $this->productValidationRules($productId),
@@ -1737,6 +1758,58 @@ class AdminController extends Controller
         });
 
         return $validator;
+    }
+
+    private function normalizeProductInput(array $input): array
+    {
+        foreach ([
+            'name', 'short_description', 'sku', 'image', 'gallery', 'weight', 'dimension',
+            'color', 'tags', 'square_banner', 'square_banner_title', 'artisan_heading',
+            'meta_title', 'meta_keywords', 'regular_price', 'sale_price', 'quantity',
+        ] as $field) {
+            if (array_key_exists($field, $input)) {
+                $input[$field] = $this->emptyStringToNull($input[$field]);
+            }
+        }
+
+        if (array_key_exists('slug', $input)) {
+            $input['slug'] = Str::slug((string) $input['slug']);
+        }
+
+        foreach (['attributes', 'variants', 'artisan_gallery', 'product_icons'] as $field) {
+            if (isset($input[$field]) && is_array($input[$field])) {
+                $input[$field] = $this->trimNestedStrings($input[$field]);
+            }
+        }
+
+        return $input;
+    }
+
+    private function trimNestedStrings(array $values): array
+    {
+        foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                $values[$key] = $this->trimNestedStrings($value);
+                continue;
+            }
+
+            if (is_string($value)) {
+                $values[$key] = $this->emptyStringToNull($value);
+            }
+        }
+
+        return $values;
+    }
+
+    private function emptyStringToNull($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $value = trim($value);
+
+        return $value === '' ? null : $value;
     }
 
     private function validateArtisanGallerySlots($validator, Request $request): void
