@@ -337,28 +337,27 @@
                     $defaultText    = ["Natural Fibre", "Hand Painted", "Made In India", "Limited Edition", "Timeless Appeal", "Pack of 1"];
                     $iconPath       = old('product_icons.'.$i.'.image', $defaultIcon[$i-1]);
                 @endphp
-                <div class="image-picker"
-                    id="picker_productIcons_{{ $i }}"
-                    onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                <div>
+                    <div class="image-picker" id="picker_productIcons_{{ $i }}" onclick="openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                        {{-- Hidden image --}}
+                        <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $iconPath }}">
 
-                    {{-- Hidden image --}}
-                    <input type="hidden" name="product_icons[{{ $i }}][image]" id="productIcons_{{ $i }}" value="{{ $iconPath }}">
+                        <div class="pick-icon">🖼</div>
+                        <span class="pick-btn">Select</span>
 
-                    <div class="pick-icon">🖼</div>
-                    <span class="pick-btn">Select</span>
+                        <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $iconPath) }}" style="width:100px;">
 
-                    <img id="preview_productIcons_{{ $i }}" src="{{ asset('storage/' . $iconPath) }}" style="width:100px;">
+                        <div class="overlay">
+                            <button type="button"
+                                onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                                Change
+                            </button>
 
-                    <div class="overlay">
-                        <button type="button"
-                            onclick="event.stopPropagation(); openMediaUploader('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
-                            Change
-                        </button>
-
-                        <button type="button" class="del-btn"
-                            onclick="event.stopPropagation(); clearImage('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
-                            ✕
-                        </button>
+                            <button type="button" class="del-btn"
+                                onclick="event.stopPropagation(); clearImage('productIcons_{{ $i }}','preview_productIcons_{{ $i }}','picker_productIcons_{{ $i }}')">
+                                ✕
+                            </button>
+                        </div>
                     </div>
                     {{-- Text --}}
                     <input type="text" name="product_icons[{{ $i }}][text]" placeholder="Text" value="{{ old('product_icons.'.$i.'.text', $defaultText[$i-1]) }}">
