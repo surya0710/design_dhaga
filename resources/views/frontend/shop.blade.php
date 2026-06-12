@@ -100,11 +100,11 @@
         {{-- ── Main content ────────────────────────────────────────────── --}}
         <div class="shop-main">
             @if(!empty($category->page_heading))
-                <h1 class="text-center mb-3 class="home-heading"">{{ $category->page_heading }}</h1>
+                <h1 class="text-center mb-3 home-heading">{{ $category->page_heading }}</h1>
             @elseif(!empty($pageContent->heading))
-                <h1 class="text-center mb-3 class="home-heading"">{{ $pageContent->heading }}</h1>
+                <h1 class="text-center mb-3 home-heading">{{ $pageContent->heading }}</h1>
             @else
-                <h1 class="text-center mb-3 class="home-heading"">{{ $pageTitle }}</h1>
+                <h1 class="text-center mb-3 home-heading">{{ $pageTitle }}</h1>
             @endif
 
             <div class="col-8 offset-2">
