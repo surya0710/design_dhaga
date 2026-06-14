@@ -192,10 +192,10 @@
                         <div class="d-flex flex-column gap-2 overflow-hidden" style="max-height: 700px; scrollbar-width: thin;">
 
                             <img src="{{ asset('storage/' . $product->image) }}" class="desktop-thumb border-2 border-danger cursor-pointer" style="width: 80px;" 
-                            onclick="setDesktopImage(this)" />
+                            onclick="setDesktopImage(this)" alt="{{ $product->name }}" />
 
                             @foreach ($gallery as $img)
-                                <img src="{{ asset('storage/' . $img->image) }}" class="desktop-thumb cursor-pointer" style="width: 80px; opacity: 0.6;" onclick="setDesktopImage(this)" />
+                                <img src="{{ asset('storage/' . $img->image) }}" class="desktop-thumb cursor-pointer" style="width: 80px; opacity: 0.6;" onclick="setDesktopImage(this)"  alt="{{ $product->name }}" />
                             @endforeach
                         </div>
 
@@ -282,11 +282,11 @@
 
                         <div class="d-flex gap-2 overflow-auto pb-1" style="scrollbar-width: thin;">
                             <img src="{{ asset('storage/' . $product->image) }}" class="border border-2 border-danger mobile-thumb" style="width: 70px;" onclick="changeImage(this)"
-                            ondblclick="openImageModal(this.src)" />
+                            ondblclick="openImageModal(this.src)" alt="{{ $product->name }}" />
 
                             @foreach ($gallery as $img)
                                 <img src="{{ asset('storage/' . $img->image) }}" class="mobile-thumb" style="width: 70px; opacity: 0.6;"
-                                onclick="changeImage(this)" ondblclick="openImageModal(this.src)" />
+                                onclick="changeImage(this)" ondblclick="openImageModal(this.src)" alt="{{ $product->name }}" />
                             @endforeach
                         </div>
                     </div>
