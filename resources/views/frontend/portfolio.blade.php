@@ -316,6 +316,185 @@ and premium branding services.')
             @endforeach
         </div>
     </div>
+    @if($activeCategory->id == 1)
+    <div class="sliding-text bg-dark py-3 px-2 w-100">
+        <div class="scroll-container">
+            <div class="scroll-content">
+                <!-- ORIGINAL ITEMS -->
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Acrylic
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Foil
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Leather
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Milky
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Puffy
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Silky
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Stencil
+                </div>
+
+                <!-- DUPLICATED ITEMS FOR INFINITE LOOP -->
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Acrylic
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Foil
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Leather
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Milky
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Puffy
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Silky
+                </div>
+                <div class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
+                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
+                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
+                    </svg> Stencil
+                </div>
+            </div>
+        </div>
+    </div>
+    @else
+    <!-- ✅ BRANDS MARQUEE - Pure CSS, no Owl Carousel -->
+    <div class="brands-marquee-wrapper py-3">
+        <div class="brands-scroll-track">
+            <!-- ORIGINAL SET -->
+            <div class="brands-scroll-content">
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/Aieraa-overseas.png') }}" alt="Aieraa Overseas">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/bpr-office.png') }}" alt="BPR Office">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/BTC.png') }}" alt="BTC">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/cake-express.png') }}" alt="Cake Express">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/herbnest.png') }}" alt="Herbnest">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/marketinglu.png') }}" alt="Marketinglu">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/mishee.png') }}" alt="Mishee">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/Panfire.png') }}" alt="Panfire">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/puri-bakers.png') }}" alt="Puri Bakers">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/student-traffic.png') }}" alt="Student Traffic">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/the-blish.png') }}" alt="The Blish">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/the-safe-trader.png') }}" alt="The Safe Trader">
+                </div>
+            </div>
+            <!-- DUPLICATE SET for seamless infinite loop -->
+            <div class="brands-scroll-content" aria-hidden="true">
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/Aieraa-overseas.png') }}" alt="Aieraa Overseas">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/bpr-office.png') }}" alt="BPR Office">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/BTC.png') }}" alt="BTC">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/cake-express.png') }}" alt="Cake Express">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/herbnest.png') }}" alt="Herbnest">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/marketinglu.png') }}" alt="Marketinglu">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/mishee.png') }}" alt="Mishee">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/Panfire.png') }}" alt="Panfire">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/puri-bakers.png') }}" alt="Puri Bakers">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/student-traffic.png') }}" alt="Student Traffic">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/the-blish.png') }}" alt="The Blish">
+                </div>
+                <div class="brand-logo-item">
+                    <img src="{{ asset('frontend_assets/images/brands-logo/the-safe-trader.png') }}" alt="The Safe Trader">
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </section>
 
 <script>
