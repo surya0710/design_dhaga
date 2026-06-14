@@ -19,6 +19,7 @@ use App\Models\HomeSection;
 use App\Models\PortfolioCategory;
 use App\Models\Pages;
 use App\Models\HomepageHighlight;
+use App\Models\Wishlist;
 
 class HomeController extends Controller
 {
@@ -46,33 +47,59 @@ class HomeController extends Controller
     {
         $categories     = $this->categories;
         $menu           = $this->menu;
-        $reviews        = Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
+        $reviews        = Cache::remember('home.reviews', 60, function () {
+            return Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
+        });
         $newArrivals    = Product::where('status', 1)
+            ->select('id', 'name', 'slug', 'regular_price', 'sale_price', 'image', 'category_id')
             ->with(['category.parent', 'activeVariants:id,product_id,price'])
             ->latest()
             ->limit(9)
             ->get();
 
         $bestSellers    = Product::where('status', 1)->where('featured', 2)
+            ->select('id', 'name', 'slug', 'regular_price', 'sale_price', 'image', 'category_id')
             ->with(['category.parent', 'activeVariants:id,product_id,price'])
             ->latest()
             ->limit(9)
             ->get();
 
-        $pageContent    = Pages::where('slug', '/')->first();
+        $pageContent    = Cache::remember('home.page_content', 60, function () {
+            return Pages::where('slug', '/')->first();
+        });
 
         $highlights     = $this->activeHighlights();
 
-        $sliders = Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
-        $homeSections = HomeSection::where('status', 1)
-            ->with(['items' => function ($query) {
-                $query->where('status', 1);
-            }])
-            ->orderBy('sort_order')
-            ->get()
-            ->keyBy('key');
+        $sliders = Cache::remember('home.sliders', 60, function () {
+            return Sliders::where('active_status', 1)->orderBy('order', 'asc')->get();
+        });
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights'));
+        $homeSections = Cache::remember('home.sections', 60, function () {
+            return HomeSection::where('status', 1)
+                ->with(['items' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                ->orderBy('sort_order')
+                ->get()
+                ->keyBy('key');
+        });
+
+        $wishlistProductIds = [];
+
+        if (auth()->check()) {
+            $homeProductIds = $newArrivals->pluck('id')
+                ->merge($bestSellers->pluck('id'))
+                ->unique()
+                ->values();
+
+            $wishlistProductIds = Wishlist::where('user_id', auth()->id())
+                ->whereIn('product_id', $homeProductIds)
+                ->pluck('product_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        }
+
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights', 'wishlistProductIds'));
     }
 
     public function about()
