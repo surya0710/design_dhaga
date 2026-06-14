@@ -1,43 +1,68 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # -----------------------------------------------------
-    # 1. Force www (redirect non-www → www)
-    # -----------------------------------------------------
+    # Force HTTPS + www in one redirect
+    RewriteCond %{HTTPS} off [OR]
     RewriteCond %{HTTP_HOST} !^www\. [NC]
-    RewriteCond %{HTTP_HOST} ^(.+)$ [NC]
+    RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
     RewriteRule ^ https://www.%1%{REQUEST_URI} [L,R=301]
 
-    # -----------------------------------------------------
-    # 2. Force HTTPS (redirect http → https)
-    # -----------------------------------------------------
-    RewriteCond %{HTTPS} off
-    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-    # -----------------------------------------------------
-    # 3. Redirect all traffic to /public folder
-    # -----------------------------------------------------
+    # Internally route project root traffic to /public
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ public/$1 [L]
-
 </IfModule>
 
-
-
-# Enable Gzip Compression
+# Compression
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/plain
-  AddOutputFilterByType DEFLATE text/html
-  AddOutputFilterByType DEFLATE text/xml
-  AddOutputFilterByType DEFLATE text/css
-  AddOutputFilterByType DEFLATE text/javascript
-  AddOutputFilterByType DEFLATE application/javascript
-  AddOutputFilterByType DEFLATE application/x-javascript
-  AddOutputFilterByType DEFLATE application/json
-  AddOutputFilterByType DEFLATE application/xml
-  AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json application/xml
+    AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
 
-<FilesMatch "\.(jpg|jpeg|png|gif|css|js|woff|woff2)$">
-  Header set Cache-Control "public, max-age=604800, immutable"
-</FilesMatch>
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/plain text/html text/xml text/css text/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript application/json application/xml
+    AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header append Vary Accept-Encoding
+
+    # Security + SEO-friendly canonical HTTPS behavior
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+    Header set X-Content-Type-Options "nosniff"
+
+    # Long browser cache for static assets
+    <FilesMatch "\.(jpg|jpeg|png|webp|avif|svg|gif|ico|css|js|woff2|woff|ttf|otf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+</IfModule>
+
+# Avoid unnecessary validation requests
+FileETag None
+
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>

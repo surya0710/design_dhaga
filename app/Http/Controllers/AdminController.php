@@ -20,6 +20,7 @@ use App\Models\Story;
 use App\Models\Sliders;
 use App\Models\ProductIcon;
 use App\Models\ProductVariant;
+use App\Models\Pages;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -138,15 +139,20 @@ class AdminController extends Controller
 
     public function index()
     {
+        $completedOrderStatuses = ['delivered', 'completed'];
+
         $totalOrders     = Order::count();
         $recentOrders    = Order::where('payment_status', 'paid')->with('items')->orderBy('created_at', 'desc')->take(5)->get();
         $deliveredOrders = Order::where('order_status', 'delivered')->count();
         $pendingOrders   = Order::where('order_status', 'pending')->count();
         $cancelledOrders = Order::where('order_status', 'cancelled')->count();
-        $totalAmount     = Order::sum('total');
+        $totalAmount     = Order::whereIn('order_status', $completedOrderStatuses)->sum('total');
         $deliveredAmount = Order::where('order_status', 'delivered')->sum('total');
-        $pendingAmount   = Order::where('order_status', 'pending')->sum('total');
         $cancelledAmount = Order::where('order_status', 'cancelled')->sum('total');
+        $frontendPagesCount = Pages::count();
+        $productsCount      = Product::count();
+        $blogsCount         = Blog::count();
+        $totalPagesCount    = $frontendPagesCount + $productsCount + $blogsCount;
 
         $startOfWeek   = Carbon::now()->startOfWeek();
         $endOfWeek     = Carbon::now()->endOfWeek();
@@ -197,8 +203,11 @@ class AdminController extends Controller
             'cancelledOrders',
             'totalAmount',
             'deliveredAmount',
-            'pendingAmount',
             'cancelledAmount',
+            'frontendPagesCount',
+            'productsCount',
+            'blogsCount',
+            'totalPagesCount',
             'recentOrders',
             'thisWeekRevenue',
             'lastWeekRevenue',
@@ -212,6 +221,62 @@ class AdminController extends Controller
             'deliveredData',
             'canceledData'
         ));
+    }
+
+    public function totalPages()
+    {
+        $cmsPages = Pages::orderBy('title')
+            ->get()
+            ->map(function (Pages $page) {
+                $slug = trim((string) $page->slug, '/');
+                $url = $slug === '' ? route('home') : url($slug);
+
+                return [
+                    'type' => 'Page',
+                    'title' => $page->title ?: $page->heading ?: $slug ?: 'Home',
+                    'url' => $url,
+                    'status' => $page->status ? 'Active' : 'Inactive',
+                    'admin_url' => route('admin.pages.edit', $page->id),
+                ];
+            });
+
+        $products = Product::with(['category.parent'])
+            ->orderBy('name')
+            ->get()
+            ->map(function (Product $product) {
+                return [
+                    'type' => 'Product',
+                    'title' => $product->name,
+                    'url' => getProductUrl($product),
+                    'status' => $product->status ? 'Active' : 'Inactive',
+                    'admin_url' => route('admin.product.edit', $product->id),
+                ];
+            });
+
+        $blogs = Blog::orderBy('title')
+            ->get()
+            ->map(function (Blog $blog) {
+                return [
+                    'type' => 'Blog',
+                    'title' => $blog->title,
+                    'url' => route('blog.show', $blog->slug),
+                    'status' => $blog->status ? 'Active' : 'Inactive',
+                    'admin_url' => route('admin.blog.edit', $blog->id),
+                ];
+            });
+
+        $items = $cmsPages
+            ->concat($products)
+            ->concat($blogs)
+            ->values();
+
+        return view('admin.total-pages', [
+            'items' => $items,
+            'frontendPagesCount' => $cmsPages->count(),
+            'productsCount' => $products->count(),
+            'blogsCount' => $blogs->count(),
+            'totalPagesCount' => $items->count(),
+        ]);
     }
 
     // =========================================================================

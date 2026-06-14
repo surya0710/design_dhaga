@@ -53,17 +53,22 @@
 
 
                         <div class="wg-chart-default">
-                            <div class="flex items-center justify-between">
+                            <a href="{{ route('admin.total-pages') }}" class="flex items-center justify-between text-decoration-none">
                                 <div class="flex items-center gap14">
                                     <div class="image ic-bg">
-                                        <i class="icon-dollar-sign"></i>
+                                        <i class="icon-file-text"></i>
                                     </div>
                                     <div>
-                                        <div class="body-text mb-2">Pending Orders Amount</div>
-                                        <h4>{{ $pendingAmount }}</h4>
+                                        <div class="body-text mb-2">Total Pages</div>
+                                        <h4>{{ $totalPagesCount }}</h4>
+                                        <div class="body-text">
+                                            Pages: {{ $frontendPagesCount }} |
+                                            Products: {{ $productsCount }} |
+                                            Blogs: {{ $blogsCount }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
                     </div>

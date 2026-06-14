@@ -166,6 +166,7 @@ Route::post('/admin/login', [AdminController::class,'loginAttempt'])->name('admi
 Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::get('/admin', [AdminController::class,'index'])->name('admin.index');
+    Route::get('/admin/total-pages', [AdminController::class, 'totalPages'])->name('admin.total-pages');
 
     Route::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('/admin/categories/add', [AdminController::class, 'category_add'])->name('admin.category.add');
