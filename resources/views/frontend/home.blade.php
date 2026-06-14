@@ -58,9 +58,12 @@
     <div class="d-flex justify-content-center gap-3">
         @foreach($categories as $category)
             @if($category->show_on_home == 1)
+            @php
+                $categoryImage = responsiveImage('uploads/categories/'.$category->image, [96, 160, 240]);
+            @endphp
             <div class="text-center">
                 <a href="{{ route('shop.index', [$category->slug]) }}" class="text-decoration-none">
-                    <img src="{{ asset('uploads/categories/'.$category->image) }}" alt="{{ $category->name }} Category Icon" class="img-fluid" loading="lazy" decoding="async">
+                    <img src="{{ $categoryImage['src'] }}" srcset="{{ $categoryImage['srcset'] }}" sizes="120px" alt="{{ $category->name }} Category Icon" class="img-fluid" loading="lazy" decoding="async">
                     <h4>{{ $category->name }}</h4>
                 </a>
             </div>
@@ -81,9 +84,13 @@
 <div id="homeSlider" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         @foreach($sliders as $index => $slider)
+        @php
+            $sliderImage = responsiveImage($slider->image, [768, 1280, 1600], 'storage');
+            $sliderLoadingAttribute = $loop->first ? 'fetchpriority="high"' : 'loading="lazy"';
+        @endphp
         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
             <a href="{{ $slider->button_link }}" target="{{  $slider->target }}">
-                <img src="{{ Storage::url($slider->image) }}" class="d-block w-100" alt="{{ $slider->image_alt }}" decoding="async" @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                <img src="{{ $sliderImage['src'] }}" srcset="{{ $sliderImage['srcset'] }}" sizes="100vw" class="d-block w-100" alt="{{ $slider->image_alt }}" decoding="async" {!! $sliderLoadingAttribute !!}>
                 <div class="carousel-caption caption-{{ $slider->text_location }} text-{{ $slider->text_color }} d-none">
                     <h2>{!! $slider->heading !!}</h2>
                     <p>{!! $slider->description !!}</p>
@@ -118,8 +125,11 @@
     <div class="container">
         <div class="row feature-items">
             @foreach($mobileFeatures->items as $item)
+                @php
+                    $featureImage = responsiveImage($item->image, [64, 96, 128]);
+                @endphp
                 <div class="feature-item col p-0">
-                    <img src="{{ asset($item->image) }}" class="mobile-icons" loading="lazy" decoding="async" alt="{{ $item->title }}" />
+                    <img src="{{ $featureImage['src'] }}" srcset="{{ $featureImage['srcset'] }}" sizes="64px" class="mobile-icons" loading="lazy" decoding="async" alt="{{ $item->title }}" />
                     <h3 class="fs-12">{{ $item->title }}</h3>
                 </div>
             @endforeach
@@ -153,10 +163,11 @@
                     @php 
                         $url = getProductUrl($product); 
                         $isInWishlist = in_array($product->id, $wishlistProductIds ?? [], true);
+                        $productImage = responsiveImage($product->image, [240, 360, 480, 640], 'storage');
                     @endphp
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
-                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
+                        <img src="{{ $productImage['src'] }}" srcset="{{ $productImage['srcset'] }}" sizes="(max-width: 768px) 50vw, 220px" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
@@ -177,10 +188,11 @@
                     @php 
                         $url = getProductUrl($product); 
                         $isInWishlist = in_array($product->id, $wishlistProductIds ?? [], true);
+                        $productImage = responsiveImage($product->image, [240, 360, 480, 640], 'storage');
                     @endphp
                     <a class="product-item" href="{{ $url }}">
                         <div class="position-relative d-inline-block w-100">
-                        <img src="{{ Storage::url($product->image) }}" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
+                        <img src="{{ $productImage['src'] }}" srcset="{{ $productImage['srcset'] }}" sizes="(max-width: 768px) 50vw, 220px" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
                             aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
@@ -200,8 +212,11 @@
 <section class="py-4 bg-body-secondary" id="your-idea-our-brush">
     <div class="container">
         <div class="d-flex align-items-center">
+            @php
+                $ideaBrushImage = responsiveImage($ideaBrush->image, [480, 768, 1024]);
+            @endphp
             <div class="col text-small-center">
-                <img src="{{ asset($ideaBrush->image) }}" alt="Custmize Now" class="w-80" loading="lazy" decoding="async" />
+                <img src="{{ $ideaBrushImage['src'] }}" srcset="{{ $ideaBrushImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="Custmize Now" class="w-80" loading="lazy" decoding="async" />
             </div>
             <div class="col">
                 <div class="py-md-3 px-3">
@@ -218,11 +233,14 @@
         <div class="scroll-content">
             <!-- ORIGINAL ITEMS -->
              @foreach($highlights as $highlight)
+            @php
+                $highlightImage = responsiveImage($highlight->emoji, [32, 48, 64], 'storage');
+            @endphp
             <div class="item">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                     <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1 l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
                 </svg> {{ $highlight->title }}
-                <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" alt="{{ $highlight->alt_text }}" loading="lazy" decoding="async">
+                <img src="{{ $highlightImage['src'] }}" srcset="{{ $highlightImage['srcset'] }}" sizes="32px" class="emoji" alt="{{ $highlight->alt_text }}" loading="lazy" decoding="async">
             </div>
             @endforeach
         </div>
@@ -231,6 +249,9 @@
 <section class="bg-body-primary py-4" id="graphics-section">
     <div class="container">
         <div class="d-flex align-items-center reverse-sm">
+            @php
+                $graphicsImage = responsiveImage($graphicsDesign->image, [480, 768, 1024]);
+            @endphp
             <div class="col">
                 <div class="py-md-3 px-3">
                     <h3 class="fs-28">{{ $graphicsDesign->title }}</h3>
@@ -239,7 +260,7 @@
                 </div>
             </div>
             <div class="col text-md-right text-small-center">
-                <img src="{{ asset($graphicsDesign->image) }}" alt="Custmize Now" class="customize-image" loading="lazy" decoding="async" />
+                <img src="{{ $graphicsImage['src'] }}" srcset="{{ $graphicsImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="Custmize Now" class="customize-image" loading="lazy" decoding="async" />
             </div>
         </div>
     </div>
@@ -254,8 +275,11 @@
         <div id="whoWeAreSlider">
             <div class="owl-carousel owl-theme">
                 @foreach($whoWeAre->items as $item)
+                @php
+                    $whoWeAreImage = responsiveImage($item->image, [320, 480, 640]);
+                @endphp
                 <div class="item">
-                    <img src="{{ asset($item->image) }}" class="w-100 border rounded" alt="{{ $item->title }}" loading="lazy" decoding="async">
+                    <img src="{{ $whoWeAreImage['src'] }}" srcset="{{ $whoWeAreImage['srcset'] }}" sizes="(max-width: 575px) 100vw, (max-width: 1199px) 33vw, 25vw" class="w-100 border rounded" alt="{{ $item->title }}" loading="lazy" decoding="async">
                     <a href="{{ $item->link_url }}">
                         <div class="item-box ">
                             <span>{{ $item->title }}</span>
@@ -275,8 +299,11 @@
         </div>
         <div class="row">
             @foreach($inspiredArt->items as $item)
+            @php
+                $inspiredImage = responsiveImage($item->image, [160, 240, 320]);
+            @endphp
             <div class="col text-center">
-                <img alt="{{ $item->title }}" src="{{ asset($item->image) }}" loading="lazy" decoding="async" />
+                <img alt="{{ $item->title }}" src="{{ $inspiredImage['src'] }}" srcset="{{ $inspiredImage['srcset'] }}" sizes="(max-width: 768px) 33vw, 180px" loading="lazy" decoding="async" />
                 <h4>{{ $item->title }}</h4>
             </div>
             @endforeach
@@ -295,11 +322,14 @@
         <div class="owl-carousel owl-theme testimonials-carousel">
 
             @foreach($reviews as $review)
+            @php
+                $reviewImage = responsiveImage($review->image, [160, 240, 320]);
+            @endphp
             <div class="item">
                 <div class="testimonial-card">
 
                     <div class="testimonial-img">
-                        <img src="{{ asset($review->image) }}" alt="{{ $review->name }}" loading="lazy" decoding="async">
+                        <img src="{{ $reviewImage['src'] }}" srcset="{{ $reviewImage['srcset'] }}" sizes="120px" alt="{{ $review->name }}" loading="lazy" decoding="async">
                     </div>
 
                     <div class="testimonial-content">
@@ -336,15 +366,22 @@
 <script>
     const textData = [];
     @foreach($highlights as $highlight)
+        @php
+            $highlightImage = responsiveImage($highlight->emoji, [32, 48, 64], 'storage');
+        @endphp
         textData.push(`<span>{{ $highlight->title }}</span>
-             <img src="{{ Storage::url($highlight->emoji) }}" class="emoji" loading="lazy" decoding="async" alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
+             <img src="{{ $highlightImage['src'] }}" srcset="{{ $highlightImage['srcset'] }}" sizes="32px" class="emoji" loading="lazy" decoding="async" alt="{{ $highlight->alt_text ?? $highlight->title }}">`);
     @endforeach
 </script>
 @endsection
 
+@push('extras')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+@endpush
+
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
@@ -407,7 +444,31 @@
         loginUrl: "",
         csrfToken: "{{ csrf_token() }}"
     };
-    function showWishlistAuthPopup() {
+
+    let sweetAlertPromise;
+
+    function loadSweetAlert() {
+        if (window.Swal) {
+            return Promise.resolve(window.Swal);
+        }
+
+        if (!sweetAlertPromise) {
+            sweetAlertPromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                script.async = true;
+                script.onload = () => resolve(window.Swal);
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        return sweetAlertPromise;
+    }
+
+    async function showWishlistAuthPopup() {
+        const Swal = await loadSweetAlert();
+
         Swal.fire({
             icon: 'warning',
             title: 'Please Login',
@@ -431,10 +492,11 @@
         icon.removeClass('fa-regular').addClass('fa-solid');
     }
 
-    function toggleWishlist($button) {
+    async function toggleWishlist($button) {
         const productId  = $button.attr('data-product-id');
         const inWishlist = String($button.attr('data-in-wishlist')) === '1';
         const url        = inWishlist ? wishlistConfig.removeUrl : wishlistConfig.addUrl;
+        const Swal       = await loadSweetAlert();
 
         $button.prop('disabled', true);
 
