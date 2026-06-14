@@ -94,6 +94,10 @@ and premium branding services.')
     .portfolio-category-card:hover {
         transform: translateY(-4px);
     }
+    .gallery-filter-wrapper {
+        position: relative;
+    }
+
     .gallery-filter {
         display: flex;
         justify-content: center;
@@ -115,6 +119,34 @@ and premium branding services.')
     .gallery-filter span:hover {
         background: #c96b4b;
         color: #fff;
+    }
+
+    .gallery-filter-arrow {
+        display: none;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 50%;
+        background: #c96b4b;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .gallery-filter-arrow svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+        stroke: currentColor;
+    }
+
+    .gallery-filter-arrow:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
     }
 
     /* =========================
@@ -193,6 +225,37 @@ and premium branding services.')
             column-count: 3;
         }
 
+        .gallery-filter-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 20px;
+            padding: 0 8px;
+        }
+
+        .gallery-filter {
+            flex: 1;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gallery-filter span {
+            flex: 0 0 auto;
+        }
+
+        .gallery-filter-arrow {
+            display: inline-flex;
+        }
+
+        .gallery-filter::-webkit-scrollbar {
+            display: none;
+        }
+
     }
 
     @media (max-width: 768px) {
@@ -223,17 +286,6 @@ and premium branding services.')
 
         .gallery-item {
             margin-bottom: 12px;
-        }
-
-        .gallery-filter {
-            justify-content: flex-start;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            padding-bottom: 5px;
-        }
-
-        .gallery-filter::-webkit-scrollbar {
-            display: none;
         }
 
     }
@@ -295,11 +347,23 @@ and premium branding services.')
     @endphp
 
     {{-- FILTER --}}
-    <div class="gallery-filter">
-        <span class="active" data-filter="*">All</span>
-        @foreach ($category->subcategories as $subcategory)
-        <span data-filter="{{ $subcategory->slug }}">{{ $subcategory->name }}</span>
-        @endforeach
+    <div class="gallery-filter-wrapper">
+        <button type="button" class="gallery-filter-arrow gallery-filter-prev" aria-label="Scroll subcategories left">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15 18l-6-6 6-6" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </button>
+        <div class="gallery-filter">
+            <span class="active" data-filter="*">All</span>
+            @foreach ($category->subcategories as $subcategory)
+            <span data-filter="{{ $subcategory->slug }}">{{ $subcategory->name }}</span>
+            @endforeach
+        </div>
+        <button type="button" class="gallery-filter-arrow gallery-filter-next" aria-label="Scroll subcategories right">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 6l6 6-6 6" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </button>
     </div>
 
     {{-- GALLERY --}}
@@ -321,92 +385,22 @@ and premium branding services.')
         <div class="scroll-container">
             <div class="scroll-content">
                 <!-- ORIGINAL ITEMS -->
+                @foreach ($category->subcategories as $subcategory)
                 <div class="item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                         <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
                         l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Acrylic
+                    </svg> {{ $subcategory->name }}
                 </div>
+                @endforeach
+                @foreach ($category->subcategories as $subcategory)
                 <div class="item">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
                         <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
                         l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Foil
+                    </svg> {{ $subcategory->name }}
                 </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Leather
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Milky
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Puffy
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Silky
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Stencil
-                </div>
-
-                <!-- DUPLICATED ITEMS FOR INFINITE LOOP -->
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Acrylic
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Foil
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Leather
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Milky
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Puffy
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Silky
-                </div>
-                <div class="item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="26 -26 100 125">
-                        <path fill="#ffffff" d="M114.3,1.1L63.8,52.3c-1.7,1.8-4.6,1.8-6.3,0L36.7,31c-1.7-1.8-1.7-4.6,0-6.4c1.7-1.8,4.6-1.8,6.3,0l17.7,18.1
-                        l47.4-48c1.7-1.8,4.6-1.8,6.3,0C116.1-3.5,116.1-0.7,114.3,1.1z"></path>
-                    </svg> Stencil
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -559,6 +553,36 @@ and premium branding services.')
         });
 
     });
+
+    const filterScroller = document.querySelector('.gallery-filter');
+    const filterPrev = document.querySelector('.gallery-filter-prev');
+    const filterNext = document.querySelector('.gallery-filter-next');
+
+    function updateFilterArrows() {
+        if (!filterScroller || !filterPrev || !filterNext) {
+            return;
+        }
+
+        const maxScroll = filterScroller.scrollWidth - filterScroller.clientWidth;
+        const canScroll = maxScroll > 1;
+
+        filterPrev.disabled = !canScroll || filterScroller.scrollLeft <= 1;
+        filterNext.disabled = !canScroll || filterScroller.scrollLeft >= maxScroll - 1;
+    }
+
+    if (filterScroller && filterPrev && filterNext) {
+        filterPrev.addEventListener('click', () => {
+            filterScroller.scrollBy({ left: -180, behavior: 'smooth' });
+        });
+
+        filterNext.addEventListener('click', () => {
+            filterScroller.scrollBy({ left: 180, behavior: 'smooth' });
+        });
+
+        filterScroller.addEventListener('scroll', updateFilterArrows);
+        window.addEventListener('resize', updateFilterArrows);
+        updateFilterArrows();
+    }
 
 </script>
 
