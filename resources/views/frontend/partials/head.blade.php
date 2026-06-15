@@ -21,14 +21,15 @@
 <meta property="og:type" content="website">
 
 @php
-    $twitterCard = trim($__env->yieldContent('twitter_card', 'summary'));
-    $twitterTitle = trim($__env->yieldContent('twitter_title', $__env->yieldContent('og_title', $__env->yieldContent('title'))));
-    $twitterSite = trim($__env->yieldContent('twitter_site', '@designdhaga'));
-    $twitterDescription = trim($__env->yieldContent('twitter_description', $__env->yieldContent('og_description', $__env->yieldContent('meta_description'))));
-    $twitterImage = trim($__env->yieldContent('twitter_image', $__env->yieldContent('og_image')));
-    $twitterImageAlt = trim($__env->yieldContent('twitter_image_alt', $twitterTitle));
+    $twitterCard = trim($__env->yieldContent('twitter_card'));
+    $twitterTitle = trim($__env->yieldContent('twitter_title'));
+    $twitterSite = trim($__env->yieldContent('twitter_site'));
+    $twitterDescription = trim($__env->yieldContent('twitter_description'));
+    $twitterImage = trim($__env->yieldContent('twitter_image'));
+    $twitterImageAlt = trim($__env->yieldContent('twitter_image_alt'));
 @endphp
 
+@if($twitterCard && $twitterTitle && $twitterSite && $twitterDescription && $twitterImage && $twitterImageAlt)
 <!-- TWITTER CARD -->
 <meta name="twitter:card" content="{{ $twitterCard }}">
 <meta name="twitter:title" content="{{ $twitterTitle }}">
@@ -36,6 +37,7 @@
 <meta name="twitter:description" content="{{ $twitterDescription }}">
 <meta name="twitter:image" content="{{ $twitterImage }}">
 <meta name="twitter:image:alt" content="{{ $twitterImageAlt }}">
+@endif
 
 <!-- CANONICAL URL -->
 <link rel="canonical" href="{{ $pageContent->canonical_url ?? url()->current() }}">
