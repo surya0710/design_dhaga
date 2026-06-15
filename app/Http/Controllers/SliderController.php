@@ -135,4 +135,19 @@ class SliderController extends Controller
             ->route('admin.sliders')
             ->with('success', 'Slider updated successfully');
     }
+
+    public function sliders_delete($id)
+    {
+        $slider = Sliders::findOrFail($id);
+
+        if ($slider->image && Storage::disk('public')->exists($slider->image)) {
+            Storage::disk('public')->delete($slider->image);
+        }
+
+        $slider->delete();
+
+        return redirect()
+            ->route('admin.sliders')
+            ->with('success', 'Slider deleted successfully');
+    }
 }

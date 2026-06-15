@@ -47,7 +47,7 @@
         $urlSubcategory   = '';
         $activeFilterSlug = '';
 
-        if (!empty($category)) {
+        if (!empty($category) && ($category->slug ?? '') !== 'search') {
             if (!empty($category->parent_id)) {
                 $urlSubcategory   = $category->slug;
                 $urlCategory      = optional($category->parent)->slug ?? '';
@@ -154,7 +154,8 @@
                 data-min-price=""
                 data-max-price=""
                 data-price-min-bound="0"
-                data-price-max-bound="{{ $priceMax }}">
+                data-price-max-bound="{{ $priceMax }}"
+                data-search-query="{{ request('q') }}">
 
                 @if($hasProducts)
                     @include('frontend.partials.shop-products-grid', ['products' => $products])
@@ -377,6 +378,7 @@ initFaqButtons();
         };
         if (grid.dataset.minPrice) p.min_price = grid.dataset.minPrice;
         if (grid.dataset.maxPrice) p.max_price = grid.dataset.maxPrice;
+        if (grid.dataset.searchQuery) p.q = grid.dataset.searchQuery;
         return p;
     }
 

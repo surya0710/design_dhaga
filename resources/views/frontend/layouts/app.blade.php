@@ -12,8 +12,8 @@
     <link rel="icon" type="image/png" href="{{ asset('frontend_assets/images/logo/favicon.jpg') }}">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('frontend_assets/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend_assets/css/style-v3.css') }}">
+    <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/css/style-v3.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     @stack('extras')
@@ -156,8 +156,8 @@
     </main>
     @include('frontend.partials.footer')
     <!-- JS -->
-    <script src="{{ asset('frontend_assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
-    <script src="{{ asset('frontend_assets/js/script.js') }}" defer></script>
+    <script src="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
+    <script src="{{ versionedAsset('frontend_assets/js/script.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     {{-- Scripts --}}
     @stack('scripts')

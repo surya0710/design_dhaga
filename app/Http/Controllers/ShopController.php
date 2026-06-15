@@ -14,6 +14,7 @@ use App\Models\Faqs;
 use App\Models\Pages;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ShopController extends Controller
 {
@@ -102,12 +103,13 @@ class ShopController extends Controller
         $page = max(1, (int) $request->get('page', 1));
         $categorySlug = $request->get('url_category');
         $subcategorySlug = $request->get('url_subcategory');
+        $search = trim((string) $request->get('q', ''));
 
         $minPrice = $request->filled('min_price') ? (float) $request->get('min_price') : null;
         $maxPrice = $request->filled('max_price') ? (float) $request->get('max_price') : null;
         $sort = $request->get('sort', 'newest');
 
-        $query = $this->buildProductsQuery($categorySlug, $subcategorySlug, $minPrice, $maxPrice);
+        $query = $this->buildProductsQuery($categorySlug, $subcategorySlug, $minPrice, $maxPrice, $search);
         $total = (clone $query)->count('products.id');
 
         $products = $this->applyProductSort($query, $sort)
@@ -129,7 +131,8 @@ class ShopController extends Controller
         ?string $categorySlug = null,
         ?string $subcategorySlug = null,
         ?float $minPrice = null,
-        ?float $maxPrice = null
+        ?float $maxPrice = null,
+        ?string $search = null
     ) {
         $query = Product::query()
             ->where('products.status', 1)
@@ -172,6 +175,17 @@ class ShopController extends Controller
                         [$minPrice, $maxPrice]
                     );
                 });
+            });
+        }
+
+        $search = trim((string) $search);
+
+        if ($search !== '') {
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('products.name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('products.slug', 'LIKE', '%' . $search . '%')
+                    ->orWhere('products.description', 'LIKE', '%' . $search . '%')
+                    ->orWhere('products.short_description', 'LIKE', '%' . $search . '%');
             });
         }
 
@@ -261,8 +275,18 @@ class ShopController extends Controller
         $menu               = $this->menu;
         $highlights         = $this->highlights;
         $showFilters = false;
+        $pageContent = Pages::where('slug', 'wishlist')->first()
+            ?? (object) [
+                'meta_title' => 'Your Wishlist',
+                'meta_description' => 'Your saved Design Dhaga products.',
+                'meta_keywords' => 'wishlist, saved products',
+                'meta_image' => 'og-home.jpg',
+                'heading' => null,
+                'content' => null,
+                'canonical_url' => url()->current(),
+            ];
 
-        return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights', 'showFilters'));
+        return view('frontend.shop', compact('products', 'categories', 'category', 'menu', 'highlights', 'showFilters', 'pageContent'));
     }
 
     public function product_details(Request $request, $category = null, $subcategory = null, $slug = null)
@@ -366,21 +390,44 @@ class ShopController extends Controller
             'meta_title' => 'Search Products',
         ];
 
-        $products = Product::where('status', 1)
-            ->with('activeVariants:id,product_id,price')
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($subQuery) use ($query) {
-                    $subQuery->where('name', 'LIKE', '%' . $query . '%')
-                        ->orWhere('slug', 'LIKE', '%' . $query . '%')
-                        ->orWhere('description', 'LIKE', '%' . $query . '%')
-                        ->orWhere('short_description', 'LIKE', '%' . $query . '%');
-                });
-            })
-            ->orderBy('id', 'desc')
-            ->paginate(12)
-            ->withQueryString();
+        $pageContent = Pages::where('slug', 'search')->first()
+            ?? Pages::where('slug', 'shop')->first()
+            ?? (object) [
+                'meta_title' => 'Search Products',
+                'meta_description' => 'Search products on Design Dhaga.',
+                'meta_keywords' => 'search products, design dhaga',
+                'meta_image' => 'og-home.jpg',
+                'heading' => null,
+                'content' => null,
+                'canonical_url' => url()->current(),
+            ];
 
-        $showFilters = false;
+        $sort = $request->get('sort', 'newest');
+        $productsQuery = $this->buildProductsQuery(search: $query);
+        $totalProducts = (clone $productsQuery)->count('products.id');
+
+        $products = $this->applyProductSort($productsQuery, $sort)
+            ->limit(self::PRODUCTS_PER_PAGE)
+            ->get();
+
+        $priceBounds = $this->getPriceBounds();
+        $hasMoreProducts = $totalProducts > self::PRODUCTS_PER_PAGE;
+        $showFilters = true;
+        $faqs = collect();
+
+        $products = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products,
+            $totalProducts,
+            self::PRODUCTS_PER_PAGE,
+            1,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
+
+        $products->withPath($request->url())
+            ->withQueryString();
 
         return view('frontend.shop', compact(
             'products',
@@ -388,7 +435,43 @@ class ShopController extends Controller
             'category',
             'menu',
             'highlights',
-            'showFilters'
+            'showFilters',
+            'pageContent',
+            'priceBounds',
+            'hasMoreProducts',
+            'totalProducts',
+            'faqs'
         ));
+    }
+
+    public function searchSuggestions(Request $request)
+    {
+        $query = trim((string) $request->get('q', ''));
+
+        if (mb_strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $products = Product::where('status', 1)
+            ->select('id', 'name', 'slug', 'image', 'category_id', 'regular_price', 'sale_price')
+            ->with(['category.parent', 'activeVariants:id,product_id,price'])
+            ->where(function ($productQuery) use ($query) {
+                $productQuery->where('name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('slug', 'LIKE', '%' . $query . '%')
+                    ->orWhere('short_description', 'LIKE', '%' . $query . '%');
+            })
+            ->orderBy('name')
+            ->limit(8)
+            ->get()
+            ->map(function (Product $product) {
+                return [
+                    'name' => $product->name,
+                    'url' => getProductUrl($product),
+                    'image' => Storage::url($product->image),
+                    'price' => '₹' . number_format($product->display_price, 0),
+                ];
+            });
+
+        return response()->json($products);
     }
 }

@@ -379,7 +379,7 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="{{ asset('js/admin/tinymce-word-paste.js') }}"></script>
+<script src="{{ versionedAsset('js/admin/tinymce-word-paste.js') }}"></script>
 
 <script>
 // ── Column picker ──────────────────────────────────────────────

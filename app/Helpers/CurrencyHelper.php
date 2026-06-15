@@ -27,6 +27,18 @@ function getCartItemsCount(){
     return $cartItemsCount;
 }
 
+if (!function_exists('versionedAsset')) {
+    function versionedAsset(string $path): string
+    {
+        $path = ltrim($path, '/');
+        $filePath = public_path($path);
+        $version = File::exists($filePath) ? File::lastModified($filePath) : time();
+        $separator = str_contains($path, '?') ? '&' : '?';
+
+        return asset($path) . $separator . 'v=' . $version;
+    }
+}
+
 if (!function_exists('getProductUrl')) {
     function getProductUrl($product)
     {

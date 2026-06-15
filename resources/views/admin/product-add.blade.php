@@ -2,7 +2,7 @@
 
 @push('styles')
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/product.css') }}">
+<link rel="stylesheet" href="{{ versionedAsset('css/product.css') }}">
 @endpush
 
 
@@ -928,5 +928,5 @@ document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeMediaModal();
 });
 </script>
-<script src="{{ asset('js/admin/product-form-media.js') }}"></script>
+<script src="{{ versionedAsset('js/admin/product-form-media.js') }}"></script>
 @endpush

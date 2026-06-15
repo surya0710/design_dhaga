@@ -108,13 +108,13 @@
                                         </div>
                                     </a>
 
-                                    <form action="{{ route('admin.sliders.destroy', $slider->id) }}" method="POST">
+                                    <form action="{{ route('admin.sliders.destroy', $slider->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this slider?');">
                                         @csrf
                                         @method('DELETE')
 
-                                        <div class="item text-danger delete">
+                                        <button type="submit" class="item text-danger delete" style="border:none;background:transparent;padding:0;">
                                             <i class="icon-trash-2"></i>
-                                        </div>
+                                        </button>
                                     </form>
 
                                 </div>

@@ -263,7 +263,7 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::post('/admin/sliders/create/', [SliderController::class, 'sliders_add'])->name('admin.sliders.store');
     Route::get('/admin/sliders/edit/{id}', [SliderController::class, 'sliders_edit'])->name('admin.sliders.edit');
     Route::put('/admin/sliders/edit/{id}', [SliderController::class, 'update'])->name('admin.sliders.update');
-    Route::get('/admin/sliders/delete/{id}', [SliderController::class, 'sliders_delete'])->name('admin.sliders.destroy');
+    Route::delete('/admin/sliders/delete/{id}', [SliderController::class, 'sliders_delete'])->name('admin.sliders.destroy');
 
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 
@@ -335,4 +335,5 @@ Route::get('/shop', [ShopController::class, 'category_products'])->name('shop.al
 Route::get('/shop/{category}', [ShopController::class, 'category_products'])->name('shop.index');
 Route::get('/shop/{category}/{subcategory}', [ShopController::class, 'category_products'])->name('shop.subcategory');
 Route::get('/shop/{category}/{subcategory}/{product}', [ShopController::class, 'product_details'])->name('shop.product');
+Route::get('/search/suggestions', [ShopController::class, 'searchSuggestions'])->name('shop.search.suggestions');
 Route::get('/search', [ShopController::class, 'search'])->name('shop.search');

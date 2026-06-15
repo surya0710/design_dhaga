@@ -13,17 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="surfside media" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/animation.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-select.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/animate.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/animation.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/bootstrap-select.min.css') }}">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('icon/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ versionedAsset('icon/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('images/favicon.jpg') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicon.jpg') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/sweetalert.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ versionedAsset('css/custom.css') }}">
 
     @stack("styles")
 </head>
@@ -495,12 +495,12 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
-    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('js/apexcharts/apexcharts.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ versionedAsset('js/jquery.min.js') }}"></script>
+    <script src="{{ versionedAsset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ versionedAsset('js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ versionedAsset('js/sweetalert.min.js') }}"></script>
+    <script src="{{ versionedAsset('js/apexcharts/apexcharts.js') }}"></script>
+    <script src="{{ versionedAsset('js/main.js') }}"></script>
     <script>
         $(function () {
             const currentParams = new URLSearchParams(window.location.search);
