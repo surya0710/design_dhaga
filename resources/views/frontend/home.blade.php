@@ -9,6 +9,13 @@
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
+@section('twitter_card', 'summary')
+@section('twitter_title', 'Design Dhaga - Hand-Painted Fashion & Custom Branding Services')
+@section('twitter_site', '@designdhaga')
+@section('twitter_description', 'Handmade, hand-painted ethnic wear & designer clothing for women, men, kids & celebrities. Explore exclusive twinning dresses, sarees & custom branding services online.')
+@section('twitter_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
+@section('twitter_image_alt', 'Design Dhaga hero image - Hand-painted handmade ethnic wear and designer clothing collections')
+
 @php
     $desktopInfo    = $homeSections->get('desktop_info');
     $mobileFeatures = $homeSections->get('mobile_features');

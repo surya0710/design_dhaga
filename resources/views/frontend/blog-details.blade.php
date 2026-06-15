@@ -8,6 +8,12 @@
 @section('og_title', 'Design Dhaga - Hand-Painted Fashion')
 @section('og_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset('uploads/blogs/'.$blog->image))
+@section('twitter_card', 'summary')
+@section('twitter_title', $blog->title)
+@section('twitter_site', '@designdhaga')
+@section('twitter_description', $blog->meta_description)
+@section('twitter_image', asset('uploads/blogs/'.$blog->image))
+@section('twitter_image_alt', $blog->title)
 
 @push('extras')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">

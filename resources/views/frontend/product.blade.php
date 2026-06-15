@@ -6,6 +6,12 @@
 @section('og_title', $product->meta_title ?? $product->name)
 @section('og_description', $product->meta_description ?? '')
 @section('og_image', asset('storage/' . $product->image))
+@section('twitter_card', 'summary')
+@section('twitter_title', $product->name)
+@section('twitter_site', '@designdhaga')
+@section('twitter_description', $product->meta_description ?? '')
+@section('twitter_image', asset('storage/' . $product->image))
+@section('twitter_image_alt', $product->name)
 
 @push('extras')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
@@ -1578,7 +1584,7 @@
         });
     });
 </script>
-<script src="{{ asset('frontend_assets/js/product.js') }}"></script>
+<script src="{{ versionedAsset('frontend_assets/js/product.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
     $(document).ready(function() {
