@@ -65,6 +65,7 @@
                                             Pages: {{ $frontendPagesCount }} |
                                             Products: {{ $productsCount }} |
                                             Categories: {{ $categoriesCount }} |
+                                            Portfolio: {{ $portfolioCategoriesCount }} |
                                             Blogs: {{ $blogsCount }}
                                         </div>
                                     </div>

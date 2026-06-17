@@ -27,6 +27,7 @@
                 <div class="body-text">Pages: <strong>{{ $frontendPagesCount }}</strong></div>
                 <div class="body-text">Products: <strong>{{ $productsCount }}</strong></div>
                 <div class="body-text">Categories: <strong>{{ $categoriesCount }}</strong></div>
+                <div class="body-text">Portfolio Categories: <strong>{{ $portfolioCategoriesCount }}</strong></div>
                 <div class="body-text">Blogs: <strong>{{ $blogsCount }}</strong></div>
             </div>
         </div>
@@ -56,6 +57,11 @@
                                     </a>
                                 </td>
                                 <td>{{ $item['status'] }}</td>
+                                <td>
+                                    @if(!empty($item['admin_url']))
+                                        <a href="{{ $item['admin_url'] }}">Manage</a>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>

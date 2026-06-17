@@ -83,6 +83,17 @@ if (!function_exists('getCategoryUrl')) {
     }
 }
 
+if (!function_exists('getPortfolioCategoryUrl')) {
+    function getPortfolioCategoryUrl($category)
+    {
+        if (!$category || empty($category->slug)) {
+            return '#';
+        }
+
+        return route('portfolio', ['slug' => $category->slug]);
+    }
+}
+
 if (!function_exists('responsiveImage')) {
     function responsiveImage(?string $path, array $widths, string $disk = 'public'): array
     {

@@ -21,6 +21,7 @@ use App\Models\Sliders;
 use App\Models\ProductIcon;
 use App\Models\ProductVariant;
 use App\Models\Pages;
+use App\Services\SitemapUrlService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -149,11 +150,15 @@ class AdminController extends Controller
         $totalAmount     = Order::whereIn('order_status', $completedOrderStatuses)->sum('total');
         $deliveredAmount = Order::where('order_status', 'delivered')->sum('total');
         $cancelledAmount = Order::where('order_status', 'cancelled')->sum('total');
-        $frontendPagesCount = Pages::count();
-        $productsCount      = Product::count();
-        $blogsCount         = Blog::count();
-        $categoriesCount    = Category::count();
-        $totalPagesCount    = $frontendPagesCount + $productsCount + $blogsCount + $categoriesCount;
+
+        $sitemapUrls        = app(SitemapUrlService::class)->collect();
+        $sitemapTypeCounts  = $sitemapUrls->groupBy('type')->map->count();
+        $totalPagesCount    = $sitemapUrls->count();
+        $frontendPagesCount = ($sitemapTypeCounts['Page'] ?? 0) + ($sitemapTypeCounts['Static Page'] ?? 0);
+        $productsCount      = $sitemapTypeCounts['Product'] ?? 0;
+        $blogsCount         = $sitemapTypeCounts['Blog'] ?? 0;
+        $categoriesCount    = $sitemapTypeCounts['Category'] ?? 0;
+        $portfolioCategoriesCount = $sitemapTypeCounts['Portfolio Category'] ?? 0;
 
         $startOfWeek   = Carbon::now()->startOfWeek();
         $endOfWeek     = Carbon::now()->endOfWeek();
@@ -209,6 +214,7 @@ class AdminController extends Controller
             'productsCount',
             'blogsCount',
             'categoriesCount',
+            'portfolioCategoriesCount',
             'totalPagesCount',
             'recentOrders',
             'thisWeekRevenue',
@@ -227,71 +233,16 @@ class AdminController extends Controller
 
     public function totalPages()
     {
-        $cmsPages = Pages::orderBy('title')
-            ->get()
-            ->map(function (Pages $page) {
-                $slug = trim((string) $page->slug, '/');
-                $url = $slug === '' ? route('home') : url($slug);
-
-                return [
-                    'type' => 'Page',
-                    'title' => $page->title ?: $page->heading ?: $slug ?: 'Home',
-                    'url' => $url,
-                    'status' => $page->status ? 'Active' : 'Inactive',
-                    'admin_url' => route('admin.pages.edit', $page->id),
-                ];
-            });
-
-        $products = Product::with(['category.parent'])
-            ->orderBy('name')
-            ->get()
-            ->map(function (Product $product) {
-                return [
-                    'type' => 'Product',
-                    'title' => $product->name,
-                    'url' => getProductUrl($product),
-                    'status' => $product->status ? 'Active' : 'Inactive',
-                    'admin_url' => route('admin.product.edit', $product->id),
-                ];
-            });
-
-        $blogs = Blog::orderBy('title')
-            ->get()
-            ->map(function (Blog $blog) {
-                return [
-                    'type' => 'Blog',
-                    'title' => $blog->title,
-                    'url' => route('blog.show', $blog->slug),
-                    'status' => $blog->status ? 'Active' : 'Inactive',
-                    'admin_url' => route('admin.blog.edit', $blog->id),
-                ];
-            });
-
-        $categories = Category::with('parent')
-            ->orderBy('name')
-            ->get()
-            ->map(function (Category $category) {
-                return [
-                    'type' => 'Category',
-                    'title' => $category->name,
-                    'url' => getCategoryUrl($category),
-                    'status' => $category->status ? 'Active' : 'Inactive',
-                    'admin_url' => route('admin.category.edit', $category->id),
-                ];
-            });
-
-        $items = $cmsPages
-            ->concat($products)
-            ->concat($blogs)
-            ->concat($categories)
-            ->values();
+        $items = app(SitemapUrlService::class)->collect();
+        $typeCounts = $items->groupBy('type')->map->count();
 
         return view('admin.total-pages', [
             'items' => $items,
-            'frontendPagesCount' => $cmsPages->count(),
-            'productsCount' => $products->count(),
-            'blogsCount' => $blogs->count(),
-            'categoriesCount' => $categories->count(),
+            'frontendPagesCount' => ($typeCounts['Page'] ?? 0) + ($typeCounts['Static Page'] ?? 0),
+            'productsCount' => $typeCounts['Product'] ?? 0,
+            'blogsCount' => $typeCounts['Blog'] ?? 0,
+            'categoriesCount' => $typeCounts['Category'] ?? 0,
+            'portfolioCategoriesCount' => $typeCounts['Portfolio Category'] ?? 0,
             'totalPagesCount' => $items->count(),
         ]);
     }
