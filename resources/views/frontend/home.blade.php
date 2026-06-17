@@ -177,7 +177,7 @@
                         <img src="{{ $productImage['src'] }}" srcset="{{ $productImage['srcset'] }}" sizes="(max-width: 768px) 50vw, 220px" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
-                            aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
+                            aria-label="Toggle wishlist">
                             <i class="fa-solid fa-heart"></i>
                         </button>
                         </div>
@@ -202,7 +202,7 @@
                         <img src="{{ $productImage['src'] }}" srcset="{{ $productImage['srcset'] }}" sizes="(max-width: 768px) 50vw, 220px" class="loaded" alt="{{ $product->name }}" loading="lazy" decoding="async">
                         <button type="button" class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
                             style="width: 30px; height: 30px; z-index: 2;" data-product-id="{{ $product->id }}" data-in-wishlist="{{ $isInWishlist ? '1' : '0' }}"
-                            aria-label="Toggle wishlist" onclick="event.preventDefault(); event.stopPropagation();"> 
+                            aria-label="Toggle wishlist">
                             <i class="fa-solid fa-heart"></i>
                         </button>
                         </div>
@@ -387,6 +387,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 @endpush
 
+@push('wishlist-options')
+<script>window.wishlistOptions = { reloadOnError: true };</script>
+@endpush
+
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
@@ -442,115 +446,6 @@
                 }
             }
         });
-    });
-</script>
-<script>
-    const wishlistConfig = {
-        addUrl: "{{ route('wishlist.add') }}",
-        removeUrl: "{{ route('wishlist.remove') }}",
-        loginUrl: "",
-        csrfToken: "{{ csrf_token() }}"
-    };
-
-    let sweetAlertPromise;
-
-    function loadSweetAlert() {
-        if (window.Swal) {
-            return Promise.resolve(window.Swal);
-        }
-
-        if (!sweetAlertPromise) {
-            sweetAlertPromise = new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
-                script.async = true;
-                script.onload = () => resolve(window.Swal);
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
-        return sweetAlertPromise;
-    }
-
-    async function showWishlistAuthPopup() {
-        const Swal = await loadSweetAlert();
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Please Login',
-            text: 'You need to be logged in to manage your wishlist.',
-            confirmButtonText: 'Login',
-            confirmButtonColor: '#8b1e2d',
-            showCancelButton: true,
-            cancelButtonText: 'Cancel',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#loginModal").modal('toggle');
-            }
-        });
-    }
-
-    function setWishlistButtonState($button, inWishlist) {
-        $button.toggleClass('active', inWishlist);
-        $button.attr('data-in-wishlist', inWishlist ? '1' : '0');
-
-        const icon = $button.find('i');
-        icon.removeClass('fa-regular').addClass('fa-solid');
-    }
-
-    async function toggleWishlist($button) {
-        const productId  = $button.attr('data-product-id');
-        const inWishlist = String($button.attr('data-in-wishlist')) === '1';
-        const url        = inWishlist ? wishlistConfig.removeUrl : wishlistConfig.addUrl;
-        const Swal       = await loadSweetAlert();
-
-        $button.prop('disabled', true);
-
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: {
-                _token: wishlistConfig.csrfToken,
-                product_id: productId
-            },
-            success: function (response) {
-                setWishlistButtonState($button, response.in_wishlist);
-
-                Swal.fire({
-                    iconHtml: '<i class="fa-regular fa-circle-check fa-2x"></i>',
-                    title: response.in_wishlist ? 'Added to Wishlist' : 'Removed from Wishlist',
-                    text: response.message,
-                    confirmButtonColor: '#8b1e2d',
-                    timer: 1800,
-                    showConfirmButton: false
-                });
-            },
-            error: function (xhr) {
-                if (xhr.status === 401) {
-                    showWishlistAuthPopup();
-                    return;
-                }
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops!',
-                    text: xhr.responseJSON?.message ?? 'Something went wrong. Please try again.',
-                    confirmButtonColor: '#8b1e2d',
-                }).then((result) => {
-                    if (result.isConfirmed || result.isDismissed) {
-                        location.reload();
-                    }
-                });
-            },
-            complete: function () {
-                $button.prop('disabled', false);
-            }
-        });
-    }
-
-    $(".wishlist-btn").click(function() {
-        toggleWishlist($(this));
     });
 </script>
 @endpush

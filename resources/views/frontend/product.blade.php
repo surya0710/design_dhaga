@@ -1113,13 +1113,6 @@
         @endforeach
     ];
 
-    const wishlistConfig = {
-        addUrl: "{{ route('wishlist.add') }}",
-        removeUrl: "{{ route('wishlist.remove') }}",
-        loginUrl: "",
-        csrfToken: "{{ csrf_token() }}"
-    };
-
     const productVariants = @json($variantOptions);
     const hasFabricOptions = productVariants.some(function (variant) {
         return !!variant.fabric_type;
@@ -1334,18 +1327,8 @@
                 btn.classList.remove('loading');
 
                 if (xhr.status === 401) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Please Login',
+                    showLoginAlert({
                         text: 'You need to be logged in to add items to your cart.',
-                        confirmButtonText: 'Login',
-                        confirmButtonColor: '#8b1e2d',
-                        showCancelButton: true,
-                        cancelButtonText: 'Cancel',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $("#loginModal").modal('toggle');
-                        }
                     });
                     return;
                 }
@@ -1756,11 +1739,9 @@
         el.addEventListener('click', function () {
 
             @if(!auth()->check())
-                showReviewAlert({
-                    icon: 'warning',
+                showLoginAlert({
                     title: 'Login Required',
                     text: 'Please login to add review',
-                    confirmButtonColor: '#8b1e2d',
                 });
                 return;
             @endif

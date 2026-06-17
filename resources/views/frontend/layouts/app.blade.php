@@ -159,6 +159,16 @@
     <script src="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
     <script src="{{ versionedAsset('frontend_assets/js/script.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    window.wishlistConfig = {
+        addUrl: @json(route('wishlist.add')),
+        removeUrl: @json(route('wishlist.remove')),
+        csrfToken: @json(csrf_token())
+    };
+    window.wishlistOptions = window.wishlistOptions || {};
+    </script>
+    @stack('wishlist-options')
+    <script src="{{ versionedAsset('frontend_assets/js/wishlist.js') }}" defer></script>
     {{-- Scripts --}}
     @stack('scripts')
     
