@@ -26,6 +26,7 @@
                 <div class="body-text">Total: <strong>{{ $totalPagesCount }}</strong></div>
                 <div class="body-text">Pages: <strong>{{ $frontendPagesCount }}</strong></div>
                 <div class="body-text">Products: <strong>{{ $productsCount }}</strong></div>
+                <div class="body-text">Categories: <strong>{{ $categoriesCount }}</strong></div>
                 <div class="body-text">Blogs: <strong>{{ $blogsCount }}</strong></div>
             </div>
         </div>

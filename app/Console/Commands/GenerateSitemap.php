@@ -2,184 +2,177 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Blog;
+use App\Models\Category;
+use App\Models\Pages;
+use App\Models\Product;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Route;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Blog;
 
 class GenerateSitemap extends Command
 {
     protected $signature = 'generate:sitemap';
+
     protected $description = 'Generate sitemap.xml';
+
+    /** @var array<string, bool> */
+    private array $addedUrls = [];
 
     public function handle()
     {
         $sitemap = Sitemap::create();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Static Routes
-        |--------------------------------------------------------------------------
-        */
-        foreach (Route::getRoutes() as $route) {
+        $this->addStaticPages($sitemap);
+        $this->addCmsPages($sitemap);
+        $this->addBlogs($sitemap);
+        $this->addCategories($sitemap);
+        $this->addProducts($sitemap);
 
-            $uri = $route->uri();
-            $methods = $route->methods();
+        $sitemap->writeToFile(public_path('sitemap.xml'));
 
-            if (!in_array('GET', $methods)) {
-                continue;
-            }
+        $this->info('Sitemap generated successfully with ' . count($this->addedUrls) . ' URLs.');
+    }
 
-            if (
-                str_starts_with($uri, 'admin') ||
-                str_contains($uri, '{') ||
-                str_starts_with($uri, 'login') ||
-                str_starts_with($uri, 'register') ||
-                str_starts_with($uri, 'logout') ||
-                str_starts_with($uri, 'account') ||
-                str_starts_with($uri, 'cart') ||
-                str_starts_with($uri, 'checkout') ||
-                str_starts_with($uri, 'order') ||
-                str_starts_with($uri, 'wishlist') ||
-                str_starts_with($uri, 'auth') ||
-                str_starts_with($uri, 'email') ||
-                str_starts_with($uri, 'password') ||
-                str_starts_with($uri, 'forgot-password') ||
-                str_starts_with($uri, 'reset-password') ||
-                str_starts_with($uri, 'search') ||
-                $uri === 'sanctum/csrf-cookie' ||
-                $uri === 'up'
-            )
-            {
-                continue;
-            }
+    private function addStaticPages(Sitemap $sitemap): void
+    {
+        $routes = [
+            'home' => ['priority' => 1.0, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'about-us' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'contact-us' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'terms-and-condition' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'return-policy' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'shipping-policy' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'privacy-policy' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'store' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'blogs' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'collaborations' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'portfolio' => ['priority' => 0.8, 'frequency' => Url::CHANGE_FREQUENCY_WEEKLY],
+            'shop.all' => ['priority' => 0.9, 'frequency' => Url::CHANGE_FREQUENCY_DAILY],
+        ];
 
-            $sitemap->add(
-                Url::create(url($uri === '/' ? '/' : '/' . $uri))
-                    ->setPriority($uri === '/' ? 1.0 : 0.8)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                    ->setLastModificationDate(now())
+        foreach ($routes as $routeName => $options) {
+            $this->addSitemapUrl(
+                $sitemap,
+                route($routeName),
+                $options['priority'],
+                $options['frequency']
             );
         }
+    }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Blog Pages
-        |--------------------------------------------------------------------------
-        */
-        Blog::where('status', 1)
-            ->chunk(500, function ($blogs) use ($sitemap) {
+    private function addCmsPages(Sitemap $sitemap): void
+    {
+        Pages::where('status', 1)
+            ->orderBy('id')
+            ->chunk(200, function ($pages) use ($sitemap) {
+                foreach ($pages as $page) {
+                    $slug = trim((string) $page->slug, '/');
 
-                foreach ($blogs as $blog) {
-
-                    $sitemap->add(
-                        Url::create(route('blog.show', [
-                            'slug' => $blog->slug
-                        ]))
-                            ->setPriority(0.7)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                            ->setLastModificationDate($blog->updated_at ?? now())
-                    );
-                }
-            });
-
-        /*
-        |--------------------------------------------------------------------------
-        | Shop Main Page
-        |--------------------------------------------------------------------------
-        */
-        $sitemap->add(
-            Url::create(route('shop.all'))
-                ->setPriority(0.9)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                ->setLastModificationDate(now())
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Category Pages
-        |--------------------------------------------------------------------------
-        */
-        Category::where('status', 1)
-            ->chunk(500, function ($categories) use ($sitemap) {
-
-                foreach ($categories as $category) {
-
-                    $sitemap->add(
-                        Url::create(
-                            route('shop.index', [
-                                'category' => $category->slug
-                            ])
-                        )
-                            ->setPriority(0.8)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                            ->setLastModificationDate($category->updated_at ?? now())
-                    );
-                }
-            });
-
-        /*
-        |--------------------------------------------------------------------------
-        | Product Pages
-        |--------------------------------------------------------------------------
-        */
-        Product::where('status', 1)
-            ->with('category')
-            ->chunk(500, function ($products) use ($sitemap) {
-
-                foreach ($products as $product) {
-
-                    if (!$product->category) {
+                    if ($slug === '' || $slug === '/') {
                         continue;
                     }
 
-                    $category = $product->category;
-
-                    // Child category
-                    if (!empty($category->parent_id)) {
-
-                        $parentCategory = Category::find($category->parent_id);
-
-                        if (!$parentCategory) {
-                            continue;
-                        }
-
-                        $productUrl = route('shop.product', [
-                            'category'    => $parentCategory->slug,
-                            'subcategory' => $category->slug,
-                            'product'     => $product->slug,
-                        ]);
-
-                    } else {
-
-                        // Fallback for products directly attached to parent category
-                        $productUrl = route('shop.product', [
-                            'category'    => $category->slug,
-                            'subcategory' => $category->slug,
-                            'product'     => $product->slug,
-                        ]);
-                    }
-
-                    $sitemap->add(
-                        Url::create($productUrl)
-                            ->setPriority(0.9)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                            ->setLastModificationDate($product->updated_at ?? now())
+                    $this->addSitemapUrl(
+                        $sitemap,
+                        url($slug),
+                        0.8,
+                        Url::CHANGE_FREQUENCY_WEEKLY,
+                        $page->updated_at
                     );
                 }
             });
-        
+    }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Write Sitemap
-        |--------------------------------------------------------------------------
-        */
-        $sitemap->writeToFile(public_path('sitemap.xml'));
+    private function addBlogs(Sitemap $sitemap): void
+    {
+        Blog::where('status', 1)
+            ->orderBy('id')
+            ->chunk(500, function ($blogs) use ($sitemap) {
+                foreach ($blogs as $blog) {
+                    $this->addSitemapUrl(
+                        $sitemap,
+                        route('blog.show', ['slug' => $blog->slug]),
+                        0.7,
+                        Url::CHANGE_FREQUENCY_WEEKLY,
+                        $blog->updated_at
+                    );
+                }
+            });
+    }
 
-        $this->info('Sitemap generated successfully.');
+    private function addCategories(Sitemap $sitemap): void
+    {
+        Category::where('status', 1)
+            ->with('parent')
+            ->orderBy('id')
+            ->chunk(500, function ($categories) use ($sitemap) {
+                foreach ($categories as $category) {
+                    $url = getCategoryUrl($category);
+
+                    if ($url === '#') {
+                        continue;
+                    }
+
+                    $this->addSitemapUrl(
+                        $sitemap,
+                        $url,
+                        0.8,
+                        Url::CHANGE_FREQUENCY_WEEKLY,
+                        $category->updated_at
+                    );
+                }
+            });
+    }
+
+    private function addProducts(Sitemap $sitemap): void
+    {
+        Product::where('status', 1)
+            ->with(['category.parent'])
+            ->orderBy('id')
+            ->chunk(500, function ($products) use ($sitemap) {
+                foreach ($products as $product) {
+                    $url = getProductUrl($product);
+
+                    if ($url === '#') {
+                        continue;
+                    }
+
+                    $this->addSitemapUrl(
+                        $sitemap,
+                        $url,
+                        0.9,
+                        Url::CHANGE_FREQUENCY_DAILY,
+                        $product->updated_at
+                    );
+                }
+            });
+    }
+
+    private function addSitemapUrl(
+        Sitemap $sitemap,
+        string $url,
+        float $priority,
+        string $changeFrequency,
+        $lastModified = null
+    ): void {
+        $normalizedUrl = rtrim($url, '/');
+
+        if ($normalizedUrl === '') {
+            $normalizedUrl = url('/');
+        }
+
+        if (isset($this->addedUrls[$normalizedUrl])) {
+            return;
+        }
+
+        $this->addedUrls[$normalizedUrl] = true;
+
+        $sitemap->add(
+            Url::create($normalizedUrl)
+                ->setPriority($priority)
+                ->setChangeFrequency($changeFrequency)
+                ->setLastModificationDate($lastModified ?? now())
+        );
     }
 }

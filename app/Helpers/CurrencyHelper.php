@@ -61,6 +61,28 @@ if (!function_exists('getProductUrl')) {
     }
 }
 
+if (!function_exists('getCategoryUrl')) {
+    function getCategoryUrl($category)
+    {
+        if (!$category) {
+            return '#';
+        }
+
+        if (!empty($category->parent_id)) {
+            $parent = $category->parent ?? \App\Models\Category::find($category->parent_id);
+
+            if ($parent) {
+                return route('shop.subcategory', [
+                    'category' => $parent->slug,
+                    'subcategory' => $category->slug,
+                ]);
+            }
+        }
+
+        return route('shop.index', ['category' => $category->slug]);
+    }
+}
+
 if (!function_exists('responsiveImage')) {
     function responsiveImage(?string $path, array $widths, string $disk = 'public'): array
     {

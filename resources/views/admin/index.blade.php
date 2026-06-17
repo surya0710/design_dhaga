@@ -64,6 +64,7 @@
                                         <div class="body-text">
                                             Pages: {{ $frontendPagesCount }} |
                                             Products: {{ $productsCount }} |
+                                            Categories: {{ $categoriesCount }} |
                                             Blogs: {{ $blogsCount }}
                                         </div>
                                     </div>

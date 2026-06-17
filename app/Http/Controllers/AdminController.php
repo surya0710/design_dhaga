@@ -152,7 +152,8 @@ class AdminController extends Controller
         $frontendPagesCount = Pages::count();
         $productsCount      = Product::count();
         $blogsCount         = Blog::count();
-        $totalPagesCount    = $frontendPagesCount + $productsCount + $blogsCount;
+        $categoriesCount    = Category::count();
+        $totalPagesCount    = $frontendPagesCount + $productsCount + $blogsCount + $categoriesCount;
 
         $startOfWeek   = Carbon::now()->startOfWeek();
         $endOfWeek     = Carbon::now()->endOfWeek();
@@ -207,6 +208,7 @@ class AdminController extends Controller
             'frontendPagesCount',
             'productsCount',
             'blogsCount',
+            'categoriesCount',
             'totalPagesCount',
             'recentOrders',
             'thisWeekRevenue',
@@ -265,9 +267,23 @@ class AdminController extends Controller
                 ];
             });
 
+        $categories = Category::with('parent')
+            ->orderBy('name')
+            ->get()
+            ->map(function (Category $category) {
+                return [
+                    'type' => 'Category',
+                    'title' => $category->name,
+                    'url' => getCategoryUrl($category),
+                    'status' => $category->status ? 'Active' : 'Inactive',
+                    'admin_url' => route('admin.category.edit', $category->id),
+                ];
+            });
+
         $items = $cmsPages
             ->concat($products)
             ->concat($blogs)
+            ->concat($categories)
             ->values();
 
         return view('admin.total-pages', [
@@ -275,6 +291,7 @@ class AdminController extends Controller
             'frontendPagesCount' => $cmsPages->count(),
             'productsCount' => $products->count(),
             'blogsCount' => $blogs->count(),
+            'categoriesCount' => $categories->count(),
             'totalPagesCount' => $items->count(),
         ]);
     }
