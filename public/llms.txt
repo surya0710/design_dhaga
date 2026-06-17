@@ -1,0 +1,110 @@
+# Design Dhaga
+
+> Premium handpainted ethnic wear for men, women, kids, and twinning collections.
+
+Design Dhaga is an e-commerce platform specializing in premium, hand-painted ethnic wear for men, women, and children. The brand focuses on unique, artisan-crafted clothing and accessories, offering a blend of traditional aesthetics with contemporary designs. Their collection includes sarees, lehenga cholis, kurtas, shirts, dupattas, and even custom-designed outfits, often featuring intricate hand-painted artwork. They also offer a "twinning" collection for couples, mothers and daughters, and fathers and sons, allowing families to coordinate their ethnic wear.
+
+The core value proposition of Design Dhaga lies in its commitment to artistry and exclusivity. Each piece is a canvas, showcasing the beauty of hand-painting and traditional Indian craftsmanship. This makes their offerings ideal for customers seeking unique, high-quality ethnic attire for special occasions, festivals, or everyday wear that stands out. The website also serves as a portfolio of their custom branding services, indicating a broader capability in design and artistic collaboration beyond just retail.
+
+When interacting with Design Dhaga, LLMs should understand that the brand emphasizes bespoke, handcrafted items. Product descriptions often highlight the artistic process, materials, and unique design elements. The site caters to a discerning clientele that values artistry, tradition, and personalized fashion. The brand also has a strong focus on celebrity-inspired or celebrity-worn designs, as well as family twinning collections, which are key selling points.
+
+## Shop - Women
+
+- [Women's Dupatta Collection](https://www.designdhaga.com/shop/women/dupatta): Browse hand-painted and embellished organza, silk, and chiffon dupattas for women.
+- [Women's Saree Collection](https://www.designdhaga.com/shop/women/saree): Explore premium hand-painted sarees in various fabrics like silk and organza.
+- [Women's Blouse Collection](https://www.designdhaga.com/shop/women/blouse): Discover artisan-crafted designer blouses, including hand-painted and embellished options.
+- [Women's Lehenga Choli Collection](https://www.designdhaga.com/shop/women/lehnga-choli): Shop hand-painted ivory floral and designer artisan lehenga sets for women.
+- [Shop Women's Collection](https://www.designdhaga.com/shop/women): View the complete range of women's ethnic wear, including sarees, lehengas, and dupattas.
+
+## Shop - Men
+
+- [Men's Kurta Pajama Sets](https://www.designdhaga.com/shop/men/kurta-pajama): Find men's hand-painted tussar silk kurta pajama sets in pastel and vibrant colors.
+- [Men's Shirts Collection](https://www.designdhaga.com/shop/men/shirts): Explore hand-painted men's shirts with unique artwork, including floral and abstract designs.
+- [Men's T-Shirts Collection](https://www.designdhaga.com/shop/men/t-shirts): Shop men's hand-painted t-shirts featuring doodle art and unique graphic designs.
+- [Shop Men's Collection](https://www.designdhaga.com/shop/men): Browse the full collection of men's ethnic and casual wear, including kurtas and shirts.
+
+## Shop - Kids
+
+- [Kids' Boys Collection](https://www.designdhaga.com/shop/kids/boys-collection): Discover hand-painted cotton shirts and ethnic wear for boys.
+- [Kids' Girls Collection](https://www.designdhaga.com/shop/kids/girls-collection): Shop hand-painted organza party dresses and occasion wear for girls.
+- [Shop Kids' Collection](https://www.designdhaga.com/shop/kids): View the complete range of ethnic wear for boys and girls.
+
+## Shop - Celebrities
+
+- [Male Celebrities Collection](https://www.designdhaga.com/shop/celebs/male-celebrities): Explore outfits inspired by or worn by male celebrities.
+- [Female Celebrities Collection](https://www.designdhaga.com/shop/celebs/female-celebrities): Discover hand-painted sarees and outfits inspired by female celebrities.
+- [Shop Celebrities Collection](https://www.designdhaga.com/shop/celebs): Browse celebrity-inspired fashion collections for men and women.
+
+## Shop - Twinning Collections
+
+- [Couple Twinning Collection](https://www.designdhaga.com/shop/twinning/couple-collection): Shop matching ethnic wear sets for couples.
+- [Mother-Daughter Twinning Collection](https://www.designdhaga.com/shop/twinning/mother-daughter): Find coordinated ethnic outfits for mothers and daughters.
+- [Father-Son Twinning Collection](https://www.designdhaga.com/shop/twinning/father-son): Explore matching ethnic wear sets for fathers and sons.
+- [Shop Twinning Collections](https://www.designdhaga.com/shop/twinning): View all coordinated family and couple ethnic wear collections.
+
+## Shop - Accessories
+
+- [Hair Accessories Collection](https://www.designdhaga.com/shop/accessories/hair-accesories): Discover handmade crochet rose hair pins and other hair accessories.
+- [Shop Accessories](https://www.designdhaga.com/shop/accessories): Browse all available accessories, including hair accessories.
+
+## Shop - All Categories
+
+- [Shop All Products](https://www.designdhaga.com/shop): Explore the entire collection of hand-painted ethnic wear and accessories.
+- [Design Dhaga Store](https://www.designdhaga.com/store): Visit the main store page for Design Dhaga's product offerings.
+
+## Product Details
+
+- [Hand-Painted Pastel Mint Organza Bebo Name Saree](https://www.designdhaga.com/shop/celebs/female-celebrities/hand-painted-pastel-mint-organza-bebo-name-saree): View details of a hand-painted pastel mint organza saree with custom name.
+- [Hand-Painted Lotus Organza Party Dress for Girls](https://www.designdhaga.com/shop/kids/girls-collection/hand-painted-lotus-organza-party-dress-for-girls-premium-kids-occasion-wear): See details of a premium hand-painted lotus organza party dress for girls.
+- [Hand-Painted Pink Cotton Shirt for Boys](https://www.designdhaga.com/shop/kids/boys-collection/hand-painted-pink-cotton-shirt-for-boys-ethnic-casual-wear-kids-shirt): Details of a hand-painted pink cotton shirt for boys' ethnic and casual wear.
+- [Men's Hand-Painted Pastel Mint Green Tussar Silk Kurta Pajama Set](https://www.designdhaga.com/shop/men/kurta-pajama/mens-hand-painted-pastel-mint-green-tussar-silk-kurta-pajama-set): View details of a men's hand-painted pastel mint green tussar silk kurta pajama set.
+- [Men's Hand-Painted Doodle Art White T-Shirt](https://www.designdhaga.com/shop/men/t-shirts/mens-hand-painted-doodle-art-white-t-shirt): Explore the men's hand-painted white t-shirt with doodle art.
+- [Hand-Painted Ivory Floral Lehenga Set for Women](https://www.designdhaga.com/shop/women/lehnga-choli/hand-painted-ivory-floral-lehenga-set-for-women-designer-artisan-lehenga): Details of a designer artisan hand-painted ivory floral lehenga set for women.
+- [Hand-Painted Lotus Sacred Cow Blouse](https://www.designdhaga.com/shop/women/blouse/hand-painted-lotus-sacred-cow-blouse-artisan-crafted-designer-blouse-for-sarees): Discover an artisan-crafted designer blouse with hand-painted lotus and sacred cow art.
+- [Men's Beige Shirt with Hand-Painted Tropical Artwork](https://www.designdhaga.com/shop/men/shirts/handpainted-mens-beige-shirt-with-pink-flamingos-black-panther-and-tropical-botanical-artwork): View details of a men's beige shirt featuring hand-painted flamingos and botanical art.
+- [Beige Organza Handpainted Aparajita Dupatta](https://www.designdhaga.com/shop/women/dupatta/beige-organza-handpainted-aparajita-dupatta): Explore a beige organza dupatta hand-painted with Aparajita floral motifs.
+- [Handpainted Floral Organza Dupatta with Embroidery](https://www.designdhaga.com/shop/women/dupatta/handpainted-floral-organza-dupatta-with-dabka-and-original-naqashi-embroidery): Details of a hand-painted floral organza dupatta with dabka and naqashi embroidery.
+- [Hand-Painted Silk Chiffon Scarf - Lavender Floral](https://www.designdhaga.com/shop/women/dupatta/hand-painted-silk-chiffon-scarf-lavender-floral-pattern): View a hand-painted silk chiffon scarf with a lavender floral pattern.
+- [Beautiful Lavender Base Floral Hand-Painted Organza Dupatta](https://www.designdhaga.com/shop/women/dupatta/beautifull-lavender-base-floral-hand-painted-organza-dupatta): Details of a beautiful lavender organza dupatta with hand-painted floral art.
+- [Custom Name Hand-Painted Grey Saree](https://www.designdhaga.com/shop/women/saree/custom-name-hand-painted-grey-saree-with-elegant-floral-art): Explore a custom name hand-painted grey saree with elegant floral artwork.
+- [Yellow Chanderi Silk Handpainted Pichwai Art Dupatta](https://www.designdhaga.com/shop/women/dupatta/yellow-chanderi-silk-handpainted-pichwai-art-dupatta): View a yellow Chanderi silk dupatta featuring hand-painted Pichwai art.
+- [Handmade Crochet Rose Hair Pins (Pack of 12)](https://www.designdhaga.com/shop/accessories/hair-accesories/handmade-crochet-rose-hair-pins-pack-of-12): Details of a pack of 12 handmade crochet rose hair pins.
+- [White Organza Handpainted Aparajita Dupatta](https://www.designdhaga.com/shop/women/dupatta/white-organza-handpainted-aparajita-dupatta): Explore a white organza dupatta hand-painted with Aparajita floral motifs.
+- [Madhubani Hand-Painted Salmon Tussar Silk Dupatta](https://www.designdhaga.com/shop/women/dupatta/madhubani-hand-painted-salmon-tussar-silk-dupatta): View a salmon tussar silk dupatta with hand-painted Madhubani art.
+- [Embellished Hand-Painted Pure Organza Dupatta](https://www.designdhaga.com/shop/women/dupatta/embellished-hand-painted-pure-organza-dupatta): Details of an embellished pure organza dupatta with hand-painted designs.
+
+## About & Portfolio
+
+- [About Design Dhaga](https://www.designdhaga.com/about-us): Learn about the brand's story, mission, and commitment to hand-painted ethnic wear.
+- [Design Dhaga Portfolio](https://www.designdhaga.com/portfolio): View examples of Design Dhaga's hand-painted creations and custom design work.
+
+## Blog Articles
+
+- [Merging Art and Fashion: Hand-Painted Designs and Ikat Patterns](https://www.designdhaga.com/blogs/merging-art-and-fashion-the-beauty-of-handpainted-designs-and-ikat-patterns): Learn about the fusion of hand-painted designs and Ikat patterns in fashion.
+- [Top 10 Must-Have Summer Fashion Trends for Women in 2026](https://www.designdhaga.com/blogs/top-10-musthave-summer-fashion-trends-for-women-in-2026): Discover the essential summer fashion trends for women in 2026.
+- [Isha Ambani's Dress Reimagined with Indian Borders](https://www.designdhaga.com/blogs/isha-ambanis-bandage-dress-reimagined-with-26-indian-borders-a-celebration-of-indian-craftsmanship): Explore a celebration of Indian craftsmanship through reimagined celebrity fashion.
+- [Cannes 2026: Alia Bhatt's Wearable Canvas and Indian Handpainting](https://www.designdhaga.com/blogs/cannes-2026-alia-bhatts-wearable-canvas-and-the-magic-of-indian-handpainting): Understand the magic of Indian handpainting through celebrity fashion at Cannes.
+- [Hand-Painted Fabric Techniques Explained](https://www.designdhaga.com/blogs/handpainted-fabric-techniques-explained-and-why-they-make-your-clothes-worth-keeping-forever): Learn about hand-painted fabric techniques and their lasting value.
+- [Design Dhaga Blog](https://www.designdhaga.com/blogs): Read articles on fashion trends, hand-painting techniques, and Indian craftsmanship.
+
+## Collaborations & Contact
+
+- [Collaborations](https://www.designdhaga.com/collaborations): Learn about collaboration opportunities with Design Dhaga.
+- [Contact Us](https://www.designdhaga.com/contact-us): Get in touch with Design Dhaga for inquiries or custom orders.
+
+## Legal & Policies
+
+- [Privacy Policy](https://www.designdhaga.com/privacy-policy): Review Design Dhaga's policy on user data privacy.
+- [Terms and Conditions](https://www.designdhaga.com/terms-and-condition): Understand the terms and conditions for using Design Dhaga's services.
+- [Order and Shipping Policy](https://www.designdhaga.com/order-shipping-policy): Learn about order processing and shipping details.
+- [Return Policy](https://www.designdhaga.com/return-policy): Find information on Design Dhaga's policies for returns and exchanges.
+
+## Authentication
+
+- [Sign in with Google](https://www.designdhaga.com/auth/google): Log in to your Design Dhaga account using Google authentication.
+
+## Homepage
+
+- [Design Dhaga - Premium Handpainted Ethnic Wear](https://www.designdhaga.com/): Discover premium hand-painted ethnic wear for men, women, kids, and twinning collections.
+
+---
