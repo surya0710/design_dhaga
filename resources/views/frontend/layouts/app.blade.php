@@ -163,7 +163,8 @@
     window.wishlistConfig = {
         addUrl: @json(route('wishlist.add')),
         removeUrl: @json(route('wishlist.remove')),
-        csrfToken: @json(csrf_token())
+        csrfToken: @json(csrf_token()),
+        isAuthenticated: @json(auth()->check() && auth()->user()->utype === 'USR')
     };
     window.wishlistOptions = window.wishlistOptions || {};
     </script>
