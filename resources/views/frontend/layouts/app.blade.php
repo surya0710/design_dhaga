@@ -166,6 +166,9 @@
         csrfToken: @json(csrf_token()),
         isAuthenticated: @json(auth()->check() && auth()->user()->utype === 'USR')
     };
+    window.authConfig = {
+        isAuthenticated: window.wishlistConfig.isAuthenticated
+    };
     window.wishlistOptions = window.wishlistOptions || {};
     </script>
     @stack('wishlist-options')

@@ -1268,6 +1268,13 @@
     function handleAddToCart(productId) {
         const btn = document.getElementById('addToCartBtn');
 
+        if (window.authConfig?.isAuthenticated === false) {
+            showLoginAlert({
+                text: 'You need to be logged in to add items to your cart.',
+            });
+            return;
+        }
+
         if (productVariants.length && !selectedVariant) {
             Swal.fire({
                 icon: 'warning',
