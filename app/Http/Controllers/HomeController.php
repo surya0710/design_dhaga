@@ -141,7 +141,7 @@ class HomeController extends Controller
             },
 
             'subcategories.galleries' => function ($query) {
-                $query->select('id', 'portfolio_subcategory_id', 'image', 'title');
+                $query->select('id', 'portfolio_subcategory_id', 'image', 'title', 'alt_text');
             }
 
         ])

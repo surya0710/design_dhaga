@@ -57,8 +57,8 @@
                 @error('title') <span class="invalid-feedback">{{ $message }}</span> @enderror
 
                 <fieldset class="name">
-                    <div class="body-title">Alt Text</div>
-                    <input class="flex-grow" type="text" name="alt_text" value="{{ old('alt_text', $gallery->alt_text ?? '') }}" placeholder="Image description for SEO">
+                    <div class="body-title">Image Alt Tag Content</div>
+                    <input class="flex-grow" type="text" name="alt_text" value="{{ old('alt_text', $gallery->alt_text ?? '') }}" placeholder="Describe this image for SEO and accessibility">
                 </fieldset>
                 @error('alt_text') <span class="invalid-feedback">{{ $message }}</span> @enderror
 

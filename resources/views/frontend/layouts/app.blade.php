@@ -15,6 +15,24 @@
     <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/css/style-v3.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        @media (max-width: 768px) {
+            .breadcrumb-section {
+                padding-top: .25rem !important;
+                padding-bottom: .25rem !important;
+            }
+
+            .breadcrumb {
+                --bs-breadcrumb-item-padding-x: .25rem;
+                font-size: 12px;
+                line-height: 1.25;
+            }
+
+            .breadcrumb-item.active {
+                max-width: 110px;
+            }
+        }
+    </style>
 
     @stack('extras')
     <!-- Google tag (gtag.js) -->

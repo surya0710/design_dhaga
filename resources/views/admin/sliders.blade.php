@@ -26,7 +26,7 @@
                 <div class="wg-filter flex-grow">
                     <form class="form-search" method="GET">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search by heading..." name="search"
+                            <input type="text" placeholder="Search by heading, alt text..." name="search"
                                 value="{{ request('search') }}">
                         </fieldset>
                         <div class="button-submit">
@@ -122,7 +122,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center">No sliders found</td>
+                            <td colspan="9" class="text-center">No sliders found</td>
                         </tr>
                         @endforelse
 

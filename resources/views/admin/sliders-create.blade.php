@@ -89,8 +89,9 @@
 
                 <!-- Image Alt -->
                 <fieldset>
-                    <div class="body-title">Image Alt</div>
+                    <div class="body-title">Image Alt Tag Content</div>
                     <input type="text" name="image_alt"
+                           placeholder="Describe this slider image for SEO and accessibility"
                            value="{{ old('image_alt', $slider->image_alt ?? '') }}">
                 </fieldset>
                 @error('image_alt')

@@ -24,7 +24,7 @@
                 <div class="wg-filter flex-grow">
                     <form class="form-search" method="GET" action="{{ route('admin.portfolio.gallery.index') }}">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search gallery by title, category..." name="search"
+                            <input type="text" placeholder="Search gallery by title, alt text, category..." name="search"
                                 value="{{ request('search') }}">
                         </fieldset>
                         <div class="button-submit">
