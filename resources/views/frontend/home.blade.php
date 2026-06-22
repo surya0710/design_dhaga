@@ -336,7 +336,7 @@
                 <div class="testimonial-card">
 
                     <div class="testimonial-img">
-                        <img src="{{ $reviewImage['src'] }}" srcset="{{ $reviewImage['srcset'] }}" sizes="120px" alt="{{ $review->name }}" loading="lazy" decoding="async">
+                        <img src="{{ $reviewImage['src'] }}" srcset="{{ $reviewImage['srcset'] }}" sizes="120px" alt="{{ $review->alt_tag }}" loading="lazy" decoding="async">
                     </div>
 
                     <div class="testimonial-content">

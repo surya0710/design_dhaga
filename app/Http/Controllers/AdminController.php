@@ -1290,6 +1290,7 @@ class AdminController extends Controller
             'stars'       => 'required|integer|min:1|max:5',
             'image'       => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status'      => 'required|in:0,1',
+            'alt_tag'     => 'nullable|string|max:255',
         ]);
 
         $imageName = null;
@@ -1316,6 +1317,7 @@ class AdminController extends Controller
             'stars'       => $request->stars,
             'image'       => 'uploads/testimonials/' . $imageName,
             'status'      => $request->status,
+            'alt_tag'     => $request->alt_tag,
         ]);
 
         return redirect()->route('admin.testimonials')->with('status', 'Testimonial added successfully.');
@@ -1337,6 +1339,7 @@ class AdminController extends Controller
             'stars'       => 'required|integer|min:1|max:5',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status'      => 'required|in:0,1',
+            'alt_tag'     => 'nullable|string|max:255',
         ]);
 
         $imagePath = $testimonial->image;
@@ -1371,6 +1374,7 @@ class AdminController extends Controller
             'stars'       => $request->stars,
             'image'       => $imagePath,
             'status'      => $request->status,
+            'alt_tag'     => $request->alt_tag
         ]);
 
         return redirect()

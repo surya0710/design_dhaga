@@ -151,6 +151,26 @@
                 </div>
 
 
+                {{-- Alt tag --}}
+                <fieldset class="name">
+                    <div class="body-title">
+                        Image Alt Tag <span class="tf-color-1">*</span>
+                    </div>
+
+                    <input
+                        class="flex-grow"
+                        type="text"
+                        name="alt_tag"
+                        value="{{ old('alt_tag') }}"
+                        placeholder="Enter image alt tag"
+                        required>
+                </fieldset>
+
+                @error('alt_tag')
+                    <span class="invalid-feedback d-block">{{ $message }}</span>
+                @enderror
+
+
                 {{-- Status --}}
                 <fieldset class="name">
                     <div class="body-title">
