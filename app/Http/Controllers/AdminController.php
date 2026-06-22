@@ -1407,7 +1407,8 @@ class AdminController extends Controller
             'description'   => 'required',
             'image'         => 'required|image|mimes:jpg,jpeg,png,webp',
             'display_order' => 'required|integer',
-            'status'        => 'required'
+            'status'        => 'required',
+            'alt_tag'       => 'nullable|string|max:255',
         ]);
 
         $imagePath = null;
@@ -1435,6 +1436,7 @@ class AdminController extends Controller
             'image'         => $imagePath,
             'display_order' => $request->display_order,
             'status'        => $request->status,
+            'alt_tag'       => $request->alt_tag
         ]);
 
         return redirect()
@@ -1458,7 +1460,8 @@ class AdminController extends Controller
             'description'   => 'required',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'display_order' => 'required|integer',
-            'status'        => 'required'
+            'status'        => 'required',
+            'alt_tag'       => 'nullable|string|max:255',
         ]);
 
         $imagePath = $story->image;
@@ -1490,6 +1493,7 @@ class AdminController extends Controller
             'image'         => $imagePath,
             'display_order' => $request->display_order,
             'status'        => $request->status,
+            'alt_tag'       => $request->alt_tag
         ]);
 
         return redirect()
@@ -1527,6 +1531,7 @@ class AdminController extends Controller
             'description'             => 'required',
             'signature'               => 'nullable',
             'image'                   => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'alt_tag'                 => 'nullable|string|max:255',
             'value_titles'            => 'required|array|min:1',
             'value_titles.*'          => 'required|string|max:255',
             'value_descriptions'      => 'required|array|min:1',
@@ -1575,6 +1580,7 @@ class AdminController extends Controller
         $section->description = $request->description;
         $section->signature = $request->signature;
         $section->image = $imagePath;
+        $section->alt_tag = $request->alt_tag;
         $section->value_items = $this->buildAboutValueItems($request);
 
         $section->save();
@@ -1594,6 +1600,7 @@ class AdminController extends Controller
 
         foreach ($titles as $index => $title) {
             $iconPath = $existingIcons[$index] ?? '';
+            $alt = trim((string) ($alts[$index] ?? '')) ?: $title;
 
             if ($request->hasFile("value_icons.$index")) {
                 $oldIcon = $iconPath;
@@ -1615,7 +1622,7 @@ class AdminController extends Controller
 
             $items[] = [
                 'icon' => $iconPath,
-                'alt' => $alts[$index] ?? $title,
+                'alt' => $alt,
                 'title' => $title,
                 'description' => $descriptions[$index] ?? '',
             ];

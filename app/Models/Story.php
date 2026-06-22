@@ -12,5 +12,6 @@ class Story extends Model
         'image',
         'display_order',
         'status',
+        'alt_tag'
     ];
 }   

@@ -142,7 +142,7 @@ and premium branding services. Our products are handcrafted in India and loved b
 <section class="container py-4">
   <div class="owners-box">
     <div class="col-md-6 owner-image">
-      <img src="{{ asset($about->image) }}" class="img-fluid" alt="{{ $about->heading }}" loading="lazy" />
+      <img src="{{ asset($about->image) }}" class="img-fluid" alt="{{ $about->alt_tag ?: $about->heading }}" loading="lazy" />
     </div>
     <div class="col-md-6 content">
       <h1 class="text-center">{{ $about->heading }}</h1>
@@ -161,7 +161,7 @@ and premium branding services. Our products are handcrafted in India and loved b
       @foreach($aboutValueItems as $item)
         <div class="box">
           @if(!empty($item['icon']))
-            <img alt="{{ $item['alt'] ?? $item['title'] ?? 'About value' }}" src="{{ asset($item['icon']) }}" loading="lazy" />
+            <img alt="{{ ($item['alt'] ?? '') ?: ($item['title'] ?? 'About value') }}" src="{{ asset($item['icon']) }}" loading="lazy" />
           @endif
           <h4>{{ $item['title'] ?? '' }}</h4>
           <p class="px-3 text-justify">
@@ -234,7 +234,7 @@ and premium branding services. Our products are handcrafted in India and loved b
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->year }} Journey" loading="lazy" />
+                                <img src="{{ asset($story->image) }}" class="w-100 img-fluid" alt="{{ $story->alt_tag }}" loading="lazy" />
                             </div>
                         </div>
                     @endif

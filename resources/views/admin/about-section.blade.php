@@ -48,12 +48,12 @@
                         @if(isset($section) && $section->image)
 
                             <div class="item" id="imgpreview" style="display:block"> 
-                                <img id="previewImg" src="{{ asset($section->image) }}" class="effect8">
+                                <img id="previewImg" src="{{ asset($section->image) }}" class="effect8" alt="{{ old('alt_tag', $section->alt_tag ?? 'About section image') }}">
                             </div>
                         @else
 
                             <div class="item" id="imgpreview" style="display:none"> 
-                                <img id="previewImg" src="" class="effect8">
+                                <img id="previewImg" src="" class="effect8" alt="{{ old('alt_tag', $section->alt_tag ?? 'About section image') }}">
                             </div>
 
                         @endif
@@ -86,16 +86,24 @@
 
                 </fieldset>
 
+                <fieldset>
+                    <div class="body-title">Image Alt Tag Content</div>
+                    <input type="text" id="aboutAltTag" name="alt_tag" value="{{ old('alt_tag', $section->alt_tag ?? '') }}">
+                </fieldset>
+
                 <div class="body-title" style="margin-top: 25px;">Values Section</div>
 
                 <div class="about-values-editor">
                     @foreach($valueItems as $index => $item)
+                        @php
+                            $valueAltText = old('value_alts.'.$index, $item['alt'] ?? '') ?: ($item['title'] ?? 'About value');
+                        @endphp
                         <fieldset class="about-value-card" style="max-width: 100%;">
                             <div class="body-title">Value {{ $index + 1 }}</div>
 
                             <div class="value-icon-stack">
                                 <div class="item value-icon-preview" style="{{ !empty($item['icon']) ? 'display:flex' : 'display:none' }}">
-                                    <img src="{{ !empty($item['icon']) ? asset($item['icon']) : '' }}" class="effect8 value-preview-img" alt="{{ $item['alt'] ?? '' }}">
+                                    <img src="{{ !empty($item['icon']) ? asset($item['icon']) : '' }}" class="effect8 value-preview-img" alt="{{ $valueAltText }}">
                                 </div>
 
                                 <div class="item up-load value-icon-upload">
@@ -124,12 +132,12 @@
 
                             <div class="value-field">
                                 <div class="body-title">Title</div>
-                                <input type="text" name="value_titles[{{ $index }}]" value="{{ old('value_titles.'.$index, $item['title'] ?? '') }}" required>
+                                <input type="text" name="value_titles[{{ $index }}]" class="value-title-input" value="{{ old('value_titles.'.$index, $item['title'] ?? '') }}" required>
                             </div>
 
                             <div class="value-field">
-                                <div class="body-title">Icon Alt Text</div>
-                                <input type="text" name="value_alts[{{ $index }}]" value="{{ old('value_alts.'.$index, $item['alt'] ?? '') }}">
+                                <div class="body-title">Icon Alt Tag Content</div>
+                                <input type="text" name="value_alts[{{ $index }}]" class="value-alt-input" value="{{ old('value_alts.'.$index, $item['alt'] ?? '') }}" placeholder="Defaults to the value title">
                             </div>
 
                             <div class="value-field">
@@ -294,6 +302,7 @@
                     'src',
                     URL.createObjectURL(file)
                 );
+                $('#previewImg').attr('alt', $('#aboutAltTag').val() || 'About section image');
 
                 $('#imgpreview').show();
 
@@ -301,18 +310,35 @@
 
         });
 
+        $('#aboutAltTag').on('input', function () {
+
+            $('#previewImg').attr('alt', this.value || 'About section image');
+
+        });
+
         $('.value-icon-input').on('change', function () {
 
             const file = this.files[0];
-            const preview = $(this).closest('fieldset').find('.value-icon-preview');
+            const card = $(this).closest('fieldset');
+            const preview = card.find('.value-icon-preview');
             const image = preview.find('.value-preview-img');
 
             if (file) {
 
                 image.attr('src', URL.createObjectURL(file));
+                image.attr('alt', card.find('.value-alt-input').val() || card.find('.value-title-input').val() || 'About value');
                 preview.show();
 
             }
+
+        });
+
+        $('.value-alt-input, .value-title-input').on('input', function () {
+
+            const card = $(this).closest('fieldset');
+            const altText = card.find('.value-alt-input').val() || card.find('.value-title-input').val() || 'About value';
+
+            card.find('.value-preview-img').attr('alt', altText);
 
         });
 

@@ -12,6 +12,7 @@ class AboutSection extends Model
         'signature',
         'image',
         'value_items',
+        'alt_tag',
     ];
 
     protected $casts = [

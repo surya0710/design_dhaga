@@ -162,6 +162,23 @@
 
                 </fieldset>
 
+                {{-- Alt Text --}}
+                <fieldset>
+
+                    <div class="body-title">
+                        Alt tag Text
+                    </div>
+
+                    <input type="text" name="alt_tag" value="{{ old('alt_tag', $story->alt_tag) }}">
+
+                    @error('alt_tag')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                </fieldset>
+
                 {{-- Display Order --}}
                 <fieldset>
 
