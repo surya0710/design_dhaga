@@ -7,6 +7,9 @@
     RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
     RewriteRule ^ https://www.%1%{REQUEST_URI} [L,R=301]
 
+    # Let Laravel handle the blog index even if /public/blogs exists for assets.
+    RewriteRule ^blogs/?$ public/index.php [L]
+
     # Internally route project root traffic to /public
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ public/$1 [L]
