@@ -52,7 +52,7 @@
                     <div>
                         <a href="{{ route('blog.show', $blog->slug) }}" class="text-decoration-none text-dark">
                             <div class="card border-0 h-100">
-                                <div class="ratio ratio-4x3">
+                                <div class="card-image-container">
                                     <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="card-img-top object-fit-cover" alt="{{ $blog->title }}" />
                                 </div>
                                 <div class="card-body blogs-card">
