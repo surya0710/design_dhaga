@@ -15,6 +15,7 @@ class HomeSectionItem extends Model
         'subtitle',
         'body',
         'image',
+        'alt_tag',
         'link_text',
         'link_url',
         'icon',

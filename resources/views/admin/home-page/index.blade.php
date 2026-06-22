@@ -330,13 +330,18 @@
                                 <label>Section Image</label>
 
                                 @if($section->image)
-                                    <img src="{{ asset($section->image) }}?v={{ time() }}" class="home-item-preview" alt="">
+                                    <img src="{{ asset($section->image) }}?v={{ time() }}" class="home-item-preview" alt="{{ $section->alt_tag ?: ($section->title ?? 'Section image') }}">
                                 @endif
 
                                 <input type="file"
                                     name="image"
                                     accept="image/*">
 
+                            </div>
+
+                            <div class="modern-field">
+                                <label>Image Alt Tag Content</label>
+                                <input type="text" name="alt_tag" value="{{ old('alt_tag', $section->alt_tag) }}" placeholder="Describe the section image">
                             </div>
 
                         @endif
@@ -428,12 +433,20 @@
                                                     @if($item->image)
                                                         <img src="{{ asset($item->image) }}?v={{ time() }}"
                                                              class="home-item-preview"
-                                                             alt="">
+                                                             alt="{{ $item->alt_tag ?: ($item->title ?? 'Item image') }}">
                                                     @endif
 
                                                     <input type="file"
                                                            name="image"
                                                            accept="image/*">
+                                                </div>
+
+                                                <div class="home-field-group">
+                                                    <label>Image Alt Tag Content</label>
+                                                    <input type="text"
+                                                           name="alt_tag"
+                                                           value="{{ old('alt_tag', $item->alt_tag) }}"
+                                                           placeholder="Defaults to item heading">
                                                 </div>
 
                                             @endif

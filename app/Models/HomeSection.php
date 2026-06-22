@@ -15,6 +15,7 @@ class HomeSection extends Model
         'subtitle',
         'body',
         'image',
+        'alt_tag',
         'button_text',
         'button_url',
         'button_target',

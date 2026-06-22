@@ -136,7 +136,7 @@
                     $featureImage = responsiveImage($item->image, [64, 96, 128]);
                 @endphp
                 <div class="feature-item col p-0">
-                    <img src="{{ $featureImage['src'] }}" srcset="{{ $featureImage['srcset'] }}" sizes="64px" class="mobile-icons" loading="lazy" decoding="async" alt="{{ $item->title }}" />
+                    <img src="{{ $featureImage['src'] }}" srcset="{{ $featureImage['srcset'] }}" sizes="64px" class="mobile-icons" loading="lazy" decoding="async" alt="{{ $item->alt_tag ?: $item->title }}" />
                     <h3 class="fs-12">{{ $item->title }}</h3>
                 </div>
             @endforeach
@@ -223,7 +223,7 @@
                 $ideaBrushImage = responsiveImage($ideaBrush->image, [480, 768, 1024]);
             @endphp
             <div class="col text-small-center">
-                <img src="{{ $ideaBrushImage['src'] }}" srcset="{{ $ideaBrushImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="Custmize Now" class="w-80" loading="lazy" decoding="async" />
+                <img src="{{ $ideaBrushImage['src'] }}" srcset="{{ $ideaBrushImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="{{ $ideaBrush->alt_tag ?: $ideaBrush->title }}" class="w-80" loading="lazy" decoding="async" />
             </div>
             <div class="col">
                 <div class="py-md-3 px-3">
@@ -267,7 +267,7 @@
                 </div>
             </div>
             <div class="col text-md-right text-small-center">
-                <img src="{{ $graphicsImage['src'] }}" srcset="{{ $graphicsImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="Custmize Now" class="customize-image" loading="lazy" decoding="async" />
+                <img src="{{ $graphicsImage['src'] }}" srcset="{{ $graphicsImage['srcset'] }}" sizes="(max-width: 768px) 90vw, 45vw" alt="{{ $graphicsDesign->alt_tag ?: $graphicsDesign->title }}" class="customize-image" loading="lazy" decoding="async" />
             </div>
         </div>
     </div>
@@ -286,7 +286,7 @@
                     $whoWeAreImage = responsiveImage($item->image, [320, 480, 640]);
                 @endphp
                 <div class="item">
-                    <img src="{{ $whoWeAreImage['src'] }}" srcset="{{ $whoWeAreImage['srcset'] }}" sizes="(max-width: 575px) 100vw, (max-width: 1199px) 33vw, 25vw" class="w-100 border rounded" alt="{{ $item->title }}" loading="lazy" decoding="async">
+                    <img src="{{ $whoWeAreImage['src'] }}" srcset="{{ $whoWeAreImage['srcset'] }}" sizes="(max-width: 575px) 100vw, (max-width: 1199px) 33vw, 25vw" class="w-100 border rounded" alt="{{ $item->alt_tag ?: $item->title }}" loading="lazy" decoding="async">
                     <a href="{{ $item->link_url }}">
                         <div class="item-box ">
                             <span>{{ $item->title }}</span>
@@ -310,7 +310,7 @@
                 $inspiredImage = responsiveImage($item->image, [160, 240, 320]);
             @endphp
             <div class="col text-center">
-                <img alt="{{ $item->title }}" src="{{ $inspiredImage['src'] }}" srcset="{{ $inspiredImage['srcset'] }}" sizes="(max-width: 768px) 33vw, 180px" loading="lazy" decoding="async" />
+                <img alt="{{ $item->alt_tag ?: $item->title }}" src="{{ $inspiredImage['src'] }}" srcset="{{ $inspiredImage['srcset'] }}" sizes="(max-width: 768px) 33vw, 180px" loading="lazy" decoding="async" />
                 <h4>{{ $item->title }}</h4>
             </div>
             @endforeach

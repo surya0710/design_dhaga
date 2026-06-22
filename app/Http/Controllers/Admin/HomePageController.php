@@ -49,6 +49,8 @@ class HomePageController extends Controller
             'status' => 'nullable|boolean',
 
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:5120',
+
+            'alt_tag' => 'nullable|string|max:255',
         ]);
 
         $data['button_target'] =
@@ -185,6 +187,8 @@ class HomePageController extends Controller
             'status' => 'nullable|boolean',
 
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:5120',
+
+            'alt_tag' => 'nullable|string|max:255',
         ]);
     }
 
