@@ -252,7 +252,7 @@
             <div class="submenu" id="{{ $item->slug }}" style="{{ $loop->index == 0 ? 'display:block;' : 'display:none;' }}">
                 @foreach($item->children as $subCategory)
                     <a href="{{ route('shop.subcategory', [$item->slug, $subCategory->slug]) }}" class="submenu-item">
-                        <img src="{{ asset('uploads/categories/'.$subCategory->image) }}" alt="{{ $subCategory->name }} Category Icon" />
+                        <img src="{{ asset('uploads/categories/'.$subCategory->image) }}" alt="{{ $subCategory->alt_tag ?: $subCategory->name }}" />
                         {{ $subCategory->name }}
                     </a>
                 @endforeach

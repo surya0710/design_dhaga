@@ -70,7 +70,7 @@
             @endphp
             <div class="text-center">
                 <a href="{{ route('shop.index', [$category->slug]) }}" class="text-decoration-none">
-                    <img src="{{ $categoryImage['src'] }}" srcset="{{ $categoryImage['srcset'] }}" sizes="120px" alt="{{ $category->name }} Category Icon" class="img-fluid" loading="lazy" decoding="async">
+                    <img src="{{ $categoryImage['src'] }}" srcset="{{ $categoryImage['srcset'] }}" sizes="120px" alt="{{ $category->alt_tag }} " class="img-fluid" loading="lazy" decoding="async">
                     <h4>{{ $category->name }}</h4>
                 </a>
             </div>

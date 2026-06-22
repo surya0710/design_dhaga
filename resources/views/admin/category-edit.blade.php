@@ -131,6 +131,16 @@
                 @error('image')
                     <span class="invalid-feedback">{{$message}}</span>
                 @enderror
+
+                <fieldset class="name">
+                    <div class="body-title">Alt Tag Text <span class="tf-color-1">*</span>
+                    </div>
+                    <input class="flex-grow" type="text" placeholder="Image Alt Tag" name="alt_tag"  value="{{$category->alt_tag ?? ''}}" aria-required="true">
+                </fieldset>
+                @error('page_heading')
+                    <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+
                 <div class="bot">
                     <div></div>
                     <button class="tf-button w208" type="submit">Save</button>

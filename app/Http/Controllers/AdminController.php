@@ -386,6 +386,7 @@ class AdminController extends Controller
             'show_on_home'     => 'nullable',
             'content'          => 'required',
             'page_heading'     => 'required',
+            'alt_tag'          => 'nullable|string|max:255',
         ]);
 
         $category                    = new Category();
@@ -399,6 +400,7 @@ class AdminController extends Controller
         $category->content           = $request->content;
         $category->page_heading      = $request->page_heading;
         $category->image             = '';
+        $category->alt_tag           = $request->alt_tag;
 
         if ($request->hasFile('image')) {
             $image     = $request->file('image');
@@ -438,6 +440,7 @@ class AdminController extends Controller
             'show_on_home'     => 'nullable',
             'content'          => 'required',
             'page_heading'     => 'required',
+            'alt_tag'          => 'nullable|string|max:255',
         ]);
 
         $category = Category::findOrFail($request->id);
@@ -450,6 +453,7 @@ class AdminController extends Controller
         $category->show_on_home     = $request->show_on_home ?? 1;
         $category->content          = $request->content;
         $category->page_heading     = $request->page_heading;
+        $category->alt_tag          = $request->alt_tag;
 
         if ($request->hasFile('image')) {
 
