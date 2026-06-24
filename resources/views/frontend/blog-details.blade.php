@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="rounded overflow-hidden mb-4 text-center">
-                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="img-fluid w-100" alt="{{ $blog->title }}" />
+                    <img src="{{ asset('uploads/blogs/'.$blog->image) }}" class="img-fluid w-100" alt="{{ $blog->alt_tag ?? $blog->title }}" />
                 </div>
                 {!! $blog->content !!}
             </div>

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
-use Surfsidemedia\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class CouponController extends Controller
 {
@@ -154,52 +155,38 @@ class CouponController extends Controller
             ]);
         }
 
-        // ✅ Get cart subtotal
-        $cartItems = session('cart', []);
-        $subtotal = collect($cartItems)->sum(function ($item) {
-            return $item['price'] * $item['quantity'];
-        });
+        // ✅ Get cart subtotal from database (same source as cart/checkout pages)
+        $subtotal = (float) Cart::where('user_id', Auth::id())
+            ->get()
+            ->sum(function ($item) {
+                return ((float) $item->price) * ((int) $item->quantity);
+            });
 
         // ✅ Min cart check
-        if ($coupon->min_cart_value && $subtotal < $coupon->min_cart_value) {
+        $minCartValue = (float) $coupon->min_cart_value;
+        if ($minCartValue > 0 && $subtotal < $minCartValue) {
             return response()->json([
                 'success' => false,
-                'message' => 'Minimum cart value should be ₹' . $coupon->min_cart_value
+                'message' => 'Minimum cart value should be ₹' . number_format($minCartValue, 2)
             ]);
         }
 
-        // =========================
-        // ✅ FREE SHIPPING LOGIC
-        // =========================
-        $freeShipping = false;
+        $freeShipping = (isset($coupon->free_shipping) && $coupon->free_shipping)
+            || $coupon->type === 'shipping';
+
         $discount = 0;
 
-        if (
-            (isset($coupon->free_shipping) && $coupon->free_shipping) ||
-            $coupon->type === 'shipping'
-        ) {
-            $freeShipping = true;
-            $discount = 0; // no price discount
-        } else {
-
-            // =========================
-            // ✅ NORMAL DISCOUNT LOGIC
-            // =========================
-            if ($coupon->type === 'fixed') {
-                $discount = $coupon->value;
-            } else {
-                // percentage
-                $discount = ($subtotal * $coupon->value) / 100;
-            }
-
-            // ✅ Max discount cap
-            if ($coupon->max_discount && $discount > $coupon->max_discount) {
-                $discount = $coupon->max_discount;
-            }
-
-            // ✅ Prevent discount > subtotal
-            $discount = min($discount, $subtotal);
+        if ($coupon->type === 'fixed') {
+            $discount = (float) $coupon->value;
+        } elseif ($coupon->type === 'percent') {
+            $discount = ($subtotal * (float) $coupon->value) / 100;
         }
+
+        if ($coupon->max_discount && $discount > (float) $coupon->max_discount) {
+            $discount = (float) $coupon->max_discount;
+        }
+
+        $discount = min($discount, $subtotal);
 
         // =========================
         // ✅ SINGLE USE CHECK
@@ -226,11 +213,17 @@ class CouponController extends Controller
             session()->put('coupon_used_' . $coupon->code, true);
         }
 
+        if ($freeShipping && $discount > 0) {
+            $message = 'Coupon applied: ₹' . number_format($discount, 2) . ' off + free shipping';
+        } elseif ($freeShipping) {
+            $message = 'Free shipping applied successfully';
+        } else {
+            $message = 'Coupon applied successfully';
+        }
+
         return response()->json([
             'success' => true,
-            'message' => $freeShipping 
-                ? 'Free shipping applied successfully' 
-                : 'Coupon applied successfully',
+            'message' => $message,
             'discount' => round($discount, 2),
             'free_shipping' => $freeShipping
         ]);

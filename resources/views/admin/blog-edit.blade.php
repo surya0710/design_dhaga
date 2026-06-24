@@ -303,6 +303,12 @@
                     <div class="text-danger">{{ $errors->first('image') }}</div>
                 </fieldset>
 
+                <fieldset class="name">
+                    <div class="body-title mb-10">Alt Tag Text <span class="tf-color-1">*</span></div>
+                    <input type="text" class="mb-10" placeholder="Enter Image Alt tag" name="alt_tag" value="{{ old('alt_tag', $blog->alt_tag) }}">
+                    <div class="text-danger">{{ $errors->first('alt_tag') }}</div>
+                </fieldset>
+
                 <div class="cols gap10">
                     <button class="tf-button w-full" type="submit">Update Blog</button>
                 </div>

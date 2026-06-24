@@ -20,6 +20,7 @@ use App\Models\PortfolioCategory;
 use App\Models\Pages;
 use App\Models\HomepageHighlight;
 use App\Models\Wishlist;
+use App\Services\InstagramFeedService;
 
 class HomeController extends Controller
 {
@@ -84,6 +85,16 @@ class HomeController extends Controller
                 ->keyBy('key');
         });
 
+        $instagramFeed = $homeSections->get('instagram_feed');
+        $instagramProfile = null;
+        $instagramPosts = collect();
+
+        if ($instagramFeed) {
+            $instagramService = app(InstagramFeedService::class);
+            $instagramProfile = $instagramService->getProfile($instagramFeed);
+            $instagramPosts = $instagramService->getPosts($instagramFeed);
+        }
+
         $wishlistProductIds = [];
 
         if (auth()->check()) {
@@ -99,7 +110,7 @@ class HomeController extends Controller
                 ->all();
         }
 
-        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights', 'wishlistProductIds'));
+        return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights', 'wishlistProductIds', 'instagramFeed', 'instagramProfile', 'instagramPosts'));
     }
 
     public function about()

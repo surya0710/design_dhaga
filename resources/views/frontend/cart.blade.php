@@ -116,11 +116,18 @@
                         <span>₹{{ number_format($subtotal, 2) }}</span>
                     </div>
 
-                    {{-- DISCOUNT ROW (shows only when coupon is applied) --}}
-                    @if(session('coupon'))
+                    {{-- DISCOUNT ROW --}}
+                    @if(session('coupon.discount', 0) > 0)
                     <div class="d-flex justify-content-between summary-row">
                         <span style="color: green;">Discount</span>
                         <span style="color: green;">−₹{{ number_format(session('coupon.discount'), 2) }}</span>
+                    </div>
+                    @endif
+
+                    @if(session('coupon.free_shipping'))
+                    <div class="d-flex justify-content-between summary-row">
+                        <span style="color: green;">Shipping</span>
+                        <span style="color: green;">FREE</span>
                     </div>
                     @endif
 
@@ -141,6 +148,11 @@
                                  style="background-color: #f0fff4; border: 1px solid #b7ebc0;">
                                 <span style="color: green; font-size: 13px; font-weight: 500;">
                                     ✓ {{ session('coupon.code') }} applied
+                                    @if(session('coupon.free_shipping') && session('coupon.discount', 0) > 0)
+                                        (₹{{ number_format(session('coupon.discount'), 2) }} off + Free Shipping)
+                                    @elseif(session('coupon.free_shipping'))
+                                        (Free Shipping)
+                                    @endif
                                 </span>
                                 <form method="POST" action="{{ route('coupon.remove') }}">
                                     @csrf

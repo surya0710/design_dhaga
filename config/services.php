@@ -59,6 +59,14 @@ return [
         'base_url' => env('SHIPROCKET_BASE_URL', 'https://apiv2.shiprocket.in/v1/external'),
         'pickup_pincode' => '125001'
     ],
+
+    'instagram' => [
+        'access_token' => env('INSTAGRAM_ACCESS_TOKEN'),
+        'user_id' => env('INSTAGRAM_USER_ID'),
+        'graph_version' => env('INSTAGRAM_GRAPH_VERSION', 'v21.0'),
+        'cache_ttl' => env('INSTAGRAM_CACHE_TTL', 3600),
+        'post_limit' => env('INSTAGRAM_POST_LIMIT', 20),
+    ],
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),

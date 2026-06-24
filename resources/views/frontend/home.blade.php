@@ -272,6 +272,7 @@
         </div>
     </div>
 </section>
+@include('frontend.partials.instagram-feed')
 <section class="container-fluid py-3" id="who-we-are">
     <div class="row px-4">
         <h2 class="mb-0">{{ $whoWeAre->title }}</h2>
@@ -385,6 +386,170 @@
 @push('extras')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<style>
+    .instagram-feed-section {
+        background: #fff;
+    }
+
+    .instagram-feed-title {
+        font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .instagram-feed-icon {
+        margin-left: 8px;
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .instagram-feed-subtitle {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .instagram-profile-bar {
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 18px 20px;
+        background: #fff;
+    }
+
+    .instagram-profile-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid #e5e7eb;
+    }
+
+    .instagram-profile-avatar--placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        color: #9ca3af;
+        font-size: 1.5rem;
+    }
+
+    .instagram-profile-name {
+        font-weight: 700;
+        color: #111827;
+        margin-right: 10px;
+    }
+
+    .instagram-profile-handle {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .instagram-profile-bio {
+        color: #374151;
+        font-size: 0.92rem;
+        margin-top: 6px;
+    }
+
+    .instagram-profile-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        color: #374151;
+        font-size: 0.9rem;
+    }
+
+    .instagram-follow-btn {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        border: none;
+        color: #fff;
+        border-radius: 999px;
+        padding: 10px 22px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .instagram-follow-btn:hover {
+        color: #fff;
+        opacity: 0.92;
+    }
+
+    .instagram-feed-item {
+        padding: 0 4px;
+    }
+
+    .instagram-feed-media {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .instagram-feed-image {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        display: block;
+        border-radius: 8px;
+    }
+
+    .instagram-feed-play {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #111827;
+        font-size: 0.7rem;
+    }
+
+    .instagram-feed-caption {
+        margin: 10px 0 0;
+        font-size: 0.82rem;
+        line-height: 1.45;
+        color: #374151;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    #instagramFeedSlider .owl-dots {
+        margin-top: 18px;
+    }
+
+    #instagramFeedSlider .owl-dot span {
+        width: 8px;
+        height: 8px;
+        margin: 4px;
+        background: #d1d5db;
+    }
+
+    #instagramFeedSlider .owl-dot.active span {
+        background: #6b7280;
+    }
+
+    @media (max-width: 767px) {
+        .instagram-profile-bar {
+            padding: 16px;
+        }
+
+        .instagram-follow-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .instagram-feed-caption {
+            font-size: 0.75rem;
+            -webkit-line-clamp: 2;
+        }
+    }
+</style>
 @endpush
 
 @push('wishlist-options')
@@ -395,6 +560,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 <script>
+    $(document).ready(function() {
+        if ($("#instagramFeedSlider .owl-carousel").length) {
+            $("#instagramFeedSlider .owl-carousel").owlCarousel({
+                loop: true,
+                margin: 16,
+                nav: true,
+                dots: true,
+                slideBy: 'page',
+                autoplay: false,
+                smartSpeed: 700,
+
+                responsive: {
+                    0: {
+                        items: 3
+                    },
+                    992: {
+                        items: 4
+                    },
+                    1200: {
+                        items: 5
+                    }
+                }
+            });
+        }
+    });
+
     $(document).ready(function() {
         $("#whoWeAreSlider .owl-carousel").owlCarousel({
             loop: true,

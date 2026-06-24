@@ -768,7 +768,7 @@
                                 <span>₹{{ number_format($subtotal, 2) }}</span>
                             </div>
 
-                            @if($couponDiscount > 0 && !$isFreeShipping)
+                            @if($couponDiscount > 0)
                             <div class="co-summary-row is-discount">
                                 <span>Coupon Discount</span>
                                 <span>− ₹{{ number_format($couponDiscount, 2) }}</span>

@@ -45,6 +45,21 @@
             'body_label' => 'Left Side Content',
         ],
 
+        'instagram_feed' => [
+            'title' => '4b. Instagram Feed',
+            'where' => 'Shows below the graphics section on the homepage.',
+            'hint' => 'First line of body = @handle. Remaining lines = profile bio. Post caption goes in item description.',
+            'fields' => ['title', 'subtitle', 'body', 'button', 'image', 'items'],
+            'heading_label' => 'Profile Name',
+            'subtitle_label' => 'Section Subtext',
+            'body_label' => 'Profile Handle And Bio',
+            'item_count' => 12,
+            'item_image' => true,
+            'item_description' => true,
+            'item_button_text' => false,
+            'item_link' => true,
+        ],
+
         'who_we_are' => [
             'title' => '5. who-we-are',
             'where' => 'Section with four image cards.',

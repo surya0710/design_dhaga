@@ -1119,6 +1119,7 @@ class AdminController extends Controller
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
             'author'           => 'required|string|max:255',
+            'alt_tag'          => 'nullable|string|max:255',
         ]);
 
         $image = $request->file('image');
@@ -1136,6 +1137,7 @@ class AdminController extends Controller
             'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
             'author'           => $request->author,
+            'alt_tag'          => $request->alt_tag,
         ]);
 
         $tagIds = collect(explode(',', $request->tags ?? ''))
@@ -1170,6 +1172,7 @@ class AdminController extends Controller
             'meta_keywords'    => 'nullable|max:255',
             'meta_description' => 'nullable',
             'author'           => 'required|string|max:255',
+            'alt_tag'          => 'nullable|string|max:255',
         ]);
 
         $imageName = $blog->image;
@@ -1198,6 +1201,7 @@ class AdminController extends Controller
             'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
             'author'           => $request->author,
+            'alt_tag'          => $request->alt_tag,
         ]);
 
         $tagIds = collect(explode(',', $request->tags ?? ''))
