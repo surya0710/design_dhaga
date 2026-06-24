@@ -1,14 +1,23 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
+class EnsureInstagramFeedSection extends Command
 {
-    public function up(): void
+    protected $signature = 'home:ensure-instagram-feed';
+
+    protected $description = 'Create the homepage Instagram feed section if it is missing';
+
+    public function handle(): int
     {
         if (DB::table('home_sections')->where('key', 'instagram_feed')->exists()) {
-            return;
+            $this->info('Instagram feed section already exists.');
+
+            return self::SUCCESS;
         }
 
         $now = now();
@@ -55,15 +64,12 @@ return new class extends Migration
                 'updated_at' => $now,
             ]);
         }
-    }
 
-    public function down(): void
-    {
-        $sectionId = DB::table('home_sections')->where('key', 'instagram_feed')->value('id');
+        Cache::forget('home.sections');
+        Cache::forget('instagram.feed');
 
-        if ($sectionId) {
-            DB::table('home_section_items')->where('home_section_id', $sectionId)->delete();
-            DB::table('home_sections')->where('id', $sectionId)->delete();
-        }
+        $this->info('Instagram feed section created with ' . count($posts) . ' fallback posts.');
+
+        return self::SUCCESS;
     }
-};
+}

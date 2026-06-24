@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HomeSection;
 use App\Models\HomeSectionItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -79,6 +80,8 @@ class HomePageController extends Controller
 
         $section->update($data);
 
+        $this->clearHomePageCache();
+
         return back()->with(
             'status',
             'Home page section updated successfully.'
@@ -105,6 +108,8 @@ class HomePageController extends Controller
         }
 
         $section->items()->create($data);
+
+        $this->clearHomePageCache();
 
         return back()->with(
             'status',
@@ -142,6 +147,8 @@ class HomePageController extends Controller
 
         $item->update($data);
 
+        $this->clearHomePageCache();
+
         return back()->with(
             'status',
             'Home page item updated successfully.'
@@ -158,10 +165,18 @@ class HomePageController extends Controller
 
         $item->delete();
 
+        $this->clearHomePageCache();
+
         return back()->with(
             'status',
             'Home page item deleted successfully.'
         );
+    }
+
+    private function clearHomePageCache(): void
+    {
+        Cache::forget('home.sections');
+        Cache::forget('instagram.feed');
     }
 
     private function validateItem(

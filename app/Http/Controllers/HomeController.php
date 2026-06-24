@@ -86,6 +86,15 @@ class HomeController extends Controller
         });
 
         $instagramFeed = $homeSections->get('instagram_feed');
+
+        if (! $instagramFeed) {
+            $instagramFeed = HomeSection::where('key', 'instagram_feed')
+                ->where('status', 1)
+                ->with(['items' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                ->first();
+        }
         $instagramProfile = null;
         $instagramPosts = collect();
 

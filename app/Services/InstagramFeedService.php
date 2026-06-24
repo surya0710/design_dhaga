@@ -52,15 +52,20 @@ class InstagramFeedService
             return null;
         }
 
-        return Cache::remember('instagram.feed', config('services.instagram.cache_ttl', 3600), function () use ($token) {
-            $feed = $this->fetchFromFacebookGraph($token);
+        $cacheKey = 'instagram.feed';
+        $cached = Cache::get($cacheKey);
 
-            if ($feed) {
-                return $feed;
-            }
+        if (is_array($cached)) {
+            return $cached;
+        }
 
-            return $this->fetchFromInstagramGraph($token);
-        });
+        $feed = $this->fetchFromFacebookGraph($token) ?? $this->fetchFromInstagramGraph($token);
+
+        if ($feed) {
+            Cache::put($cacheKey, $feed, config('services.instagram.cache_ttl', 3600));
+        }
+
+        return $feed;
     }
 
     private function fetchFromFacebookGraph(string $token): ?array
