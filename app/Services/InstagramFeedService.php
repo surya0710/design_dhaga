@@ -53,7 +53,8 @@ class InstagramFeedService
         }
 
         $cacheKey = 'instagram.feed';
-        $cached = Cache::get($cacheKey);
+        $cache = $this->instagramCache();
+        $cached = $cache->get($cacheKey);
 
         if (is_array($cached)) {
             return $cached;
@@ -62,10 +63,21 @@ class InstagramFeedService
         $feed = $this->fetchFromFacebookGraph($token) ?? $this->fetchFromInstagramGraph($token);
 
         if ($feed) {
-            Cache::put($cacheKey, $feed, config('services.instagram.cache_ttl', 3600));
+            try {
+                $cache->put($cacheKey, $feed, config('services.instagram.cache_ttl', 3600));
+            } catch (\Throwable $exception) {
+                Log::warning('Instagram feed: unable to cache API response.', [
+                    'message' => $exception->getMessage(),
+                ]);
+            }
         }
 
         return $feed;
+    }
+
+    private function instagramCache(): \Illuminate\Contracts\Cache\Repository
+    {
+        return Cache::store('file');
     }
 
     private function fetchFromFacebookGraph(string $token): ?array

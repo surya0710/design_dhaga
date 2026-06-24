@@ -37,6 +37,7 @@ class TestInstagramFeed extends Command
         $this->info('Fallback items in database: ' . $section->items->count());
 
         Cache::forget('instagram.feed');
+        Cache::store('file')->forget('instagram.feed');
 
         $version = config('services.instagram.graph_version', 'v21.0');
         $pages = Http::timeout(20)->get("https://graph.facebook.com/{$version}/me/accounts", [

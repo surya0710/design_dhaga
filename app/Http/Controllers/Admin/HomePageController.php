@@ -176,6 +176,13 @@ class HomePageController extends Controller
     private function clearHomePageCache(): void
     {
         Cache::forget('home.sections');
+
+        try {
+            Cache::store('file')->forget('instagram.feed');
+        } catch (\Throwable) {
+            //
+        }
+
         Cache::forget('instagram.feed');
     }
 

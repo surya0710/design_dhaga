@@ -66,6 +66,7 @@ class EnsureInstagramFeedSection extends Command
         }
 
         Cache::forget('home.sections');
+        Cache::store('file')->forget('instagram.feed');
         Cache::forget('instagram.feed');
 
         $this->info('Instagram feed section created with ' . count($posts) . ' fallback posts.');
