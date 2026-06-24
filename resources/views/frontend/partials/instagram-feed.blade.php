@@ -77,9 +77,10 @@
                 @foreach($instagramPosts as $post)
                     @php
                         $mediaUrl = $post['media_url'] ?? '';
-                        $postImage = (str_starts_with($mediaUrl, 'http://') || str_starts_with($mediaUrl, 'https://'))
+                        $isExternalMedia = str_starts_with($mediaUrl, 'http://') || str_starts_with($mediaUrl, 'https://');
+                        $postImage = $isExternalMedia
                             ? ['src' => $mediaUrl, 'srcset' => '']
-                            : responsiveImage($mediaUrl, [240, 360, 480]);
+                            : ['src' => asset($mediaUrl), 'srcset' => ''];
                         $postUrl = $post['permalink'] ?: $followUrl;
                         $isVideo = in_array(strtoupper((string) ($post['media_type'] ?? '')), ['VIDEO', 'REELS'], true);
                     @endphp
@@ -90,9 +91,11 @@
                                 @if($postImage['srcset']) srcset="{{ $postImage['srcset'] }}" @endif
                                 sizes="(max-width: 767px) 33vw, 20vw"
                                 alt="{{ $post['alt'] ?? 'Instagram post' }}"
-                                class="instagram-feed-image"
-                                loading="lazy"
+                                class="instagram-feed-image skip-lazy"
+                                loading="eager"
                                 decoding="async"
+                                data-no-lazy="1"
+                                fetchpriority="low"
                             >
                             @if($isVideo)
                                 <span class="instagram-feed-play" aria-hidden="true">

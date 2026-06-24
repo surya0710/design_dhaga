@@ -75,83 +75,43 @@ class InstagramFeedService
             $igUserId = config('services.instagram.user_id');
             $accessToken = $token;
 
-            if (! $igUserId) {
-                $pagesResponse = Http::timeout(15)->get("https://graph.facebook.com/{$version}/me/accounts", [
+            if ($igUserId) {
+                $feed = $this->fetchInstagramBusinessFeed($version, $igUserId, $accessToken);
+
+                if ($feed) {
+                    return $feed;
+                }
+            }
+
+            $pagesResponse = Http::timeout(20)
+                ->retry(2, 250)
+                ->get("https://graph.facebook.com/{$version}/me/accounts", [
                     'fields' => 'instagram_business_account,access_token',
                     'access_token' => $token,
                 ]);
 
-                if (! $pagesResponse->successful()) {
-                    Log::warning('Instagram feed: unable to load Facebook pages.', [
-                        'status' => $pagesResponse->status(),
-                        'body' => $pagesResponse->json(),
-                    ]);
-
-                    return null;
-                }
-
-                $page = collect($pagesResponse->json('data', []))
-                    ->first(fn ($item) => ! empty($item['instagram_business_account']['id']));
-
-                if (! $page) {
-                    Log::warning('Instagram feed: no Facebook page linked to an Instagram business account.');
-
-                    return null;
-                }
-
-                $igUserId = $page['instagram_business_account']['id'];
-                $accessToken = $page['access_token'] ?? $token;
-            }
-
-            $profileResponse = Http::timeout(15)->get("https://graph.facebook.com/{$version}/{$igUserId}", [
-                'fields' => 'username,name,biography,profile_picture_url,followers_count,follows_count,media_count',
-                'access_token' => $accessToken,
-            ]);
-
-            if (! $profileResponse->successful()) {
-                Log::warning('Instagram feed: unable to load Instagram profile.', [
-                    'status' => $profileResponse->status(),
-                    'body' => $profileResponse->json(),
+            if (! $pagesResponse->successful()) {
+                Log::warning('Instagram feed: unable to load Facebook pages.', [
+                    'status' => $pagesResponse->status(),
+                    'body' => $pagesResponse->json(),
                 ]);
 
                 return null;
             }
 
-            $profileData = $profileResponse->json();
+            $page = collect($pagesResponse->json('data', []))
+                ->first(fn ($item) => ! empty($item['instagram_business_account']['id']));
 
-            $mediaResponse = Http::timeout(15)->get("https://graph.facebook.com/{$version}/{$igUserId}/media", [
-                'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url,thumbnail_url,media_type}',
-                'limit' => config('services.instagram.post_limit', 20),
-                'access_token' => $accessToken,
-            ]);
-
-            if (! $mediaResponse->successful()) {
-                Log::warning('Instagram feed: unable to load Instagram media.', [
-                    'status' => $mediaResponse->status(),
-                    'body' => $mediaResponse->json(),
-                ]);
+            if (! $page) {
+                Log::warning('Instagram feed: no Facebook page linked to an Instagram business account.');
 
                 return null;
             }
 
-            $posts = collect($mediaResponse->json('data', []))
-                ->map(fn (array $item) => $this->normalizeMediaItem($item))
-                ->filter(fn ($post) => ! empty($post['media_url']))
-                ->values()
-                ->all();
+            $igUserId = $page['instagram_business_account']['id'];
+            $accessToken = $page['access_token'] ?? $token;
 
-            return [
-                'profile' => [
-                    'name' => $profileData['name'] ?? $profileData['username'] ?? 'Design Dhaga',
-                    'username' => '@' . ltrim((string) ($profileData['username'] ?? 'designdhaga'), '@'),
-                    'bio' => (string) ($profileData['biography'] ?? ''),
-                    'avatar' => $profileData['profile_picture_url'] ?? null,
-                    'following' => $profileData['follows_count'] ?? null,
-                    'followers' => $profileData['followers_count'] ?? null,
-                    'media_count' => $profileData['media_count'] ?? null,
-                ],
-                'posts' => $posts,
-            ];
+            return $this->fetchInstagramBusinessFeed($version, $igUserId, $accessToken);
         } catch (\Throwable $exception) {
             Log::warning('Instagram feed: Facebook Graph request failed.', [
                 'message' => $exception->getMessage(),
@@ -159,6 +119,69 @@ class InstagramFeedService
 
             return null;
         }
+    }
+
+    private function fetchInstagramBusinessFeed(string $version, string $igUserId, string $accessToken): ?array
+    {
+        $profileResponse = Http::timeout(20)
+            ->retry(2, 250)
+            ->get("https://graph.facebook.com/{$version}/{$igUserId}", [
+                'fields' => 'username,name,biography,profile_picture_url,followers_count,follows_count,media_count',
+                'access_token' => $accessToken,
+            ]);
+
+        if (! $profileResponse->successful()) {
+            Log::warning('Instagram feed: unable to load Instagram profile.', [
+                'status' => $profileResponse->status(),
+                'body' => $profileResponse->json(),
+            ]);
+
+            return null;
+        }
+
+        $profileData = $profileResponse->json();
+
+        $mediaResponse = Http::timeout(20)
+            ->retry(2, 250)
+            ->get("https://graph.facebook.com/{$version}/{$igUserId}/media", [
+                'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url,thumbnail_url,media_type}',
+                'limit' => config('services.instagram.post_limit', 20),
+                'access_token' => $accessToken,
+            ]);
+
+        if (! $mediaResponse->successful()) {
+            Log::warning('Instagram feed: unable to load Instagram media.', [
+                'status' => $mediaResponse->status(),
+                'body' => $mediaResponse->json(),
+            ]);
+
+            return null;
+        }
+
+        $posts = collect($mediaResponse->json('data', []))
+            ->map(fn (array $item) => $this->normalizeMediaItem($item))
+            ->filter(fn ($post) => ! empty($post['media_url']))
+            ->values()
+            ->all();
+
+        if ($posts === []) {
+            Log::warning('Instagram feed: media endpoint returned no usable posts.');
+
+            return null;
+        }
+
+        return [
+            'profile' => [
+                'name' => $profileData['name'] ?? $profileData['username'] ?? 'Design Dhaga',
+                'username' => '@' . ltrim((string) ($profileData['username'] ?? 'designdhaga'), '@'),
+                'bio' => (string) ($profileData['biography'] ?? ''),
+                'avatar' => $profileData['profile_picture_url'] ?? null,
+                'following' => $profileData['follows_count'] ?? null,
+                'followers' => $profileData['followers_count'] ?? null,
+                'media_count' => $profileData['media_count'] ?? null,
+            ],
+            'posts' => $posts,
+        ];
     }
 
     private function fetchFromInstagramGraph(string $token): ?array

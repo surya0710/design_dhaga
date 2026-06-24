@@ -491,6 +491,16 @@
         object-fit: cover;
         display: block;
         border-radius: 8px;
+        background: #f3f4f6;
+    }
+
+    #instagramFeedSlider .owl-carousel .owl-item.loading {
+        background: transparent;
+        min-height: 0;
+    }
+
+    #instagramFeedSlider .ajax-loader {
+        display: none !important;
     }
 
     .instagram-feed-play {
@@ -562,12 +572,15 @@
 <script>
     $(document).ready(function() {
         if ($("#instagramFeedSlider .owl-carousel").length) {
+            const instagramPostCount = $("#instagramFeedSlider .instagram-feed-item").length;
+
             $("#instagramFeedSlider .owl-carousel").owlCarousel({
-                loop: true,
+                loop: instagramPostCount > 5,
                 margin: 16,
                 nav: true,
                 dots: true,
                 slideBy: 'page',
+                lazyLoad: false,
                 autoplay: false,
                 smartSpeed: 700,
 
@@ -582,6 +595,8 @@
                         items: 5
                     }
                 }
+            }).on('initialized.owl.carousel refreshed.owl.carousel', function () {
+                $(this).find('.owl-item').removeClass('loading');
             });
         }
     });
