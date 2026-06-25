@@ -63,6 +63,9 @@ return [
     'instagram' => [
         'access_token' => env('INSTAGRAM_ACCESS_TOKEN'),
         'user_id' => env('INSTAGRAM_USER_ID'),
+        'page_id' => env('INSTAGRAM_PAGE_ID'),
+        'app_id' => env('INSTAGRAM_APP_ID'),
+        'app_secret' => env('INSTAGRAM_APP_SECRET'),
         'graph_version' => env('INSTAGRAM_GRAPH_VERSION', 'v21.0'),
         'cache_ttl' => env('INSTAGRAM_CACHE_TTL', 3600),
         'post_limit' => env('INSTAGRAM_POST_LIMIT', 20),
