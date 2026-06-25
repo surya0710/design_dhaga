@@ -392,8 +392,6 @@
     }
 
     .instagram-feed-title {
-        font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-        font-weight: 700;
         color: #111827;
     }
 
@@ -546,10 +544,56 @@
 
     @media (max-width: 767px) {
         .instagram-profile-bar {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-areas:
+                "avatar heading"
+                "bio bio"
+                "button button";
+            gap: 10px 12px;
+            align-items: center;
             padding: 16px;
         }
 
+        .instagram-profile-avatar-wrap {
+            grid-area: avatar;
+        }
+
+        .instagram-profile-info {
+            display: contents;
+        }
+
+        .instagram-profile-heading {
+            grid-area: heading;
+            min-width: 0;
+        }
+
+        .instagram-profile-name {
+            display: block;
+            margin-right: 0;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .instagram-profile-handle {
+            display: block;
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .instagram-profile-bio {
+            grid-area: bio;
+            margin-top: 0;
+            font-size: 0.88rem;
+        }
+
+        .instagram-profile-avatar {
+            width: 56px;
+            height: 56px;
+        }
+
         .instagram-follow-btn {
+            grid-area: button;
             width: 100%;
             text-align: center;
         }
@@ -582,7 +626,7 @@
                 slideBy: 'page',
                 lazyLoad: false,
                 autoplay: false,
-                smartSpeed: 700,
+                smartSpeed: 300,
 
                 responsive: {
                     0: {
