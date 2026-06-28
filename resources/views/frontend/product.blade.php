@@ -435,7 +435,7 @@
                         <i class="fa-solid fa-truck me-2"></i>Check Delivery Time
                     </div>
 
-                    <div id="deliveryCheckWrapper" data-product-id="{{ $product->id }}" data-product-weight="{{ $product->weight ?? 0.5 }}">
+                    <div id="deliveryCheckWrapper" data-product-id="{{ $product->id }}" data-product-weight="{{ $product->shiprocket_weight_kg }}">
 
                         <div id="deliveryInputSection">
                             <div class="input-group">
@@ -460,7 +460,7 @@
                                         </div>
 
                                         <div class="d-flex">
-                                            <div class="label confirm-delivery-label text-success">We deliver to your zipcode.</div> &nbsp;
+                                            <div id="confirm-delivery-label" class="label confirm-delivery-label text-success">We deliver to your zipcode.</div> &nbsp;
                                         </div>
                                     </div>
 
@@ -1367,9 +1367,6 @@
             errorBox: document.getElementById('deliveryError'),
             pincodeValue: document.getElementById('deliveryPincodeValue'),
             confirmLabel: document.getElementById('confirm-delivery-label'),
-            daysValue: document.getElementById('deliveryDaysValue'),
-            courierValue: document.getElementById('deliveryCourierValue'),
-            courierRow: document.getElementById('deliveryCourierRow'),
             changeBtn: document.getElementById('changeDeliveryPincodeBtn'),
             retryBtn: document.getElementById('retryDeliveryBtn')
         };
@@ -1437,7 +1434,9 @@
         els.inputSection.classList.add('d-none');
         els.unavailableSection.classList.add('d-none');
         els.successSection.classList.remove('d-none');
-        els.confirmLabel.classList.add("text-success");
+        if (els.confirmLabel) {
+            els.confirmLabel.classList.add('text-success');
+        }
 
         localStorage.setItem(deliveryConfig.storageKey, JSON.stringify({
             status: 'success',
@@ -1505,7 +1504,7 @@
         const els = getDeliveryElements();
         const wrapper = els.wrapper;
         const deliveryPincode = (els.pincodeInput.value || '').trim();
-        const productWeight = wrapper.dataset.productWeight || '0.5';
+        const productWeight = Math.max(parseFloat(wrapper.dataset.productWeight) || 0.5, 0.5).toString();
 
         hideDeliveryError();
 

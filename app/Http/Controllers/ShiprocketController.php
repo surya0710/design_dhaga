@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Services\ShiprocketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,18 +14,27 @@ class ShiprocketController extends Controller
         $validated = $request->validate([
             'delivery_postcode' => ['required', 'digits:6'],
             'weight' => ['required', 'numeric', 'min:0.1'],
-            'cod' => ['nullable', false],
+            'cod' => ['nullable', 'integer', 'in:0,1'],
             'length' => ['nullable', 'numeric', 'min:0'],
             'breadth' => ['nullable', 'numeric', 'min:0'],
             'height' => ['nullable', 'numeric', 'min:0'],
             'declared_value' => ['nullable', 'numeric', 'min:0'],
         ]);
 
+        $pickupPincode = (string) config('services.shiprocket.pickup_pincode');
+
+        if ($pickupPincode === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Shiprocket pickup pincode is not configured.',
+            ], 500);
+        }
+
         try {
             $result = $shiprocket->checkServiceability(
-                pickupPincode: config('services.shiprocket.pickup_pincode'),
+                pickupPincode: $pickupPincode,
                 deliveryPincode: $validated['delivery_postcode'],
-                weight: (float) $validated['weight'],
+                weight: Product::normalizeWeightToKg($validated['weight']),
                 cod: (int) ($validated['cod'] ?? 0),
                 length: isset($validated['length']) ? (float) $validated['length'] : null,
                 breadth: isset($validated['breadth']) ? (float) $validated['breadth'] : null,

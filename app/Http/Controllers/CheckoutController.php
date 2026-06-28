@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Address;
 use App\Models\Setting;
 use App\Models\Cart;
+use App\Models\Product;
 use App\Models\HaryanaPincode;
 use Razorpay\Api\Api;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -133,8 +134,9 @@ class CheckoutController extends Controller
         $deliveryPincode = trim($validated['pincode']);
 
         $weight = max($cartItems->sum(function ($item) {
-            $itemWeight = isset($item['weight']) ? (float) $item['weight'] : 0.5;
-            $quantity = isset($item['quantity']) ? (int) $item['quantity'] : 1;
+            $itemWeight = Product::normalizeWeightToKg($item->product->weight ?? null);
+            $quantity = (int) ($item->quantity ?? 1);
+
             return $itemWeight * $quantity;
         }), 0.5);
 
@@ -592,8 +594,9 @@ class CheckoutController extends Controller
         }
 
         $weight = max($cartItems->sum(function ($item) {
-            $itemWeight = isset($item['weight']) ? (float) $item['weight'] : 0.5;
-            $quantity = isset($item['quantity']) ? (int) $item['quantity'] : 1;
+            $itemWeight = Product::normalizeWeightToKg($item->product->weight ?? null);
+            $quantity = (int) ($item->quantity ?? 1);
+
             return $itemWeight * $quantity;
         }), 0.5);
 

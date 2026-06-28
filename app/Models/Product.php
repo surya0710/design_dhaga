@@ -118,4 +118,28 @@ class Product extends Model
         return $this->hasMany(ProductIcon::class)
             ->select('id','product_id','image','text');
     }
+
+    /**
+     * Convert stored product weight to kilograms for Shiprocket.
+     * Admin expects kg (e.g. 0.500), but legacy rows may store grams (e.g. 500).
+     */
+    public static function normalizeWeightToKg(null|float|string $weight, float $minimum = 0.5): float
+    {
+        $weight = (float) ($weight ?? 0);
+
+        if ($weight <= 0) {
+            return max($minimum, 0.5);
+        }
+
+        if ($weight >= 100 || ($weight >= 10 && abs($weight - round($weight)) < 0.0001)) {
+            $weight = $weight / 1000;
+        }
+
+        return max($weight, 0.5);
+    }
+
+    public function getShiprocketWeightKgAttribute(): float
+    {
+        return self::normalizeWeightToKg($this->weight);
+    }
 }
