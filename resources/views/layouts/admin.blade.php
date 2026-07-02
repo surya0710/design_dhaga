@@ -58,6 +58,12 @@
                                         <div class="text">Dashboard</div>
                                     </a>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.analytics') }}" class="">
+                                        <div class="icon"><i class="icon-bar-chart"></i></div>
+                                        <div class="text">Analytics</div>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div class="center-item">

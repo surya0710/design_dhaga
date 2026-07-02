@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
         $settings = Schema::hasTable('settings')
             ? Cache::remember('site.settings', 60, fn () => Setting::first())
             : null;

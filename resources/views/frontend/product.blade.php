@@ -90,6 +90,13 @@
             'quantity' => (int) $variant->quantity,
         ];
     })->values();
+    $parentCategoryId = !empty($product->category->parent_id)
+        ? $product->category->parent_id
+        : ($product->category->id ?? null);
+    $handDetailsLabel = 'Hand Painted Details'; 
+    if($parentCategoryId == 16 || $parentCategoryId == 27) {
+        $handDetailsLabel = 'Hand Crafted Details';
+    }
 @endphp
 @section('schema')
 
@@ -439,7 +446,7 @@
 
                         <div id="deliveryInputSection">
                             <div class="input-group">
-                                <input type="text" id="deliveryPincode" class="form-control bg-light-pink p-3 border-0" placeholder="Enter pincode" maxlength="6" inputmode="numeric" />
+                                <input type="text" id="deliveryPincode" class="form-control bg-light-pink p-3 border-0" placeholder="Enter pincode" maxlength="6" inputmode="numeric" value="{{ $product->parent_id }}" />
                                 <button class="btn btn-white border fw-bold" type="button" id="checkDeliveryBtn"> 
                                     Check
                                 </button>
@@ -526,7 +533,7 @@
                         @if ($product->hand_painted_details)
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-dark py-4 fs-5" id="handPainted-tab" data-bs-toggle="tab" data-bs-target="#handPaintedTab" type="button" role="tab">
-                                    <i class="fa-solid fa-palette me-2 text-maroon"></i>Hand Painted Details
+                                    <i class="fa-solid fa-palette me-2 text-maroon"></i>{{ $handDetailsLabel }}
                                 </button>
                             </li>
                         @endif
@@ -625,7 +632,7 @@
                                     <h2 class="accordion-header" id="headingHandPainted">
                                         <button class="accordion-button collapsed fw-bold fs-6 px-0 py-3" type="button" data-bs-toggle="collapse" 
                                         data-bs-target="#collapseHandPainted" aria-expanded="false" aria-controls="collapseHandPainted">
-                                            <i class="fa-solid fa-palette me-2 text-maroon"></i>Hand Painted Details
+                                            <i class="fa-solid fa-palette me-2 text-maroon"></i>{{ $handDetailsLabel }}
                                         </button>
                                     </h2>
                                     <div id="collapseHandPainted" class="accordion-collapse collapse" aria-labelledby="headingHandPainted" data-bs-parent="#productAccordion">

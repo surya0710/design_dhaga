@@ -73,6 +73,20 @@
                             </a>
                         </div>
 
+                        <div class="wg-chart-default mt-20">
+                            <a href="{{ route('admin.analytics') }}" class="flex items-center justify-between text-decoration-none">
+                                <div class="flex items-center gap14">
+                                    <div class="image ic-bg">
+                                        <i class="icon-bar-chart"></i>
+                                    </div>
+                                    <div>
+                                        <div class="body-text mb-2">Traffic Analytics</div>
+                                        <h4>View reports</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
                     </div>
 
                     <div class="w-half">

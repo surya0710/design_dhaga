@@ -18,8 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.user' => \App\Http\Middleware\TrackUser::class,
         ]);
 
-        // ✅ ADD THIS LINE
-        $middleware->append(\App\Http\Middleware\TrackUser::class);
+        $middleware->web(append: [
+            \App\Http\Middleware\TrackUser::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

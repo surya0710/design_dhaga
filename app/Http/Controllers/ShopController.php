@@ -15,6 +15,7 @@ use App\Models\Pages;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ShopController extends Controller
 {
@@ -299,7 +300,7 @@ class ShopController extends Controller
 
         $visitor = null;
 
-        if ($visitorId) {
+        if ($visitorId && Str::isUuid($visitorId)) {
             $visitor = Visitor::where('visitor_id', $visitorId)->first();
         }
 

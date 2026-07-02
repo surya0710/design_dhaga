@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\HomepageHighlightController;
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\FooterWidgetController;
 use App\Http\Controllers\Admin\FaqController;
 
@@ -166,6 +167,7 @@ Route::post('/admin/login', [AdminController::class,'loginAttempt'])->name('admi
 Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::get('/admin', [AdminController::class,'index'])->name('admin.index');
+    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics');
     Route::get('/admin/total-pages', [AdminController::class, 'totalPages'])->name('admin.total-pages');
 
     Route::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
