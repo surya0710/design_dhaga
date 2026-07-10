@@ -5,9 +5,11 @@
 
 @section('meta_keywords', $blog->meta_keywords)
 
-@section('og_title', 'Design Dhaga - Hand-Painted Fashion')
-@section('og_description', 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
+@section('og_title', $blog->title)
+@section('og_description', $blog->meta_description)
 @section('og_image', asset('uploads/blogs/'.$blog->image))
+@section('og_url', route('blog.show', ['slug' => $blog->slug]))
+@section('canonical_url', route('blog.show', ['slug' => $blog->slug]))
 @section('twitter_card', 'summary')
 @section('twitter_title', $blog->title)
 @section('twitter_site', '@designdhaga')
@@ -21,6 +23,11 @@
 @endpush
 
 @section('content')
+@php
+    $plainShareUrl = route('blog.show', ['slug' => $blog->slug]);
+    $shareUrl = rawurlencode($plainShareUrl);
+    $shareTitle = rawurlencode($blog->title);
+@endphp
 
 <div class="container">
     <div class="row gx-lg-5 px-xs-2">
@@ -134,33 +141,28 @@
         <button id="closeShare"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    @php
-        $shareUrl = urlencode(request()->fullUrl());
-        $shareTitle = urlencode($blog->title);
-    @endphp
-
     <div class="share-grid">
-        <a href="https://wa.me/?text={{ $shareTitle }}%20{{ $shareUrl }}" target="_blank" class="share-card whatsapp">
+        <a href="https://wa.me/?text={{ $shareTitle }}%20{{ $shareUrl }}" target="_blank" rel="noopener" class="share-card whatsapp">
             <i class="fa-brands fa-whatsapp"></i>
             <span>WhatsApp</span>
         </a>
 
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}" target="_blank" class="share-card facebook">
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}" target="_blank" rel="noopener" class="share-card facebook">
             <i class="fa-brands fa-facebook"></i>
             <span>Facebook</span>
         </a>
 
-        <a href="https://twitter.com/intent/tweet?text={{ $shareTitle }}&url={{ $shareUrl }}" target="_blank" class="share-card twitter">
+        <a href="https://twitter.com/intent/tweet?text={{ $shareTitle }}&url={{ $shareUrl }}" target="_blank" rel="noopener" class="share-card twitter">
             <i class="fa-brands fa-twitter"></i>
             <span>Twitter</span>
         </a>
 
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" class="share-card linkedin">
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" rel="noopener" class="share-card linkedin"> 
             <i class="fa-brands fa-linkedin"></i>
             <span>LinkedIn</span>
         </a>
 
-        <button class="share-card copy" onclick="copyLink()">
+        <button class="share-card copy" type="button" onclick="copyLink()">
             <i class="fa-solid fa-link"></i>
             <span>Copy Link</span>
         </button>
@@ -294,8 +296,8 @@
     shareoverlay.addEventListener('click', closeSharePanel);
 
     function copyLink() {
-        navigator.clipboard.writeText(window.location.href);
-        alert("🔗 Link copied!");
+        navigator.clipboard.writeText(@json($plainShareUrl));
+        alert("Link copied!");
     }
 </script>
 

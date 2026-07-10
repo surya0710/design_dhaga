@@ -51,12 +51,7 @@ class HomeController extends Controller
         $reviews        = Cache::remember('home.reviews', 60, function () {
             return Testimonial::where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
         });
-        $newArrivals    = Product::where('status', 1)
-            ->select('id', 'name', 'slug', 'regular_price', 'sale_price', 'image', 'category_id')
-            ->with(['category.parent', 'activeVariants:id,product_id,price'])
-            ->latest()
-            ->limit(9)
-            ->get();
+        $newArrivals    = $this->mixedNewArrivals();
 
         $bestSellers    = Product::where('status', 1)->where('featured', 2)
             ->select('id', 'name', 'slug', 'regular_price', 'sale_price', 'image', 'category_id')
@@ -120,6 +115,36 @@ class HomeController extends Controller
         }
 
         return view('frontend.home', compact('categories', 'newArrivals', 'sliders', 'bestSellers', 'menu', 'reviews', 'pageContent', 'homeSections', 'highlights', 'wishlistProductIds', 'instagramFeed', 'instagramProfile', 'instagramPosts'));
+    }
+
+    private function mixedNewArrivals(int $limit = 9)
+    {
+        $products = Product::where('status', 1)
+            ->select('id', 'name', 'slug', 'regular_price', 'sale_price', 'image', 'category_id', 'created_at')
+            ->with(['category.parent', 'activeVariants:id,product_id,price'])
+            ->latest()
+            ->limit(max($limit * 8, 40))
+            ->get();
+
+        $groups = $products
+            ->groupBy(fn ($product) => (string) ($product->category_id ?? 'uncategorized'))
+            ->shuffle();
+
+        $mixed = collect();
+
+        while ($mixed->count() < $limit && $groups->isNotEmpty()) {
+            $groups = $groups->map(function ($group) use ($mixed, $limit) {
+                if ($mixed->count() >= $limit) {
+                    return $group;
+                }
+
+                $mixed->push($group->shift());
+
+                return $group;
+            })->filter(fn ($group) => $group->isNotEmpty());
+        }
+
+        return $mixed->shuffle()->take($limit)->values();
     }
 
     public function about()

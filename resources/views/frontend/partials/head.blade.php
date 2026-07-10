@@ -17,7 +17,7 @@
 
 <meta property="og:image" content="@yield('og_image')">
 
-<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:url" content="{{ trim($__env->yieldContent('og_url')) ?: url()->current() }}">
 <meta property="og:type" content="website">
 
 @php
@@ -40,4 +40,4 @@
 @endif
 
 <!-- CANONICAL URL -->
-<link rel="canonical" href="{{ $pageContent->canonical_url ?? url()->current() }}">
+<link rel="canonical" href="{{ trim($__env->yieldContent('canonical_url')) ?: ($pageContent->canonical_url ?? url()->current()) }}">
