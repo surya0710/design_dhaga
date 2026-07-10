@@ -1071,7 +1071,7 @@
             <span>Twitter</span>
         </a>
 
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" class="share-card linkedin">
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" rel="noopener" class="share-card linkedin">
             <i class="fa-brands fa-linkedin"></i>
             <span>LinkedIn</span>
         </a>
