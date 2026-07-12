@@ -20,6 +20,7 @@ class AnalyticsController extends Controller
         $periodLabel = $this->analytics->periodLabel($filters['period']);
 
         $ga4Configured = $this->ga4->isConfigured();
+        $ga4Issues = $this->ga4->configurationIssues();
         $ga4ServiceAccountEmail = $this->ga4->serviceAccountEmail();
         $ga4Data = $ga4Configured
             ? $this->ga4->dashboardData($filters['date_from'], $filters['date_to'])
@@ -55,6 +56,7 @@ class AnalyticsController extends Controller
             'topReferrers',
             'countries',
             'ga4Configured',
+            'ga4Issues',
             'ga4ServiceAccountEmail',
             'ga4Data',
         ));

@@ -14,14 +14,32 @@ class Ga4AnalyticsService
 {
     public function isConfigured(): bool
     {
+        return $this->configurationIssues() === [];
+    }
+
+    public function configurationIssues(): array
+    {
+        $issues = [];
+
         if (! class_exists(BetaAnalyticsDataClient::class)) {
-            return false;
+            $issues[] = 'The google/analytics-data package is missing. Run composer install on the server.';
         }
 
-        $propertyId = config('analytics.ga4_property_id');
+        if (! config('analytics.ga4_property_id')) {
+            $issues[] = 'GA4_PROPERTY_ID is not set in .env.';
+        }
+
         $credentials = $this->credentialsPath();
 
-        return $propertyId && $credentials && is_readable($credentials);
+        if (! $credentials) {
+            $issues[] = 'GA4 credentials path is empty. Set GA4_CREDENTIALS in .env or add storage/app/google-analytics-credentials.json.';
+        } elseif (! file_exists($credentials)) {
+            $issues[] = 'Service account JSON not found at: '.$credentials;
+        } elseif (! is_readable($credentials)) {
+            $issues[] = 'Service account JSON exists but is not readable: '.$credentials;
+        }
+
+        return $issues;
     }
 
     private function credentialsPath(): string

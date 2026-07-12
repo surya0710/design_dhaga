@@ -53,7 +53,18 @@
         @if(!$ga4Configured)
             <div class="wg-box mb-20">
                 <h5 class="mb-10">Google Analytics not configured</h5>
-                <p class="body-text mb-0">Set <code>GA4_PROPERTY_ID</code> and add your service account credentials to view analytics here.</p>
+                <p class="body-text mb-10">Analytics works locally because your machine has the GA4 env vars and service account file. The server needs the same setup — these files are not deployed by git.</p>
+                @if(count($ga4Issues))
+                    <ul class="body-text mb-10">
+                        @foreach($ga4Issues as $issue)
+                            <li>{{ $issue }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+                <p class="body-text mb-2">On the server, add to <code>.env</code>:</p>
+                <pre class="body-text mb-10" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>GA4_PROPERTY_ID=your_numeric_property_id
+GA4_CREDENTIALS=storage/app/your-service-account.json</code></pre>
+                <p class="body-text mb-0">Upload the same service account JSON file you use locally, then run <code>php artisan config:clear</code> on the server.</p>
             </div>
         @elseif($ga4Data && !empty($ga4Data['error']))
             <div class="wg-box mb-20">
