@@ -6,7 +6,7 @@
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
             <div>
                 <h3>Website Traffic</h3>
-                <p class="body-text mb-0">Simple overview of who is visiting your store.</p>
+                <p class="body-text mb-0">Overview from Google Analytics.</p>
             </div>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li><a href="{{ route('admin.index') }}"><div class="text-tiny">Dashboard</div></a></li>
@@ -50,164 +50,12 @@
                 – {{ \Carbon\Carbon::parse($filters['date_to'])->format('M j, Y') }})</p>
         </div>
 
-        <div class="flex gap20 flex-wrap-mobile mb-30">
-            <div class="w-half">
-                <div class="wg-chart-default mb-20">
-                    <div class="body-text mb-2">Total visits</div>
-                    <h4>{{ number_format($summary['page_views']) }}</h4>
-                    <div class="body-text">How many pages were opened</div>
-                </div>
-            </div>
-            <div class="w-half">
-                <div class="wg-chart-default mb-20">
-                    <div class="body-text mb-2">Unique visitors</div>
-                    <h4>{{ number_format($summary['unique_visitors']) }}</h4>
-                    <div class="body-text">Different people who visited</div>
-                </div>
-            </div>
-            <div class="w-half">
-                <div class="wg-chart-default mb-20">
-                    <div class="body-text mb-2">Pages per visitor</div>
-                    <h4>{{ $summary['avg_pages_per_visitor'] }}</h4>
-                    <div class="body-text">Average browsing depth</div>
-                </div>
-            </div>
-            <div class="w-half">
-                <div class="wg-chart-default mb-20">
-                    <div class="body-text mb-2">Visitors today</div>
-                    <h4>{{ number_format($summary['active_today']) }}</h4>
-                    <div class="body-text">People active so far today</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="wg-box mb-20">
-            <h5 class="mb-20">Visits over time</h5>
-            <div id="chart-traffic-over-time"></div>
-        </div>
-
-        <div class="flex gap20 flex-wrap-mobile mb-30">
-            <div class="w-half">
-                <div class="wg-box">
-                    <h5 class="mb-20">Most visited pages</h5>
-                    @if(count($topPages))
-                        <div class="wg-table table-all-user">
-                            <table class="table table-striped table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Page</th>
-                                        <th class="text-end">Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($topPages as $row)
-                                        <tr>
-                                            <td>
-                                                <div>{{ $row['label'] }}</div>
-                                                <div class="body-text">{{ $row['path'] }}</div>
-                                            </td>
-                                            <td class="text-end">{{ number_format($row['views']) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="body-text mb-0">No page visits yet for this period.</p>
-                    @endif
-                </div>
-            </div>
-            <div class="w-half">
-                <div class="wg-box">
-                    <h5 class="mb-20">Visitors by country</h5>
-                    @if(count($countries))
-                        <div id="chart-countries"></div>
-                        <div class="wg-table table-all-user mt-3">
-                            <table class="table table-striped table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Country</th>
-                                        <th class="text-end">Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($countries as $row)
-                                        <tr>
-                                            <td>{{ $row['label'] }}</td>
-                                            <td class="text-end">{{ number_format($row['views']) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="body-text mb-0">No country data yet.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <div class="wg-box mb-20">
-            <h5 class="mb-20">Where visitors came from</h5>
-            @if(count($topReferrers))
-                <div class="wg-table table-all-user">
-                    <table class="table table-striped table-bordered mb-0">
-                        <thead>
-                            <tr>
-                                <th>Website / source</th>
-                                <th class="text-end">Visits</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topReferrers as $row)
-                                <tr>
-                                    <td>{{ $row['referrer'] }}</td>
-                                    <td class="text-end">{{ number_format($row['views']) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="body-text mb-0">Visitors came directly or no referrer was recorded.</p>
-            @endif
-        </div>
-
-        @if($ga4Configured && $ga4Data && empty($ga4Data['error']))
+        @if(!$ga4Configured)
             <div class="wg-box mb-20">
-                <h5 class="mb-10">Google Analytics</h5>
-                <p class="body-text mb-20">Extra stats pulled from your Google Analytics account.</p>
-
-                <div class="flex gap20 flex-wrap-mobile mb-20">
-                    <div class="w-half">
-                        <div class="wg-chart-default">
-                            <div class="body-text mb-2">Google — active users</div>
-                            <h4>{{ number_format($ga4Data['summary']['active_users'] ?? 0) }}</h4>
-                        </div>
-                    </div>
-                    <div class="w-half">
-                        <div class="wg-chart-default">
-                            <div class="body-text mb-2">Google — page views</div>
-                            <h4>{{ number_format($ga4Data['summary']['page_views'] ?? 0) }}</h4>
-                        </div>
-                    </div>
-                    <div class="w-half">
-                        <div class="wg-chart-default">
-                            <div class="body-text mb-2">Google — new users</div>
-                            <h4>{{ number_format($ga4Data['summary']['new_users'] ?? 0) }}</h4>
-                        </div>
-                    </div>
-                    <div class="w-half">
-                        <div class="wg-chart-default">
-                            <div class="body-text mb-2">Google — bounce rate</div>
-                            <h4>{{ $ga4Data['summary']['bounce_rate'] ?? 0 }}%</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="chart-ga4-over-time"></div>
+                <h5 class="mb-10">Google Analytics not configured</h5>
+                <p class="body-text mb-0">Set <code>GA4_PROPERTY_ID</code> and add your service account credentials to view analytics here.</p>
             </div>
-        @elseif($ga4Configured && !empty($ga4Data['error']))
+        @elseif($ga4Data && !empty($ga4Data['error']))
             <div class="wg-box mb-20">
                 <h5 class="mb-10">Google Analytics</h5>
                 @if(str_contains($ga4Data['error'], 'PERMISSION_DENIED') || str_contains($ga4Data['error'], 'sufficient permissions'))
@@ -215,6 +63,129 @@
                     <p class="body-text mb-0"><code>{{ $ga4ServiceAccountEmail }}</code></p>
                 @else
                     <p class="body-text mb-0">Google Analytics could not be loaded right now.</p>
+                @endif
+            </div>
+        @elseif($summary)
+            <div class="flex gap20 flex-wrap-mobile mb-30">
+                <div class="w-half">
+                    <div class="wg-chart-default mb-20">
+                        <div class="body-text mb-2">Page views</div>
+                        <h4>{{ number_format($summary['page_views'] ?? 0) }}</h4>
+                        <div class="body-text">Total pages viewed</div>
+                    </div>
+                </div>
+                <div class="w-half">
+                    <div class="wg-chart-default mb-20">
+                        <div class="body-text mb-2">Active users</div>
+                        <h4>{{ number_format($summary['active_users'] ?? 0) }}</h4>
+                        <div class="body-text">Unique visitors</div>
+                    </div>
+                </div>
+                <div class="w-half">
+                    <div class="wg-chart-default mb-20">
+                        <div class="body-text mb-2">Sessions</div>
+                        <h4>{{ number_format($summary['sessions'] ?? 0) }}</h4>
+                        <div class="body-text">Total visits</div>
+                    </div>
+                </div>
+                <div class="w-half">
+                    <div class="wg-chart-default mb-20">
+                        <div class="body-text mb-2">New users</div>
+                        <h4>{{ number_format($summary['new_users'] ?? 0) }}</h4>
+                        <div class="body-text">First-time visitors</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wg-box mb-20">
+                <h5 class="mb-20">Traffic over time</h5>
+                <div id="chart-traffic-over-time"></div>
+            </div>
+
+            <div class="flex gap20 flex-wrap-mobile mb-30">
+                <div class="w-half">
+                    <div class="wg-box">
+                        <h5 class="mb-20">Most visited pages</h5>
+                        @if(count($topPages))
+                            <div class="wg-table table-all-user">
+                                <table class="table table-striped table-bordered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Page</th>
+                                            <th class="text-end">Views</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($topPages as $row)
+                                            <tr>
+                                                <td>
+                                                    <div>{{ $row['label'] }}</div>
+                                                    <div class="body-text">{{ $row['path'] }}</div>
+                                                </td>
+                                                <td class="text-end">{{ number_format($row['views']) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="body-text mb-0">No page views for this period.</p>
+                        @endif
+                    </div>
+                </div>
+                <div class="w-half">
+                    <div class="wg-box">
+                        <h5 class="mb-20">Users by country</h5>
+                        @if(count($countries))
+                            <div id="chart-countries"></div>
+                            <div class="wg-table table-all-user mt-3">
+                                <table class="table table-striped table-bordered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th class="text-end">Users</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($countries as $row)
+                                            <tr>
+                                                <td>{{ $row['label'] }}</td>
+                                                <td class="text-end">{{ number_format($row['users']) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="body-text mb-0">No country data for this period.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="wg-box mb-20">
+                <h5 class="mb-20">Traffic sources</h5>
+                @if(count($topReferrers))
+                    <div class="wg-table table-all-user">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Source / medium</th>
+                                    <th class="text-end">Sessions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($topReferrers as $row)
+                                    <tr>
+                                        <td>{{ $row['referrer'] }}</td>
+                                        <td class="text-end">{{ number_format($row['sessions']) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p class="body-text mb-0">No traffic source data for this period.</p>
                 @endif
             </div>
         @endif
@@ -254,20 +225,16 @@
     }
 
     $(window).on('load', function() {
+        @if($summary)
         renderLineChart('#chart-traffic-over-time', @json($overTime['labels']), [
-            { name: 'Visits', data: @json($overTime['views']) },
-            { name: 'Visitors', data: @json($overTime['visitors']) },
+            { name: 'Sessions', data: @json($overTime['sessions']) },
+            { name: 'Users', data: @json($overTime['users']) },
         ]);
 
         renderDonut('#chart-countries',
             @json(array_column($countries, 'label')),
-            @json(array_column($countries, 'views'))
+            @json(array_column($countries, 'users'))
         );
-
-        @if($ga4Configured && $ga4Data && empty($ga4Data['error']))
-        renderLineChart('#chart-ga4-over-time', @json($ga4Data['over_time']['labels'] ?? []), [
-            { name: 'Sessions', data: @json($ga4Data['over_time']['sessions'] ?? []) },
-        ]);
         @endif
     });
 })(jQuery);
