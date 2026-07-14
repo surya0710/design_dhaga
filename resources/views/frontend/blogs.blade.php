@@ -9,6 +9,69 @@
 @section('og_description', $pageContent->meta_description ?? 'Design Dhaga is a premium fashion brand that offers hand-painted clothes, custom designs, and premium branding services. Our products are handcrafted in India and loved by 400+ customers.')
 @section('og_image', asset($pageContent->meta_image ?? 'og-home.jpg'))
 
+@push('extras')
+<style>
+    .blog-pagination {
+        margin-top: 3rem;
+    }
+
+    .blog-pagination-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .blog-pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        height: 42px;
+        padding: 0 0.85rem;
+        border: 1px solid #e6ddd6;
+        border-radius: 999px;
+        background: #fff;
+        color: #333;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .blog-pagination-btn:hover:not(.is-disabled):not(.is-active):not(.is-ellipsis) {
+        border-color: var(--brand-color);
+        color: var(--brand-color);
+        box-shadow: var(--brand-shadow-sm);
+        transform: translateY(-1px);
+    }
+
+    .blog-pagination-btn.is-active {
+        background: var(--brand-color);
+        border-color: var(--brand-color);
+        color: #fff;
+        box-shadow: var(--brand-shadow-sm);
+    }
+
+    .blog-pagination-btn.is-disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    .blog-pagination-btn.is-ellipsis {
+        border-color: transparent;
+        background: transparent;
+        min-width: 28px;
+        padding: 0;
+        cursor: default;
+    }
+</style>
+@endpush
+
 @section('content')
 
 <div class="px-3 px-md-5 py-lg-3">
@@ -46,11 +109,11 @@
         @endforeach
     </div>
 
-    @if ($blogs->hasPages())
-        <div class="d-flex justify-content-center mt-5">
-            {{ $blogs->links('pagination::bootstrap-5') }}
-        </div>
-    @endif
+    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center">
+        {{ $blogs->links('vendor.pagination.frontend-blogs') }}
+    </div>
+</div>
 </div>
 <script>
     const textData = [];
