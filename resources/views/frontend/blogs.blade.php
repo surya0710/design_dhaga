@@ -45,6 +45,12 @@
         </div>
         @endforeach
     </div>
+
+    @if ($blogs->hasPages())
+        <div class="d-flex justify-content-center mt-5">
+            {{ $blogs->links('pagination::bootstrap-5') }}
+        </div>
+    @endif
 </div>
 <script>
     const textData = [];
