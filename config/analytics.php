@@ -26,6 +26,13 @@ return [
             : base_path(env('GA4_CREDENTIALS')))
         : storage_path('app/google-analytics-credentials.json'),
 
+    /*
+    | Optional: base64-encoded service account JSON for servers where the file
+    | cannot be uploaded (e.g. shared hosting). Generate locally with:
+    | php -r "echo base64_encode(file_get_contents('path/to/key.json'));"
+    */
+    'ga4_credentials_base64' => env('GA4_CREDENTIALS_BASE64'),
+
     'ga4_cache_minutes' => (int) env('GA4_CACHE_MINUTES', 30),
 
 ];

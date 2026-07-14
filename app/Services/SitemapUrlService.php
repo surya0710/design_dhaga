@@ -11,6 +11,26 @@ use Illuminate\Support\Collection;
 
 class SitemapUrlService
 {
+    /**
+     * CMS "pages" slugs that map to real public routes.
+     * Other rows in `pages` are category SEO content (e.g. "Blouse", "Women")
+     * and are not standalone URLs — shop category URLs come from addShopCategoryUrls().
+     *
+     * @var list<string>
+     */
+    private const PUBLIC_CMS_SLUGS = [
+        'about-us',
+        'contact-us',
+        'terms-and-condition',
+        'return-policy',
+        'order-shipping-policy',
+        'privacy-policy',
+        'collaborations',
+        'blogs',
+        'portfolio',
+        'shop'
+    ];
+
     /** @var array<string, array<string, mixed>> */
     private array $urls = [];
 
@@ -21,11 +41,12 @@ class SitemapUrlService
     {
         $this->urls = [];
 
-        $this->addStaticPages();
+        // CMS first so real pages keep an admin edit link; static fills any gaps.
         $this->addCmsPages();
+        $this->addStaticPages();
         $this->addBlogs();
-        $this->addCategories();
-        $this->addPortfolioCategories();
+        $this->addShopCategoryUrls();
+        $this->addPortfolioCategoryUrls();
         $this->addProducts();
 
         return collect(array_values($this->urls))
@@ -62,7 +83,6 @@ class SitemapUrlService
             'return-policy' => 'Return Policy',
             'shipping-policy' => 'Order & Shipping Policy',
             'privacy-policy' => 'Privacy Policy',
-            'store' => 'Store Locator',
             'blogs' => 'Blogs',
             'collaborations' => 'Collaborations',
             'portfolio' => 'Portfolio',
@@ -83,6 +103,7 @@ class SitemapUrlService
     private function addCmsPages(): void
     {
         Pages::where('status', 1)
+            ->whereIn('slug', self::PUBLIC_CMS_SLUGS)
             ->orderBy('title')
             ->each(function (Pages $page) {
                 $slug = trim((string) $page->slug, '/');
@@ -116,7 +137,10 @@ class SitemapUrlService
             });
     }
 
-    private function addCategories(): void
+    /**
+     * Shop category listing URLs: /shop/{category} and /shop/{category}/{subcategory}.
+     */
+    private function addShopCategoryUrls(): void
     {
         Category::where('status', 1)
             ->with('parent')
@@ -138,7 +162,7 @@ class SitemapUrlService
             });
     }
 
-    private function addPortfolioCategories(): void
+    private function addPortfolioCategoryUrls(): void
     {
         PortfolioCategory::where('status', 1)
             ->orderBy('name')

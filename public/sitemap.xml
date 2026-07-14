@@ -1,207 +1,399 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-    <loc>http://localhost/design_dhaga/public/blogs/merging-art-and-fashion-the-beauty-of-handpainted-designs-and-ikat-patterns</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/blogs/handpainted-designs-ikat-patterns</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
             </url>
     <url>
-    <loc>http://localhost/design_dhaga/public/shop/acessories</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/blogs/raja-ravi-varma-painting-sets-indian-art-record-what-it-means-for-handmade-indian-art-culture</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/accessories</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/women/blouse</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/kids/boys-collection</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/celebs</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/couple-collection</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/women/dupatta</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/father-son</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/celebs/female-celebrities</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/kids/girls-collection</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/accessories/hair-accesories</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/kids</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/men/kurta-pajama</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/women/lehnga-choli</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/celebs/male-celebrities</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/men</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/mother-daughter</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/women/saree</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/men/shirts</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/men/t-shirts</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop/women</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/portfolio/fabric-painting</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/portfolio/graphics-gallery</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/saree/custom-name-hand-painted-grey-saree-with-elegant-floral-art</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/embellished-hand-painted-pure-organza-dupatta</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/handpainted-floral-organza-dupatta-with-dabka-and-original-naqashi-embroidery</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/yellow-chanderi-silk-handpainted-pichwai-art-dupatta</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-silk-chiffon-scarf-lavender-floral-pattern</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/beautifull-lavender-base-floral-hand-painted-organza-dupatta</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/madhubani-hand-painted-salmon-tussar-silk-dupatta</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/about-us</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/blogs</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/collaborations</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/contact-us</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/order-shipping-policy</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/portfolio</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/privacy-policy</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://localhost/design_dhaga/public/return-policy</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/shop</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
             </url>
     <url>
-    <loc>http://localhost/design_dhaga/public/store</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <loc>http://localhost/design_dhaga/public/order-shipping-policy</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/portfolio</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/privacy-policy</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/return-policy</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://localhost/design_dhaga/public/terms-and-condition</loc>
-    <lastmod>2026-06-17T16:23:04+00:00</lastmod>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/portfolio/fabric-painting</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/portfolio/graphics-gallery</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/celebs/male-celebrities/aditya-seal-celebrity-collection-hand-painted-ivory-architectural-art-blazer</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/beige-organza-handpainted-aparajita-dupatta</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/custom-name-hand-painted-grey-saree-with-elegant-floral-art</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/embellished-hand-painted-pure-organza-dupatta</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/father-son/father-son-matching-kurta-pajama-set-twinning-heritage-handpainted-ethnic-wear</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-blush-pink-organza-dupatta-with-lotus-floral-vine-art</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/lehnga-choli/hand-painted-ivory-floral-lehenga-set-for-women-designer-artisan-lehenga</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/blouse/hand-painted-lotus-sacred-cow-blouse-artisan-crafted-designer-blouse-for-sarees</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/kids/girls-collection/hand-painted-lotus-organza-party-dress-for-girls-premium-kids-occasion-wear</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/couple-collection/hand-painted-matching-colour-combo-dress-set-for-couple-personalized-organza-saree-mens-kurta-set</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/celebs/female-celebrities/hand-painted-pastel-mint-organza-bebo-name-saree</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/kids/boys-collection/hand-painted-pink-cotton-shirt-for-boys-ethnic-casual-wear-kids-shirt</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/twinning/mother-daughter/hand-painted-red-and-white-polka-dot-mother-daughter-twinning-dress-set</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/handpainted-floral-organza-dupatta-with-dabka-and-original-naqashi-embroidery</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/hand-painted-blush-pink-organza-saree-with-floral-artwork</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/hand-painted-crimson-red-organza-saree-with-white-floral-artwork</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/hand-painted-fuchsia-pink-chiffon-saree-with-white-pink-lotus-motifs</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-offwhite-dupatta-with-royal-peacock-lotus-art</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/hand-painted-pristine-white-organza-saree-with-pink-lotus-motifs</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-rust-orange-dupatta-with-lotus-and-pichwai-cow-art</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-white-cotton-dupatta-with-evil-eye-charms</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/accessories/hair-accesories/handmade-crochet-rose-hair-pins-pack-of-12</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/yellow-chanderi-silk-handpainted-pichwai-art-dupatta</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/men/shirts/handpainted-mens-beige-shirt-with-pink-flamingos-black-panther-and-tropical-botanical-artwork</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/hand-painted-silk-chiffon-scarf-lavender-floral-pattern</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/saree/lavender-petals-pure-organza-saree-with-sleeveless-blouse</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/beautifull-lavender-base-floral-hand-painted-organza-dupatta</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/women/dupatta/madhubani-hand-painted-salmon-tussar-silk-dupatta</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/men/t-shirts/mens-hand-painted-doodle-art-white-t-shirt</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public/shop/men/kurta-pajama/mens-hand-painted-pastel-mint-green-tussar-silk-kurta-pajama-set</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>http://localhost/design_dhaga/public</loc>
+    <lastmod>2026-07-14T06:46:39+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
             </url>
 </urlset>

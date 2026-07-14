@@ -22,24 +22,49 @@ class Ga4AnalyticsService
         $issues = [];
 
         if (! class_exists(BetaAnalyticsDataClient::class)) {
-            $issues[] = 'The google/analytics-data package is missing. Run composer install on the server.';
+            $issues[] = 'The google/analytics-data package is missing. SSH into the server, cd to your project root, then run: composer install --no-dev --optimize-autoloader';
         }
 
         if (! config('analytics.ga4_property_id')) {
             $issues[] = 'GA4_PROPERTY_ID is not set in .env.';
         }
 
-        $credentials = $this->credentialsPath();
-
-        if (! $credentials) {
-            $issues[] = 'GA4 credentials path is empty. Set GA4_CREDENTIALS in .env or add storage/app/google-analytics-credentials.json.';
-        } elseif (! file_exists($credentials)) {
-            $issues[] = 'Service account JSON not found at: '.$credentials;
-        } elseif (! is_readable($credentials)) {
-            $issues[] = 'Service account JSON exists but is not readable: '.$credentials;
+        if (! $this->hasValidCredentials()) {
+            $issues[] = 'Service account credentials are missing. Upload the JSON file to: '.$this->credentialsPath();
+            $issues[] = 'Or set GA4_CREDENTIALS_BASE64 in .env with the base64-encoded JSON (see instructions below).';
         }
 
         return $issues;
+    }
+
+    private function hasValidCredentials(): bool
+    {
+        if ($this->credentialsArray() !== null) {
+            return true;
+        }
+
+        $path = $this->credentialsPath();
+
+        return $path !== '' && is_readable($path);
+    }
+
+    private function credentialsArray(): ?array
+    {
+        $base64 = (string) config('analytics.ga4_credentials_base64');
+
+        if ($base64 === '') {
+            return null;
+        }
+
+        $json = base64_decode($base64, true);
+
+        if ($json === false) {
+            return null;
+        }
+
+        $decoded = json_decode($json, true);
+
+        return is_array($decoded) && isset($decoded['client_email']) ? $decoded : null;
     }
 
     private function credentialsPath(): string
@@ -49,7 +74,13 @@ class Ga4AnalyticsService
 
     public function serviceAccountEmail(): ?string
     {
-        $path = $this->credentialsPath();
+        $credentials = $this->credentialsArray();
+
+        if ($credentials) {
+            return $credentials['client_email'] ?? null;
+        }
+
+        $path = $this->resolveCredentialsPath();
 
         if (! is_readable($path)) {
             return null;
@@ -96,9 +127,35 @@ class Ga4AnalyticsService
 
     private function client(): BetaAnalyticsDataClient
     {
+        $credentials = $this->credentialsArray();
+
         return new BetaAnalyticsDataClient([
-            'credentials' => $this->credentialsPath(),
+            'credentials' => $credentials ?? $this->resolveCredentialsPath(),
         ]);
+    }
+
+    private function resolveCredentialsPath(): string
+    {
+        $path = $this->credentialsPath();
+
+        if (is_readable($path)) {
+            return $path;
+        }
+
+        $credentials = $this->credentialsArray();
+
+        if ($credentials) {
+            $dir = dirname($path);
+
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            file_put_contents($path, json_encode($credentials));
+            @chmod($path, 0640);
+        }
+
+        return $path;
     }
 
     private function property(): string

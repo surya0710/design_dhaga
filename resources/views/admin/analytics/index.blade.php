@@ -53,18 +53,29 @@
         @if(!$ga4Configured)
             <div class="wg-box mb-20">
                 <h5 class="mb-10">Google Analytics not configured</h5>
-                <p class="body-text mb-10">Analytics works locally because your machine has the GA4 env vars and service account file. The server needs the same setup — these files are not deployed by git.</p>
                 @if(count($ga4Issues))
-                    <ul class="body-text mb-10">
+                    <ul class="body-text mb-15">
                         @foreach($ga4Issues as $issue)
                             <li>{{ $issue }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <p class="body-text mb-2">On the server, add to <code>.env</code>:</p>
-                <pre class="body-text mb-10" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>GA4_PROPERTY_ID=your_numeric_property_id
-GA4_CREDENTIALS=storage/app/your-service-account.json</code></pre>
-                <p class="body-text mb-0">Upload the same service account JSON file you use locally, then run <code>php artisan config:clear</code> on the server.</p>
+
+                <p class="body-text mb-10"><strong>Step 1 — Install the PHP package on the server</strong></p>
+                <pre class="body-text mb-15" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>cd /home/u255538404/domains/designdhaga.com/public_html
+composer install --no-dev --optimize-autoloader
+php artisan config:clear</code></pre>
+
+                <p class="body-text mb-10"><strong>Step 2 — Add credentials (choose one option)</strong></p>
+                <p class="body-text mb-5">Option A: Upload the JSON file via FTP/File Manager to:</p>
+                <pre class="body-text mb-10" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>storage/app/design-dhaga-24f939f64666.json</code></pre>
+
+                <p class="body-text mb-5">Option B: Put the credentials in <code>.env</code> as base64 (no file upload needed). On your local machine run:</p>
+                <pre class="body-text mb-10" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>php -r "echo base64_encode(file_get_contents('storage/app/design-dhaga-24f939f64666.json'));"</code></pre>
+                <p class="body-text mb-5">Then add the output to the server <code>.env</code>:</p>
+                <pre class="body-text mb-0" style="background:#f5f5f5;padding:12px;border-radius:6px;"><code>GA4_PROPERTY_ID=505923248
+GA4_CREDENTIALS=storage/app/design-dhaga-24f939f64666.json
+GA4_CREDENTIALS_BASE64=paste_the_base64_string_here</code></pre>
             </div>
         @elseif($ga4Data && !empty($ga4Data['error']))
             <div class="wg-box mb-20">
