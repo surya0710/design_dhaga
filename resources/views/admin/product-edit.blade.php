@@ -194,7 +194,7 @@
                         @php $gSrc = asset('storage/' . $gPath); @endphp
                         <div class="gallery-thumb">
                             <img src="{{ $gSrc }}" alt="">
-                            <button type="button" class="remove-thumb" onclick="removeGalleryThumb(this,'{{ $gPath }}')">✕</button>
+                            <button type="button" class="remove-thumb" data-path="{{ $gPath }}">✕</button>
                         </div>
                     @endforeach
                     <button type="button" class="gallery-add-btn" onclick="openMediaUploaderMultiple('gallery_images','gallery_preview')">+</button>
@@ -871,7 +871,7 @@ function renderGrid(data, total = null) {
         const name = item.file_path.split('/').pop();
         return `
             <div class="mm-item ${sel}" data-path="${item.file_path}"
-                 onclick="toggleItem(this,'${item.file_path}')">
+                 >
                 <img src="/storage/${item.file_path}" alt="${name}" loading="lazy">
                 <div class="mm-item-name">${name}</div>
             </div>`;
@@ -934,7 +934,7 @@ function confirmSelection() {
             div.className = 'gallery-thumb';
             div.innerHTML = `
                 <img src="/storage/${path}" alt="">
-                <button type="button" class="remove-thumb" onclick="removeGalleryThumb(this,'${path}')">✕</button>`;
+                <button type="button" class="remove-thumb" data-path="${path}">✕</button>`;
             preview.insertBefore(div, addBtn);
         });
 
@@ -1033,6 +1033,22 @@ document.getElementById("mmUploadInput").addEventListener("change", function () 
 ───────────────────────────────────────────────────────────── */
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeMediaModal();
+});
+
+document.getElementById("mmGrid").addEventListener("click", function (e) {
+    const item = e.target.closest(".mm-item");
+    if (!item) return;
+    const path = item.dataset.path;
+    if (!path) return;
+    toggleItem(item, path);
+});
+
+document.getElementById("gallery_preview").addEventListener("click", function (e) {
+    const btn = e.target.closest(".remove-thumb");
+    if (!btn) return;
+    const path = btn.dataset.path;
+    if (!path) return;
+    removeGalleryThumb(btn, path);
 });
 </script>
 <script src="{{ versionedAsset('js/admin/product-form-media.js') }}"></script>
