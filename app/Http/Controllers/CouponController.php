@@ -43,16 +43,21 @@ class CouponController extends Controller
             'type' => 'required|in:fixed,percent',
             'value' => 'required|numeric|min:0',
             'cart_value' => 'required|numeric|min:0',
+            'max_discount' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'free_shipping' => 'required'
+            'free_shipping' => 'required|in:0,1',
+        ], [
+            'max_discount.numeric' => 'Max discount must be a number only (do not include % or other symbols).',
+            'value.numeric' => 'Coupon value must be a number only.',
+            'cart_value.numeric' => 'Min cart value must be a number only.',
         ]);
         Coupon::create([
             'code' => $request->code,
             'type' => $request->type,
             'value' => $request->value,
             'min_cart_value' => $request->cart_value ?? 0,
-            'max_discount' => $request->max_discount ?? 0,
+            'max_discount' => $request->max_discount,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'is_single_use' => $request->is_single_use == '1',
@@ -83,9 +88,14 @@ class CouponController extends Controller
             'type' => 'required|in:fixed,percent',
             'value' => 'required|numeric|min:0',
             'cart_value' => 'required|numeric|min:0',
+            'max_discount' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'free_shipping' => 'required'
+            'free_shipping' => 'required|in:0,1',
+        ], [
+            'max_discount.numeric' => 'Max discount must be a number only (do not include % or other symbols).',
+            'value.numeric' => 'Coupon value must be a number only.',
+            'cart_value.numeric' => 'Min cart value must be a number only.',
         ]);
 
         $coupon->update([
@@ -93,7 +103,7 @@ class CouponController extends Controller
             'type' => $request->type,
             'value' => $request->value,
             'min_cart_value' => $request->cart_value ?? 0,
-            'max_discount' => $request->max_discount ?? 0,
+            'max_discount' => $request->max_discount,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'is_single_use' => $request->is_single_use == '1',

@@ -281,7 +281,7 @@ class HomeController extends Controller
         if ($request->hasFile('design')) {
             $file = $request->file('design');
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/designs', $filename);
+            $file->storeAs('designs', $filename, 'public');
         }
 
         $contact = Contact::create([

@@ -66,16 +66,16 @@
                 </fieldset>
                 <fieldset class="name">
                     <div class="body-title">Value <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Coupon Value" name="value"
-                        tabindex="0" value="{{ $coupon->value }}" aria-required="true" required="">
+                    <input class="flex-grow" type="number" step="0.01" min="0" placeholder="e.g. 10"
+                        name="value" tabindex="0" value="{{ old('value', $coupon->value) }}" aria-required="true" required="">
                     @error('value')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </fieldset>
                 <fieldset class="name">
                     <div class="body-title">Min Cart Value <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Cart Value"
-                        name="cart_value" tabindex="0" value="{{$coupon->min_cart_value}}" aria-required="true"
+                    <input class="flex-grow" type="number" step="0.01" min="0" placeholder="e.g. 500"
+                        name="cart_value" tabindex="0" value="{{ old('cart_value', $coupon->min_cart_value) }}" aria-required="true"
                         required="">
                     @error('cart_value')
                         <div class="text-danger">{{ $message }}</div>
@@ -83,8 +83,8 @@
                 </fieldset>
                 <fieldset class="name">
                     <div class="body-title">Max discount <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Max Discount"
-                        name="max_discount" tabindex="0" value="{{$coupon->max_discount}}" aria-required="true"
+                    <input class="flex-grow" type="number" step="0.01" min="0" placeholder="e.g. 100 (number only, no %)"
+                        name="max_discount" tabindex="0" value="{{ old('max_discount', $coupon->max_discount) }}" aria-required="true"
                         required="">
                     @error('max_discount')
                         <div class="text-danger">{{ $message }}</div>

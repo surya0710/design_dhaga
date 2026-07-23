@@ -112,13 +112,24 @@
     <script>
         Swal.fire({
             icon: 'success',
+            iconHtml: '<i class="fa-regular fa-circle-check" style="color:#198754;"></i>',
             title: 'Success!',
-            text: "{{ session('success') }}",
+            text: @json(session('success')),
             showConfirmButton: true,
             confirmButtonText: 'Visit Portfolio',
             showCancelButton: true,
             cancelButtonText: 'Close',
             confirmButtonColor: '#000',
+            customClass: {
+                icon: 'swal-fa-icon',
+            },
+            didOpen: (popup) => {
+                const iconEl = popup.querySelector('.swal2-icon.swal-fa-icon');
+                if (iconEl) {
+                    iconEl.style.border = 'none';
+                    iconEl.style.color = '#198754';
+                }
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = "{{ route('portfolio') }}";

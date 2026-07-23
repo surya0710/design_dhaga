@@ -48,8 +48,9 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
-                            <th>Subject</th>
+                            <th>Category</th>
                             <th>Message</th>
+                            <th>Design</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -64,8 +65,18 @@
                             </td>
                             <td><a href="mailto:{{$contactQuery->email }}"> {{$contactQuery->email}}</a></td>
                             <td><a href="tel:{{$contactQuery->mobile}}" target="_blank">{{$contactQuery->mobile}}</a></td>
-                            <td>{{$contactQuery->subject}}</td>
-                            <td>{{$contactQuery->message}}</a></td>
+                            <td>{{ $contactQuery->category ?? $contactQuery->subject }}</td>
+                            <td>{{ $contactQuery->message }}</td>
+                            <td>
+                                @if(!empty($contactQuery->design))
+                                    @php $designUrl = asset('storage/designs/' . $contactQuery->design); @endphp
+                                    <a href="{{ $designUrl }}" target="_blank" rel="noopener">
+                                        {{ $designUrl }}
+                                    </a>
+                                @else
+                                    —
+                                @endif
+                            </td>
                             <td>
                                 <div class="list-icon-function">
                                     <form action="{{route('admin.contact.delete',['id'=>$contactQuery->id])}}" method="POST">

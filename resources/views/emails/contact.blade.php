@@ -9,18 +9,17 @@
 
     <p><strong>Name:</strong> {{ $contact->name }}</p>
     <p><strong>Email:</strong> {{ $contact->email }}</p>
-    <p><strong>Phone:</strong> {{ $contact->phone }}</p>
+    <p><strong>Phone:</strong> {{ $contact->mobile }}</p>
     <p><strong>Category:</strong> {{ $contact->category }}</p>
-
-    @if(!empty($contact->instagram))
-        <p><strong>Instagram:</strong> {{ $contact->instagram }}</p>
-    @endif
 
     <p><strong>Message:</strong></p>
     <p>{{ $contact->message }}</p>
 
     @if(!empty($contact->design))
-        <p><strong>Attached Design File:</strong> {{ $contact->design }}</p>
+        @php $designUrl = asset('storage/designs/' . $contact->design); @endphp
+        <p><strong>Attached Design File:</strong>
+            <a href="{{ $designUrl }}" target="_blank" rel="noopener">{{ $designUrl }}</a>
+        </p>
     @endif
 </body>
 </html>
