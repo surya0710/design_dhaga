@@ -293,7 +293,7 @@ class HomeController extends Controller
             'design'     => $filename,
         ]);
 
-        Mail::to('suryakantyadav16@gmail.com')->send(new ContactMail($contact));
+        Mail::to('artinfo@designdhaga.com')->send(new ContactMail($contact));
 
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
