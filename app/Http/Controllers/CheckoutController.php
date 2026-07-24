@@ -54,7 +54,7 @@ class CheckoutController extends Controller
             ->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart')->with('error', 'Your cart is empty.');
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
 
         $subtotal = $cartItems->sum(function ($item) {
@@ -504,7 +504,7 @@ class CheckoutController extends Controller
 
             return response()->json([
                 'status' => true,
-                'redirect_url' => route('home')
+                'redirect_url' => route('order.success', $order->id),
             ]);
         } catch (\Throwable $e) {
             Log::error('Payment verification failed', [
@@ -518,6 +518,53 @@ class CheckoutController extends Controller
                 'error' => config('app.debug') ? $e->getMessage() : null,
             ], 400);
         }
+    }
+
+    public function orderSuccess($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        if ((int) $order->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->payment_status !== 'paid') {
+            return redirect()->route('checkout');
+        }
+
+        $categories = $this->categories;
+        $menu = $this->menu;
+        $highlights = $this->highlights;
+        $merchantId = (int) config('services.google.merchant_id');
+
+        $deliveryCountry = $this->countryToIsoCode($order->country);
+        $estimatedDeliveryDate = optional($order->expected_delivery_date)->format('Y-m-d')
+            ?: now()->addDays(7)->format('Y-m-d');
+
+        return view('frontend.order-success', compact(
+            'order',
+            'categories',
+            'menu',
+            'highlights',
+            'merchantId',
+            'deliveryCountry',
+            'estimatedDeliveryDate'
+        ));
+    }
+
+    private function countryToIsoCode(?string $country): string
+    {
+        $country = strtolower(trim((string) $country));
+
+        $map = [
+            'india' => 'IN',
+            'in' => 'IN',
+            'united states' => 'US',
+            'usa' => 'US',
+            'us' => 'US',
+        ];
+
+        return $map[$country] ?? 'IN';
     }
 
     private function calculateGstBreakup(float $amount, ?string $customerState): array

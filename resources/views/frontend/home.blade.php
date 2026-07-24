@@ -272,7 +272,7 @@
         </div>
     </div>
 </section>
-@include('frontend.partials.instagram-feed')
+<!-- @include('frontend.partials.instagram-feed') -->
 <section class="container-fluid py-3" id="who-we-are">
     <div class="row px-4">
         <h2 class="mb-0">{{ $whoWeAre->title }}</h2>

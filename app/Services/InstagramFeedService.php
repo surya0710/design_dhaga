@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class InstagramFeedService
 {
+    public function __construct(
+        private readonly InstagramCredentialService $credentials
+    ) {}
+
     public function getProfile(HomeSection $section): array
     {
         $feed = $this->getCachedFeed();
@@ -41,12 +45,18 @@ class InstagramFeedService
             return collect($feed['posts']);
         }
 
+        if (! config('services.instagram.show_fallback', false)) {
+            return collect();
+        }
+
         return $this->getFallbackPosts($section);
     }
 
     private function getCachedFeed(): ?array
     {
-        $token = config('services.instagram.access_token');
+        $this->credentials->applyToConfig();
+
+        $token = $this->credentials->accessToken();
 
         if (! $token) {
             return null;
@@ -84,15 +94,26 @@ class InstagramFeedService
     {
         try {
             $version = config('services.instagram.graph_version', 'v21.0');
-            $igUserId = config('services.instagram.user_id');
             $accessToken = $token;
+            $pageId = $this->credentials->pageId();
+            $link = app(InstagramTokenService::class)->resolveLinkedInstagramAccount(
+                $token,
+                $pageId ?: null,
+                $this->credentials->userId() ?: null
+            );
 
-            if ($igUserId) {
-                $feed = $this->fetchInstagramBusinessFeed($version, $igUserId, $accessToken);
+            if ($link['linked'] && ! empty($link['instagram_user_id'])) {
+                $feed = $this->fetchInstagramBusinessFeed($version, $link['instagram_user_id'], $accessToken);
 
                 if ($feed) {
+                    $this->syncResolvedAccount($link);
+
                     return $feed;
                 }
+            }
+
+            foreach ($link['errors'] as $error) {
+                Log::warning('Instagram feed: ' . $error);
             }
 
             $pagesResponse = Http::timeout(20)
@@ -296,5 +317,25 @@ class InstagramFeedService
         }
 
         return strlen($caption) > 120 ? substr($caption, 0, 117) . '...' : $caption;
+    }
+
+    private function syncResolvedAccount(array $link): void
+    {
+        $resolvedUserId = (string) ($link['instagram_user_id'] ?? '');
+        $resolvedPageId = (string) ($link['page_id'] ?? '');
+
+        if (
+            $resolvedUserId === $this->credentials->userId()
+            && $resolvedPageId === $this->credentials->pageId()
+        ) {
+            return;
+        }
+
+        $this->credentials->store([
+            'access_token' => $this->credentials->accessToken(),
+            'user_id' => $resolvedUserId ?: null,
+            'page_id' => $resolvedPageId ?: null,
+            'last_refreshed_at' => now(),
+        ]);
     }
 }

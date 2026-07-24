@@ -69,10 +69,12 @@ return [
         'graph_version' => env('INSTAGRAM_GRAPH_VERSION', 'v21.0'),
         'cache_ttl' => env('INSTAGRAM_CACHE_TTL', 3600),
         'post_limit' => env('INSTAGRAM_POST_LIMIT', 20),
+        'show_fallback' => env('INSTAGRAM_SHOW_FALLBACK', true),
     ],
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
+        'merchant_id' => env('GOOGLE_MERCHANT_ID', '5791926177'),
     ],
 ];

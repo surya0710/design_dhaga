@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\HomeSection;
+use App\Services\InstagramCredentialService;
 use App\Services\InstagramFeedService;
 use App\Services\InstagramTokenService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class TestInstagramFeed extends Command
 {
@@ -15,9 +15,15 @@ class TestInstagramFeed extends Command
 
     protected $description = 'Diagnose Instagram feed API and post loading';
 
-    public function handle(InstagramFeedService $service, InstagramTokenService $tokens): int
-    {
-        $token = config('services.instagram.access_token');
+    public function handle(
+        InstagramFeedService $service,
+        InstagramTokenService $tokens,
+        InstagramCredentialService $credentials
+    ): int {
+        $credentials->syncFromEnvIfEmpty();
+        $credentials->applyToConfig();
+
+        $token = $credentials->accessToken();
 
         if (! $token) {
             $this->error('INSTAGRAM_ACCESS_TOKEN is missing from config.');
@@ -36,6 +42,23 @@ class TestInstagramFeed extends Command
             $this->warn('Add INSTAGRAM_APP_ID and INSTAGRAM_APP_SECRET to inspect token expiry.');
         }
 
+        $link = $tokens->resolveLinkedInstagramAccount(
+            $token,
+            $credentials->pageId() ?: null,
+            $credentials->userId() ?: null
+        );
+
+        $this->newLine();
+        $this->info('Page / Instagram linkage');
+        $this->line('Facebook page: ' . ($link['page_name'] ?: 'unknown') . ' (' . ($link['page_id'] ?: 'not found') . ')');
+        $this->line('Saved INSTAGRAM_USER_ID: ' . ($credentials->userId() ?: 'not set'));
+        $this->line('Linked Instagram ID: ' . ($link['instagram_user_id'] ?: 'not linked'));
+        $this->line('Linked Instagram username: ' . ($link['instagram_username'] ? '@' . $link['instagram_username'] : 'not linked'));
+
+        foreach ($link['errors'] as $error) {
+            $this->warn($error);
+        }
+
         $section = HomeSection::where('key', 'instagram_feed')->with('items')->first();
 
         if (! $section) {
@@ -49,54 +72,29 @@ class TestInstagramFeed extends Command
         Cache::forget('instagram.feed');
         Cache::store('file')->forget('instagram.feed');
 
-        $version = config('services.instagram.graph_version', 'v21.0');
-        $tokenType = strtoupper((string) ($debug['type'] ?? ''));
-        $igUserId = config('services.instagram.user_id');
-
-        if ($tokenType === 'PAGE' && $igUserId) {
-            $this->line('Token type: PAGE (expected for production)');
-            $this->line('Skipping /me/accounts because page tokens use INSTAGRAM_USER_ID directly.');
-
-            $profile = Http::timeout(20)->get("https://graph.facebook.com/{$version}/{$igUserId}", [
-                'fields' => 'username,media_count',
-                'access_token' => $token,
-            ]);
-
-            $this->line('Instagram profile API status: ' . $profile->status());
-
-            if (! $profile->successful()) {
-                $this->warn($profile->body());
-            } else {
-                $this->info('Instagram account: @' . ($profile->json('username') ?? 'unknown'));
-            }
-        } else {
-            $pages = Http::timeout(20)->get("https://graph.facebook.com/{$version}/me/accounts", [
-                'fields' => 'instagram_business_account,access_token',
-                'access_token' => $token,
-            ]);
-
-            $this->line('Facebook pages API status: ' . $pages->status());
-
-            if (! $pages->successful()) {
-                $this->warn($pages->body());
-            }
-        }
-
         $posts = $service->getPosts($section);
         $firstUrl = (string) ($posts->first()['media_url'] ?? '');
 
+        $this->newLine();
         $this->info('Posts returned by service: ' . $posts->count());
         $this->info('First post source: ' . (str_starts_with($firstUrl, 'http') ? 'Instagram CDN' : 'local fallback'));
 
         if ($posts->count() > 6 && str_starts_with($firstUrl, 'http')) {
             $this->info('Instagram feed is working correctly.');
+
+            return self::SUCCESS;
         }
 
-        if ($posts->count() <= 6 && str_starts_with($firstUrl, 'frontend_assets')) {
-            $this->warn('Live Instagram API is not being used. Check storage/logs/laravel.log for "Instagram feed:" messages.');
-            $this->warn('If the token expires quickly, run: php artisan instagram:refresh-token');
+        $this->newLine();
+        $this->error('Live Instagram API is not being used.');
+
+        if (! ($link['linked'] ?? false)) {
+            $this->line('Root cause: Facebook Page is not linked to Instagram, or saved INSTAGRAM_USER_ID is wrong.');
+            $this->line('Run: php artisan instagram:diagnose-link');
+        } else {
+            $this->line('Page is linked, but media API still failed. Regenerate token with instagram_basic permission.');
         }
 
-        return self::SUCCESS;
+        return self::FAILURE;
     }
 }

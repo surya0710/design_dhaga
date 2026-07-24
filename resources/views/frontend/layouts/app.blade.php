@@ -193,6 +193,22 @@
     <script src="{{ versionedAsset('frontend_assets/js/wishlist.js') }}" defer></script>
     {{-- Scripts --}}
     @stack('scripts')
-    
+
+    {{-- Google Merchant store widget (Customer Reviews badge) --}}
+    <script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+    <script>
+      (function () {
+        var scriptEl = document.getElementById('merchantWidgetScript');
+        if (!scriptEl) return;
+        scriptEl.addEventListener('load', function () {
+          if (typeof merchantwidget === 'undefined') return;
+          merchantwidget.start({
+            merchant_id: {{ (int) config('services.google.merchant_id', 5791926177) }},
+            position: 'RIGHT_BOTTOM',
+            region: 'IN'
+          });
+        });
+      })();
+    </script>
 </body>
 </html>

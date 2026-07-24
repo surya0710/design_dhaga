@@ -86,6 +86,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact-us');
 Route::post('/contact-us', [HomeController::class, 'sendmail'])->name('sendmail');
+Route::get('/store', [HomeController::class, 'store'])->name('store.page');
 Route::get('/portfolio/{slug?}', [HomeController::class, 'portfolio'])->name('portfolio');
 Route::get('/terms-and-condition', [HomeController::class, 'terms'])->name('terms-and-condition');
 Route::get('/return-policy', [HomeController::class, 'returnPolicy'])->name('return-policy');
@@ -134,6 +135,7 @@ Route::middleware(['auth', 'utype:USR', 'verified'])->group(function () {
 
     Route::post('/razorpay/verify', [CheckoutController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
 
+    Route::get('/order/{id}/success', [CheckoutController::class, 'orderSuccess'])->name('order.success');
     Route::get('/order/{id}/invoice', [CheckoutController::class, 'invoice'])->name('order.invoice');
     Route::get('order/track/{awb}', [AccountController::class, 'trackOrder'])->name('order.track');
 
