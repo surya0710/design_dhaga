@@ -16,9 +16,10 @@ and premium branding services.')
 @push('extras')
 
 <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all'">
+<noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+</noscript>
 
 <style>
 
@@ -506,15 +507,19 @@ and premium branding services.')
 
 @push('scripts')
 
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
 <script>
-
-    /* LIGHTBOX */
-
-    GLightbox({
-        loop: false,
-        touchNavigation: true,
-        preload: false
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof GLightbox === 'function') {
+        GLightbox({
+            loop: false,
+            touchNavigation: true,
+            preload: false
+        });
+    }
+});
+</script>
+<script>
 
     /* FILTER */
 

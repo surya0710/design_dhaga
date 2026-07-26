@@ -6,10 +6,18 @@
         : false;
 
     $productUrl = getProductUrl($product);
+    $productImage = responsiveImage($product->image, [240, 360, 480, 640], 'storage');
 @endphp
 <a class="product-item" href="{{ $productUrl }}">
     <div class="position-relative d-inline-block w-100">
-        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 rounded">
+        <img
+            src="{{ $productImage['src'] }}"
+            @if(!empty($productImage['srcset'])) srcset="{{ $productImage['srcset'] }}" sizes="(max-width: 768px) 50vw, 220px" @endif
+            alt="{{ $product->name }}"
+            class="w-100 rounded"
+            loading="lazy"
+            decoding="async"
+        >
 
         <button type="button"
             class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"

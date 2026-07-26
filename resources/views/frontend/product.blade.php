@@ -13,13 +13,50 @@
 @section('twitter_image', asset('storage/' . $product->image))
 @section('twitter_image_alt', $product->name)
 
-@push('extras')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-@endpush
+@php
+    $gallery    = $product->galleryImages;
+    $mainImage  = $product->image;
+    $productID  = $product->id;
+    $productBreadcrumbName = $product->name;
+    $mainProductImage = responsiveImage($product->image, [480, 768, 1024, 1280], 'storage');
+    $activeVariants = $product->activeVariants->values();
+    $hasVariants = $activeVariants->isNotEmpty();
+    $initialVariant = $activeVariants->sortBy('price')->first();
+    $displayPrice = $initialVariant?->price ?? ($product->sale_price ?? $product->regular_price);
+    $variantSizes = $activeVariants->pluck('size')->filter()->unique()->values();
+    $variantFabrics = $activeVariants->pluck('fabric_type')->filter()->unique()->values();
+    $variantOptions = $activeVariants->map(function ($variant) {
+        return [
+            'id' => $variant->id,
+            'size' => $variant->size,
+            'fabric_type' => $variant->fabric_type,
+            'sku' => $variant->sku,
+            'price' => (float) $variant->price,
+            'regular_price' => (float) $variant->regular_price,
+            'quantity' => (int) $variant->quantity,
+        ];
+    })->values();
+    $parentCategoryId = !empty($product->category->parent_id)
+        ? $product->category->parent_id
+        : ($product->category->id ?? null);
+    $handDetailsLabel = 'Hand Painted Details';
+    if($parentCategoryId == 16 || $parentCategoryId == 27) {
+        $handDetailsLabel = 'Hand Crafted Details';
+    }
+@endphp
 
-@push('styles')
+@push('extras')
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.css') }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.theme.default.min.css') }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" media="print" onload="this.media='all'">
+<noscript>
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.css') }}">
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.theme.default.min.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</noscript>
+@if(!empty($mainProductImage['src']))
+<link rel="preload" as="image" href="{{ $mainProductImage['src'] }}" fetchpriority="high">
+@endif
 <style>
     .wishlist-btn.active i {
         font-weight: 900;
@@ -68,36 +105,6 @@
     }
 </style>
 @endpush
-@php
-    $gallery    = $product->galleryImages;
-    $mainImage  = $product->image;
-    $productID  = $product->id;
-    $productBreadcrumbName = $product->name;
-    $activeVariants = $product->activeVariants->values();
-    $hasVariants = $activeVariants->isNotEmpty();
-    $initialVariant = $activeVariants->sortBy('price')->first();
-    $displayPrice = $initialVariant?->price ?? ($product->sale_price ?? $product->regular_price);
-    $variantSizes = $activeVariants->pluck('size')->filter()->unique()->values();
-    $variantFabrics = $activeVariants->pluck('fabric_type')->filter()->unique()->values();
-    $variantOptions = $activeVariants->map(function ($variant) {
-        return [
-            'id' => $variant->id,
-            'size' => $variant->size,
-            'fabric_type' => $variant->fabric_type,
-            'sku' => $variant->sku,
-            'price' => (float) $variant->price,
-            'regular_price' => (float) $variant->regular_price,
-            'quantity' => (int) $variant->quantity,
-        ];
-    })->values();
-    $parentCategoryId = !empty($product->category->parent_id)
-        ? $product->category->parent_id
-        : ($product->category->id ?? null);
-    $handDetailsLabel = 'Hand Painted Details'; 
-    if($parentCategoryId == 16 || $parentCategoryId == 27) {
-        $handDetailsLabel = 'Hand Crafted Details';
-    }
-@endphp
 @section('schema')
 
 @php
@@ -218,8 +225,11 @@
                         </div>
 
                         <div class="carousel-container position-relative overflow-hidden flex-grow-1">
-                            <img id="desktopMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" style="object-fit: contain; display: block; max-height: 700px;"
-                            alt="{{ $product->name }}" onclick="openImageModal(this.src)" />
+                            <img id="desktopMainImage"
+                            src="{{ $mainProductImage['src'] }}"
+                            @if(!empty($mainProductImage['srcset'])) srcset="{{ $mainProductImage['srcset'] }}" sizes="(max-width: 991px) 100vw, 50vw" @endif
+                            class="cursor-pointer w-100" style="object-fit: contain; display: block; max-height: 700px;"
+                            alt="{{ $product->name }}" fetchpriority="high" decoding="async" onclick="openImageModal(this.src)" />
 
                             <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y ms-2 shadow"
                             style="z-index: 10; width: 45px; height: 45px;" onclick="prevDesktopImage()">
@@ -285,7 +295,10 @@
 
                     <div class="d-flex flex-column gap-2">
                         <div class="position-relative" style="overflow: hidden;">
-                            <img id="mobileMainImage" src="{{ asset('storage/' . $product->image) }}" class="cursor-pointer w-100" alt="{{ $product->name }}" onclick="openImageModal(this.src)" />
+                            <img id="mobileMainImage"
+                            src="{{ $mainProductImage['src'] }}"
+                            @if(!empty($mainProductImage['srcset'])) srcset="{{ $mainProductImage['srcset'] }}" sizes="100vw" @endif
+                            class="cursor-pointer w-100" alt="{{ $product->name }}" fetchpriority="high" decoding="async" onclick="openImageModal(this.src)" />
 
                             <button class="btn btn-light rounded-circle position-absolute start-0 top-50 translate-middle-y shadow" style="z-index: 10; width: 35px; height: 35px; left: 4px;" 
                             onclick="prevMobileImage()">
@@ -819,6 +832,7 @@
                 @foreach($relatedProducts as $relatedProduct)
                 @php
                     $productUrl = getProductUrl($relatedProduct);
+                    $relatedProductImage = responsiveImage($relatedProduct->image, [240, 360, 480], 'storage');
                     $isInWishlist = auth()->check()
                         ? \App\Models\Wishlist::where('user_id', auth()->id())
                             ->where('product_id', $relatedProduct->id)
@@ -830,7 +844,14 @@
                         <div class="card border-0 h-100">
                             <div class="position-relative">
                                 <div class="ratio ratio-4x3">
-                                    <img src="{{ Storage::url($relatedProduct->image) }}" loading="lazy" class="card-img-top object-fit-cover" alt="{{ $relatedProduct->name }}" />
+                                    <img
+                                        src="{{ $relatedProductImage['src'] }}"
+                                        @if(!empty($relatedProductImage['srcset'])) srcset="{{ $relatedProductImage['srcset'] }}" sizes="(max-width: 576px) 90vw, 240px" @endif
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="card-img-top object-fit-cover"
+                                        alt="{{ $relatedProduct->name }}"
+                                    />
                                 </div>
                                 <button type="button"
                                     class="btn p-0 border-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow wishlist-btn {{ $isInWishlist ? 'active' : '' }}"
@@ -1095,8 +1116,7 @@
 
 @push('scripts')
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
 <script>
     $('.artisan-description').each(function () {
@@ -1581,7 +1601,7 @@
     });
 </script>
 <script src="{{ versionedAsset('frontend_assets/js/product.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         $("#recentBlogsCarousel .owl-carousel").owlCarousel({

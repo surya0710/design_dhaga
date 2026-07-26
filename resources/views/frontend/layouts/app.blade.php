@@ -4,17 +4,23 @@
     <!-- BASIC META TAGS -->
     @include('frontend.partials.head')
 
-    <!-- PERFORMANCE OPTIMIZATION -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <!-- PERFORMANCE: early connections + font preload -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <link rel="preload" href="{{ asset('frontend_assets/fonts/Inter/Inter-VariableFont_opsz,wght.woff2') }}" as="font" type="font/woff2" crossorigin>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="{{ asset('frontend_assets/images/logo/favicon.jpg') }}">
 
-    <!-- CSS -->
+    <!-- Critical CSS (render-blocking, same-origin) -->
     <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/css/style-v3.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    {{-- Font Awesome: non-blocking (icons are not required for first paint / LCP) --}}
+    <link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/fontawesome/css/all.min.css') }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/fontawesome/css/all.min.css') }}"></noscript>
+
     <style>
         @media (max-width: 768px) {
             .breadcrumb-section {
@@ -35,32 +41,35 @@
     </style>
 
     @stack('extras')
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLEQEJBY8K"></script>
+
+    {{-- Analytics delayed until after window load to free the critical path --}}
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    window.addEventListener('load', function () {
+        var ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-PLEQEJBY8K';
+        document.head.appendChild(ga);
+        gtag('js', new Date());
+        gtag('config', 'G-PLEQEJBY8K');
 
-    gtag('config', 'G-PLEQEJBY8K');
-    </script>
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1228920345968692');
-    fbq('track', 'PageView');
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1228920345968692');
+        fbq('track', 'PageView');
+    });
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1228920345968692&ev=PageView&noscript=1"
     /></noscript>
-    <!-- End Meta Pixel Code -->
+
      <!-- Dynamic Breadcrumb Schema -->
     @if (Request::segment(1))
     <script type="application/ld+json">
@@ -173,10 +182,10 @@
         @yield('content')
     </main>
     @include('frontend.partials.footer')
-    <!-- JS -->
+    <!-- JS: jQuery sync (required by page stacks), Bootstrap/site scripts deferred -->
+    <script src="{{ versionedAsset('frontend_assets/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ versionedAsset('frontend_assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
     <script src="{{ versionedAsset('frontend_assets/js/script.js') }}" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
     window.wishlistConfig = {
         addUrl: @json(route('wishlist.add')),
@@ -194,20 +203,31 @@
     {{-- Scripts --}}
     @stack('scripts')
 
-    {{-- Google Merchant store widget (Customer Reviews badge) --}}
-    <script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+    {{-- Google Merchant store widget: load after idle/load --}}
     <script>
       (function () {
-        var scriptEl = document.getElementById('merchantWidgetScript');
-        if (!scriptEl) return;
-        scriptEl.addEventListener('load', function () {
-          if (typeof merchantwidget === 'undefined') return;
-          merchantwidget.start({
-            merchant_id: {{ (int) config('services.google.merchant_id', 5791926177) }},
-            position: 'RIGHT_BOTTOM',
-            region: 'IN'
+        function startMerchantWidget() {
+          var s = document.createElement('script');
+          s.id = 'merchantWidgetScript';
+          s.src = 'https://www.gstatic.com/shopping/merchant/merchantwidget.js';
+          s.defer = true;
+          s.addEventListener('load', function () {
+            if (typeof merchantwidget === 'undefined') return;
+            merchantwidget.start({
+              merchant_id: {{ (int) config('services.google.merchant_id', 5791926177) }},
+              position: 'RIGHT_BOTTOM',
+              region: 'IN'
+            });
           });
-        });
+          document.body.appendChild(s);
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(startMerchantWidget, { timeout: 4000 });
+        } else {
+          window.addEventListener('load', function () {
+            setTimeout(startMerchantWidget, 1500);
+          });
+        }
       })();
     </script>
 </body>

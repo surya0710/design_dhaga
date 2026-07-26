@@ -384,8 +384,12 @@
 @endsection
 
 @push('extras')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.css') }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.theme.default.min.css') }}" media="print" onload="this.media='all'">
+<noscript>
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.css') }}">
+<link rel="stylesheet" href="{{ versionedAsset('frontend_assets/vendor/owl/owl.theme.default.min.css') }}">
+</noscript>
 <style>
     .instagram-feed-section {
         background: #fff;
@@ -611,7 +615,7 @@
 @endpush
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="{{ versionedAsset('frontend_assets/vendor/owl/owl.carousel.min.js') }}" defer></script>
 
 <script>
     $(document).ready(function() {

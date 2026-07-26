@@ -7,11 +7,6 @@
 @section('og_description', $category->meta_description ?? $pageContent->meta_description)
 @section('og_image', asset($category->meta_image ?? $pageContent->meta_image ?? 'og-home.jpg'))
 
-@push('extras')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-@endpush
-
 @section('schema')
 @if(!empty($faqs) && count($faqs) > 0)
 <script type="application/ld+json">
