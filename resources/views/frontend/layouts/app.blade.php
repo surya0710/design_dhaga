@@ -4,6 +4,7 @@
     <!-- BASIC META TAGS -->
     @include('frontend.partials.head')
 
+    <meta name="p:domain_verify" content="37226a6710a7f4c75583a1ecd98e0d4d"/>
     <!-- PERFORMANCE: early connections + font preload -->
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
