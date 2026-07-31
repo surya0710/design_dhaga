@@ -141,6 +141,10 @@ class UserController extends Controller
 
     function verificationNotice()
     {
+        if (auth()->user()->hasVerifiedEmail()) {
+            return redirect()->route('home');
+        }
+
         $categories = $this->categories;
         return view('auth.verify', compact('categories'));
     }

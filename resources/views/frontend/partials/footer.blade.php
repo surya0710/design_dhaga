@@ -164,6 +164,10 @@
                   <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" width="18">
                   Continue with Google
                 </a>
+                <p class="text-center mb-0 mt-3 small text-muted">
+                  Don't have an account?
+                  <a href="{{ route('register') }}" class="fw-semibold text-dark text-decoration-underline">Create Account</a>
+                </p>
               </div>
 
               <div id="step2" class="d-none">
@@ -252,11 +256,29 @@
         });
       }
 
-      // Allow Enter key on password field
+      // Allow Enter key on password field + auto-open login popup once
       document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('login-password')?.addEventListener('keydown', e => {
           if (e.key === 'Enter') submitLogin();
         });
+
+        const loginModalEl = document.getElementById('loginModal');
+        if (!loginModalEl || typeof bootstrap === 'undefined') return;
+
+        const storageKey = 'loginPopupDismissed';
+        const isRegisterPage = {{ request()->routeIs('register') ? 'true' : 'false' }};
+
+        loginModalEl.addEventListener('hidden.bs.modal', () => {
+          localStorage.setItem(storageKey, '1');
+        });
+
+        if (isRegisterPage || localStorage.getItem(storageKey)) return;
+
+        setTimeout(() => {
+          if (localStorage.getItem(storageKey)) return;
+          if (loginModalEl.classList.contains('show')) return;
+          bootstrap.Modal.getOrCreateInstance(loginModalEl).show();
+        }, 5000);
       });
     </script>
     @endif

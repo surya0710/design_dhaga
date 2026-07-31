@@ -80,24 +80,28 @@ class HomeController extends Controller
                 ->keyBy('key');
         });
 
-        $instagramFeed = $homeSections->get('instagram_feed');
+        // $instagramFeed = $homeSections->get('instagram_feed');
 
-        if (! $instagramFeed) {
-            $instagramFeed = HomeSection::where('key', 'instagram_feed')
-                ->where('status', 1)
-                ->with(['items' => function ($query) {
-                    $query->where('status', 1);
-                }])
-                ->first();
-        }
+        // if (! $instagramFeed) {
+        //     $instagramFeed = HomeSection::where('key', 'instagram_feed')
+        //         ->where('status', 1)
+        //         ->with(['items' => function ($query) {
+        //             $query->where('status', 1);
+        //         }])
+        //         ->first();
+        // }
+        // $instagramProfile = null;
+        // $instagramPosts = collect();
+
+        // if ($instagramFeed) {
+        //     $instagramService = app(InstagramFeedService::class);
+        //     $instagramProfile = $instagramService->getProfile($instagramFeed);
+        //     $instagramPosts = $instagramService->getPosts($instagramFeed);
+        // }
+
+        $instagramFeed = null;
         $instagramProfile = null;
         $instagramPosts = collect();
-
-        if ($instagramFeed) {
-            $instagramService = app(InstagramFeedService::class);
-            $instagramProfile = $instagramService->getProfile($instagramFeed);
-            $instagramPosts = $instagramService->getPosts($instagramFeed);
-        }
 
         $wishlistProductIds = [];
 

@@ -20,7 +20,7 @@
             <!-- Brand Section -->
             <div class="col-lg-6 brand-section">
                 <img class="" src="{{ asset('frontend_assets/images/logo/landscape-logo.svg') }}" alt="Design Dhaga Logo">
-                <p class="brand-tagline">Explore limited edition handcrafted pieces you won’t find anywhere else.</p>
+                <p class="brand-tagline d-none d-lg-block">Explore limited edition handcrafted pieces you won’t find anywhere else.</p>
 
                 <ul class="benefit-list d-none d-lg-block">
                     <li class="benefit-item">
@@ -128,8 +128,8 @@
                                     <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
                                     <label class="form-check-label" for="terms">
                                         I agree to the 
-                                        <a href="#">Terms & Conditions</a> and 
-                                        <a href="#">Privacy Policy</a> of Design Dhaga
+                                        <a href="{{ route('terms-and-condition') }}">Terms & Conditions</a> and 
+                                        <a href="{{ route('privacy-policy') }}">Privacy Policy</a> of Design Dhaga
                                     </label>
                                 </div>
                             </div>
