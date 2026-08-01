@@ -198,6 +198,8 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
 
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/admin/order/detail/{id}', [AdminController::class, 'orders_detail'])->name('admin.order.detail');
+    Route::get('/admin/order/{id}/invoice', [AdminController::class, 'order_invoice'])->name('admin.order.invoice');
+    Route::get('/admin/order/{id}/invoice/download', [AdminController::class, 'order_invoice_download'])->name('admin.order.invoice.download');
     Route::get('/admin/order/track', [AdminController::class, 'orders_track'])->name('admin.order.track');
     Route::post('/admin/order/{id}/status', [AdminController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::patch('/admin/orders/{id}/reset-shiprocket', [AdminController::class, 'resetShiprocket'])->name('orders.resetShiprocket');

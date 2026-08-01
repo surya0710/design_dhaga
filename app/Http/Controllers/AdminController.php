@@ -36,6 +36,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use App\Services\ShiprocketService;
 use App\Models\AboutSection;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -924,6 +925,30 @@ class AdminController extends Controller
     {
         $orders = Order::with('items')->findOrFail($id);
         return view('admin.order-detail', compact('orders'));
+    }
+
+    public function order_invoice($id)
+    {
+        return $this->generateOrderInvoice($id, 'view');
+    }
+
+    public function order_invoice_download($id)
+    {
+        return $this->generateOrderInvoice($id, 'download');
+    }
+
+    private function generateOrderInvoice($id, $type = 'view')
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        $pdf = Pdf::loadView('user.invoice', compact('order'))
+            ->setPaper('A4', 'portrait');
+
+        if ($type === 'view') {
+            return $pdf->stream('invoice-'.$order->id.'.pdf');
+        }
+
+        return $pdf->download('invoice-'.$order->id.'.pdf');
     }
 
     public function updateStatus(Request $request, $id)

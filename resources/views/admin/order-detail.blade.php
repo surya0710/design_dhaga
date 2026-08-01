@@ -90,7 +90,15 @@
                     <div class="wg-filter flex-grow">
                         <h5>Ordered Items</h5>
                     </div>
-                    <a class="tf-button style-1 w208" href="{{ route('admin.orders') }}">Back</a>
+                    <div class="flex items-center gap10 flex-wrap">
+                        <a class="tf-button style-1 w208" href="{{ route('admin.order.invoice', $orders->id) }}" target="_blank">
+                            View Invoice
+                        </a>
+                        <a class="tf-button style-1 w208" href="{{ route('admin.order.invoice.download', $orders->id) }}">
+                            Download Invoice
+                        </a>
+                        <a class="tf-button style-1 w208" href="{{ route('admin.orders') }}">Back</a>
+                    </div>
                 </div>
 
                 <div class="table-responsive">

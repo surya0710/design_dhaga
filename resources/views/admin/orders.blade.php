@@ -84,13 +84,23 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a href="{{route('admin.order.detail',$order->id)}}">
-                                        <div class="list-icon-function view-icon">
+                                    <div class="list-icon-function view-icon" style="justify-content:center;gap:8px;">
+                                        <a href="{{ route('admin.order.detail', $order->id) }}" title="View order">
                                             <div class="item eye">
                                                 <i class="icon-eye"></i>
                                             </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                        <a href="{{ route('admin.order.invoice', $order->id) }}" target="_blank" title="View invoice">
+                                            <div class="item">
+                                                <i class="icon-file-text"></i>
+                                            </div>
+                                        </a>
+                                        <a href="{{ route('admin.order.invoice.download', $order->id) }}" title="Download invoice">
+                                            <div class="item">
+                                                <i class="icon-download"></i>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
