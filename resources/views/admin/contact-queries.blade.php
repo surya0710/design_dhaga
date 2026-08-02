@@ -49,6 +49,7 @@
                             <th>Email</th>
                             <th>Mobile</th>
                             <th>Category</th>
+                            <th>Instagram</th>
                             <th>Message</th>
                             <th>Design</th>
                             <th>Action</th>
@@ -66,6 +67,13 @@
                             <td><a href="mailto:{{$contactQuery->email }}"> {{$contactQuery->email}}</a></td>
                             <td><a href="tel:{{$contactQuery->mobile}}" target="_blank">{{$contactQuery->mobile}}</a></td>
                             <td>{{ $contactQuery->category ?? $contactQuery->subject }}</td>
+                            <td>
+                                @if(!empty($contactQuery->instagram))
+                                    <a href="{{ $contactQuery->instagram }}" target="_blank" rel="noopener">{{ $contactQuery->instagram }}</a>
+                                @else
+                                    —
+                                @endif
+                            </td>
                             <td>{{ $contactQuery->message }}</td>
                             <td>
                                 @if(!empty($contactQuery->design))

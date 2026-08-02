@@ -57,6 +57,9 @@
                                 <div class="col-md-12">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            @if ($errors->has('instagram'))
+                                                <span class="text-danger">{{ $errors->first('instagram') }}</span>
+                                            @endif
                                             <input type="text" class="form-control" name="instagram" id="instagram" placeholder="Enter Instagram Link" value="{{ old('instagram') }}" required>
                                         </div>
                                     </div>
@@ -86,3 +89,35 @@
             @endforeach
         </script>
     @endsection
+    @push('scripts')
+    @if(session('success'))
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            iconHtml: '<i class="fa-regular fa-circle-check" style="color:#198754;"></i>',
+            title: 'Success!',
+            text: @json(session('success')),
+            showConfirmButton: true,
+            confirmButtonText: 'Visit Portfolio',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            confirmButtonColor: '#000',
+            customClass: {
+                icon: 'swal-fa-icon',
+            },
+            didOpen: (popup) => {
+                const iconEl = popup.querySelector('.swal2-icon.swal-fa-icon');
+                if (iconEl) {
+                    iconEl.style.border = 'none';
+                    iconEl.style.color = '#198754';
+                }
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('portfolio') }}";
+            }
+        });
+    </script>
+    @endif
+    @endpush

@@ -12,6 +12,12 @@
     <p><strong>Phone:</strong> {{ $contact->mobile }}</p>
     <p><strong>Category:</strong> {{ $contact->category }}</p>
 
+    @if(!empty($contact->instagram))
+        <p><strong>Instagram:</strong>
+            <a href="{{ $contact->instagram }}" target="_blank" rel="noopener">{{ $contact->instagram }}</a>
+        </p>
+    @endif
+
     <p><strong>Message:</strong></p>
     <p>{{ $contact->message }}</p>
 

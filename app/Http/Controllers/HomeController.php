@@ -276,6 +276,7 @@ class HomeController extends Controller
             'phone'      => 'required|string|max:20',
             'category'   => 'required|string|max:255',
             'message'    => 'required|string',
+            'instagram'  => 'nullable|string|max:255',
             'design'     => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'terms'      => 'accepted',
         ]);
@@ -295,9 +296,11 @@ class HomeController extends Controller
             'category'   => $validated['category'],
             'message'    => $validated['message'],
             'design'     => $filename,
+            'instagram'  => $validated['instagram'] ?? null,
         ]);
 
-        Mail::to('artinfo@designdhaga.com')->send(new ContactMail($contact));
+        // Mail::to('artinfo@designdhaga.com')->send(new ContactMail($contact));
+        Mail::to('suryakantyadav16@gmail.com')->send(new ContactMail($contact));
 
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }

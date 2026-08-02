@@ -14,7 +14,9 @@ class Contact extends Model
         'email',
         'mobile',
         'category',
+        'subject',
         'message',
         'design',
+        'instagram',
     ];
 }
