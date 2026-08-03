@@ -49,7 +49,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="category">
                                             <option value="">Select Category</option>
-                                            <option value="fabric" {{ old('category') == 'fabric' ? 'selected' : '' }}>Fabric Printing</option>
+                                            <option value="fabric" {{ old('category') == 'Hand Crafted' ? 'selected' : '' }}>Hand Crafted</option>
                                             <option value="design" {{ old('category') == 'design' ? 'selected' : '' }}>Graphics</option>
                                         </select>
                                     </div>
