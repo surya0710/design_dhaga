@@ -28,13 +28,29 @@ class SyncShipmentTracking implements ShouldQueue
         $orders = Order::whereNotNull('awb_code')
             ->whereNotIn('order_status', ['delivered', 'cancelled'])
             ->get();
+
+        Log::info('SyncShipmentTracking started', [
+            'orders_count' => $orders->count(),
+        ]);
+
         foreach ($orders as $order) {
             try {
+                Log::info('SyncShipmentTracking tracking order', [
+                    'order_id' => $order->id,
+                    'awb_code' => $order->awb_code,
+                ]);
+
                 $tracking = app(ShiprocketService::class)
                     ->trackOrder($order->awb_code);
 
                 if (!empty($tracking)) {
                     $status = $tracking['current_status'] ?? null;
+
+                    Log::info('SyncShipmentTracking response', [
+                        'order_id'       => $order->id,
+                        'awb_code'       => $order->awb_code,
+                        'current_status' => $status,
+                    ]);
 
                     $order->tracking_status = $status;
                     $order->tracking_last_update = $tracking['delivered_date'] ?? now();
@@ -52,7 +68,7 @@ class SyncShipmentTracking implements ShouldQueue
                 }
             } catch (\Throwable $e) {
                 Log::error('Tracking failed', [
-                    'order_id' => $order->id,
+                    'order_id' => $order->id ?? null,
                     'error'    => $e->getMessage(),
                 ]);
             }
