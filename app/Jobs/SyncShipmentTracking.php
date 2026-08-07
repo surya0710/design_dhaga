@@ -28,31 +28,33 @@ class SyncShipmentTracking implements ShouldQueue
         $orders = Order::whereNotNull('awb_code')
             ->whereNotIn('order_status', ['delivered', 'cancelled'])
             ->get();
-
         foreach ($orders as $order) {
             try {
                 $tracking = app(ShiprocketService::class)
-                    ->trackShipment($order->awb_code);
+                    ->trackOrder($order->awb_code);
 
                 if (!empty($tracking)) {
+                    $status = $tracking['current_status'] ?? null;
 
-                    $shipment = $tracking['shipment_track'][0] ?? null;
+                    $order->tracking_status = $status;
+                    $order->tracking_last_update = $tracking['delivered_date'] ?? now();
+                    $order->tracking_raw_json = json_encode($tracking['raw'] ?? $tracking);
 
-                    $order->tracking_status = $shipment['current_status'] ?? null;
-                    $order->tracking_last_update = $shipment['updated_date'] ?? now();
-                    $order->tracking_raw_json = json_encode($tracking);
-
-                    // Auto mark delivered
-                    if (($shipment['current_status'] ?? '') === 'Delivered') {
+                    // Auto mark delivered (handle different capitalisations / phrasing)
+                    if ($status && str_contains(strtolower($status), 'delivered')) {
+                        if (! $order->delivered_at) {
+                            $order->delivered_at = now();
+                        }
                         $order->order_status = 'delivered';
-                        $order->delivered_at = now();
                     }
 
                     $order->save();
                 }
-
             } catch (\Throwable $e) {
-                Log::error('Tracking failed', ['order_id' => $order->id]);
+                Log::error('Tracking failed', [
+                    'order_id' => $order->id,
+                    'error'    => $e->getMessage(),
+                ]);
             }
         }
     }
