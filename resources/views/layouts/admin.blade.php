@@ -112,6 +112,11 @@
                                     </a>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
+                                            <a href="{{route('admin.order.add')}}" class="">
+                                                <div class="text">Create Order</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
                                             <a href="{{route('admin.orders')}}" class="">
                                                 <div class="text">Orders</div>
                                             </a>

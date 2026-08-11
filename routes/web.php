@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\HomepageHighlightController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\FooterWidgetController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,6 +198,9 @@ Route::middleware(['auth.admin', 'utype:ADM'])->group(function(){
     Route::get('/admin/coupon/delete/{id}', [CouponController::class,'coupon_delete'])->name('admin.coupon.delete');
 
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::get('/admin/order/add', [AdminOrderController::class, 'create'])->name('admin.order.add');
+    Route::post('/admin/order/store', [AdminOrderController::class, 'store'])->name('admin.order.store');
+    Route::post('/admin/order/delivery-options', [AdminOrderController::class, 'deliveryOptions'])->name('admin.order.delivery.options');
     Route::get('/admin/order/detail/{id}', [AdminController::class, 'orders_detail'])->name('admin.order.detail');
     Route::get('/admin/order/{id}/invoice', [AdminController::class, 'order_invoice'])->name('admin.order.invoice');
     Route::get('/admin/order/{id}/invoice/download', [AdminController::class, 'order_invoice_download'])->name('admin.order.invoice.download');

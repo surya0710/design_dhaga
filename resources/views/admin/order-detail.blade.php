@@ -172,6 +172,19 @@
                         <p><strong>Country:</strong> {{ $orders->country }}</p>
                         <p><strong>Pincode:</strong> {{ $orders->pincode }}</p>
                         <p><strong>Address Type:</strong> {{ ucfirst($orders->address_type) }}</p>
+
+                        @if($orders->courier_name || $orders->delivery_label || $orders->delivery_eta)
+                            <p><strong>Courier:</strong> {{ $orders->courier_name ?? '—' }}
+                                @if($orders->delivery_label) ({{ $orders->delivery_label }}) @endif
+                            </p>
+                            @if($orders->delivery_eta)
+                                <p><strong>ETA:</strong> {{ $orders->delivery_eta }}</p>
+                            @endif
+                        @endif
+
+                        @if($orders->notes)
+                            <p><strong>Customization / Notes:</strong> {{ $orders->notes }}</p>
+                        @endif
                     </div>
                 </div>
             </div>
