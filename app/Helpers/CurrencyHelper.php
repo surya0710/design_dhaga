@@ -1,11 +1,31 @@
 <?php
 
 use App\Models\Cart;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+
+if (!function_exists('ist')) {
+    /**
+     * Convert a datetime to Asia/Kolkata for display.
+     */
+    function ist(mixed $value): ?Carbon
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        $carbon = $value instanceof CarbonInterface
+            ? $value->copy()
+            : Carbon::parse($value, config('app.timezone'));
+
+        return $carbon->setTimezone('Asia/Kolkata');
+    }
+}
 
 function getIconsByCategory($category){
     $categoryIcons = [

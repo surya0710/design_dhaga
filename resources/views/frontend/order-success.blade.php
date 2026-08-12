@@ -254,7 +254,7 @@
                 A receipt was sent to <strong>{{ $order->email }}</strong>.
             </p>
             <div class="os-meta">
-                <span class="os-chip"><i class="fa-regular fa-calendar"></i> {{ optional($paidAt)->format('d M Y, g:i A') }}</span>
+                <span class="os-chip"><i class="fa-regular fa-calendar"></i> {{ ist($paidAt)?->format('d M Y, g:i A') }}</span>
                 <span class="os-chip"><i class="fa-solid fa-check"></i> {{ ucfirst($order->payment_status) }}</span>
                 <span class="os-chip"><i class="fa-solid fa-bag-shopping"></i> {{ $itemCount }} {{ $itemCount === 1 ? 'item' : 'items' }}</span>
                 @if($order->expected_delivery_date)

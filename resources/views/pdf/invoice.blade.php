@@ -33,7 +33,7 @@
     <h2>Tax Invoice</h2>
 
     <p><strong>Order ID:</strong> #{{ $order->id }}</p>
-    <p><strong>Invoice Date:</strong> {{ optional($order->paid_at)->format('d-m-Y H:i') }}</p>
+    <p><strong>Invoice Date:</strong> {{ ist($order->paid_at)?->format('d-m-Y H:i') }}</p>
     <p><strong>Payment ID:</strong> {{ $order->razorpay_payment_id }}</p>
 
     <div class="mt-20">

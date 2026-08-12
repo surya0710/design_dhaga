@@ -249,11 +249,11 @@
                                             <td class="text-center">{{ $recentOrder->total }}</td>
 
                                             <td class="text-center">{{ $recentOrder->order_status }}</td>
-                                            <td class="text-center">{{ $recentOrder->created_at->toDayDateTimeString() }}</td>
+                                            <td class="text-center">{{ ist($recentOrder->created_at)?->toDayDateTimeString() }}</td>
                                             <td class="text-center">{{ $recentOrder->items()->count() }}</td>
                                             <td class="text-center">
                                                 @if ($recentOrder->delivered_at)
-                                                    {{ \Carbon\Carbon::parse($recentOrder->delivered_at)->toDayDateTimeString() }}
+                                                    {{ ist($recentOrder->delivered_at)?->toDayDateTimeString() }}
                                                 @else
                                                     -
                                                 @endif

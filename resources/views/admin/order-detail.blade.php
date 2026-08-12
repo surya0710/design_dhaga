@@ -223,12 +223,12 @@
                             </td>
 
                             <th>Order Date</th>
-                            <td>{{ $orders->created_at->toDayDateTimeString() }}</td>
+                            <td>{{ ist($orders->created_at)?->toDayDateTimeString() }}</td>
 
                             <th>Paid Date</th>
                             <td>
                                 @if ($orders->paid_at)
-                                    {{ \Carbon\Carbon::parse($orders->paid_at)->toDayDateTimeString() }}
+                                    {{ ist($orders->paid_at)?->toDayDateTimeString() }}
                                 @else
                                     Not paid yet
                                 @endif
@@ -238,7 +238,7 @@
                             <th>Delivered Date</th>
                             <td>
                                 @if ($orders->delivered_at)
-                                    {{ \Carbon\Carbon::parse($orders->delivered_at)->toDayDateTimeString() }}
+                                    {{ ist($orders->delivered_at)?->toDayDateTimeString() }}
                                 @else
                                     Not delivered yet
                                 @endif
@@ -247,7 +247,7 @@
                             <th>Cancelled Date</th>
                             <td>
                                 @if ($orders->cancelled_at)
-                                    {{ \Carbon\Carbon::parse($orders->cancelled_at)->toDayDateTimeString() }}
+                                    {{ ist($orders->cancelled_at)?->toDayDateTimeString() }}
                                 @else
                                     Not cancelled
                                 @endif

@@ -90,7 +90,7 @@
                             </td>
 
                             {{-- Created --}}
-                            <td>{{ $faq->created_at->format('d M Y') }}</td>
+                            <td>{{ ist($faq->created_at)?->format('d M Y') }}</td>
                             {{-- Actions --}}
                             <td>
 

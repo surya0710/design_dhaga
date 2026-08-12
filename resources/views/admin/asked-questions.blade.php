@@ -69,7 +69,7 @@
                             <td>{{$askedQuestion->product_name}}</td>
                             <td>{{$askedQuestion->user->id .', '. $askedQuestion->user->name}}</a></td>
                             <td>{{$askedQuestion->message}}</a></td>
-                            <td>{{$askedQuestion->created_at}}</a></td>
+                            <td>{{ ist($askedQuestion->created_at) }}</a></td>
                             <td>
                                 <div class="list-icon-function">
                                     <form action="{{route('admin.question.delete',['id'=>$askedQuestion->id])}}" method="POST">

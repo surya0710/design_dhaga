@@ -74,7 +74,7 @@
                                 @endif
                             </td>
 
-                            <td>{{ $menu->created_at->format('d M Y') }}</td>
+                            <td>{{ ist($menu->created_at)?->format('d M Y') }}</td>
 
                             <td>
                                 <div class="d-flex gap-2">

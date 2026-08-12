@@ -71,12 +71,12 @@
                                 <td class="text-center">{{$order->phone}}</td>
                                 <td class="text-center">{{$order->total}}</td>
                                 <td class="text-center">{{$order->order_status}}</td>
-                                <td class="text-center">{{$order->created_at->toDayDateTimeString()}}</td>
+                                <td class="text-center">{{ ist($order->created_at)?->toDayDateTimeString() }}</td>
                                 <td class="text-center">{{$order->items()->count()}}</td>
 
                                 <td>
                                     @if ($order->delivered_at)
-                                        {{ \Carbon\Carbon::parse($order->delivered_at)->toDayDateTimeString() }}
+                                        {{ ist($order->delivered_at)?->toDayDateTimeString() }}
                                     @else
                                         Not delivered yet
                                     @endif

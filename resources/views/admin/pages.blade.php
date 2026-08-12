@@ -118,7 +118,7 @@
 
                             {{-- Created --}}
                             <td>
-                                {{ $page->created_at->format('d M Y') }}
+                                {{ ist($page->created_at)?->format('d M Y') }}
                             </td>
 
                             {{-- Actions --}}

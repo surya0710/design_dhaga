@@ -905,7 +905,7 @@ your orders.')
                                             <div>
                                                 <div class="order-id">Order #{{ $order->id }}</div>
                                                 <div class="order-meta">
-                                                    <span><i class="bi bi-calendar3 me-1"></i>{{ $order->created_at->format('M d, Y') }}</span>
+                                                    <span><i class="bi bi-calendar3 me-1"></i>{{ ist($order->created_at)?->format('M d, Y') }}</span>
                                                     <span><i class="bi bi-credit-card me-1"></i>{{ ucfirst($order->payment_status) }}</span>
                                                     @if($order->expected_delivery_date)
                                                         <span><i class="bi bi-clock-history me-1"></i>Expected {{ $order->expected_delivery_date->format('M d') }}</span>
@@ -998,7 +998,7 @@ your orders.')
                                             @if($order->delivered_at)
                                                 <div class="mt-3 text-success small fw-semibold">
                                                     <i class="bi bi-check-circle-fill me-1"></i>
-                                                    Delivered on {{ $order->delivered_at->format('M d, Y') }}
+                                                    Delivered on {{ ist($order->delivered_at)?->format('M d, Y') }}
                                                 </div>
                                             @elseif($order->delivery_eta)
                                                 <div class="mt-3 text-muted small">
