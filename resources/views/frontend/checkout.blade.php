@@ -558,7 +558,7 @@
 
 @php
     $couponDiscount = $couponDiscount ?? 0;
-    $isFreeShipping = session('coupon.free_shipping') ?? false;
+    $isFreeShipping = (bool) ($coupon['free_shipping'] ?? session('coupon.free_shipping') ?? false);
     $taxableAmount = max($subtotal - $couponDiscount, 0);
 
     // Normalise gstData so Blade never throws on missing keys
@@ -580,6 +580,12 @@
 
 <main class="co-page">
     <div class="container">
+        @if(session('error'))
+            <div class="alert alert-danger py-2 mb-3">{{ session('error') }}</div>
+        @endif
+        @if(session('success'))
+            <div class="alert alert-success py-2 mb-3">{{ session('success') }}</div>
+        @endif
         <form id="checkout-form">
             @csrf
             <input type="hidden" name="delivery_type" id="delivery_type">

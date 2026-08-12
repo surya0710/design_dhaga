@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Cart;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
@@ -42,6 +43,11 @@ class CartController extends Controller
             return $item->price * $item->quantity;
         });
 
+        $couponSync = Coupon::syncSessionForSubtotal((float) $subtotal);
+        if ($couponSync['removed'] && $couponSync['message']) {
+            session()->flash('error', $couponSync['message']);
+        }
+
         $total          = $subtotal;
         $menu           = $this->menu;
         $highlights     = HomepageHighlight::where('status', 1)->get();
@@ -54,6 +60,22 @@ class CartController extends Controller
             'menu'          => $menu,
             'highlights'    => $highlights
         ]);
+    }
+
+    /**
+     * Recalculate / drop session coupon after cart changes.
+     *
+     * @return array{coupon: array|null, removed: bool, message: string|null}
+     */
+    protected function syncCouponAfterCartChange(): array
+    {
+        $subtotal = (float) Cart::where('user_id', Auth::id())
+            ->get()
+            ->sum(function ($item) {
+                return ((float) $item->price) * ((int) $item->quantity);
+            });
+
+        return Coupon::syncSessionForSubtotal($subtotal);
     }
 
     /**
@@ -139,6 +161,11 @@ class CartController extends Controller
             : $query->where('product_id', $request->product_id);
         $query->delete();
 
+        $couponSync = $this->syncCouponAfterCartChange();
+        if ($couponSync['removed'] && $couponSync['message']) {
+            return redirect()->back()->with('error', $couponSync['message']);
+        }
+
         return redirect()->back()->with('success', 'Item removed');
     }
 
@@ -162,6 +189,11 @@ class CartController extends Controller
             ->update([
                 'quantity' => $request->quantity
             ]);
+
+        $couponSync = $this->syncCouponAfterCartChange();
+        if ($couponSync['removed'] && $couponSync['message']) {
+            return redirect()->back()->with('error', $couponSync['message']);
+        }
 
         return redirect()->back()->with('success', 'Cart updated');
     }

@@ -11,6 +11,13 @@
             <h1 class="m-0">Your Cart</h1>
         </div>
 
+        @if(session('success'))
+            <div class="alert alert-success py-2">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger py-2">{{ session('error') }}</div>
+        @endif
+
         @if($cartItems->isEmpty())
 
             <div class="empty-cart-box">

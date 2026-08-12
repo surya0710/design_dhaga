@@ -898,35 +898,9 @@ class AdminController extends Controller
     public function orders(Request $request)
     {
         $search = trim((string) $request->get('search', ''));
-        $orderStatus = trim((string) $request->get('order_status', 'confirmed'));
-        $paymentStatus = trim((string) $request->get('payment_status', ''));
-        $paymentMethod = trim((string) $request->get('payment_method', ''));
-
-        $allowedOrderStatuses = ['all', 'pending', 'confirmed', 'packed', 'shipped', 'delivered', 'cancelled'];
-        if (!in_array($orderStatus, $allowedOrderStatuses, true)) {
-            $orderStatus = 'confirmed';
-        }
-
-        $allowedPaymentStatuses = ['', 'paid', 'pending'];
-        if (!in_array($paymentStatus, $allowedPaymentStatuses, true)) {
-            $paymentStatus = '';
-        }
-
-        $allowedPaymentMethods = ['', 'razorpay', 'offline', 'cod', 'bank_transfer'];
-        if (!in_array($paymentMethod, $allowedPaymentMethods, true)) {
-            $paymentMethod = '';
-        }
 
         $orders = Order::query()
-            ->when($orderStatus !== 'all', function ($query) use ($orderStatus) {
-                $query->where('order_status', $orderStatus);
-            })
-            ->when($paymentStatus !== '', function ($query) use ($paymentStatus) {
-                $query->where('payment_status', $paymentStatus);
-            })
-            ->when($paymentMethod !== '', function ($query) use ($paymentMethod) {
-                $query->where('payment_method', $paymentMethod);
-            })
+            ->where('payment_status', 'paid')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('id', 'like', '%' . $search . '%')
@@ -936,7 +910,6 @@ class AdminController extends Controller
                         ->orWhere('total', 'like', '%' . $search . '%')
                         ->orWhere('order_status', 'like', '%' . $search . '%')
                         ->orWhere('payment_status', 'like', '%' . $search . '%')
-                        ->orWhere('payment_method', 'like', '%' . $search . '%')
                         ->orWhere('razorpay_order_id', 'like', '%' . $search . '%')
                         ->orWhere('razorpay_payment_id', 'like', '%' . $search . '%');
                 });
@@ -945,7 +918,7 @@ class AdminController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.orders', compact('orders', 'orderStatus', 'paymentStatus', 'paymentMethod'));
+        return view('admin.orders', compact('orders'));
     }
 
     public function orders_detail($id)

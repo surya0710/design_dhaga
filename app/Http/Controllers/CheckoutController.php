@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Address;
 use App\Models\Setting;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\HaryanaPincode;
 use Razorpay\Api\Api;
@@ -61,8 +62,13 @@ class CheckoutController extends Controller
             return ((float) $item['price']) * ((int) $item['quantity']);
         });
 
+        $couponSync = Coupon::syncSessionForSubtotal((float) $subtotal);
+        if ($couponSync['removed'] && $couponSync['message']) {
+            session()->flash('error', $couponSync['message']);
+        }
+
         $shipping = 0;
-        $coupon = session()->get('coupon');
+        $coupon = $couponSync['coupon'] ?? [];
         $couponDiscount = (float) ($coupon['discount'] ?? 0);
         $defaultAddress = null;
 
@@ -232,7 +238,8 @@ class CheckoutController extends Controller
         $checkoutAddress = $this->resolveCheckoutAddress($validated);
 
         $subtotal = $cartItems->sum(fn($item) => $item['price'] * $item['quantity']);
-        $coupon = session()->get('coupon');
+        $couponSync = Coupon::syncSessionForSubtotal((float) $subtotal);
+        $coupon = $couponSync['coupon'] ?? [];
         $couponDiscount = (float) ($coupon['discount'] ?? 0);
         $taxableAmount = max($subtotal - $couponDiscount, 0);
 
