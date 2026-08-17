@@ -223,12 +223,12 @@
                             </td>
 
                             <th>Order Date</th>
-                            <td>{{ ist($orders->created_at)?->toDayDateTimeString() }}</td>
+                            <td>{{ ist_format($orders->created_at) }}</td>
 
                             <th>Paid Date</th>
                             <td>
                                 @if ($orders->paid_at)
-                                    {{ ist($orders->paid_at)?->toDayDateTimeString() }}
+                                    {{ ist_format($orders->paid_at) }}
                                 @else
                                     Not paid yet
                                 @endif
@@ -238,7 +238,7 @@
                             <th>Delivered Date</th>
                             <td>
                                 @if ($orders->delivered_at)
-                                    {{ ist($orders->delivered_at)?->toDayDateTimeString() }}
+                                    {{ ist_format($orders->delivered_at) }}
                                 @else
                                     Not delivered yet
                                 @endif
@@ -247,7 +247,7 @@
                             <th>Cancelled Date</th>
                             <td>
                                 @if ($orders->cancelled_at)
-                                    {{ ist($orders->cancelled_at)?->toDayDateTimeString() }}
+                                    {{ ist_format($orders->cancelled_at) }}
                                 @else
                                     Not cancelled
                                 @endif

@@ -62,8 +62,8 @@
                                 </td>
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->mobile}}</td>
-                                <td>{{ ist($user->email_verified_at) }}</td>
-                                <td>{{ ist($user->created_at) }}</td>
+                                <td>{{ ist_format($user->email_verified_at) }}</td>
+                                <td>{{ ist_format($user->created_at) }}</td>
                             </tr>
                         @endforeach
 

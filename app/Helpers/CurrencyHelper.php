@@ -27,6 +27,16 @@ if (!function_exists('ist')) {
     }
 }
 
+if (!function_exists('ist_format')) {
+    /**
+     * Format a datetime in Asia/Kolkata using 12-hour clock (e.g. 17 Aug 2026, 11:14 AM).
+     */
+    function ist_format(mixed $value, string $format = 'd M Y, g:i A'): ?string
+    {
+        return ist($value)?->format($format);
+    }
+}
+
 function getIconsByCategory($category){
     $categoryIcons = [
         "1" => "Natural Fibre",

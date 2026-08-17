@@ -63,7 +63,7 @@
                                 </div>
                             </td>
                             <td><a href="mailto:{{$subscriber->email }}"> {{$subscriber->email}}</a></td>
-                                <td>{{ ist($subscriber->created_at) }}</a></td>
+                                <td>{{ ist_format($subscriber->created_at) }}</a></td>
                             <td>
                             <td><a href="mailto:{{$subscriber->email }}"> {{$subscriber->email}}</a></td>
                                 <td></a></td>

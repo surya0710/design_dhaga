@@ -96,7 +96,7 @@
                             </td>
 
                             {{-- Created --}}
-                            <td>{{ ist($slider->created_at)?->format('d M Y') }}</td>
+                            <td>{{ ist_format($slider->created_at) }}</td>
 
                             {{-- Actions --}}
                             <td>

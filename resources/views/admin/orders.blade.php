@@ -71,12 +71,12 @@
                                 <td class="text-center">{{$order->phone}}</td>
                                 <td class="text-center">{{$order->total}}</td>
                                 <td class="text-center">{{$order->order_status}}</td>
-                                <td class="text-center">{{ ist($order->created_at)?->toDayDateTimeString() }}</td>
+                                <td class="text-center">{{ ist_format($order->created_at) }}</td>
                                 <td class="text-center">{{$order->items()->count()}}</td>
 
                                 <td>
                                     @if ($order->delivered_at)
-                                        {{ ist($order->delivered_at)?->toDayDateTimeString() }}
+                                        {{ ist_format($order->delivered_at) }}
                                     @else
                                         Not delivered yet
                                     @endif

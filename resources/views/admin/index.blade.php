@@ -249,11 +249,11 @@
                                             <td class="text-center">{{ $recentOrder->total }}</td>
 
                                             <td class="text-center">{{ $recentOrder->order_status }}</td>
-                                            <td class="text-center">{{ ist($recentOrder->created_at)?->toDayDateTimeString() }}</td>
+                                            <td class="text-center">{{ ist_format($recentOrder->created_at) }}</td>
                                             <td class="text-center">{{ $recentOrder->items()->count() }}</td>
                                             <td class="text-center">
                                                 @if ($recentOrder->delivered_at)
-                                                    {{ ist($recentOrder->delivered_at)?->toDayDateTimeString() }}
+                                                    {{ ist_format($recentOrder->delivered_at) }}
                                                 @else
                                                     -
                                                 @endif

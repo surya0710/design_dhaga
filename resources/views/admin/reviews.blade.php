@@ -70,7 +70,7 @@
                                     —
                                 @endif
                             </td>
-                            <td>{{ ist($review->created_at)?->format('d M Y') }}</td>
+                            <td>{{ ist_format($review->created_at) }}</td>
                             <td>
                                 <div class="list-icon-function">
                                     <form action="{{ route('admin.review.delete', ['id' => $review->id]) }}" method="POST">
