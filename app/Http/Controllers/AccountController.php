@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Category;
 use App\Models\Address;
 use App\Services\ShiprocketService;
+use App\Services\ShipmentTrackingSyncService;
 use App\Models\Menu;
 use App\Models\HomepageHighlight;
 
@@ -67,20 +68,7 @@ class AccountController extends Controller
                 ->first();
 
             if ($order) {
-                $order->tracking_status = $data['current_status'] ?? $order->tracking_status;
-                $order->tracking_last_update = now();
-                $order->tracking_raw_json = json_encode($data);
-
-                $currentStatus = strtolower((string) ($data['current_status'] ?? ''));
-
-                if (str_contains($currentStatus, 'deliver') || !empty($data['delivered_date'])) {
-                    $order->order_status = 'delivered';
-                    $order->delivered_at = $order->delivered_at ?? now();
-                } elseif (in_array($order->order_status, ['pending', 'confirmed', 'packed'], true)) {
-                    $order->order_status = 'shipped';
-                }
-
-                $order->save();
+                app(ShipmentTrackingSyncService::class)->applyTracking($order, $data);
             }
 
             return response()->json(['success' => true, 'data' => $data]);

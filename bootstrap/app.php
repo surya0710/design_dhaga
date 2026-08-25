@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.user' => \App\Http\Middleware\TrackUser::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'webhook/shipment',
+        ]);
+
         $middleware->web(append: [
             \App\Http\Middleware\TrackUser::class,
         ]);

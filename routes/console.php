@@ -3,17 +3,18 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
-use App\Jobs\SyncShipmentTracking;
 use App\Models\Order;
 use App\Services\ShiprocketService;
+use App\Services\ShipmentTrackingSyncService;
 use Illuminate\Support\Facades\Log;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// ✅ Your tracking sync job
-Schedule::job(new SyncShipmentTracking)->everyThirtyMinutes();
+Schedule::command('shipments:sync-tracking')
+    ->everyThirtyMinutes()
+    ->withoutOverlapping();
 Schedule::command('generate:sitemap')->daily();
 Schedule::command('instagram:auto-refresh')->daily();
 
@@ -33,26 +34,12 @@ Artisan::command('tracking:test {awb}', function (string $awb) {
     $this->line(' - tracking_status: ' . ($order->tracking_status ?? 'null'));
 
     try {
-        /** @var ShiprocketService $shiprocket */
-        $shiprocket = app(ShiprocketService::class);
-
-        $tracking = $shiprocket->trackOrder($awb);
-        $status   = $tracking['current_status'] ?? null;
+        $tracking = app(ShiprocketService::class)->trackOrder($awb);
+        $status = $tracking['current_status'] ?? null;
 
         $this->line('Shiprocket current_status: ' . ($status ?? 'null'));
 
-        $order->tracking_status      = $status;
-        $order->tracking_last_update = $tracking['delivered_date'] ?? now();
-        $order->tracking_raw_json    = json_encode($tracking['raw'] ?? $tracking);
-
-        if ($status && str_contains(strtolower($status), 'delivered')) {
-            if (! $order->delivered_at) {
-                $order->delivered_at = now();
-            }
-            $order->order_status = 'delivered';
-        }
-
-        $order->save();
+        app(ShipmentTrackingSyncService::class)->applyTracking($order, $tracking);
 
         $this->info('Order updated. New DB status:');
         $this->line(' - order_status: ' . ($order->order_status ?? 'null'));
